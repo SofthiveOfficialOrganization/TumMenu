@@ -14,8 +14,8 @@ namespace Domain.Entities
 		public Guid PlanId { get; set; }
 		public Plan Plan { get; set; } = null!;
 
-		public Guid OwnerId { get; set; }
-		public Owner Owner { get; set; } = null!;
+		public Guid? OwnerId { get; set; }
+		public Owner? Owner { get; set; }
 
 		public DateTime StartAt { get; set; }
 		public DateTime? NextBillingAt { get; set; }
