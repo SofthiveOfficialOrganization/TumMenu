@@ -1,5 +1,5 @@
 ﻿using Infrastructure;
-
+using Application;
 namespace TumMenu.Extensions
 {
 	public static class ServiceExtensions
@@ -9,8 +9,12 @@ namespace TumMenu.Extensions
 			var configuration = builder.Configuration;
 			var services = builder.Services;
 
-			services
+			services.AddApplication()
 				.AddInfrastructure(configuration);
+
+			services.AddControllers();
+			services.AddEndpointsApiExplorer();
+			services.AddSwaggerGen();
 		}
 	}
 }
