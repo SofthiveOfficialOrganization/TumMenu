@@ -7,13 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Categories.Commands;
 
-// DTO
 public record CategoryDto(Guid Id, Guid MenuId, string Name, string Slug, int SortOrder);
 
-// Command
 public record CreateCategoryCommand(Guid MenuId, string Name, int SortOrder) : IRequest<CategoryDto>;
 
-// Validator
 public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 {
 	public CreateCategoryValidator()
@@ -24,7 +21,6 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 	}
 }
 
-// Handler
 public class CreateCategoryHandler(IRepository<Category> repo, IUnitOfWork uow, IMapper mapper)
 	: IRequestHandler<CreateCategoryCommand, CategoryDto>
 {

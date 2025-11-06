@@ -1,10 +1,12 @@
-﻿using Application.Abstractions;
+﻿using System.Reflection;
 using FluentValidation;
-using Mapster;
-using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using Mapster;
+using MapsterMapper;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using Application.Abstractions;
 
 namespace Application;
 
@@ -16,50 +18,85 @@ public static class DependencyInjection
 
 		services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(asm));
 		services.AddValidatorsFromAssembly(asm);
+
 		var mapsterConfig = new TypeAdapterConfig();
 		mapsterConfig.Scan(asm);
 		services.AddSingleton(mapsterConfig);
 		services.AddScoped<IMapper, ServiceMapper>();
 
-		// Validation pipeline  
+		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggingBehavior<,>));
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
 		return services;
 	}
 }
 
-// Pipeline
-public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
+
+public sealed class RequestLoggingBehavior<TRequest, TResponse>(
+	ILogger<RequestLoggingBehavior<TRequest, TResponse>> logger)
+	: IPipelineBehavior<TRequest, TResponse>
 	where TRequest : notnull
 {
-	private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
-
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
 	{
-		if(_validators.Any())
+		var name = typeof(TRequest).Name;
+		var sw = Stopwatch.StartNew();
+		logger.LogInformation("→ Handling {Request}", name);
+		try
+		{
+			var response = await next();
+			sw.Stop();
+			logger.LogInformation("← Handled {Request} in {Elapsed}ms", name, sw.ElapsedMilliseconds);
+			return response;
+		}
+		catch(Exception ex)
+		{
+			sw.Stop();
+			logger.LogError(ex, "✖ Error in {Request} after {Elapsed}ms", name, sw.ElapsedMilliseconds);
+			throw;
+		}
+	}
+}
+
+public sealed class ValidationBehavior<TRequest, TResponse>(
+	IEnumerable<IValidator<TRequest>> validators)
+	: IPipelineBehavior<TRequest, TResponse>
+	where TRequest : notnull
+{
+	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
+	{
+		if(validators.Any())
 		{
 			var ctx = new ValidationContext<TRequest>(request);
-			var errors = (await Task.WhenAll(_validators.Select(v => v.ValidateAsync(ctx, ct))))
+			var errors = (await Task.WhenAll(validators.Select(v => v.ValidateAsync(ctx, ct))))
 				.SelectMany(r => r.Errors)
-				.Where(e => e != null)
+				.Where(e => e is not null)
 				.ToList();
 
 			if(errors.Count > 0)
-				throw new FluentValidation.ValidationException(errors);
+				throw new ValidationException(errors);
 		}
-		return await next(ct);
+
+		return await next();
 	}
 }
-public class TransactionBehavior<TRequest, TResponse>(IUnitOfWork uow) : IPipelineBehavior<TRequest, TResponse>
+
+public sealed class TransactionBehavior<TRequest, TResponse>(IUnitOfWork uow)
+	: IPipelineBehavior<TRequest, TResponse>
 	where TRequest : notnull
 {
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
 	{
 		if(request is not ITransactionalRequest)
-			return await next(ct);
+			return await next();
 
 		TResponse? resp = default;
-		await uow.ExecuteInTransactionAsync(async _ => { resp = await next(ct); }, ct);
+		await uow.ExecuteInTransactionAsync(async _ =>
+		{
+			resp = await next();
+		}, ct);
+
 		return resp!;
 	}
 }
