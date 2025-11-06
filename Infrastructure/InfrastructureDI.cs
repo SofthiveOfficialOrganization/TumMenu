@@ -1,8 +1,6 @@
 ﻿using Application.Abstractions;
-using Application.Abstractions.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence;
-using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,16 +12,26 @@ namespace Infrastructure
 	{
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
 			services.AddIdentity<ApplicationUser, ApplicationRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
-			services.AddScoped<ICategoryRepository, CategoryRepository>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+			services.AddScoped<IUserContext, HttpUserContext>();
+			services.AddScoped<AuditInterceptor>();
+
+			services.AddDbContext<ApplicationDbContext>((sp, opts) =>
+			{
+				opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+				opts.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
+				// Global NoTracking verme; repo zaten kontrol ediyor.
+			});
+
+			services.AddScoped(typeof(Application.Abstractions.IRepository<>), typeof(EfRepository<>));
+			services.AddScoped<Application.Abstractions.IUnitOfWork, UnitOfWork>();
 
 			return services;
 		}
+
 	}
 }

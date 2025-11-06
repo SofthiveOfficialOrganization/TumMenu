@@ -1,13 +1,11 @@
 ﻿using Application.Abstractions;
-using Application.Abstractions.Repositories;
 using Domain.Entities;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
-using System.Globalization;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
-namespace Application.Categories;
+namespace Application.Categories.Commands;
 
 // DTO
 public record CategoryDto(Guid Id, Guid MenuId, string Name, string Slug, int SortOrder);
@@ -27,12 +25,13 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 }
 
 // Handler
-public class CreateCategoryHandler(ICategoryRepository repo, IUnitOfWork uow, IMapper mapper)
+public class CreateCategoryHandler(IRepository<Category> repo, IUnitOfWork uow, IMapper mapper)
 	: IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
 	public async Task<CategoryDto> Handle(CreateCategoryCommand req, CancellationToken ct)
 	{
-		if(await repo.ExistsByNameAsync(req.MenuId, req.Name, ct))
+		var exists = await repo.Query().AnyAsync(c => c.MenuId == req.MenuId && c.Name == req.Name, ct);
+		if(exists)
 			throw new InvalidOperationException("Bu menüde aynı isimde bir kategori zaten var.");
 
 		var entity = mapper.Map<Category>(req);

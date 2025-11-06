@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Base
 {
-	public interface IBaseEntity
+	public interface IBaseEntity : IAuditable
 	{
 		Guid Id { get; }
-		long CreatedOn { get; }
-		long? ModifiedOn { get; }
-		string CreatedBy { get; }
-		string? ModifiedBy { get; }
-		bool IsDeleted { get; }
 		void Created(string? userId = null);
 		void Modified(string? userId, bool isDeleted = false);
 		void Deleted(string? userId);
@@ -24,17 +19,12 @@ namespace Domain.Base
 	{
 		[Key]
 		public Guid Id { get; set; }
-		public long CreatedOn { get; private set; }
-		public DateTime CreatedOnValue { get { return DateTimeHelper.ConvertLocalDateTime(CreatedOn); } }
-		public long? ModifiedOn { get; private set; }
-		public DateTime? ModifiedOnValue { get { return ModifiedOn.HasValue ? DateTimeHelper.ConvertLocalDateTime(ModifiedOn.Value) : null; } }
 
-		[MaxLength(50)]
-		public string CreatedBy { get; private set; }
-
-		[MaxLength(50)]
-		public string? ModifiedBy { get; private set; }
-		public bool IsDeleted { get; private set; }
+		public long CreatedOn { get; set; }
+		public long? ModifiedOn { get; set; }
+		public string? CreatedBy { get; set; }
+		public string? ModifiedBy { get; set; }
+		public bool IsDeleted { get; set; }
 
 		public void Created(string? userId = null)
 		{
@@ -47,11 +37,7 @@ namespace Domain.Base
 		{
 			ModifiedOn = DateTimeHelper.GetUtcNowTime();
 			ModifiedBy = userId;
-
-			if(isDeleted)
-			{
-				Deleted(userId);
-			}
+			if(isDeleted) Deleted(userId);
 		}
 
 		public void Deleted(string? userId = null)

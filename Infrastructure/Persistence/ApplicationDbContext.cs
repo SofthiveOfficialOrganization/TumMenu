@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Reflection.Emit;
 
 namespace Infrastructure.Persistence
 {
@@ -40,7 +42,16 @@ namespace Infrastructure.Persistence
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+
 			base.OnModelCreating(builder); // Identity tabanını kur
+
+
+			foreach(var et in builder.Model.GetEntityTypes()
+					 .Where(t => typeof(Domain.Base.BaseEntity).IsAssignableFrom(t.ClrType)))
+			{
+				builder.Entity(et.ClrType)
+					   .HasQueryFilter(MakeIsDeletedFilter(et.ClrType));
+			}
 
 			// ---------- Identity: UserRole join ----------
 			builder.Entity<ApplicationUserRole>(ur =>
@@ -209,5 +220,15 @@ namespace Infrastructure.Persistence
 			builder.Entity<Image>().Property(i => i.Type).HasConversion<int>();
 			builder.Entity<Invoice>().Property(i => i.PaymentStatus).HasConversion<int>();
 		}
+
+		static LambdaExpression MakeIsDeletedFilter(Type t)
+		{
+			var p = Expression.Parameter(t, "e");
+			var prop = Expression.Property(p, nameof(Domain.Base.BaseEntity.IsDeleted));
+			var body = Expression.Equal(prop, Expression.Constant(false));
+			var funcType = typeof(Func<,>).MakeGenericType(t, typeof(bool));
+			return Expression.Lambda(funcType, body, p);
+		}
+
 	}
 }

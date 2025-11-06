@@ -1,9 +1,10 @@
-﻿using System.Reflection;
+﻿using Application.Abstractions;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Application;
 
@@ -28,11 +29,10 @@ public static class DependencyInjection
 }
 
 // Pipeline
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
 	where TRequest : notnull
 {
-	private readonly IEnumerable<IValidator<TRequest>> _validators;
-	public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
+	private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
 	{
@@ -47,6 +47,19 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 			if(errors.Count > 0)
 				throw new FluentValidation.ValidationException(errors);
 		}
-		return await next();
+		return await next(ct);
+	}
+}
+public class TransactionBehavior<TRequest, TResponse>(IUnitOfWork uow) : IPipelineBehavior<TRequest, TResponse>
+	where TRequest : notnull
+{
+	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
+	{
+		if(request is not ITransactionalRequest)
+			return await next(ct);
+
+		TResponse? resp = default;
+		await uow.ExecuteInTransactionAsync(async _ => { resp = await next(ct); }, ct);
+		return resp!;
 	}
 }

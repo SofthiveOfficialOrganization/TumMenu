@@ -1,4 +1,6 @@
 ﻿using Application.Categories;
+using Application.Categories.Commands;
+using Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +18,7 @@ public class CategoryController(IMediator mediator) : ControllerBase
 	public async Task<ActionResult<List<CategoryDto>>> GetByMenu(Guid menuId, CancellationToken ct)
 		=> Ok(await mediator.Send(new GetCategoriesByMenuIdQuery(menuId), ct));
 
-	[HttpGet("api/categories/{id:guid}")]
-	public async Task<ActionResult<CategoryDto>> GetOne(Guid id, CancellationToken ct)
+	[HttpGet("{id:guid}")]
+	public async Task<ActionResult<CategoryDto>> GetCategory(Guid id, CancellationToken ct)
 	=> Ok(await mediator.Send(new GetCategoryByIdQuery(id), ct));
 }
