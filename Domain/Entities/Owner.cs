@@ -16,13 +16,8 @@ namespace Domain.Entities
 		public string ApplicationUserId { get; set; } = null!;
 		public ApplicationUser User { get; set; } = null!;
 
-		public Guid? PaymentMethodId { get; set; }
+		public ICollection<Company> Companies { get; set; } = [];
 		public PaymentMethod? PaymentMethod { get; set; }
-
-		public Guid? CompanyId { get; set; }
-		public Company? Company { get; set; }
-
-		public Guid? SubscriptionId { get; set; }
 		public Subscription? Subscription { get; set; }
 
 		public List<Invoice> Invoices { get; set; } = [];

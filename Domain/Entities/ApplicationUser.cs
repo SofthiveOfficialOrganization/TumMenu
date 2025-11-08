@@ -23,9 +23,8 @@ namespace Domain.Entities
 		public long LastLogin { get; set; }
 		public DateTime? BirthDate { get; set; }
 
-		// Navigations
-		public virtual ICollection<Owner> Owners { get; set; } = new List<Owner>();
-		public virtual ICollection<Staff> Staffs { get; set; } = new List<Staff>();
+		public Owner? Owner { get; set; }
+		public Staff? Staff { get; set; }
 
 		public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; } = new List<IdentityUserClaim<string>>();
 		public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; } = new List<IdentityUserLogin<string>>();

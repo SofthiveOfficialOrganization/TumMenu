@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence;
 
-public sealed class EfRepository<T>(DbContext ctx) : IRepository<T> where T : class
+public sealed class EfRepository<T>(ApplicationDbContext ctx) : IRepository<T> where T : class
 {
 	public IQueryable<T> Query(bool tracked = false) =>
 		tracked ? ctx.Set<T>() : ctx.Set<T>().AsNoTracking();

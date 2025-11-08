@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+﻿using System.Linq;                         // LINQ (Where vb.)
+using System.Linq.Expressions;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Reflection.Emit;
 
 namespace Infrastructure.Persistence
 {
@@ -42,18 +42,17 @@ namespace Infrastructure.Persistence
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			base.OnModelCreating(builder);
 
-			base.OnModelCreating(builder); // Identity tabanını kur
-
-
+			// -------- BaseEntity soft delete: IsDeleted == false (global filter) --------
 			foreach(var et in builder.Model.GetEntityTypes()
-					 .Where(t => typeof(Domain.Base.BaseEntity).IsAssignableFrom(t.ClrType)))
+						 .Where(t => typeof(Domain.Base.BaseEntity).IsAssignableFrom(t.ClrType)))
 			{
 				builder.Entity(et.ClrType)
 					   .HasQueryFilter(MakeIsDeletedFilter(et.ClrType));
 			}
 
-			// ---------- Identity: UserRole join ----------
+			// -------- Identity: ApplicationUserRole join (User(1) <-> Role(1) M-N) --------
 			builder.Entity<ApplicationUserRole>(ur =>
 			{
 				ur.HasKey(x => new { x.UserId, x.RoleId });
@@ -71,62 +70,64 @@ namespace Infrastructure.Persistence
 				ur.ToTable("AspNetUserRoles");
 			});
 
-			// ---------- Indexes ----------
+			// -------- Indexes --------
 			builder.Entity<Company>().HasIndex(x => x.Slug).IsUnique();
+			builder.Entity<Company>().HasIndex(c => c.OwnerId);
 			builder.Entity<Product>().HasIndex(x => x.Slug).IsUnique();
 			builder.Entity<Image>().HasIndex(i => new { i.ReferenceId, i.Type });
 
-			// ---------- ApplicationUser (1) -> Owner (N) ----------
-			builder.Entity<Owner>()
-				.HasOne(o => o.User)
-				.WithMany(u => u.Owners)
-				.HasForeignKey(o => o.ApplicationUserId)
+			// -------- ApplicationUser(1) -> Owner(1) --------
+			builder.Entity<ApplicationUser>()
+				.HasOne(u => u.Owner)
+				.WithOne(o => o.User)
+				.HasForeignKey<Owner>(o => o.ApplicationUserId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Staff -> Company  (CASCADE kalsın)
+			// -------- Company(1) -> Staff(n) --------
 			builder.Entity<Staff>()
 				.HasOne(s => s.Company)
 				.WithMany(c => c.Staff)
 				.HasForeignKey(s => s.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Staff -> ApplicationUser  (NO ACTION / RESTRICT yap)
-			builder.Entity<Staff>()
-				.HasOne(s => s.User)
-				.WithMany(u => u.Staffs)
-				.HasForeignKey(s => s.ApplicationUserId)
-				.OnDelete(DeleteBehavior.NoAction); // veya .Restrict()
+			// -------- ApplicationUser(1) -> Staff(1) (NoAction: cascade path riskini kırar) --------
+			builder.Entity<ApplicationUser>()
+				.HasOne(u => u.Staff)
+				.WithOne(s => s.User)
+				.HasForeignKey<Staff>(s => s.ApplicationUserId)
+				.OnDelete(DeleteBehavior.NoAction); // veya Restrict()
 
-			// ---------- Owner (principal) -> Company (dependent) 1–1 ----------
+			// -------- Owner(1) -> Company(n) --------
 			builder.Entity<Company>()
 				.HasOne(c => c.Owner)
-				.WithOne(o => o.Company)
-				.HasForeignKey<Company>(c => c.OwnerId)
-				.OnDelete(DeleteBehavior.Cascade);
+				.WithMany(o => o.Companies)
+				.HasForeignKey(c => c.OwnerId)
+				.IsRequired()                       // opsiyonelse IsRequired(false) + SetNull
+				.OnDelete(DeleteBehavior.Cascade);   // veya Restrict
 
-			// ---------- Owner (principal) -> PaymentMethod (dependent) 1–1 ----------
+			// -------- Owner(1) -> PaymentMethod(1) --------
 			builder.Entity<PaymentMethod>()
 				.HasOne(pm => pm.Owner)
 				.WithOne(o => o.PaymentMethod)
 				.HasForeignKey<PaymentMethod>(pm => pm.OwnerId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Owner (principal) -> Subscription (dependent, optional) 1–1 ----------
+			// -------- Owner(1) -> Subscription(1) --------
 			builder.Entity<Owner>()
 				.HasOne(o => o.Subscription)
 				.WithOne(s => s.Owner)
 				.HasForeignKey<Subscription>(s => s.OwnerId)
-				.IsRequired()
+				.IsRequired()                        // opsiyonelse IsRequired(false) + SetNull + nullable FK
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Company -> Address (1–N) ----------
+			// -------- Company(1) -> Address(n) --------
 			builder.Entity<Address>()
 				.HasOne(a => a.Company)
 				.WithMany(c => c.Addresses)
 				.HasForeignKey(a => a.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Company -> Menu -> Category -> Product (cascade zinciri) ----------
+			// -------- Company(1) -> Menu(n) -> Category(n) -> Product(n) --------
 			builder.Entity<Menu>()
 				.HasOne(m => m.Company)
 				.WithMany(c => c.Menus)
@@ -145,35 +146,35 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(p => p.CategoryId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Menu banner image (opsiyonel) ----------
+			// -------- Menu(1) -> BannerImage(0..1) (opsiyonel ref; FK Menu tarafında) --------
 			builder.Entity<Menu>()
 				.HasOne(m => m.BannerImage)
 				.WithMany()
 				.HasForeignKey(m => m.BannerImageId)
 				.OnDelete(DeleteBehavior.SetNull);
 
-			// ---------- ProductPrice ----------
+			// -------- Product(1) -> ProductPrice(n) --------
 			builder.Entity<ProductPrice>()
 				.HasOne(pp => pp.Product)
 				.WithMany(p => p.Prices)
 				.HasForeignKey(pp => pp.ProductId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Tag ----------
+			// -------- Product(1) -> Tag(n) --------
 			builder.Entity<Tag>()
 				.HasOne(t => t.Product)
 				.WithMany(p => p.Tags)
 				.HasForeignKey(t => t.ProductId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- QRCode ----------
+			// -------- Company(1) -> QRCode(n) --------
 			builder.Entity<QRCode>()
 				.HasOne(q => q.Company)
 				.WithMany(c => c.QRCodes)
 				.HasForeignKey(q => q.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- Plan <-> ExtensionPack (N–N, explicit join) ----------
+			// -------- Plan(n) <-> ExtensionPack(n) (explicit join: ExtensionPackPlan) --------
 			builder.Entity<ExtensionPackPlan>(eb =>
 			{
 				eb.ToTable("ExtensionPackPlans");
@@ -190,12 +191,12 @@ namespace Infrastructure.Persistence
 				  .OnDelete(DeleteBehavior.Cascade);
 			});
 
-			// ---------- Subscription / Invoice ----------
+			// -------- Subscription(n) -> Invoice(n) --------
 			builder.Entity<Subscription>()
 				.HasOne(s => s.Plan)
 				.WithMany(p => p.Subscriptions)
 				.HasForeignKey(s => s.PlanId)
-				.OnDelete(DeleteBehavior.Restrict); // cascade path’i azalt
+				.OnDelete(DeleteBehavior.Restrict); // cascade path’i azaltır
 
 			builder.Entity<Invoice>()
 				.HasOne(i => i.Subscription)
@@ -203,7 +204,7 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(i => i.SubscriptionId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// ---------- DECIMAL PRECISION ----------
+			// -------- DECIMAL PRECISION --------
 			builder.Entity<Product>().Property(p => p.BasePrice).HasColumnType("decimal(18,2)");
 			builder.Entity<ProductPrice>().Property(p => p.Price).HasColumnType("decimal(18,2)");
 			builder.Entity<Plan>().Property(p => p.MonthlyPrice).HasColumnType("decimal(18,2)");
@@ -214,13 +215,14 @@ namespace Infrastructure.Persistence
 			builder.Entity<Invoice>().Property(i => i.TaxAmount).HasColumnType("decimal(18,2)");
 			builder.Entity<Invoice>().Property(i => i.TotalAmount).HasColumnType("decimal(18,2)");
 
-			// ---------- ENUM CONVERSIONS ----------
+			// -------- ENUM CONVERSIONS --------
 			builder.Entity<Subscription>().Property(s => s.BillingCycle).HasConversion<int>();
 			builder.Entity<Subscription>().Property(s => s.Status).HasConversion<int>();
 			builder.Entity<Image>().Property(i => i.Type).HasConversion<int>();
 			builder.Entity<Invoice>().Property(i => i.PaymentStatus).HasConversion<int>();
 		}
 
+		// BaseEntity.IsDeleted == false filtre ifadesi
 		static LambdaExpression MakeIsDeletedFilter(Type t)
 		{
 			var p = Expression.Parameter(t, "e");
@@ -229,6 +231,5 @@ namespace Infrastructure.Persistence
 			var funcType = typeof(Func<,>).MakeGenericType(t, typeof(bool));
 			return Expression.Lambda(funcType, body, p);
 		}
-
 	}
 }

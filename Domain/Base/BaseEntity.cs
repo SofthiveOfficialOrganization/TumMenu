@@ -28,14 +28,14 @@ namespace Domain.Base
 
 		public void Created(string? userId = null)
 		{
-			CreatedOn = DateTimeHelper.GetUtcNowTime();
+			CreatedOn = DateTimeHelper.UtcNowSeconds();
 			CreatedBy = userId ?? string.Empty;
 			Id = Guid.NewGuid();
 		}
 
 		public void Modified(string? userId = null, bool isDeleted = false)
 		{
-			ModifiedOn = DateTimeHelper.GetUtcNowTime();
+			ModifiedOn = DateTimeHelper.UtcNowSeconds();
 			ModifiedBy = userId;
 			if(isDeleted) Deleted(userId);
 		}
@@ -43,7 +43,7 @@ namespace Domain.Base
 		public void Deleted(string? userId = null)
 		{
 			IsDeleted = true;
-			ModifiedOn = DateTimeHelper.GetUtcNowTime();
+			ModifiedOn = DateTimeHelper.UtcNowSeconds();
 			ModifiedBy = userId;
 		}
 	}
