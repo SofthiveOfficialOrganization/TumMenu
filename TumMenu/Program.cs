@@ -1,14 +1,10 @@
-using Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
+using TumMenu.Extensions;
 using TumMenu.Middleware;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.AddServices();
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
@@ -26,7 +22,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseHttpsRedirection();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
