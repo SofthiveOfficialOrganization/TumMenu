@@ -1,5 +1,7 @@
 ﻿using Application.Abstractions;
+using Application.Categories.DTOs;
 using Domain.Entities;
+using Domain.Helpers;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
@@ -7,9 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Categories.Commands;
 
-public record CategoryDto(Guid Id, Guid MenuId, string Name, string Slug, int SortOrder);
-
-public record CreateCategoryCommand(Guid MenuId, string Name, int SortOrder) : IRequest<CategoryDto>;
+public record CreateCategoryCommand(Guid MenuId, string Name, int SortOrder) : IRequest<CategoryDTO>;
 
 public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 {
@@ -22,17 +22,17 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 }
 
 public class CreateCategoryHandler(IRepository<Category> repo, IUnitOfWork uow, IMapper mapper)
-	: IRequestHandler<CreateCategoryCommand, CategoryDto>
+	: IRequestHandler<CreateCategoryCommand, CategoryDTO>
 {
-	public async Task<CategoryDto> Handle(CreateCategoryCommand req, CancellationToken ct)
+	public async Task<CategoryDTO> Handle(CreateCategoryCommand req, CancellationToken ct)
 	{
-		var exists = await repo.Query().AnyAsync(c => c.MenuId == req.MenuId && c.Name == req.Name, ct);
+		var exists = await repo.Query().AnyAsync(c => c.MenuId == req.MenuId && c.Slug == SlugHelper.Slugify(req.Name), ct);
 		if(exists)
 			throw new InvalidOperationException("Bu menüde aynı isimde bir kategori zaten var.");
 
 		var entity = mapper.Map<Category>(req);
 		await repo.AddAsync(entity, ct);
 		await uow.SaveChangesAsync(ct);
-		return mapper.Map<CategoryDto>(entity);
+		return mapper.Map<CategoryDTO>(entity);
 	}
 }

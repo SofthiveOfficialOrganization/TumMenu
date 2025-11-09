@@ -1,24 +1,25 @@
 ﻿using Application.Abstractions; // IUnitOfWork
-using Application.Auth.DTOs;
+using Application.Auths.DTOs;
 using Domain.Entities;
 using Domain.Helpers;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Application.Auth.Commands;
+namespace Application.Auths.Commands;
 
-public sealed record RegisterOwnerCommand(RegisterOwnerRequest Body) : IRequest<AuthResultDto>;
+public sealed record RegisterOwnerCommand(string Email, string UserName, string Password, string FirstName, string LastName) : IRequest<AuthResultDTO>;
 
 public sealed class RegisterOwnerValidator : AbstractValidator<RegisterOwnerCommand>
 {
 	public RegisterOwnerValidator()
 	{
-		RuleFor(x => x.Body.Email).NotEmpty().EmailAddress();
-		RuleFor(x => x.Body.Password).NotEmpty().MinimumLength(6);
-		RuleFor(x => x.Body.FirstName).NotEmpty();
-		RuleFor(x => x.Body.LastName).NotEmpty();
+		RuleFor(x => x.Email).NotEmpty().EmailAddress();
+		RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
+		RuleFor(x => x.FirstName).NotEmpty();
+		RuleFor(x => x.LastName).NotEmpty();
 	}
 }
 
@@ -27,17 +28,16 @@ public sealed class RegisterOwnerHandler(
 	RoleManager<ApplicationRole> roles,
 	IJwtTokenService tokens,
 	IUnitOfWork uow,
-	IRepository<Owner> repository,
+	IRepository<Owner> repoOwner,
 	IMapper mapper
-) : IRequestHandler<RegisterOwnerCommand, AuthResultDto>
+) : IRequestHandler<RegisterOwnerCommand, AuthResultDTO>
 {
-	public async Task<AuthResultDto> Handle(RegisterOwnerCommand req, CancellationToken ct)
+	public async Task<AuthResultDTO> Handle(RegisterOwnerCommand req, CancellationToken ct)
 	{
-		var body = req.Body;
-		ApplicationUser? user = mapper.Map<ApplicationUser>(body);
+		ApplicationUser? user = mapper.Map<ApplicationUser>(req);
 		user.CreatedOn = DateTimeHelper.UtcNowSeconds();
 
-		var create = await users.CreateAsync(user, body.Password);
+		var create = await users.CreateAsync(user, req.Password);
 		if(!create.Succeeded) throw new Exception(string.Join("; ", create.Errors.Select(e => e.Description)));
 
 		if(!await roles.RoleExistsAsync("Owner"))
@@ -45,11 +45,11 @@ public sealed class RegisterOwnerHandler(
 		await users.AddToRoleAsync(user, "Owner");
 
 		var owner = new Owner { ApplicationUserId = user.Id };
-		await repository.AddAsync(owner, ct);
+		await repoOwner.AddAsync(owner, ct);
 		await uow.SaveChangesAsync(ct);
 
 		var roleNames = await users.GetRolesAsync(user);
 		var pair = await tokens.IssueAsync(user, roleNames, ownerId: owner.Id.ToString(), ct);
-		return new AuthResultDto(pair.AccessToken, pair.ExpiresAt, pair.RefreshToken);
+		return new AuthResultDTO(pair.AccessToken, pair.ExpiresAt, pair.RefreshToken);
 	}
 }

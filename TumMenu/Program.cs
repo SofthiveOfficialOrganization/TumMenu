@@ -7,6 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServices();
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy("OwnerOnly", p => p.RequireRole("Owner"))
+	.AddPolicy("StaffOnly", p => p.RequireRole("Staff"))
+	.AddPolicy("HasOwnerId", p => p.RequireClaim("owner_id"))
+	.AddPolicy("HasStaffId", p => p.RequireClaim("staff_id"));
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Domain.Base;
+﻿using Application.Abstractions;
+using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
