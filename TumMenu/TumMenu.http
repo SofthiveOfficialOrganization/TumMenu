@@ -1,6 +1,0 @@
-@TumMenu_HostAddress = http://localhost:5121
-
-GET {{TumMenu_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
