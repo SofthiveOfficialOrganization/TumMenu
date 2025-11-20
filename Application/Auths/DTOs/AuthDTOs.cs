@@ -8,6 +8,8 @@ public sealed record SessionDTO(
 	Guid? OwnerId,
 	Guid? StaffId,
 	Guid? CompanyId,
-	string? CompanyName
+	string? CompanyName,
+	Guid? StoreId,
+	string? StoreName
 );
-public sealed record BasicApplicationUserDTO(string Id, string UserName, string Email);
+public sealed record ApplicationUserLiteDTO(string Id, string UserName, string Email);

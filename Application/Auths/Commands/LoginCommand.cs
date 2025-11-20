@@ -34,7 +34,7 @@ public sealed class LoginHandler(
 		if(!check.Succeeded) throw new UnauthorizedAccessException("Geçersiz kimlik bilgileri.");
 
 		var roles = await users.GetRolesAsync(user);
-		var pair = await tokens.IssueAsync(user, roles, ownerId: null, ct);
+		var pair = await tokens.IssueAsync(user, roles, ct);
 		return new AuthResultDTO(pair.AccessToken, pair.ExpiresAt, pair.RefreshToken);
 	}
 }

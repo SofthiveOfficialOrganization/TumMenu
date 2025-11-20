@@ -16,17 +16,20 @@ namespace Domain.Entities
 
 		// Polimorfik ilişki
 		public Guid ReferenceId { get; set; }
-		public ImageRefType Type { get; set; }
-
+		public ImageRefType Type { get; set; } = ImageRefType.Unknown;
+		[MaxLength(50)]
+		public string Slot { get; set; } = "default-gallery";
 		public int? Width { get; set; }
 		public int? Height { get; set; }
 	}
 	public enum ImageRefType
 	{
-		Company = 1,
-		Menu = 2,
-		Category = 3,
-		Product = 4,
-		QRCode = 5
+		Unknown = 0,
+		Company,
+		Store,
+		Menu,
+		Category,
+		Product,
+		QRCode
 	}
 }

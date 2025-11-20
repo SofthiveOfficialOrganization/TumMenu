@@ -23,4 +23,6 @@ public sealed class HttpUserContext(IHttpContextAccessor accessor) : IUserContex
 	public string? StaffId => User?.FindFirst("staff_id")?.Value;
 	public string? CompanyId => User?.FindFirst("company_id")?.Value;
 	public string? CompanyName => User?.FindFirst("company_name")?.Value;
+	public string? StoreId => User?.FindFirst("store_id")?.Value;
+	public string? StoreName => User?.FindFirst("store_name")?.Value;
 }

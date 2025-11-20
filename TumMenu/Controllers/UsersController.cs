@@ -11,7 +11,7 @@ namespace TumMenu.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public sealed class UserController(IMediator mediator) : ControllerBase
+public sealed class UsersController(IMediator mediator) : ControllerBase
 {
 	[HttpGet("me")]
 	[Authorize]
@@ -28,6 +28,7 @@ public class OwnerController : ControllerBase
 	public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
 		=> Ok(await mediator.Send(new GetOwnerProfileByCurrentUserQuery(), ct));
 }
+
 
 [ApiController]
 [Route("api/staff")]

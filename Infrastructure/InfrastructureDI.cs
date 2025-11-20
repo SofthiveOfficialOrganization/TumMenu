@@ -16,42 +16,43 @@ namespace Infrastructure
 	{
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 		{
-			// IHttpContextAccessor (HttpUserContext için)
 			services.AddHttpContextAccessor();
 
-			// Audit Interceptor / UserContext
 			services.AddScoped<IUserContext, HttpUserContext>();
 			services.AddScoped<AuditInterceptor>();
 
-			// DbContext (+ interceptor)
 			services.AddDbContext<ApplicationDbContext>((sp, opts) =>
 			{
 				opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 				opts.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
 			});
 
-			// Identity
 			services.AddIdentity<ApplicationUser, ApplicationRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
 
-			// JWT Options + Token service
 			services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-			// JWT Bearer auth
 			var jwt = configuration.GetSection("Jwt");
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Secret"]!));
 
 			services
-				.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddAuthentication(options =>
+				{
+					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+					options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+				})
 				.AddJwtBearer(o =>
 				{
 					o.TokenValidationParameters = new TokenValidationParameters
 					{
-						ValidIssuer = jwt["Issuer"],
-						ValidAudience = jwt["Audience"],
-						IssuerSigningKey = key,
+						ValidIssuer = configuration["Jwt:Issuer"],      // "TumMenu"
+						ValidAudience = configuration["Jwt:Audience"],  // "TumMenu.Api"
+						IssuerSigningKey = new SymmetricSecurityKey(
+							Encoding.UTF8.GetBytes(configuration["Jwt:Secret"])
+						),
 						ValidateIssuer = true,
 						ValidateAudience = true,
 						ValidateIssuerSigningKey = true,
@@ -60,7 +61,6 @@ namespace Infrastructure
 					};
 				});
 
-			// UoW
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			services.AddScoped(typeof(Application.Abstractions.IRepository<>), typeof(EfRepository<>));

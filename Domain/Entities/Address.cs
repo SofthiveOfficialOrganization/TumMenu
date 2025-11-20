@@ -16,9 +16,7 @@ namespace Domain.Entities
 		public Guid? DistrictId { get; set; }
 		[MaxLength(200)] public string? Neighborhood { get; set; }
 		public string? FullAddress { get; set; }
-
-		public Guid CompanyId { get; set; }
-		public Company Company { get; set; } = null!;
+		public Guid StoreId { get; set; }
+		public Store Store { get; set; } = null!;
 	}
-
 }

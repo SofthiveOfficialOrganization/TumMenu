@@ -22,4 +22,11 @@ public class CategoryController(IMediator mediator) : ControllerBase
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<CategoryDTO>> GetCategory(Guid id, CancellationToken ct)
 	=> Ok(await mediator.Send(new GetCategoryByIdQuery(id), ct));
+
+	[HttpDelete("{id:guid}")]
+	public async Task<ActionResult> DeleteCategory(Guid id, CancellationToken ct)
+	{
+		await mediator.Send(new DeleteCategoryCommand(id), ct);
+		return NoContent();
+	}
 }

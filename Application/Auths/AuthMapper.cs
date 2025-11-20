@@ -13,7 +13,7 @@ namespace Application.Auths
 	{
 		public AuthMapper(TypeAdapterConfig config)
 		{
-			config.NewConfig<ApplicationUser, BasicApplicationUserDTO>();
+			config.NewConfig<ApplicationUser, ApplicationUserLiteDTO>();
 		}
 	}
 }

@@ -25,17 +25,17 @@ public sealed class GetOwnerProfileByCurrentUserHandler(
 	public async Task<OwnerDTO> Handle(GetOwnerProfileByCurrentUserQuery req, CancellationToken ct)
 	{
 		if(!user.IsAuthenticated) throw new UnauthorizedAppException("Giriş gerekli.");
-
 		if(!Guid.TryParse(user.OwnerId, out var ownerId))
 			throw new ForbiddenAppException("Owner yetkisi bulunamadı.");
 
 		var owner = await repoOwner.Query()
 			.Where(o => o.Id == ownerId)
+				.Include(o => o.Company)
 			.AsNoTracking()
-			.FirstOrDefaultAsync(ct) ?? throw new NotFoundAppException("Owner profili bulunamadı.");
+			.FirstOrDefaultAsync(ct)
+			?? throw new NotFoundAppException("Owner profili bulunamadı.");
 
-		var ownerDTO = mapper.Map<OwnerDTO?>(owner);
-
-		return ownerDTO!;
+		var ownerDTO = mapper.Map<OwnerDTO>(owner);
+		return ownerDTO;
 	}
 }

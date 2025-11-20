@@ -17,11 +17,14 @@ namespace Domain.Entities
 
 		public Guid OwnerId { get; set; }
 		public Owner Owner { get; set; } = null!;
+		public Menu? BaseMenu { get; set; }
 
-		public ICollection<Staff> Staff { get; set; } = [];
-		public ICollection<Menu> Menus { get; set; } = [];
+		public Subscription? Subscription { get; set; }
+
+		public Guid? DefaultPaymentMethodId { get; set; }
+		public ICollection<PaymentMethod> PaymentMethods { get; set; } = [];
+
+		public ICollection<Store> Stores { get; set; } = [];
 		public ICollection<Image> Images { get; set; } = [];
-		public ICollection<QRCode> QRCodes { get; set; } = [];
-		public ICollection<Address> Addresses { get; set; } = [];
 	}
 }

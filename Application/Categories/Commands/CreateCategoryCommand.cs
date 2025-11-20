@@ -21,8 +21,7 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 	}
 }
 
-public class CreateCategoryHandler(IRepository<Category> repo, IUnitOfWork uow, IMapper mapper)
-	: IRequestHandler<CreateCategoryCommand, CategoryDTO>
+public class CreateCategoryHandler(IRepository<Category> repo, IUnitOfWork uow, IMapper mapper) : IRequestHandler<CreateCategoryCommand, CategoryDTO>
 {
 	public async Task<CategoryDTO> Handle(CreateCategoryCommand req, CancellationToken ct)
 	{

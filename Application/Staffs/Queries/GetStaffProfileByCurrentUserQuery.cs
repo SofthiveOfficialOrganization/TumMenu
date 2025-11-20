@@ -28,9 +28,10 @@ public sealed class GetStaffProfileByCurrentUserHandler(
 			throw new ForbiddenAppException("Kullanıcının bilgilerinde çalışan yetkisi bulunamadı.");
 
 		var staff = await repoStaff.Query()
-			.Where(o => o.Id == staffId)
-			.AsNoTracking()
-			.FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundAppException("Çalışan profili bulunamadı.");
+				.Include(s => s.Store)
+				.Where(o => o.Id == staffId)
+				.AsNoTracking()
+				.FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundAppException("Çalışan profili bulunamadı.");
 
 		var staffDTO = mapper.Map<StaffDTO?>(staff);
 

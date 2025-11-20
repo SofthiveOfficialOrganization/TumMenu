@@ -14,8 +14,8 @@ namespace Domain.Entities
 		[MaxLength(100)]
 		public string Role { get; set; } = null!;
 
-		public Guid CompanyId { get; set; }
-		public Company Company { get; set; } = null!;
+		public Guid StoreId { get; set; }
+		public Store Store { get; set; } = null!;
 
 		public string ApplicationUserId { get; set; } = null!;
 		public ApplicationUser User { get; set; } = null!;

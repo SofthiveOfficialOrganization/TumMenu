@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Application.Owners.DTOs;
 public sealed record OwnerDTO(
 	string? TaxNo,
-	IReadOnlyList<CompanyLiteDTO> Companies,
+	CompanyLiteDTO Company,
 	SubscriptionLiteDTO? Subscription,
-	BasicApplicationUserDTO User
+	ApplicationUserLiteDTO User
 ) : BaseDTO;

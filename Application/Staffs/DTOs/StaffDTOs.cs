@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Application.Staffs.DTOs;
 public sealed record StaffDTO(
-	Guid CompanyId,
-	string CompanyName,
 	string Role,
-	BasicApplicationUserDTO User
+	Guid StoreId,
+	string StoreName,
+	ApplicationUserLiteDTO User
 ) : BaseDTO;
 

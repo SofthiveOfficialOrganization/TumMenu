@@ -26,7 +26,9 @@ public sealed class GetStaffProfileByIdHandler(IRepository<Staff> repoStaff, IMa
 {
 	public async Task<StaffDTO> Handle(GetStaffProfileByIdQuery query, CancellationToken ct)
 	{
-		var staff = await repoStaff.Query().FirstAsync(s => s.Id == query.Id, ct);
+		var staff = await repoStaff.Query()
+			.Include(s => s.Store)
+			.FirstAsync(s => s.Id == query.Id, ct);
 		var staffDTO = mapper.Map<StaffDTO>(staff);
 		return staffDTO;
 	}

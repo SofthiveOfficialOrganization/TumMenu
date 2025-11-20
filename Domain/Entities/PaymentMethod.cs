@@ -10,8 +10,8 @@ namespace Domain.Entities
 {
 	public class PaymentMethod : BaseEntity
 	{
-		public Guid OwnerId { get; set; }
-		public Owner Owner { get; set; } = null!;
+		public Guid CompanyId { get; set; }
+		public bool IsDefault { get; set; }
 
 		[MaxLength(50)] public string? Psp { get; set; }
 		[MaxLength(100)] public string? PspCustomerId { get; set; }

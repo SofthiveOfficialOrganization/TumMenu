@@ -21,7 +21,7 @@ public class GetCategoriesByMenuIdHandler(
 			.Where(c => c.MenuId == req.MenuId)
 			.OrderBy(c => c.SortOrder)
 			.ToListAsync(ct);
-
-		return mapper.Map<List<CategoryDTO>>(list);
+		var categories = mapper.Map<List<CategoryDTO>>(list);
+		return categories;
 	}
 }

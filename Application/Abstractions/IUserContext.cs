@@ -16,6 +16,8 @@ public interface IUserContext
 	string? StaffId { get; }
 	string? CompanyId { get; }
 	string? CompanyName { get; }
+	string? StoreId { get; }
+	string? StoreName { get; }
 	IReadOnlyList<string> Roles { get; }
 	string? RemoteIp { get; }
 }

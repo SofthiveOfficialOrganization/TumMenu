@@ -8,34 +8,27 @@ using System.Threading.Tasks;
 
 namespace Domain.Base
 {
-	public interface IBaseEntity : IAuditable
-	{
-		Guid Id { get; }
-		void Created(string? userId = null);
-		void Modified(string? userId, bool isDeleted = false);
-		void Deleted(string? userId);
-	}
 	public class BaseEntity : IBaseEntity
 	{
 		[Key]
 		public Guid Id { get; set; }
 
-		public long CreatedOn { get; set; }
-		public long? ModifiedOn { get; set; }
+		public DateTimeOffset CreatedAt { get; set; }
+		public DateTimeOffset? ModifiedAt { get; set; }
 		public string? CreatedBy { get; set; }
 		public string? ModifiedBy { get; set; }
 		public bool IsDeleted { get; set; }
-
+		public DateTimeOffset? DeletedAt { get; set; }
 		public void Created(string? userId = null)
 		{
-			CreatedOn = DateTimeHelper.UtcNowSeconds();
+			CreatedAt = DateTimeOffset.UtcNow;
 			CreatedBy = userId ?? string.Empty;
 			Id = Guid.NewGuid();
 		}
 
 		public void Modified(string? userId = null, bool isDeleted = false)
 		{
-			ModifiedOn = DateTimeHelper.UtcNowSeconds();
+			ModifiedAt = DateTimeOffset.UtcNow;
 			ModifiedBy = userId;
 			if(isDeleted) Deleted(userId);
 		}
@@ -43,8 +36,9 @@ namespace Domain.Base
 		public void Deleted(string? userId = null)
 		{
 			IsDeleted = true;
-			ModifiedOn = DateTimeHelper.UtcNowSeconds();
+			DeletedAt = DateTimeOffset.UtcNow;
 			ModifiedBy = userId;
+			ModifiedAt = DeletedAt;
 		}
 	}
 }

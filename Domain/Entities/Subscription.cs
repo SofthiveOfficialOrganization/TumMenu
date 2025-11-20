@@ -10,6 +10,8 @@ namespace Domain.Entities
 {
 	public class Subscription : BaseEntity
 	{
+		public Guid CompanyId { get; set; }
+		public Company Company { get; set; } = null!;
 
 		public Guid PlanId { get; set; }
 		public Plan Plan { get; set; } = null!;
@@ -18,7 +20,8 @@ namespace Domain.Entities
 		public Owner? Owner { get; set; }
 
 		public DateTime StartAt { get; set; }
-		public DateTime? NextBillingAt { get; set; }
+		public DateTime? CurrentPeriodEnd { get; set; } // end date of the current billing period
+		public bool CancelAtPeriodEnd { get; set; } = false; // if true, subscription will be cancelled at the end of the current period
 		public DateTime? CancelledAt { get; set; }
 		public BillingCycle BillingCycle { get; set; }
 		public SubscriptionStatus Status { get; set; }

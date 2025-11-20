@@ -1,5 +1,6 @@
 ﻿using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -12,6 +13,14 @@ namespace TumMenu.Extensions
 		{
 			var services = builder.Services;
 			var configuration = builder.Configuration;
+
+			services.Configure<IdentityOptions>(o =>
+			{
+				o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+				o.Lockout.MaxFailedAccessAttempts = 5;
+				o.Lockout.AllowedForNewUsers = true;
+				o.SignIn.RequireConfirmedAccount = true;
+			});
 
 			services
 				.AddApplication()

@@ -15,13 +15,16 @@ public sealed record GetSessionByCurrentUserQuery : IRequest<SessionDTO>;
 
 public sealed class GetSesssionByCurrentUserHandler(
 	IUserContext userContext,
-	IRepository<Company> repoCompany
+	IRepository<Company> repoCompany,
+	IRepository<Store> repoStore
 ) : IRequestHandler<GetSessionByCurrentUserQuery, SessionDTO>
 {
 	public async Task<SessionDTO> Handle(GetSessionByCurrentUserQuery req, CancellationToken ct)
 	{
 		Guid? companyId = null;
 		string? companyName = null;
+		Guid? storeId = null;
+		string? storeName = null;
 
 		if(Guid.TryParse(userContext.CompanyId, out var cid))
 		{
@@ -31,9 +34,18 @@ public sealed class GetSesssionByCurrentUserHandler(
 				.Select(c => c.Name)
 				.FirstOrDefaultAsync(ct);
 		}
+		if(Guid.TryParse(userContext.StoreId, out var sid))
+		{
+			storeId = sid;
+			storeName = await repoStore.Query()
+					.Where(s => s.Id == sid)
+					.Select(s => s.Name)
+					.FirstOrDefaultAsync(ct);
+		}
 
-		Guid? ownerId = Guid.TryParse(userContext.OwnerId, out var oid) ? oid : null;
-		Guid? staffId = Guid.TryParse(userContext.StaffId, out var sid) ? sid : null;
+		Guid? ownerId = Guid.TryParse(userContext.OwnerId, out var owid) ? owid : null;
+		Guid? staffId = Guid.TryParse(userContext.StaffId, out var stid) ? stid : null;
+
 
 		return new SessionDTO(
 			userContext.UserId ?? "",
@@ -42,7 +54,9 @@ public sealed class GetSesssionByCurrentUserHandler(
 			OwnerId: ownerId,
 			StaffId: staffId,
 			CompanyId: companyId,
-			CompanyName: companyName
+			CompanyName: companyName,
+			StoreId: storeId,
+			StoreName: storeName
 		);
 	}
 }

@@ -2,9 +2,9 @@
 
 public interface IAuditable
 {
-	long CreatedOn { get; set; }
+	DateTimeOffset CreatedAt { get; set; }
 	string? CreatedBy { get; set; }
-	long? ModifiedOn { get; set; }
+	DateTimeOffset? ModifiedAt { get; set; }
 	string? ModifiedBy { get; set; }
 	bool IsDeleted { get; set; }
 }

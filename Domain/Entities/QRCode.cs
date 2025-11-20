@@ -10,12 +10,18 @@ namespace Domain.Entities
 {
 	public class QRCode : BaseEntity
 	{
-		[MaxLength(1024)] public string? ImageLink { get; set; }
-		[MaxLength(300)] public string? Value { get; set; }
+		public Guid? CompanyId { get; set; }
+		public Company? Company { get; set; }
+		public Guid? StoreId { get; set; }
+		public Store? Store { get; set; }
+		public Guid? MenuId { get; set; }
+		public Menu? Menu { get; set; }
 
-		public Guid CompanyId { get; set; }
-		public Company Company { get; set; } = null!;
-
+		[MaxLength(50)] public string PublicKey { get; set; } = null!; // /q/{key}
+		[MaxLength(2048)] public string TargetUrl { get; set; } = null!;
+		public bool IsDynamic { get; set; } = true;
+		public bool IsActive { get; set; } = true;
+		public string ECCLevel { get; set; } = "M";
 		public string? StyleJson { get; set; }
 	}
 }
