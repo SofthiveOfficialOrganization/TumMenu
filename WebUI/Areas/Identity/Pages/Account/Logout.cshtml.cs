@@ -2,14 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using Domain.Entities;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -28,7 +24,7 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
+            if(returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
             }

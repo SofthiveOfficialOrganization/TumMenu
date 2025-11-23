@@ -1,8 +1,5 @@
-using Application.Abstractions;
-using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using WebUI.Extensions;
 using WebUI.ExternalServices;
@@ -58,4 +55,4 @@ app.MapControllerRoute(
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.Run();
+await app.RunAsync();

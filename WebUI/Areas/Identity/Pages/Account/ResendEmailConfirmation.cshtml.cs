@@ -2,18 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -57,13 +55,13 @@ namespace WebUI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return Page();
             }
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
-            if (user == null)
+            if(user == null)
             {
                 ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
                 return Page();

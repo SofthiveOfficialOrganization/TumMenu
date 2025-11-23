@@ -2,17 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace WebUI.Areas.Identity.Pages.Account.Manage
 {
@@ -90,7 +88,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            if(user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
@@ -102,19 +100,19 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostChangeEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            if(user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 await LoadAsync(user);
                 return Page();
             }
 
             var email = await _userManager.GetEmailAsync(user);
-            if (Input.NewEmail != email)
+            if(Input.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
@@ -140,12 +138,12 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            if(user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 await LoadAsync(user);
                 return Page();

@@ -1,10 +1,5 @@
 ﻿using Domain.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
@@ -22,7 +17,7 @@ namespace Domain.Entities
 		[MaxLength(300)] public string? Allergens { get; set; }
 		public bool? IsVegan { get; set; }
 		public bool? IsVegetarian { get; set; }
-
+		public int? EstimatedPreparationTimeInMinutes { get; set; }
 		public ICollection<ProductPrice> Prices { get; set; } = [];
 		public ICollection<Tag> Tags { get; set; } = [];
 		public ICollection<Image> Images { get; set; } = [];

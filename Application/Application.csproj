@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Companies\Queries\" />
     <Folder Include="Owners\Commands\" />
     <Folder Include="Staffs\Commands\" />
   </ItemGroup>
