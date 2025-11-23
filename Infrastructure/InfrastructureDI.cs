@@ -63,7 +63,7 @@ namespace Infrastructure
 
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-			services.AddScoped(typeof(Application.Abstractions.IRepository<>), typeof(EfRepository<>));
+			services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
 			return services;
 		}
