@@ -132,7 +132,7 @@ namespace Infrastructure.Persistence
 				.HasOne(o => o.Company)
 				.WithOne(c => c.Owner)
 				.HasForeignKey<Company>(c => c.OwnerId)
-				.IsRequired()
+				.IsRequired(false)
 				.OnDelete(DeleteBehavior.Cascade);
 
 			// Company(1) -> Store(n)
@@ -476,7 +476,7 @@ namespace Infrastructure.Persistence
 
 		private static void ApplySoftDeleteQueryFilter(ModelBuilder builder)
 		{
-			// BaseEntity türevi her entity için IsDeleted == false filtresi
+			// IsDeleted == false filter
 			foreach(var entityType in builder.Model.GetEntityTypes()
 				.Where(t => typeof(Domain.Base.BaseEntity).IsAssignableFrom(t.ClrType)))
 			{
