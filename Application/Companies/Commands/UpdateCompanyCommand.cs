@@ -5,15 +5,10 @@ using Domain.Entities;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Companies.Commands;
 
-public record UpdateCompanyCommand(Guid Id, string Name, string Slug) : IRequest<CompanyDTO>;
+public record UpdateCompanyCommand(Guid Id, string Name, string Slug) : IRequest<CompanyDTO>, ITransactionalRequest;
 
 public class UpdateCompanyHandler(
 	IRepository<Company> repoCompany,

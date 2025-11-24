@@ -4,9 +4,9 @@ using Mapster;
 
 namespace Application.Auths
 {
-    public class AuthMapper
+    public class AuthMappingProfiles
     {
-        public AuthMapper(TypeAdapterConfig config)
+        public AuthMappingProfiles(TypeAdapterConfig config)
         {
             config.NewConfig<ApplicationUser, ApplicationUserLiteDTO>();
         }

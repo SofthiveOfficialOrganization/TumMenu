@@ -4,7 +4,7 @@ using Mapster;
 
 namespace Application.Common.Base;
 
-public class BaseEntityMapper
+public class BaseEntityMappingProfiles
 {
     public void Register(TypeAdapterConfig config)
     {

@@ -4,7 +4,7 @@ using Mapster;
 
 namespace Application.Owners;
 
-public class OwnerMapping
+public class OwnerMappingProfiles
 {
     public void Register(TypeAdapterConfig config)
     {

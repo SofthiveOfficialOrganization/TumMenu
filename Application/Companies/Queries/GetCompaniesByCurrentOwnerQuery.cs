@@ -1,40 +1,43 @@
 ﻿using Application.Abstractions;
+using Application.Common.Base.DTOs;
+using Application.Common.Base.Page.RequestBase;
 using Application.Common.Exceptions;
 using Application.Companies.DTOs;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Companies.Queries;
 
-public record GetCompaniesByCurrentOwnerQuery() : IRequest<List<CompanyDTO>>;
+public record GetCompaniesByCurrentOwnerQuery() : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
 
 public class GetCompaniesByCurrentOwnerHandler(
 	IRepository<Domain.Entities.Company> repoCompany,
 	IUserContext userContext,
 	IMapper mapper
-) : IRequestHandler<GetCompaniesByCurrentOwnerQuery, List<CompanyDTO>>
+) : IRequestHandler<GetCompaniesByCurrentOwnerQuery, PaginatedListDTO<CompanyDTO>>
 {
-	public async Task<List<CompanyDTO>> Handle(GetCompaniesByCurrentOwnerQuery req, CancellationToken ct)
+	public async Task<PaginatedListDTO<CompanyDTO>> Handle(GetCompaniesByCurrentOwnerQuery req, CancellationToken ct)
 	{
 		var ownerId = userContext.UserId;
-		var companyList = await repoCompany.Query()
-			.Where(c => c.Owner != null && c.Owner.ApplicationUserId == ownerId)
-			.Include(c => c.BaseMenu)
-			.Include(c => c.Subscription)
-			.Include(c => c.PaymentMethods)
-			.Include(c => c.Stores)
-			.ToListAsync(ct);
-		if(companyList.Count == 0)
+
+		var companies = await repoCompany.GetPageListAsync(
+			req,
+			c => c.Owner != null && c.Owner.ApplicationUserId == ownerId,
+			include: q => q
+				.Include(c => c.BaseMenu)
+				.Include(c => c.Subscription)
+				.Include(c => c.PaymentMethods)
+				.Include(c => c.Stores),
+			orderBy: q => q.OrderBy(c => c.Name),
+			enableTracking: false,
+			ct: ct
+		);
+
+		if(companies.Count == 0)
 			throw new NotFoundAppException("Kullanıcının hiç şirketi bulunamadı.");
 
-		var companyListDTO = mapper.Map<List<CompanyDTO>>(companyList);
-		return companyListDTO;
+		var companyListDto = mapper.Map<PaginatedListDTO<CompanyDTO>>(companies);
+		return companyListDto;
 	}
 }

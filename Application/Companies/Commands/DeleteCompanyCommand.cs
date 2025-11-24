@@ -3,15 +3,10 @@ using Application.Common.Exceptions;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Companies.Commands;
 
-public record DeleteCompanyCommand(Guid Id) : IRequest<Unit>;
+public record DeleteCompanyCommand(Guid Id) : IRequest<Unit>, ITransactionalRequest;
 
 public class DeleteCompanyCommandHandler(
 	IRepository<Company> repoCompany,

@@ -2,14 +2,14 @@
 
 public static class ErrorCodes
 {
-	public const string Validation = "VALIDATION_ERROR";
-	public const string NotFound = "NOT_FOUND";
-	public const string Conflict = "CONFLICT";
-	public const string Forbidden = "FORBIDDEN";
-	public const string Unauthorized = "UNAUTHORIZED";
-	public const string DbDuplicate = "DB_DUPLICATE";
-	public const string DbForeignKey = "DB_FOREIGN_KEY";
-	public const string DbGeneric = "DB_ERROR";
-	public const string Unknown = "UNKNOWN_ERROR";
-	public const string AlreadyExists = "ALREADY_EXISTS";
+    public const string Validation = "VALIDATION_ERROR";
+    public const string NotFound = "NOT_FOUND";
+    public const string Conflict = "CONFLICT";
+    public const string Forbidden = "FORBIDDEN";
+    public const string Unauthorized = "UNAUTHORIZED";
+    public const string DbDuplicate = "DB_DUPLICATE";
+    public const string DbForeignKey = "DB_FOREIGN_KEY";
+    public const string DbGeneric = "DB_ERROR";
+    public const string Unknown = "UNKNOWN_ERROR";
+    public const string AlreadyExists = "ALREADY_EXISTS";
 }

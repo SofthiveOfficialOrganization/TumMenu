@@ -4,7 +4,7 @@ using Mapster;
 
 namespace Application.Staffs
 {
-    public class StaffMapping
+    public class StaffMappingProfiles
     {
         public void Register(TypeAdapterConfig config)
         {
