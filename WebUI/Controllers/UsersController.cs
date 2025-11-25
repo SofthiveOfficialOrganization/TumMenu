@@ -5,12 +5,11 @@ using Application.Staffs.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace WebUI.Controllers;
 
 [ApiController]
-[Route("api/users")]
+[Route("user")]
 public sealed class UsersController(IMediator mediator) : ControllerBase
 {
 	[HttpGet("me")]
@@ -20,7 +19,7 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
 }
 
 [ApiController]
-[Route("api/owner")]
+[Route("owner")]
 public class OwnerController : ControllerBase
 {
 	[HttpGet("me")]
@@ -31,7 +30,7 @@ public class OwnerController : ControllerBase
 
 
 [ApiController]
-[Route("api/staff")]
+[Route("staff")]
 public class StaffController : ControllerBase
 {
 	[HttpGet("me")]

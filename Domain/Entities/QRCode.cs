@@ -1,27 +1,22 @@
 ﻿using Domain.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-	public class QRCode : BaseEntity
-	{
-		public Guid? CompanyId { get; set; }
-		public Company? Company { get; set; }
-		public Guid? StoreId { get; set; }
-		public Store? Store { get; set; }
-		public Guid? MenuId { get; set; }
-		public Menu? Menu { get; set; }
+    public enum QRResolveMode { LatestActive = 1, StaticUrl = 2, StaticMenu = 3 }
+    public enum QRECCLevel { L = 1, M = 2, Q = 3, H = 4 }
+    public class QRCode : BaseEntity
+    {
+        [MaxLength(50)] public string PublicKey { get; set; } = null!; // /q/{key}
+        public Guid? StoreId { get; set; }
+        public Store? Store { get; set; } // Left nullable for future use cases
 
-		[MaxLength(50)] public string PublicKey { get; set; } = null!; // /q/{key}
-		[MaxLength(2048)] public string TargetUrl { get; set; } = null!;
-		public bool IsDynamic { get; set; } = true;
-		public bool IsActive { get; set; } = true;
-		public string ECCLevel { get; set; } = "M";
-		public string? StyleJson { get; set; }
-	}
+        public QRResolveMode ResolveMode { get; set; } = QRResolveMode.LatestActive;
+        [MaxLength(2048)] public string? TargetUrl { get; set; } // if static url
+        public Guid? MenuId { get; set; } // if static menu
+
+        public bool IsActive { get; set; } = true;
+        public QRECCLevel ECCLevel { get; set; } = QRECCLevel.M;
+        public string? StyleJson { get; set; }
+    }
 }

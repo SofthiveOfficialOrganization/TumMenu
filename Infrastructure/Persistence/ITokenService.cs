@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 
 namespace Infrastructure.Persistence;
 
 public interface ITokenService
 {
-	string CreateToken(IEnumerable<Claim> claims, DateTime expires);
-	ClaimsPrincipal? ReadToken(string jwt);
+    string CreateToken(IEnumerable<Claim> claims, DateTime expires);
+    ClaimsPrincipal? ReadToken(string jwt);
 }

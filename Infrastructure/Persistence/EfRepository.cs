@@ -1,26 +1,50 @@
 ﻿using Application.Abstractions;
-using Domain.Base;
+using Application.Common.Base.Page;
+using Application.Common.Base.Page.RequestBase;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence;
 
 public sealed class EfRepository<T>(ApplicationDbContext ctx) : IRepository<T> where T : class
 {
-	public IQueryable<T> Query(bool tracked = false) =>
-		tracked ? ctx.Set<T>() : ctx.Set<T>().AsNoTracking();
+    public IQueryable<T> Query(bool tracked = false) =>
+        tracked ? ctx.Set<T>() : ctx.Set<T>().AsNoTracking();
 
-	public Task<T?> GetByIdAsync(Guid id, CancellationToken ct) =>
-		ctx.Set<T>().FindAsync([id], ct).AsTask();
+    public Task<T?> GetByIdAsync(Guid id, CancellationToken ct) =>
+        ctx.Set<T>().FindAsync([id], ct).AsTask();
 
-	public Task AddAsync(T entity, CancellationToken ct) =>
-		ctx.Set<T>().AddAsync(entity, ct).AsTask();
+    public Task AddAsync(T entity, CancellationToken ct) =>
+        ctx.Set<T>().AddAsync(entity, ct).AsTask();
 
-	public void Update(T entity) => ctx.Set<T>().Update(entity);
-	public void Remove(T entity) => ctx.Set<T>().Remove(entity);
+    public void Update(T entity) => ctx.Set<T>().Update(entity);
+    public void SoftDelete(T entity) => ctx.Set<T>().Remove(entity);
+    public async Task<IPaginate<T>> GetPageListAsync(
+        PageRequest request,
+        Expression<Func<T, bool>>? expression = null,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool enableTracking = true,
+        CancellationToken ct = default)
+    {
+        IQueryable<T> query = enableTracking
+            ? ctx.Set<T>()
+            : ctx.Set<T>().AsNoTracking();
+
+        if(expression is not null)
+            query = query.Where(expression);
+        if(include is not null)
+            query = include(query);
+        if(orderBy is not null)
+            query = orderBy(query);
+
+        return await query.ToPaginateAsync(
+            ct,
+            request.Page,
+            request.PageSize,
+            request.From
+        );
+    }
+
 }

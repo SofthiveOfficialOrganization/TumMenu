@@ -1,32 +1,65 @@
-﻿using Application.Categories;
-using Application.Categories.Commands;
+﻿using Application.Categories.Commands;
 using Application.Categories.DTOs;
 using Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebUI.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class CategoryController(IMediator mediator) : ControllerBase
+[Route("[controller]")]
+public class CategoryController(IMediator mediator) : Controller
 {
+	[HttpGet]
+	public async Task<IActionResult> Index(CancellationToken ct)
+	{
+		var categories = await mediator.Send(new GetAllCategoriesPagedQuery(), ct);
+		return View(categories);
+	}
+
+	[HttpGet("{slug}")]
+	public async Task<IActionResult> Details(string slug, CancellationToken ct)
+	{
+		var categories = await mediator.Send(new GetCategoryBySlugQuery(slug), ct);
+		return View(categories);
+	}
+
+	[HttpGet("[action]/{menuId}")]
+	public async Task<IActionResult> Categories(Guid menuId, CancellationToken ct)
+	{
+		var categories = await mediator.Send(new GetCategoriesByMenuIdQuery(menuId), ct);
+		return View(categories);
+	}
+
+	[HttpGet("[action]/{menuId}")]
+	public IActionResult Create(Guid menuId)
+	{
+		return View(menuId);
+	}
+
 	[HttpPost("[action]")]
-	public async Task<ActionResult<CategoryDTO>> Create([FromBody] CreateCategoryCommand cmd, CancellationToken ct)
-		=> Created(string.Empty, await mediator.Send(cmd, ct));
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Create([FromBody] CreateCategoryCommand cmd, CancellationToken ct)
+	{
+		if(!ModelState.IsValid)
+			return View(cmd);
 
-	[HttpGet("menu/{menuId:guid}")]
-	public async Task<ActionResult<List<CategoryDTO>>> GetByMenu(Guid menuId, CancellationToken ct)
-		=> Ok(await mediator.Send(new GetCategoriesByMenuIdQuery(menuId), ct));
+		await mediator.Send(cmd, ct);
+		return RedirectToAction(nameof(Index), new { menuId = cmd.MenuId });
+	}
 
-	[HttpGet("{id:guid}")]
-	public async Task<ActionResult<CategoryDTO>> GetCategory(Guid id, CancellationToken ct)
-	=> Ok(await mediator.Send(new GetCategoryByIdQuery(id), ct));
+	[HttpGet("[action]/{id}")]
+	public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
+	{
+		var dto = await mediator.Send(new GetCategoryByIdQuery(id), ct);
+		return View(dto);
+	}
 
-	[HttpDelete("{id:guid}")]
-	public async Task<ActionResult> DeleteCategory(Guid id, CancellationToken ct)
+	[HttpPost("[action]/{id}")]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
 		await mediator.Send(new DeleteCategoryCommand(id), ct);
-		return NoContent();
+		return RedirectToAction(nameof(Index));
 	}
 }
