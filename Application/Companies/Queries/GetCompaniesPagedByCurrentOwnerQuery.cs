@@ -9,15 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Queries;
 
-public record GetCompaniesByCurrentOwnerQuery() : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
+public record GetCompaniesPagedByCurrentOwnerQuery() : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
 
-public class GetCompaniesByCurrentOwnerHandler(
+public class GetCompaniesPagedByCurrentOwnerHandler(
 	IRepository<Domain.Entities.Company> repoCompany,
 	IUserContext userContext,
 	IMapper mapper
-) : IRequestHandler<GetCompaniesByCurrentOwnerQuery, PaginatedListDTO<CompanyDTO>>
+) : IRequestHandler<GetCompaniesPagedByCurrentOwnerQuery, PaginatedListDTO<CompanyDTO>>
 {
-	public async Task<PaginatedListDTO<CompanyDTO>> Handle(GetCompaniesByCurrentOwnerQuery req, CancellationToken ct)
+	public async Task<PaginatedListDTO<CompanyDTO>> Handle(GetCompaniesPagedByCurrentOwnerQuery req, CancellationToken ct)
 	{
 		var ownerId = userContext.UserId;
 

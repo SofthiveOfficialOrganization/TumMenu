@@ -9,32 +9,32 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Controllers;
 
 [ApiController]
-[Route("api/users")]
+[Route("user")]
 public sealed class UsersController(IMediator mediator) : ControllerBase
 {
-    [HttpGet("me")]
-    [Authorize]
-    public async Task<ActionResult<SessionDTO>> Me(CancellationToken ct)
-        => Ok(await mediator.Send(new GetSessionByCurrentUserQuery(), ct));
+	[HttpGet("me")]
+	[Authorize]
+	public async Task<ActionResult<SessionDTO>> Me(CancellationToken ct)
+		=> Ok(await mediator.Send(new GetSessionByCurrentUserQuery(), ct));
 }
 
 [ApiController]
-[Route("api/owner")]
+[Route("owner")]
 public class OwnerController : ControllerBase
 {
-    [HttpGet("me")]
-    [Authorize(Policy = "OwnerOnly")]
-    public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
-        => Ok(await mediator.Send(new GetOwnerProfileByCurrentUserQuery(), ct));
+	[HttpGet("me")]
+	[Authorize(Policy = "OwnerOnly")]
+	public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
+		=> Ok(await mediator.Send(new GetOwnerProfileByCurrentUserQuery(), ct));
 }
 
 
 [ApiController]
-[Route("api/staff")]
+[Route("staff")]
 public class StaffController : ControllerBase
 {
-    [HttpGet("me")]
-    [Authorize(Policy = "StaffOnly")]
-    public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
-        => Ok(await mediator.Send(new GetStaffProfileByCurrentUserQuery(), ct));
+	[HttpGet("me")]
+	[Authorize(Policy = "StaffOnly")]
+	public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
+		=> Ok(await mediator.Send(new GetStaffProfileByCurrentUserQuery(), ct));
 }
