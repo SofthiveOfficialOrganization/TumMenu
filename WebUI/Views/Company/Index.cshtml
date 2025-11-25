@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "QR Menü - Restoran ve Kafeler İçin Dijital Menü";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var features = new[]
+    {
+        new { Icon = "📱", Title = "Hızlı QR Oluştur", Description = "Saniyeler içinde profesyonel QR kodlar oluştur ve paylaş" },
+        new { Icon = "📲", Title = "Mobil Dostu", Description = "Her cihazda mükemmel görünen, hızlı yüklenen menüler" },
+        new { Icon = "📊", Title = "Analitik ve İstatistik", Description = "Müşteri davranışlarını takip et, kararları veri ile al" },
+        new { Icon = "⚡", Title = "Hemen Güncelle", Description = "Menüyü istediğin zaman güncelle, canlı yayınla" },
+        new { Icon = "🏬", Title = "Şubeleri Yönet", Description = "Birden fazla şubeyi merkezi olarak yönet" },
+        new { Icon = "🛡️", Title = "Güvenli ve Hızlı", Description = "Yüksek güvenlik, yüksek performans" }
+    };
+
+    var steps = new[]
+    {
+        new { Step = "1", Title = "Hesabını Oluştur", Description = "Dakikalar içinde kayıt ol, işletmeni tanımla." },
+        new { Step = "2", Title = "Menünü Ekle", Description = "Kategori ve ürünlerini kolayca ekle, fiyatları düzenle." },
+        new { Step = "3", Title = "QR Kodunu Paylaş", Description = "Masalara QR koy, müşterilerin menünü telefondan incelesin." }
+    };
+}
+<link rel="stylesheet" href="~/css/site.css" />
+<link rel="stylesheet" href="~/css/globals.css" />
+
+
+<section class="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent py-20 md:py-32">
+    <div class="absolute inset-0 opacity-30">
+        <div class="absolute top-10 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-72 h-72 bg-accent/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+                    Restoran Menünü Dijitalleştir
+                </h1>
+                <p class="text-lg text-white/90">
+                    QR menü ile müşterilerine hızlı, güvenli ve modern bir deneyim sun. Hiç kod yazmana gerek yok.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="~/Account/Register"
+                       class="inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold
+                              bg-white text-primary hover:bg-white/90 w-full sm:w-auto">
+                        Ücretsiz Başla
+                        <span class="ml-2 text-sm">→</span>
+                    </a>
+                    <a href="~/Pricing"
+                       class="inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold
+                              border border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        Fiyatlandırmayı Gör
+                    </a>
+                </div>
+                <p class="text-sm text-white/80">
+                    5 dakikadan kısa sürede menünü yayına al.
+                </p>
+            </div>
+
+            <!-- Hero “mock” preview -->
+            <div class="bg-white/10 border border-white/20 rounded-3xl p-6 backdrop-blur-md shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-sm text-white/80">Canlı Önizleme</p>
+                        <p class="text-lg font-semibold text-white">Benim Restoranım</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span class="text-xs text-white/70">Aktif</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-sm">Başlangıçlar</span>
+                        <span class="text-xs text-muted-foreground">3 ürün</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <div>
+                            <p class="font-medium">Humus</p>
+                            <p class="text-xs text-muted-foreground">Klasik nohut ezmesi</p>
+                        </div>
+                        <span class="font-semibold text-primary">₺95</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <div>
+                            <p class="font-medium">Patates Kızartması</p>
+                            <p class="text-xs text-muted-foreground">Özel sos ile</p>
+                        </div>
+                        <span class="font-semibold text-primary">₺80</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="py-20 md:py-32 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+                Tüm İhtiyacın İçin Çözümler
+            </h2>
+            <p class="text-lg text-muted-foreground">
+                Menünü dijitalleştir, işletmeni optimize et, müşteri deneyimini iyileştir.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach(var feature in features)
+            {
+                <div class="bg-gradient-to-br from-background to-white border border-border rounded-xl p-8 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <span class="text-xl">@feature.Icon</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-foreground">@feature.Title</h3>
+                    <p class="text-sm text-muted-foreground">@feature.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section id="how-it-works" class="py-20 md:py-32 bg-gradient-to-br from-background to-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+                Nasıl Çalışır?
+            </h2>
+            <p class="text-lg text-muted-foreground">
+                Üç basit adımda menünü dijital hale getir.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @foreach(var s in steps)
+            {
+                <div class="bg-white border border-border rounded-2xl p-8 flex flex-col items-start">
+                    <span class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold mb-4">
+                        @s.Step
+                    </span>
+                    <h3 class="text-xl font-semibold mb-2 text-foreground">@s.Title</h3>
+                    <p class="text-sm text-muted-foreground">@s.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-primary text-white text-center">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Hazır mısın? Şimdi Başla</h2>
+        <p class="text-lg text-white/90 mb-8">
+            Hiç kredi kartı gerekmiyor. Hemen aşağıda başla.
+        </p>
+        <a href="~/Account/Register"
+           class="inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold
+                  bg-white text-primary hover:bg-white/90">
+            Ücretsiz Hesap Oluştur
+            <span class="ml-2 text-sm">→</span>
+        </a>
+    </div>
+</section>

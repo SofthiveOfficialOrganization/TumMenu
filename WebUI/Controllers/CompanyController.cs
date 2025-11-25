@@ -10,6 +10,11 @@ namespace WebUI.Controllers;
 [Route("[controller]")]
 public class CompanyController(IMediator mediator) : Controller
 {
+	[HttpGet]
+	public IActionResult Index()
+	{
+		return View();
+	}
 	[HttpGet("[action]/{id}")]
 	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
 	{
@@ -51,7 +56,7 @@ public class CompanyController(IMediator mediator) : Controller
 		await mediator.Send(new DeleteCompanyCommand(id), ct);
 		return RedirectToAction(nameof(MyCompanies));
 	}
-	[HttpGet]
+	[HttpGet("[action]")]
 	public async Task<IActionResult> ExampleCompanies()
 	{
 		List<CompanyDTO> company = [];
@@ -89,7 +94,7 @@ public class CompanyController(IMediator mediator) : Controller
 
 		return View(companies);
 	}
-	[HttpPost]
+	[HttpPost("[action]")]
 	public IActionResult CreateTestCompany([FromBody] CompanyDTO dto)
 	{
 		if(!ModelState.IsValid)

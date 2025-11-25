@@ -10,24 +10,24 @@ namespace WebUI.Controllers;
 [Route("[controller]")]
 public class CategoryController(IMediator mediator) : Controller
 {
-	[HttpGet]
-	public async Task<IActionResult> Index(CancellationToken ct)
-	{
-		var categories = await mediator.Send(new GetAllCategoriesPagedQuery(), ct);
-		return View(categories);
-	}
+	//[HttpGet]
+	//public async Task<IActionResult> Index(CancellationToken ct)
+	//{
+	//	var categories = await mediator.Send(new GetAllCategoriesPagedQuery(), ct);
+	//	return View(categories);
+	//}
 
-	[HttpGet("{slug}")]
-	public async Task<IActionResult> Details(string slug, CancellationToken ct)
-	{
-		var categories = await mediator.Send(new GetCategoryBySlugQuery(slug), ct);
-		return View(categories);
-	}
+	//[HttpGet("{slug}")]
+	//public async Task<IActionResult> Details(string slug, CancellationToken ct)
+	//{
+	//	var categories = await mediator.Send(new GetCategoryBySlugQuery(slug), ct);
+	//	return View(categories);
+	//}
 
 	[HttpGet("[action]/{menuId}")]
 	public async Task<IActionResult> Categories(Guid menuId, CancellationToken ct)
 	{
-		var categories = await mediator.Send(new GetCategoriesByMenuIdQuery(menuId), ct);
+		var categories = await mediator.Send(new GetCategoriesPagedByMenuIdQuery(menuId), ct);
 		return View(categories);
 	}
 

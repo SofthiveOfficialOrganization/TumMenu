@@ -27,14 +27,3 @@ public class OwnerController : ControllerBase
 	public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
 		=> Ok(await mediator.Send(new GetOwnerProfileByCurrentUserQuery(), ct));
 }
-
-
-[ApiController]
-[Route("staff")]
-public class StaffController : ControllerBase
-{
-	[HttpGet("me")]
-	[Authorize(Policy = "StaffOnly")]
-	public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
-		=> Ok(await mediator.Send(new GetStaffProfileByCurrentUserQuery(), ct));
-}
