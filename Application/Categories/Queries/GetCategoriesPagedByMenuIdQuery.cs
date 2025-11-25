@@ -18,17 +18,14 @@ public class GetCategoriesByMenuIdHandler(
 {
 	public async Task<List<CategoryDTO>> Handle(GetCategoriesPagedByMenuIdQuery req, CancellationToken ct)
 	{
-		var categoryList = await repoCategory.Query()
-			.Where(c => c.MenuId == req.MenuId)
-			.OrderBy(c => c.SortOrder)
-			.ToListAsync(ct);
-		//var categoryList = await repoCategory.GetPageListAsync(
-		//	req,
-		//	c=>c.MenuId == req.MenuId,
-		//	c=>c.OrderBy(c=>c.SortOrder),
-		//	)
+		var categoryList = await repoCategory.GetPageListAsync(
+			req,
+			c => c.MenuId == req.MenuId,
+			orderBy: c => c.OrderBy(c => c.SortOrder),
+			ct: ct
+			);
 		if(categoryList.Count == 0)
-			throw new NotFoundAppException("Bu menuye ait kategori bulunamadı");
+			throw new NotFoundAppException("Bu menüye ait kategori bulunamadı");
 		var categoryListDTO = mapper.Map<List<CategoryDTO>>(categoryList);
 		return categoryListDTO;
 	}
