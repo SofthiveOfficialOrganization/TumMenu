@@ -22,6 +22,7 @@ namespace WebUI.Controllers
 		{
 			return View();
 		}
+		// istersen buraya yazabilirsin sayfa oluþturacaksan örnek tamam mý bebeðimmmmmm
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
