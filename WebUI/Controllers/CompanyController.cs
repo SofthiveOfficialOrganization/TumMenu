@@ -62,14 +62,14 @@ public class CompanyController(IMediator mediator) : Controller
 		List<CompanyDTO> company = [];
 		for(int i = 1; i <= 5; i++)
 		{
-			CompanyDTO comp = new CompanyDTO(
-				Name: $"Example Company {i}",
-				Slug: $"example-company-{i}",
-				OwnerId: Guid.NewGuid()
-			)
+			CompanyDTO comp = new CompanyDTO()
 			{
-				Id = Guid.NewGuid()
+				Id = Guid.NewGuid(),
+				Name = $"Example Company {i}",
+				Slug = $"example-company-{i}",
+				OwnerId = Guid.NewGuid()
 			};
+
 			company.Add(comp);
 		}
 		return View(company);
@@ -82,15 +82,13 @@ public class CompanyController(IMediator mediator) : Controller
 			return BadRequest("Count must be greater than zero.");
 
 		var companies = Enumerable.Range(1, count)
-			.Select(i => new CompanyDTO(
-				Name: $"Example Company {i}",
-				Slug: $"example-company-{i}",
-				OwnerId: Guid.NewGuid()
-			)
+			.Select(i => new CompanyDTO()
 			{
-				Id = Guid.NewGuid()
-			})
-			.ToList();
+				Id = Guid.NewGuid(),
+				Name = $"Example Company {i}",
+				Slug = $"example-company-{i}",
+				OwnerId = Guid.NewGuid()
+			}).ToList();
 
 		return View(companies);
 	}
@@ -103,7 +101,7 @@ public class CompanyController(IMediator mediator) : Controller
 		if(string.IsNullOrWhiteSpace(dto.Name))
 			return BadRequest("Name is required.");
 
-		var created = dto with
+		var created = new CompanyDTO
 		{
 			Id = Guid.NewGuid()
 		};
