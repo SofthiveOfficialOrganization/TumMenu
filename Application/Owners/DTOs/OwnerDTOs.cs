@@ -1,13 +1,14 @@
-﻿using Application.Auths.DTOs;
+using Application.Auths.DTOs;
 using Application.Common.Base.DTOs;
 using Application.Companies.DTOs;
 using Application.Subscriptions.DTOs;
 
 namespace Application.Owners.DTOs;
 
-public sealed record OwnerDTO(
-    string? TaxNo,
-    CompanyLiteDTO Company,
-    SubscriptionLiteDTO? Subscription,
-    ApplicationUserLiteDTO User
-) : BaseDTO;
+public sealed class OwnerDTO : BaseDTO
+{
+    public string? TaxNo { get; set; }
+    public CompanyLiteDTO Company { get; set; } = null!;
+    public SubscriptionLiteDTO? Subscription { get; set; }
+    public ApplicationUserLiteDTO User { get; set; } = null!;
+}

@@ -1,14 +1,16 @@
-﻿using Application.Common.Base.DTOs;
+using Application.Common.Base.DTOs;
 
 namespace Application.Companies.DTOs;
 
-public sealed record CompanyDTO(
-    string Name,
-    string Slug,
-    Guid? OwnerId
-) : BaseDTO, ISluggableDTO;
+public sealed class CompanyDTO : BaseDTO, ISluggableDTO
+{
+	public string Name { get; set; } = null!;
+	public string Slug { get; set; } = null!;
+	public Guid? OwnerId { get; set; }
+}
 
-public sealed record CompanyLiteDTO(
-    string Name,
-    string Slug
-) : BaseDTO, ISluggableDTO;
+public sealed class CompanyLiteDTO : BaseDTO, ISluggableDTO
+{
+	public string Name { get; set; } = null!;
+	public string Slug { get; set; } = null!;
+}

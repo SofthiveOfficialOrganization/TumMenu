@@ -1,9 +1,9 @@
-﻿namespace Application.Common.Base.DTOs;
+namespace Application.Common.Base.DTOs;
 
-public abstract record BaseDTO
+public abstract class BaseDTO
 {
-    public Guid Id { get; init; }
-    public DateTime? CreatedOnValue { get; init; }
-    public DateTime? ModifiedOnValue { get; init; }
-    public bool IsDeleted { get; init; }
+	public Guid Id { get; init; }
+	public DateTimeOffset? CreatedAt { get; init; }
+	public DateTimeOffset? ModifiedAt { get; init; }
+	public bool IsDeleted { get; init; }
 }

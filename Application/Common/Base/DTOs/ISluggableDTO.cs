@@ -2,5 +2,5 @@
 
 public interface ISluggableDTO
 {
-    string Slug { get; init; }
+	string Slug { get; set; }
 }
