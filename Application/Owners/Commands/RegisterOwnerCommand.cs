@@ -47,6 +47,6 @@ public sealed class RegisterOwnerHandler(
 
 		var roleNames = await users.GetRolesAsync(user);
 		var pair = await tokens.IssueAsync(user, roleNames, ct);
-		return new AuthResultDTO(pair.AccessToken, pair.ExpiresAt, pair.RefreshToken);
+		return new AuthResultDTO() { AccessToken = pair.AccessToken, ExpiresAt = pair.ExpiresAt, RefreshToken = pair.RefreshToken };
 	}
 }

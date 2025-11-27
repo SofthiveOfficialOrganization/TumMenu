@@ -45,6 +45,5 @@ public class GetStaffsPagedByStoreIdHandler(
 		);
 		var staffDTOs = mapper.Map<PaginatedListDTO<StaffDTO>>(staffs);
 		return staffDTOs;
-
 	}
 }
