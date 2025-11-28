@@ -30,6 +30,7 @@ namespace Infrastructure
 			services.AddIdentity<ApplicationUser, ApplicationRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
+			services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
 			services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
 			services.AddScoped<IJwtTokenService, JwtTokenService>();

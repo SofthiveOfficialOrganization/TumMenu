@@ -3,6 +3,7 @@ using Application.Companies.DTOs;
 using Application.Companies.Queries;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers;
@@ -21,6 +22,7 @@ public class CompanyController(IMediator mediator) : Controller
 		var company = await mediator.Send(new GetCompanyByIdQuery(id), ct);
 		return View(company);
 	}
+	[Authorize(Policy = "Owner")]
 	[HttpGet("[action]")]
 	public IActionResult Create()
 	{

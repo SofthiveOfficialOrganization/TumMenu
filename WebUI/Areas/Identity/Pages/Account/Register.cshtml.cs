@@ -3,6 +3,7 @@
 #nullable disable
 
 using Domain.Entities;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -23,13 +24,17 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+		private readonly RoleManager<ApplicationRole> _roleManager;
+		private readonly ApplicationDbContext _db;
 
-        public RegisterModel(
+		public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<ApplicationRole> roleManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -37,7 +42,9 @@ namespace WebUI.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-        }
+			_roleManager = roleManager;
+			_db = db;
+		}
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -115,8 +122,28 @@ namespace WebUI.Areas.Identity.Pages.Account
                 if(result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+					const string ownerRole = "Owner";
+					if(!await _roleManager.RoleExistsAsync(ownerRole))
+					{
+						await _roleManager.CreateAsync(new ApplicationRole(ownerRole));
+					}
 
-                    var userId = await _userManager.GetUserIdAsync(user);
+					// 2) Kullanıcıyı OWNER rolüne ekle
+					if(!await _userManager.IsInRoleAsync(user, ownerRole))
+					{
+						await _userManager.AddToRoleAsync(user, ownerRole);
+					}
+
+					// 3) Owner kaydı oluştur
+					var owner = new Owner
+					{
+						ApplicationUserId = user.Id
+                        
+					};
+
+					_db.Owners.Add(owner);
+					await _db.SaveChangesAsync();
+					var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
