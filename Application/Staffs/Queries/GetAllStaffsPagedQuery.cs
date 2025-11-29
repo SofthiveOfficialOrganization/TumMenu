@@ -1,18 +1,11 @@
 ﻿using Application.Abstractions;
 using Application.Common.Base.DTOs;
 using Application.Common.Base.Page.RequestBase;
-using Application.Common.Exceptions;
 using Application.Staffs.DTOs;
 using Domain.Entities;
-using Domain.Helpers;
 using MapsterMapper;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Staffs.Queries;
 
@@ -42,9 +35,6 @@ public class GetAllStaffsPagedHandler(
 			orderBy: q => q.OrderBy(s => s.LastName).ThenBy(s => s.FirstName),
 			ct: ct
 		);
-
-		if(staffs.Items.Count == 0)
-			throw new NotFoundAppException("Hiç personel bulunamadı.");
 
 		var staffDTOs = mapper.Map<PaginatedListDTO<StaffDTO>>(staffs);
 		return staffDTOs;

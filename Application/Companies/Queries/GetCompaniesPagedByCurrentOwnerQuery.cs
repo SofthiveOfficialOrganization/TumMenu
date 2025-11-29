@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Base.DTOs;
 using Application.Common.Base.Page.RequestBase;
-using Application.Common.Exceptions;
 using Application.Companies.DTOs;
 using MapsterMapper;
 using MediatR;
@@ -33,9 +32,6 @@ public class GetCompaniesPagedByCurrentOwnerHandler(
 			enableTracking: false,
 			ct: ct
 		);
-
-		if(companies.Count == 0)
-			throw new NotFoundAppException("Kullanıcının hiç şirketi bulunamadı.");
 
 		var companyListDto = mapper.Map<PaginatedListDTO<CompanyDTO>>(companies);
 		return companyListDto;

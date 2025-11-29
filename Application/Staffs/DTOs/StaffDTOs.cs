@@ -1,4 +1,3 @@
-using Application.Auths.DTOs;
 using Application.Common.Base.DTOs;
 
 namespace Application.Staffs.DTOs;

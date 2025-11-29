@@ -12,5 +12,5 @@ public interface IRepository<T> where T : class
 	Task AddAsync(T entity, CancellationToken ct = default);
 	void Update(T entity);
 	void SoftDelete(T entity);
-	Task<IPaginate<T>> GetPageListAsync(PageRequest request, Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = true, CancellationToken ct = default);
+	Task<IPaginate<T>> GetPageListAsync(PageRequest request, Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object?>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = true, CancellationToken ct = default);
 }

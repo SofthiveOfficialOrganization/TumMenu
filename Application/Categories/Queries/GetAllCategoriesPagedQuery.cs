@@ -7,21 +7,20 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetCategoriesPagedByMenuIdQuery(Guid MenuId) : PageRequest, IRequest<List<CategoryDTO>>;
+public record GetAllCategoriesPagedQuery() : PageRequest, IRequest<List<CategoryDTO>>;
 
-public class GetCategoriesByMenuIdHandler(
+public class GetAllCategoriesPagedHandler(
 	IRepository<Category> repoCategory,
 	IMapper mapper
-) : IRequestHandler<GetCategoriesPagedByMenuIdQuery, List<CategoryDTO>>
+) : IRequestHandler<GetAllCategoriesPagedQuery, List<CategoryDTO>>
 {
-	public async Task<List<CategoryDTO>> Handle(GetCategoriesPagedByMenuIdQuery req, CancellationToken ct)
+	public async Task<List<CategoryDTO>> Handle(GetAllCategoriesPagedQuery req, CancellationToken ct)
 	{
 		var categoryList = await repoCategory.GetPageListAsync(
 			req,
-			c => c.MenuId == req.MenuId,
 			orderBy: c => c.OrderBy(c => c.SortOrder),
 			ct: ct
-			);
+		);
 		var categoryListDTO = mapper.Map<List<CategoryDTO>>(categoryList);
 		return categoryListDTO;
 	}

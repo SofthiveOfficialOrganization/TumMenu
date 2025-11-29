@@ -8,19 +8,19 @@ namespace Application.Owners.Commands;
 
 public sealed record CreateOwnerCommand
 (
-	string ApplicationUserId
+    string ApplicationUserId
 ) : IRequest<OwnerDTO>, ITransactionalRequest;
 
 public class CreateOwnerCommandHandler(
-	IRepository<Owner> repoOwner,
-	IMapper mapper
+    IRepository<Owner> repoOwner,
+    IMapper mapper
 ) : IRequestHandler<CreateOwnerCommand, OwnerDTO>
 {
-	public async Task<OwnerDTO> Handle(CreateOwnerCommand req, CancellationToken ct)
-	{
-		var owner = mapper.Map<Owner>(req);
-		await repoOwner.AddAsync(owner, ct);
-		var ownerDTO = mapper.Map<OwnerDTO>(owner);
-		return ownerDTO;
-	}
+    public async Task<OwnerDTO> Handle(CreateOwnerCommand req, CancellationToken ct)
+    {
+        var owner = mapper.Map<Owner>(req);
+        await repoOwner.AddAsync(owner, ct);
+        var ownerDTO = mapper.Map<OwnerDTO>(owner);
+        return ownerDTO;
+    }
 }

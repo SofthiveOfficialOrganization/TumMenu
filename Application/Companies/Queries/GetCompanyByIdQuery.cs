@@ -1,5 +1,4 @@
 ﻿using Application.Abstractions;
-using Application.Common.Exceptions;
 using Application.Companies.DTOs;
 using MapsterMapper;
 using MediatR;
@@ -23,8 +22,6 @@ public class GetCompanyByIdHandler(
 			.Include(c => c.PaymentMethods)
 			.Include(c => c.Stores)
 			.FirstOrDefaultAsync(ct);
-		if(company == null)
-			throw new NotFoundAppException("Şirket bulunamadı");
 		var companyDTO = mapper.Map<CompanyDTO>(company);
 		return companyDTO;
 	}

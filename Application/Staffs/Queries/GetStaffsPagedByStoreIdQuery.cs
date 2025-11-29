@@ -3,15 +3,9 @@ using Application.Common.Base.DTOs;
 using Application.Common.Base.Page.RequestBase;
 using Application.Staffs.DTOs;
 using Domain.Entities;
-using Mapster;
 using MapsterMapper;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Staffs.Queries;
 
