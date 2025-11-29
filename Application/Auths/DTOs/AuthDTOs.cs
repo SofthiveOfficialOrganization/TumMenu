@@ -13,11 +13,8 @@ public sealed class SessionDTO
 	public string? Email { get; set; }
 	public IReadOnlyList<string> Roles { get; set; } = null!;
 	public Guid? OwnerId { get; set; }
-	public Guid? StaffId { get; set; }
 	public Guid? CompanyId { get; set; }
 	public string? CompanyName { get; set; }
-	public Guid? StoreId { get; set; }
-	public string? StoreName { get; set; }
 }
 
 public sealed class ApplicationUserLiteDTO

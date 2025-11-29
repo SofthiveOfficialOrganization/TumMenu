@@ -18,8 +18,6 @@ public sealed class GetSesssionByCurrentUserHandler(
 	{
 		Guid? companyId = null;
 		string? companyName = null;
-		Guid? storeId = null;
-		string? storeName = null;
 
 		if(Guid.TryParse(userContext.CompanyId, out var cid))
 		{
@@ -29,17 +27,8 @@ public sealed class GetSesssionByCurrentUserHandler(
 				.Select(c => c.Name)
 				.FirstOrDefaultAsync(ct);
 		}
-		if(Guid.TryParse(userContext.StoreId, out var sid))
-		{
-			storeId = sid;
-			storeName = await repoStore.Query()
-					.Where(s => s.Id == sid)
-					.Select(s => s.Name)
-					.FirstOrDefaultAsync(ct);
-		}
 
 		Guid? ownerId = Guid.TryParse(userContext.OwnerId, out var owid) ? owid : null;
-		Guid? staffId = Guid.TryParse(userContext.StaffId, out var stid) ? stid : null;
 
 
 		return new SessionDTO()
@@ -47,12 +36,7 @@ public sealed class GetSesssionByCurrentUserHandler(
 			UserId = userContext.UserId ?? "",
 			Email = userContext.Email ?? "",
 			Roles = userContext.Roles,
-			OwnerId = ownerId,
-			StaffId = staffId,
-			CompanyId = companyId,
-			CompanyName = companyName,
-			StoreId = storeId,
-			StoreName = storeName
+			OwnerId = ownerId
 		};
 	}
 }

@@ -15,11 +15,13 @@ namespace WebUI.Areas.Identity.Pages.Account
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly ILogger<LoginModel> _logger;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+		public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
 		{
 			_signInManager = signInManager;
 			_logger = logger;
+			_userManager = userManager;
 		}
 
 		/// <summary>
@@ -105,12 +107,46 @@ namespace WebUI.Areas.Identity.Pages.Account
 			{
 				// This doesn't count login failures towards account lockout
 				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-				var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+				var result = await _signInManager.PasswordSignInAsync(
+					Input.Email,
+					Input.Password,
+					Input.RememberMe,
+					lockoutOnFailure: false);
+
+				// 🔽🔽🔽 DEĞİŞEN KISIM BURASI 🔽🔽🔽
 				if(result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
+
+					// Register'da UserName = Email set ettiğimiz için:
+					var user = await _userManager.FindByNameAsync(Input.Email);
+					if(user is null)
+					{
+						// Çok edge case ama güvenli olsun
+						await _signInManager.SignOutAsync();
+						ModelState.AddModelError(string.Empty, "Kullanıcı bulunamadı.");
+						return Page();
+					}
+
+					// Sadece Owner veya Admin login olsun
+					var roles = await _userManager.GetRolesAsync(user);
+					var allowed = roles.Contains("Owner") || roles.Contains("Admin");
+
+					if(!allowed)
+					{
+						await _signInManager.SignOutAsync(); // yanlış kullanıcı cookie’yi temizle
+						ModelState.AddModelError(string.Empty, "Bu hesap ile giriş yapılamaz.");
+						return Page();
+					}
+
+					// Opsiyonel: LastLogin güncelle
+					user.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+					await _userManager.UpdateAsync(user);
+
 					return LocalRedirect(returnUrl);
 				}
+				// 🔼🔼🔼 DEĞİŞEN KISIM BURASI 🔼🔼🔼
+
 				if(result.RequiresTwoFactor)
 				{
 					return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -130,5 +166,6 @@ namespace WebUI.Areas.Identity.Pages.Account
 			// If we got this far, something failed, redisplay form
 			return Page();
 		}
+
 	}
 }

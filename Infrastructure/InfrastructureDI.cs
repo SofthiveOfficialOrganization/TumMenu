@@ -32,36 +32,6 @@ namespace Infrastructure
 				.AddDefaultTokenProviders();
 			services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
-			services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-			services.AddScoped<IJwtTokenService, JwtTokenService>();
-
-			var jwt = configuration.GetSection("Jwt");
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Secret"]!));
-
-			services
-				.AddAuthentication(options =>
-				{
-					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-					options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-				})
-				.AddJwtBearer(o =>
-				{
-					o.TokenValidationParameters = new TokenValidationParameters
-					{
-						ValidIssuer = configuration["Jwt:Issuer"],      // "TumMenu"
-						ValidAudience = configuration["Jwt:Audience"],  // "TumMenu.Api"
-						IssuerSigningKey = new SymmetricSecurityKey(
-							Encoding.UTF8.GetBytes(configuration["Jwt:Secret"])
-						),
-						ValidateIssuer = true,
-						ValidateAudience = true,
-						ValidateIssuerSigningKey = true,
-						ValidateLifetime = true,
-						ClockSkew = TimeSpan.FromSeconds(30)
-					};
-				});
-
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
