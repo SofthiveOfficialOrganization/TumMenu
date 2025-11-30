@@ -1,12 +1,136 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">ses ses</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-  
-</div>
+<!-- HERO / SLOGAN + FOTOĞRAF -->
+<section class="home-hero">
+    <div class="home-hero-grid">
+        <!-- Sol: slogan alanı -->
+        <div class="home-hero-content">
+            <div class="home-hero-badge">
+                Küçük esnaf için dijital QR menü
+            </div>
+
+            <h1 class="home-hero-title">
+                Menünü dijitale taşı, siparişleri hızlandır.
+            </h1>
+
+            <p class="home-hero-text">
+                İşletmen için dakikalar içinde QR menü oluştur, müşterilerin menünü
+                telefonlarından inceleyip siparişlerini kolayca versin.
+            </p>
+
+            <ul class="home-hero-list">
+                <li>🧾 Menü değişikliklerini anında güncelle</li>
+                <li>📱 QR kodu masalarına koy, sırayı kısalt</li>
+                <li>🌐 Menünü herkese açık bir sayfada göster</li>
+            </ul>
+        </div>
+
+        <!-- Sağ: fotoğraf / illüstrasyon alanı -->
+        <div class="home-hero-visual">
+            <div class="hero-photo-placeholder">
+                FOTOĞRAF / İLLÜSTRASYON
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ETKRAFINDAKİ İŞLETMELER + HARİTA -->
+<section class="home-discover">
+    <div class="discover-grid">
+        <!-- Sol: filtre kartı -->
+        <div class="discover-card card-surface">
+            <h2 class="discover-title">Etrafınızdaki işletmeleri keşfedin</h2>
+            <p class="discover-text">
+                Size en yakın restoran, kafe ve yemek işletmelerini bulun.
+            </p>
+
+            <div class="discover-form">
+                <div class="discover-field">
+                    <label for="city">İl</label>
+                    <input id="city" type="text" placeholder="Örneğin: İstanbul">
+                </div>
+                <div class="discover-field">
+                    <label for="district">İlçe</label>
+                    <input id="district" type="text" placeholder="Örneğin: Kadıköy">
+                </div>
+
+                <div class="discover-tags-label">Kategori</div>
+                <div class="discover-tags">
+                    <button type="button" class="discover-tag active">Restoran</button>
+                    <button type="button" class="discover-tag">Kafe</button>
+                    <button type="button" class="discover-tag">Yemek</button>
+                </div>
+
+                <button type="button" class="discover-submit">
+                    İşletmeleri göster
+                </button>
+            </div>
+        </div>
+
+        <!-- Sağ: harita alanı -->
+        <div class="discover-map">
+            <div class="map-placeholder">
+                <span>HARİTA</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ÖNE ÇIKAN RESTORANLAR / CAROUSEL GÖRÜNÜM -->
+<section class="home-restaurants">
+    <div class="home-restaurants-header">
+        <div>
+            <h2>Öne çıkan işletmeler</h2>
+            <p class="home-restaurants-text">
+                Popüler restoran ve kafeleri keşfedin. Hepsi QR menüyle hazır.
+            </p>
+        </div>
+
+        <div class="home-restaurants-controls">
+            <button type="button" class="slider-btn slider-btn-prev" aria-label="Önceki">
+                ‹
+            </button>
+            <button type="button" class="slider-btn slider-btn-next" aria-label="Sonraki">
+                ›
+            </button>
+        </div>
+    </div>
+
+    <div class="home-restaurants-row">
+        <!-- Kart 1 -->
+        <article class="restaurant-card card-surface">
+            <div class="restaurant-image-placeholder"></div>
+            <div class="restaurant-info">
+                <h3 class="restaurant-name">Restoran 1</h3>
+                <p class="restaurant-meta">Kadıköy · Türk Mutfağı</p>
+                <p class="restaurant-pill">QR menü hazır</p>
+            </div>
+        </article>
+
+        <!-- Kart 2 -->
+        <article class="restaurant-card card-surface">
+            <div class="restaurant-image-placeholder"></div>
+            <div class="restaurant-info">
+                <h3 class="restaurant-name">Restoran 2</h3>
+                <p class="restaurant-meta">Beşiktaş · Dünya Mutfağı</p>
+                <p class="restaurant-pill">Temassız menü</p>
+            </div>
+        </article>
+
+        <!-- Kart 3 (placeholder) -->
+        <article class="restaurant-card card-surface">
+            <div class="restaurant-image-placeholder"></div>
+            <div class="restaurant-info">
+                <h3 class="restaurant-name">Restoran 3</h3>
+                <p class="restaurant-meta">Konum · Kafe &amp; Tatlı</p>
+                <p class="restaurant-pill">Yakında sizinki de burada</p>
+            </div>
+        </article>
+    </div>
+</section>
+
 
 
 

@@ -1,57 +1,151 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebUI</title>
+
+    <!-- Önce Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Tema değişkenleri -->
+    <link rel="stylesheet" href="~/css/globals.css" asp-append-version="true" />
+
+    <!-- Otomatik WebUI stilleri (varsa kalsın) -->
     <link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />
+
+    <!-- Body, tipografi, layout -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Header + footer -->
+    <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebUI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Company" asp-action="Create">Şirket oluştur</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+    <!-- HEADER -->
+    <header class="glass-header">
+        <div class="container header-bar">
+
+            <!-- Logo -->
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="/images/logo.png" alt="Logo" style="height:40px; width:auto;">
+                <span class="fw-bold logo-text">tümmenü</span>
+            </a>
+
+            <!-- Orta menü (desktop) -->
+            <nav class="header-menu desktop-menu">
+                <a class="nav-link" asp-controller="Home" asp-action="Restoranlar">
+                    Restoranlar
+                </a>
+
+                <!-- Ne Yesem? baloncuk -->
+                <a class="nav-link bubble-link"
+                   asp-controller="Home" asp-action="NeYesem">
+                    Ne Yesem?
+                </a>
+            </nav>
+
+            <!-- Sağ CTA (desktop) -->
+            <div class="desktop-cta">
+                <a asp-controller="Home" asp-action="QrOl"
+                   class="btn qr-btn">
+                    QR'lı Ol
+                </a>
             </div>
+
+            <!-- Hamburger (mobil) -->
+            <button class="mobile-menu-btn" type="button" aria-label="Menüyü aç/kapat">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Mobil Menü -->
+        <nav class="mobile-menu">
+            <a asp-controller="Home" asp-action="Restoranlar">Restoranlar</a>
+            <a asp-controller="Home" asp-action="NeYesem">Ne Yesem?</a>
+            <a asp-controller="Home" asp-action="QrOl">QR'lı Ol</a>
         </nav>
     </header>
 
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <!-- HEADER ile FOOTER arasındaki alan -->
+    <div class="page-main">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-top">
+            <!-- Marka bloğu -->
+            <div class="footer-brand">
+                <div class="footer-brand-logo">
+                    <img src="/images/logo.png alt="tümmenü logosu">
+                </div>
+                <div>
+                    <h4 class="footer-title">tümmenü</h4>
+                    <p class="footer-text">
+                        Küçük esnaf ve müşteriler için hızlı ve modern dijital QR menü platformu.
+                    </p>
+                </div>
+            </div>
 
+            <!-- Link kolonları -->
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h5>Ürün</h5>
+                    <a asp-controller="Home" asp-action="Restoranlar">Restoranlar</a>
+                    <a asp-controller="Home" asp-action="NeYesem">Ne Yesem?</a>
+                    <a asp-controller="Home" asp-action="QrOl">QR'lı Ol</a>
+                </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - WebUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <div class="footer-column">
+                    <h5>Destek</h5>
+                    <a href="#">SSS</a>
+                    <a href="#">Kullanım Şartları</a>
+                    <a asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+                </div>
+
+                <div class="footer-column">
+                    <h5>İletişim</h5>
+                    <p class="footer-text">Sorun mu var, önerin mi?</p>
+                    <a href="mailto:destek@tummenu.app" class="footer-cta-link">
+                        destek@tummenu.app
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <span>© @DateTime.Now.Year tümmenü</span>
+                <div class="footer-bottom-links">
+                    <a asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+                    <a href="#">Çerezler</a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        const mobileBtn = document.querySelector(".mobile-menu-btn");
+        const mobileMenu = document.querySelector(".mobile-menu");
+
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener("click", () => {
+                mobileMenu.classList.toggle("show");
+                mobileBtn.classList.toggle("active");
+            });
+        }
+    </script>
 </body>
 </html>
