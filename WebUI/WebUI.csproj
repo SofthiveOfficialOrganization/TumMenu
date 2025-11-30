@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Admin\Views\Company\AllCompanies.cshtml" />
     <Content Remove="Views\Company\AllCompanies.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Areas\Admin\Views\Company\AllCompanies.cshtml" />
     <Compile Include="Views\Company\AllCompanies.cshtml" />
   </ItemGroup>
 

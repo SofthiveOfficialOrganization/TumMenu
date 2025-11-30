@@ -1,0 +1,32 @@
+﻿@using Application.Companies.DTOs
+
+@model CompanyDTO
+
+@{
+    ViewData["Title"] = "Company Details";
+}
+
+<h2>Company Details</h2>
+
+<div class="card" style="padding:20px;">
+    <dl class="row">
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+
+        <dt class="col-sm-3">Slug</dt>
+        <dd class="col-sm-9">@Model.Slug</dd>
+
+        <dt class="col-sm-3">Owner Id</dt>
+        <dd class="col-sm-9">@Model.OwnerId</dd>
+
+        <dt class="col-sm-3">Created At</dt>
+        <dd class="col-sm-9">@Model.CreatedAt</dd>
+
+        <dt class="col-sm-3">Updated At</dt>
+        <dd class="col-sm-9">@Model.ModifiedAt</dd>
+    </dl>
+
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
