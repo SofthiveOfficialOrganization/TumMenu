@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_Layout";
+    var message = ViewData["Message"] as string ?? "Sayfa bulunamadı.";
+}
+
+<h1>Sayfa bulunamadı</h1>
+<p>@message</p>
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+    Ana sayfaya dön
+</a>

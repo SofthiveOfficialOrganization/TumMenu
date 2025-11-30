@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "_AdminLayout";
+    var message = ViewData["Message"] as string ?? "Kayıt bulunamadı.";
+}
+
+<h2>Kayıt bulunamadı</h2>
+<p>@message</p>
+
+<a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">
+    Yönetime dön
+</a>
