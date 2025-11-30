@@ -1,9 +1,7 @@
 ﻿using Application.Categories.Commands;
-using Application.Categories.DTOs;
 using Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace WebUI.Controllers;
 

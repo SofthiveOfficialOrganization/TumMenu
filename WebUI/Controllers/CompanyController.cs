@@ -1,7 +1,6 @@
 ﻿using Application.Companies.Commands;
 using Application.Companies.DTOs;
 using Application.Companies.Queries;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +18,7 @@ public class CompanyController(IMediator mediator) : Controller
 	[HttpGet("[action]/{id}")]
 	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
 	{
-		var company = await mediator.Send(new GetCompanyByIdQuery(id), ct);
+		CompanyDTO? company = await mediator.Send(new GetCompanyByIdQuery(id), ct);
 		return View(company);
 	}
 	[Authorize(Policy = "Owner")]

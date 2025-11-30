@@ -1,6 +1,5 @@
 using Application.Stores.Commands;
 using Application.Stores.Queries;
-using Application.Stores.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
