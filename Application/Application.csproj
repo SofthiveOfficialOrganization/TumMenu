@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Auths\Commands\" />
+    <Folder Include="Products\Queries\" />
   </ItemGroup>
 
 </Project>
