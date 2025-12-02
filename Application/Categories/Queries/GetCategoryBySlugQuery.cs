@@ -1,6 +1,6 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Categories.DTOs;
-using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
@@ -17,9 +17,10 @@ public class GetCategoryBySlugHandler(
 {
 	public async Task<CategoryDTO?> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
 	{
-		var category = await repoCategory.Query().Where(c => c.Slug == req.Slug).FirstOrDefaultAsync(ct);
-		if(category is null)
-			throw new NotFoundAppException($"Kategori bulunamadı.");
+		var category = (await repoCategory.Query()
+			.Where(c => c.Slug == req.Slug)
+			.FirstOrDefaultAsync(ct))
+			.EnsureFound("Kategori bulunamad�.");
 
 		return mapper.Map<CategoryDTO?>(category);
 	}

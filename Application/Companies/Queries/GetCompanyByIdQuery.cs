@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Application.Companies.DTOs;
 using MapsterMapper;
 using MediatR;
@@ -16,15 +17,13 @@ public class GetCompanyByIdHandler(
 {
 	public async Task<CompanyDTO> Handle(GetCompanyByIdQuery req, CancellationToken ct)
 	{
-		var company = await repoCompany.Query()
+		var company = (await repoCompany.Query()
 			.Where(c => c.Id == req.Id)
 			.Include(c => c.BaseMenu)
 			.Include(c => c.Subscription)
 			.Include(c => c.PaymentMethods)
 			.Include(c => c.Stores)
-			.FirstOrDefaultAsync(ct);
-		if(company is null)
-			throw new NotFoundAppException("Şirket bulunamadı.");
+			.FirstOrDefaultAsync(ct)).EnsureFound("Şirket bulunamadı.");
 		var companyDTO = mapper.Map<CompanyDTO>(company);
 		return companyDTO;
 	}

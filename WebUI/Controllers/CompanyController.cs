@@ -76,23 +76,7 @@ public class CompanyController(IMediator mediator) : Controller
 		return View(company);
 	}
 
-	[HttpGet("{count}")]
-	public IActionResult GetTestCompanies(int count)
-	{
-		if(count <= 0)
-			return BadRequest("Count must be greater than zero.");
 
-		var companies = Enumerable.Range(1, count)
-			.Select(i => new CompanyDTO()
-			{
-				Id = Guid.NewGuid(),
-				Name = $"Example Company {i}",
-				Slug = $"example-company-{i}",
-				OwnerId = Guid.NewGuid()
-			}).ToList();
-
-		return View(companies);
-	}
 	[HttpPost("[action]")]
 	public IActionResult CreateTestCompany([FromBody] CompanyDTO dto)
 	{

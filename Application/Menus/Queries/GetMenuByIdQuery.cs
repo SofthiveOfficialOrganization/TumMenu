@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Application.Menus.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -18,9 +19,7 @@ public class GetMenuByIdHandler(
 {
 	public async Task<MenuDTO> Handle(GetMenuByIdQuery req, CancellationToken ct)
 	{
-		var menu = await repoMenu.GetByIdAsync(req.MenuId, ct);
-		if(menu == null)
-			throw new NotFoundAppException("Menü bulunamadı.");
+		var menu = (await repoMenu.GetByIdAsync(req.MenuId, ct)).EnsureFound("Menü bulunamadı.");
 		var menuDTO = mapper.Map<MenuDTO>(menu);
 		return menuDTO;
 	}

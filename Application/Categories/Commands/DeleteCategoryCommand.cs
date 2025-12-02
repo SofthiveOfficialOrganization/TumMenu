@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Domain.Entities;
 using MediatR;
 
@@ -13,9 +14,8 @@ public class DeleteCategoryCommandHandler(
 {
 	public async Task<Unit> Handle(DeleteCategoryCommand req, CancellationToken ct)
 	{
-		var category = repoCategory.Query().FirstOrDefault(c => c.Id == req.Id);
-		if(category == null)
-			throw new NotFoundAppException("Kategori bulunamadı");
+		var category = repoCategory.Query().FirstOrDefault(c => c.Id == req.Id).EnsureFound("Kategori bulunamadı");
+
 		repoCategory.SoftDelete(category);
 		return Unit.Value;
 	}
