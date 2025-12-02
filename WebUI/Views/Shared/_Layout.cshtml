@@ -1,151 +1,112 @@
-﻿<!DOCTYPE html>
+﻿@*
+    Ortak layout:
+    - Head (SEO + CSS)
+    - Header (logo + menü)
+    - Opsiyonel Hero (@section Hero)
+    - Body (@RenderBody)
+    - Footer
+*@
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebUI</title>
 
-    <!-- Önce Bootstrap -->
+    <title>@ViewData["Title"] - tümmenü | Dijital QR Menü Platformu</title>
+
+    <meta name="description"
+          content="tümmenü; küçük esnaf ve müşteriler için dijital QR menü platformu. Restoranları keşfedin, menülere gitmeden göz atın, işletmeniz için saniyeler içinde QR menü oluşturun." />
+
+    <!-- Basit Open Graph -->
+    <meta property="og:title" content="tümmenü - Dijital QR Menü Platformu" />
+    <meta property="og:description" content="Restoranların QR menülerini keşfedin, işletmeniz için saniyeler içinde dijital menü oluşturun." />
+    <meta property="og:type" content="website" />
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     <!-- Tema değişkenleri -->
     <link rel="stylesheet" href="~/css/globals.css" asp-append-version="true" />
 
-    <!-- Otomatik WebUI stilleri (varsa kalsın) -->
+    <!-- Otomatik WebUI stilleri (varsın dursun) -->
     <link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />
 
-    <!-- Body, tipografi, layout -->
+    <!-- Body + layout -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-    <!-- Header + footer -->
+    <!-- Header + hero + footer -->
     <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="glass-header">
-        <div class="container header-bar">
-
-            <!-- Logo -->
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="/images/logo.png" alt="Logo" style="height:40px; width:auto;">
-                <span class="fw-bold logo-text">tümmenü</span>
+    <header class="tm-header">
+        <div class="tm-container tm-header-inner">
+            <a asp-controller="Home" asp-action="Index"
+               class="tm-logo" aria-label="Tüm Menü ana sayfa">
+                <div class="tm-logo-icon">TM</div>
+                <span class="tm-logo-text">tümmenü</span>
             </a>
 
-            <!-- Orta menü (desktop) -->
-            <nav class="header-menu desktop-menu">
-                <a class="nav-link" asp-controller="Home" asp-action="Restoranlar">
-                    Restoranlar
-                </a>
-
-                <!-- Ne Yesem? baloncuk -->
-                <a class="nav-link bubble-link"
-                   asp-controller="Home" asp-action="NeYesem">
-                    Ne Yesem?
-                </a>
+            <nav class="tm-nav" id="tmNav">
+                <a href="#search" class="tm-nav-link">Ne yesem?</a>
+                <a href="#restaurants" class="tm-nav-link">Restoranlar</a>
+                <button class="tm-btn tm-btn-primary" id="qrliOlBtn" type="button">
+                    QR'lı ol
+                </button>
             </nav>
 
-            <!-- Sağ CTA (desktop) -->
-            <div class="desktop-cta">
-                <a asp-controller="Home" asp-action="QrOl"
-                   class="btn qr-btn">
-                    QR'lı Ol
-                </a>
-            </div>
-
-            <!-- Hamburger (mobil) -->
-            <button class="mobile-menu-btn" type="button" aria-label="Menüyü aç/kapat">
+            <button class="tm-nav-toggle" id="navToggle"
+                    aria-label="Menüyü aç veya kapat">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
         </div>
-
-        <!-- Mobil Menü -->
-        <nav class="mobile-menu">
-            <a asp-controller="Home" asp-action="Restoranlar">Restoranlar</a>
-            <a asp-controller="Home" asp-action="NeYesem">Ne Yesem?</a>
-            <a asp-controller="Home" asp-action="QrOl">QR'lı Ol</a>
-        </nav>
     </header>
 
-    <!-- HEADER ile FOOTER arasındaki alan -->
-    <div class="page-main">
-        <div class="container">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
-    </div>
+    <main class="tm-main" role="main">
+        @RenderBody()
+    </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-        <div class="container footer-top">
-            <!-- Marka bloğu -->
-            <div class="footer-brand">
-                <div class="footer-brand-logo">
-                    <img src="/images/logo.png alt="tümmenü logosu">
-                </div>
-                <div>
-                    <h4 class="footer-title">tümmenü</h4>
-                    <p class="footer-text">
-                        Küçük esnaf ve müşteriler için hızlı ve modern dijital QR menü platformu.
+    <footer class="tm-footer" id="footer">
+        <div class="tm-container tm-footer-inner">
+            <div class="tm-footer-main">
+                <div class="tm-footer-brand">
+                    <div class="tm-logo">
+                        <div class="tm-logo-icon">TM</div>
+                        <span class="tm-logo-text">tümmenü</span>
+                    </div>
+                    <p>
+                        Klasik menü ve baskı derdini bırak. Tüm Menü ile hem
+                        müşteriler hem işletmeler için sade bir QR menü deneyimi sun.
                     </p>
                 </div>
-            </div>
 
-            <!-- Link kolonları -->
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h5>Ürün</h5>
-                    <a asp-controller="Home" asp-action="Restoranlar">Restoranlar</a>
-                    <a asp-controller="Home" asp-action="NeYesem">Ne Yesem?</a>
-                    <a asp-controller="Home" asp-action="QrOl">QR'lı Ol</a>
-                </div>
-
-                <div class="footer-column">
-                    <h5>Destek</h5>
-                    <a href="#">SSS</a>
-                    <a href="#">Kullanım Şartları</a>
-                    <a asp-controller="Home" asp-action="Privacy">Gizlilik</a>
-                </div>
-
-                <div class="footer-column">
-                    <h5>İletişim</h5>
-                    <p class="footer-text">Sorun mu var, önerin mi?</p>
-                    <a href="mailto:destek@tummenu.app" class="footer-cta-link">
-                        destek@tummenu.app
-                    </a>
+                <div class="tm-footer-columns">
+                    <div class="tm-footer-col">
+                        <h4>Ürün</h4>
+                        <a href="#hero">Nasıl çalışır?</a>
+                        <a href="#search">Restoran ara</a>
+                        <a href="#restaurants">Popüler işletmeler</a>
+                    </div>
+                    <div class="tm-footer-col">
+                        <h4>İşletmeler</h4>
+                        <button type="button" id="qrliOlFooterBtn">QR menüye geç</button>
+                        <a href="#search">Demo talep et</a>
+                        <a href="#footer">Sık sorulan sorular</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="footer-bottom">
-            <div class="container footer-bottom-inner">
-                <span>© @DateTime.Now.Year tümmenü</span>
-                <div class="footer-bottom-links">
-                    <a asp-controller="Home" asp-action="Privacy">Gizlilik</a>
-                    <a href="#">Çerezler</a>
-                </div>
+            <div class="tm-footer-bottom">
+                <span>© 2025 Tüm Menü. Tüm hakları saklıdır.</span>
+                <span>
+                    <a href="#footer">KVKK</a> ·
+                    <a href="#footer">Çerez politikası</a>
+                </span>
             </div>
         </div>
     </footer>
 
-    <!-- SCRIPTS -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-
-    <script>
-        const mobileBtn = document.querySelector(".mobile-menu-btn");
-        const mobileMenu = document.querySelector(".mobile-menu");
-
-        if (mobileBtn && mobileMenu) {
-            mobileBtn.addEventListener("click", () => {
-                mobileMenu.classList.toggle("show");
-                mobileBtn.classList.toggle("active");
-            });
-        }
-    </script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

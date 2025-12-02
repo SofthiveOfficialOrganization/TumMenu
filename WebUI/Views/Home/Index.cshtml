@@ -1,136 +1,412 @@
-﻿@{
+﻿v@{
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<!-- HERO / SLOGAN + FOTOĞRAF -->
-<section class="home-hero">
-    <div class="home-hero-grid">
-        <!-- Sol: slogan alanı -->
-        <div class="home-hero-content">
-            <div class="home-hero-badge">
-                Küçük esnaf için dijital QR menü
-            </div>
+<section class="tm-hero" id="hero">
+    <!-- Dalgalı geçiş -->
+    <div class="tm-hero-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0,64 C160,96 320,112 480,96 C640,80 800,32 960,26.7 C1120,21 1280,43 1360,53.3 L1440,64 L1440,120 L0,120 Z"
+                  fill="#e7edf7"></path>
+        </svg>
+    </div>
 
-            <h1 class="home-hero-title">
-                Menünü dijitale taşı, siparişleri hızlandır.
+    <div class="tm-container tm-hero-inner">
+        <div class="tm-hero-content">
+            <p class="tm-hero-eyebrow" id="heroEyebrow">QR menü platformu</p>
+            <h1 class="tm-hero-title" id="heroTitle">
+                Restoranları keşfet, menünü saniyede dijitale taşı.
             </h1>
-
-            <p class="home-hero-text">
-                İşletmen için dakikalar içinde QR menü oluştur, müşterilerin menünü
-                telefonlarından inceleyip siparişlerini kolayca versin.
+            <p class="tm-hero-lead" id="heroLead">
+                Normal kullanıcılar için keşif, işletmeler için kurumsal QR menü.
+                Hepsi Tüm Menü'de.
             </p>
 
-            <ul class="home-hero-list">
-                <li>🧾 Menü değişikliklerini anında güncelle</li>
-                <li>📱 QR kodu masalarına koy, sırayı kısalt</li>
-                <li>🌐 Menünü herkese açık bir sayfada göster</li>
-            </ul>
+            <!-- Basit slider: 4 slide, segment yok -->
+            <div class="tm-hero-slider" id="heroSlider">
+                <!-- Slide 0 – Çevrendeki QR menülü işletmeler -->
+                <article class="tm-hero-slide is-active"
+                         data-index="0"
+                         data-eyebrow="Müşteriler için"
+                         data-title="Çevrendeki QR menülü işletmeleri keşfet"
+                         data-lead="Konumunu gir, Tüm Menü'ye kayıtlı restoranların QR menülerine gitmeden göz at.">
+                    <h2>Çevrendeki QR menülü işletmeleri keşfet</h2>
+                    <p>
+                        Konumunu gir, Tüm Menü'ye kayıtlı restoranların QR menülerine gitmeden göz at.
+                    </p>
+                    <ul class="tm-hero-benefits">
+                        <li>Menü ve fiyatları gitmeden incele</li>
+                        <li>Mutfağa ve konuma göre filtrele</li>
+                        <li>Favori işletmelerini kaydet</li>
+                    </ul>
+                    <div class="tm-hero-cta">
+                        <a href="#search" class="tm-btn tm-btn-primary">Hemen keşfet</a>
+                        <button type="button" class="tm-link-btn">Örnek menü gör</button>
+                    </div>
+                </article>
+
+                <!-- Slide 1 – Bütçe / fiyat -->
+                <article class="tm-hero-slide"
+                         data-index="1"
+                         data-eyebrow="Müşteriler için"
+                         data-title="Gitmeden önce fiyat al, sürpriz yaşamadan öde"
+                         data-lead="Güncel fiyatlarla şeffaf bir menü deneyimi. Toplu buluşmalarda herkes menüyü önceden görebilir.">
+                    <h2>Gitmeden önce fiyat al, sürpriz yaşamadan öde</h2>
+                    <p>
+                        Güncel fiyatlarla şeffaf bir menü deneyimi. Toplu buluşmalarda herkes menüyü önceden görebilir.
+                    </p>
+                    <ul class="tm-hero-benefits">
+                        <li>Güncel fiyatları tek ekranda gör</li>
+                        <li>Arkadaşlarınla menüyü paylaş</li>
+                        <li>İndirimli işletmeleri keşfet</li>
+                    </ul>
+                    <div class="tm-hero-cta">
+                        <a href="#search" class="tm-btn tm-btn-primary">Restoranları gör</a>
+                        <button type="button" class="tm-link-btn">Tüm özellikler</button>
+                    </div>
+                </article>
+
+                <!-- Slide 2 – İşletme: sade QR menü -->
+                <article class="tm-hero-slide"
+                         data-index="2"
+                         data-eyebrow="İşletmeler için"
+                         data-title="PDF derdi olmadan modern QR menü sistemi"
+                         data-lead="Baskı masrafı yok, PDF derdi yok. Menünü dakikalar içinde dijitale taşı, dilediğin an güncelle.">
+                    <h2>PDF derdi olmadan modern QR menü sistemi</h2>
+                    <p>
+                        Baskı masrafı yok, PDF derdi yok. Menünü dakikalar içinde dijitale taşı, dilediğin an güncelle.
+                    </p>
+                    <ul class="tm-hero-benefits">
+                        <li>Limitsiz kategori ve ürün ekle</li>
+                        <li>Fiyatları tek panelden güncelle</li>
+                        <li>QR kodunu sınırsızca yazdır ve kullan</li>
+                    </ul>
+                    <div class="tm-hero-cta">
+                        <a href="#businessCta" class="tm-btn tm-btn-primary">QR menü talep et</a>
+                        <button type="button" class="tm-link-btn">İşletmeler için detaylar</button>
+                    </div>
+                </article>
+
+                <!-- Slide 3 – İşletme: 3 adım -->
+                <article class="tm-hero-slide"
+                         data-index="3"
+                         data-eyebrow="İşletmeler için"
+                         data-title="Üç adımda kendi QR menünü oluştur"
+                         data-lead="İşletmeni ekle, menünü gir, QR kodunu indir. Hepsi tek sade panelde, teknik bilgi gerekmez.">
+                    <h2>Üç adımda kendi QR menünü oluştur</h2>
+                    <p>
+                        İşletmeni ekle, menünü gir, QR kodunu indir. Hepsi tek sade panelde, teknik bilgi gerekmez.
+                    </p>
+                    <ul class="tm-hero-benefits">
+                        <li>Panelden menü şablonunu seç</li>
+                        <li>Ürün ve fiyatlarını gir</li>
+                        <li>QR kodunu çıktı alıp masalara koy</li>
+                    </ul>
+                    <div class="tm-hero-cta">
+                        <a href="#businessCta" class="tm-btn tm-btn-primary">Demo hesabı aç</a>
+                        <button type="button" class="tm-link-btn">Kurulum ne kadar sürer?</button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="tm-hero-dots" id="heroDots" aria-label="Slider kontrolleri"></div>
         </div>
 
-        <!-- Sağ: fotoğraf / illüstrasyon alanı -->
-        <div class="home-hero-visual">
-            <div class="hero-photo-placeholder">
-                FOTOĞRAF / İLLÜSTRASYON
+        <!-- 4 farklı laptop görseli (hepsi laptop, içerik değişiyor) -->
+        <div class="tm-hero-visual" aria-hidden="true">
+            <!-- 0: Harita -->
+            <div class="tm-hero-visual-item is-active" data-index="0">
+                <div class="tm-laptop tm-laptop--map">
+                    <div class="tm-laptop-screen">
+                        <div class="tm-laptop-map"></div>
+                        <div class="tm-laptop-pin tm-laptop-pin--1"></div>
+                        <div class="tm-laptop-pin tm-laptop-pin--2"></div>
+                        <div class="tm-laptop-pin tm-laptop-pin--3"></div>
+                    </div>
+                    <div class="tm-laptop-base"></div>
+                </div>
+            </div>
+
+            <!-- 1: Restoran listesi -->
+            <div class="tm-hero-visual-item" data-index="1">
+                <div class="tm-laptop tm-laptop--list">
+                    <div class="tm-laptop-screen">
+                        <div class="tm-laptop-list">
+                            <div class="tm-laptop-list-item"></div>
+                            <div class="tm-laptop-list-item"></div>
+                            <div class="tm-laptop-list-item"></div>
+                        </div>
+                        <div class="tm-laptop-filter"></div>
+                    </div>
+                    <div class="tm-laptop-base"></div>
+                </div>
+            </div>
+
+            <!-- 2: Analytics / grafik -->
+            <div class="tm-hero-visual-item" data-index="2">
+                <div class="tm-laptop tm-laptop--analytics">
+                    <div class="tm-laptop-screen">
+                        <div class="tm-laptop-chart-line"></div>
+                        <div class="tm-laptop-chart-bars">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="tm-laptop-base"></div>
+                </div>
+            </div>
+
+            <!-- 3: QR masa standı ekranı -->
+            <div class="tm-hero-visual-item" data-index="3">
+                <div class="tm-laptop tm-laptop--qr">
+                    <div class="tm-laptop-screen">
+                        <div class="tm-laptop-qr"></div>
+                        <div class="tm-laptop-qr-lines">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="tm-laptop-base"></div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ETKRAFINDAKİ İŞLETMELER + HARİTA -->
-<section class="home-discover">
-    <div class="discover-grid">
-        <!-- Sol: filtre kartı -->
-        <div class="discover-card card-surface">
-            <h2 class="discover-title">Etrafınızdaki işletmeleri keşfedin</h2>
-            <p class="discover-text">
-                Size en yakın restoran, kafe ve yemek işletmelerini bulun.
-            </p>
+<!-- ARAMA + GOOGLE MAPS -->
+<section class="tm-search" id="search">
+    <div class="tm-container">
+        <div class="tm-search-inner">
+            <div class="tm-search-panel">
+                <h2>Restoran ara, QR menü gör</h2>
+                <p>Konumunu gir, sana en yakın QR menülü işletmeleri saniyeler içinde gösterelim.</p>
 
-            <div class="discover-form">
-                <div class="discover-field">
-                    <label for="city">İl</label>
-                    <input id="city" type="text" placeholder="Örneğin: İstanbul">
-                </div>
-                <div class="discover-field">
-                    <label for="district">İlçe</label>
-                    <input id="district" type="text" placeholder="Örneğin: Kadıköy">
-                </div>
-
-                <div class="discover-tags-label">Kategori</div>
-                <div class="discover-tags">
-                    <button type="button" class="discover-tag active">Restoran</button>
-                    <button type="button" class="discover-tag">Kafe</button>
-                    <button type="button" class="discover-tag">Yemek</button>
-                </div>
-
-                <button type="button" class="discover-submit">
-                    İşletmeleri göster
-                </button>
+                <form class="tm-search-form">
+                    <div class="tm-field">
+                        <label for="location">Konum</label>
+                        <input id="location" name="location" type="text"
+                               placeholder="Örn. Kadıköy, İstanbul" />
+                    </div>
+                    <div class="tm-field">
+                        <label for="food">Ne yesen?</label>
+                        <input id="food" name="food" type="text"
+                               placeholder="Pizza, kahve, burger..." />
+                    </div>
+                    <button type="submit" class="tm-btn tm-btn-primary tm-search-submit">
+                        Restoranları göster
+                    </button>
+                </form>
             </div>
-        </div>
 
-        <!-- Sağ: harita alanı -->
-        <div class="discover-map">
-            <div class="map-placeholder">
-                <span>HARİTA</span>
+            <!-- Gerçek Google Maps konteyneri -->
+            <div id="tmMap" class="tm-map-placeholder"></div>
+        </div>
+    </div>
+</section>
+
+<!-- İSTATİSTİK / GÜVEN BÖLÜMÜ -->
+<section class="tm-stats" id="stats">
+    <div class="tm-container">
+        <header class="tm-section-header tm-section-header--center">
+            <h2>Tüm Menü, iki taraf için de tek panel</h2>
+            <p>
+                Hem müşteriler hem işletmeler için tasarlanmış sade bir QR menü deneyimi.
+                Rakamlarla Tüm Menü:
+            </p>
+        </header>
+
+        <div class="tm-stats-grid">
+            <article class="tm-stat-card">
+                <div class="tm-stat-value">2500+</div>
+                <div class="tm-stat-label">görüntülenen menü</div>
+                <p class="tm-stat-note">Kullanıcılar şehirdeki işletmelerin menülerini günde binlerce kez inceliyor.</p>
+            </article>
+
+            <article class="tm-stat-card">
+                <div class="tm-stat-value">%40</div>
+                <div class="tm-stat-label">daha az baskı maliyeti</div>
+                <p class="tm-stat-note">QR menüye geçen işletmeler menü baskı masrafını ciddi oranda azaltıyor.</p>
+            </article>
+
+            <article class="tm-stat-card">
+                <div class="tm-stat-value">3 adım</div>
+                <div class="tm-stat-label">ile QR menü hazır</div>
+                <p class="tm-stat-note">İşletmeni ekle, menünü gir, QR kodunu indir. Hepsi birkaç dakika içinde.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- İŞLETMELER İÇİN CTA -->
+<section class="tm-business-cta" id="businessCta">
+    <div class="tm-container">
+        <div class="tm-business-cta-inner">
+            <div class="tm-business-copy">
+                <h2>İşletmeni saniyeler içinde QR menüye taşı</h2>
+                <p>
+                    Menü değiştikçe tekrar baskı derdi yaşamadan, tüm ürün ve fiyatlarını tek panelden yönet.
+                    İstersen hemen demo hesabı aç, istersen ekibimiz senin için kursun.
+                </p>
+                <div class="tm-business-actions">
+                    <a href="#search" class="tm-btn tm-btn-primary">Demo hesabı aç</a>
+                    <button type="button" class="tm-link-btn">Ekibimiz seni arasın</button>
+                </div>
+            </div>
+            <div class="tm-business-steps">
+                <h3>Nasıl çalışır?</h3>
+                <ol>
+                    <li>İşletme bilgilerini ve logo’nu ekle.</li>
+                    <li>Menü kategorilerini ve ürünlerini gir.</li>
+                    <li>Oluşan QR kodunu indir, masalara yerleştir.</li>
+                </ol>
+                <p class="tm-business-note">
+                    İstediğin zaman ürün ekleyip çıkarabilir, fiyatları tek tıkla güncelleyebilirsin.
+                </p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ÖNE ÇIKAN RESTORANLAR / CAROUSEL GÖRÜNÜM -->
-<section class="home-restaurants">
-    <div class="home-restaurants-header">
-        <div>
-            <h2>Öne çıkan işletmeler</h2>
-            <p class="home-restaurants-text">
-                Popüler restoran ve kafeleri keşfedin. Hepsi QR menüyle hazır.
-            </p>
-        </div>
+@section Scripts {
+    <script>
+        (function () {
+            /* === HERO SLIDER (4 SLIDE) === */
+            const slides = Array.from(document.querySelectorAll(".tm-hero-slide"));
+            const visuals = Array.from(document.querySelectorAll(".tm-hero-visual-item"));
+            const dotsContainer = document.getElementById("heroDots");
+            const heroTitle = document.getElementById("heroTitle");
+            const heroLead = document.getElementById("heroLead");
+            const heroEyebrow = document.getElementById("heroEyebrow");
 
-        <div class="home-restaurants-controls">
-            <button type="button" class="slider-btn slider-btn-prev" aria-label="Önceki">
-                ‹
-            </button>
-            <button type="button" class="slider-btn slider-btn-next" aria-label="Sonraki">
-                ›
-            </button>
-        </div>
-    </div>
+            if (!slides.length) return;
 
-    <div class="home-restaurants-row">
-        <!-- Kart 1 -->
-        <article class="restaurant-card card-surface">
-            <div class="restaurant-image-placeholder"></div>
-            <div class="restaurant-info">
-                <h3 class="restaurant-name">Restoran 1</h3>
-                <p class="restaurant-meta">Kadıköy · Türk Mutfağı</p>
-                <p class="restaurant-pill">QR menü hazır</p>
-            </div>
-        </article>
+            let currentIndex = 0;
+            let sliderTimer = null;
 
-        <!-- Kart 2 -->
-        <article class="restaurant-card card-surface">
-            <div class="restaurant-image-placeholder"></div>
-            <div class="restaurant-info">
-                <h3 class="restaurant-name">Restoran 2</h3>
-                <p class="restaurant-meta">Beşiktaş · Dünya Mutfağı</p>
-                <p class="restaurant-pill">Temassız menü</p>
-            </div>
-        </article>
+            function buildDots() {
+                dotsContainer.innerHTML = "";
+                slides.forEach((_, index) => {
+                    const dot = document.createElement("button");
+                    dot.className = "tm-hero-dot";
+                    dot.type = "button";
+                    dot.setAttribute("aria-label", (index + 1) + ". slayt");
+                    dot.addEventListener("click", function () {
+                        goToSlide(index);
+                    });
+                    dotsContainer.appendChild(dot);
+                });
+            }
 
-        <!-- Kart 3 (placeholder) -->
-        <article class="restaurant-card card-surface">
-            <div class="restaurant-image-placeholder"></div>
-            <div class="restaurant-info">
-                <h3 class="restaurant-name">Restoran 3</h3>
-                <p class="restaurant-meta">Konum · Kafe &amp; Tatlı</p>
-                <p class="restaurant-pill">Yakında sizinki de burada</p>
-            </div>
-        </article>
-    </div>
-</section>
+            function applyActive(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("is-active", i === index);
+                });
+                visuals.forEach((visual, i) => {
+                    visual.classList.toggle("is-active", i === index);
+                });
 
+                const activeSlide = slides[index];
+                const eyebrow = activeSlide.dataset.eyebrow || "QR menü platformu";
+                const title = activeSlide.dataset.title || activeSlide.querySelector("h2")?.textContent || "";
+                const lead = activeSlide.dataset.lead || activeSlide.querySelector("p")?.textContent || "";
 
+                heroEyebrow.textContent = eyebrow;
+                heroTitle.textContent = title;
+                heroLead.textContent = lead;
 
+                Array.from(dotsContainer.children).forEach((dot, i) => {
+                    dot.classList.toggle("is-active", i === index);
+                });
+            }
 
+            function goToSlide(index) {
+                const total = slides.length;
+                currentIndex = ((index % total) + total) % total;
+                applyActive(currentIndex);
+                restartTimer();
+            }
+
+            function restartTimer() {
+                if (sliderTimer) clearInterval(sliderTimer);
+                sliderTimer = setInterval(function () {
+                    goToSlide(currentIndex + 1);
+                }, 6500);
+            }
+
+            buildDots();
+            applyActive(0);
+            restartTimer();
+
+            /* === QR'LI OL butonu: işletme CTA bölümüne scroll === */
+            const qrliOlBtn = document.getElementById("qrliOlBtn");
+            const qrliOlFooterBtn = document.getElementById("qrliOlFooterBtn");
+
+            function scrollBusiness() {
+                const el = document.getElementById("businessCta");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+            }
+
+            if (qrliOlBtn) qrliOlBtn.addEventListener("click", scrollBusiness);
+            if (qrliOlFooterBtn) qrliOlFooterBtn.addEventListener("click", scrollBusiness);
+
+            /* === MOBILE NAV === */
+            const navToggle = document.getElementById("navToggle");
+            const nav = document.getElementById("tmNav");
+
+            if (navToggle && nav) {
+                navToggle.addEventListener("click", function () {
+                    nav.classList.toggle("is-open");
+                    navToggle.classList.toggle("is-open");
+                });
+
+                document.querySelectorAll(".tm-nav-link").forEach(link => {
+                    link.addEventListener("click", function () {
+                        nav.classList.remove("is-open");
+                        navToggle.classList.remove("is-open");
+                    });
+                });
+            }
+
+            /* === ARAMA FORMU (şimdilik demo) === */
+            const searchForm = document.querySelector(".tm-search-form");
+            if (searchForm) {
+                searchForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    alert("Buraya daha sonra gerçek arama & filtreleme eklenecek.");
+                });
+            }
+
+            /* === GOOGLE MAPS === */
+            window.initMap = function () {
+                const mapEl = document.getElementById("tmMap");
+                if (!mapEl) return;
+
+                const istanbulCenter = { lat: 41.015137, lng: 28.97953 }; // İstanbul
+
+                const map = new google.maps.Map(mapEl, {
+                    center: istanbulCenter,
+                    zoom: 12,
+                    disableDefaultUI: true
+                });
+
+                const demoRestaurants = [
+                    { position: { lat: 41.025, lng: 28.975 }, title: "Burger Point" },
+                    { position: { lat: 41.043, lng: 29.002 }, title: "Third Wave Coffee" },
+                    { position: { lat: 38.455, lng: 27.205 }, title: "Mamma Mia Pizza" },
+                    { position: { lat: 39.917, lng: 32.859 }, title: "Green Bowl" }
+                ];
+
+                demoRestaurants.forEach(r =>
+                    new google.maps.Marker({
+                        position: r.position,
+                        map: map,
+                        title: r.title
+                    })
+                );
+            };
+        })();
+    </script>
+
+    <!-- Kendi API key’ini mutlaka ekle -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+            async defer></script>
+}

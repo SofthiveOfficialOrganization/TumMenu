@@ -1,124 +1,88 @@
-/* ===========================
-   GLOBALS.CSS
-   Renk paleti + grid sistemi
-   =========================== */
-
 :root {
-    /* Ana renkler (kurumsal mavi) */
-    --primary: #1e40af; /* Ana mavi */
-    --primary-soft: #2563eb; /* Hover / gradient için */
-    --primary-foreground: #f9fafb; /* Mavi üzerindeki yazý */
-    /* Accent (eðlenceli turuncu) */
-    --accent: #f97316;
-    --accent-soft: #ffedd5;
-    --accent-foreground: #111827;
-    /* Arka planlar */
-    --background: #f5f7ff; /* Body arka planý */
-    --surface: #ffffff; /* Kart / beyaz bloklar */
-    /* Metin renkleri */
-    --text-main: #111827;
-    --text-heading: #0f172a;
-    --text-muted: #6b7280;
-    /* Çizgi - sýnýr */
-    --border-subtle: rgba(15, 23, 42, 0.08);
-    /* Focus / ring */
-    --ring: #2563eb;
-    /* Grafik renkleri (ileride gerekiyorsa) */
-    --chart-1: #0ea5e9;
-    --chart-2: #22c55e;
-    --chart-3: #f97316;
-    --chart-4: #e11d48;
-    --chart-5: #6366f1;
+    --tm-primary: #2563eb;
+    --tm-primary-soft: #e3edff;
+    --tm-primary-dark: #1d4ed8;
+    /* Daha kýrýk, hafif mavi bir arka plan */
+    --tm-bg: #e7edf7;
+    --tm-surface: #ffffff;
+    --tm-text: #0f172a;
+    --tm-muted: #6b7280;
+    --tm-radius-lg: 24px;
+    --tm-radius-md: 18px;
+    --tm-radius-full: 999px;
+    --tm-shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.16);
 }
 
-/* ===========================
-   12 Column Global Layout Grid
-   =========================== */
+* {
+    box-sizing: border-box;
+}
 
-/* Container */
-.container-12 {
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--tm-bg);
+    color: var(--tm-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.tm-main {
+    min-height: 60vh;
+}
+
+.tm-container {
     width: 100%;
-    max-width: 1280px; /* Desktop geniþliði */
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 16px;
-    padding-right: 16px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
 }
 
-/* Grid wrapper */
-.row-12 {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 24px; /* Kolonlar arasý boþluk */
+/* Butonlar */
+.tm-btn {
+    border-radius: var(--tm-radius-full);
+    border: none;
+    padding: 0.55rem 1.35rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    white-space: nowrap;
 }
 
-/* Column sizes */
-.col-1 {
-    grid-column: span 1;
+.tm-btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #f9fafb;
+    box-shadow: var(--tm-shadow-soft);
 }
 
-.col-2 {
-    grid-column: span 2;
-}
-
-.col-3 {
-    grid-column: span 3;
-}
-
-.col-4 {
-    grid-column: span 4;
-}
-
-.col-5 {
-    grid-column: span 5;
-}
-
-.col-6 {
-    grid-column: span 6;
-}
-
-.col-7 {
-    grid-column: span 7;
-}
-
-.col-8 {
-    grid-column: span 8;
-}
-
-.col-9 {
-    grid-column: span 9;
-}
-
-.col-10 {
-    grid-column: span 10;
-}
-
-.col-11 {
-    grid-column: span 11;
-}
-
-.col-12 {
-    grid-column: span 12;
-}
-
-/* Responsive – küçük ekranlarda kolonlar alta dizilsin */
-@media (max-width: 900px) {
-    .row-12 {
-        gap: 16px;
+    .tm-btn-primary:hover {
+        filter: brightness(1.05);
     }
 
-    .col-1,
-    .col-2,
-    .col-3,
-    .col-4,
-    .col-5,
-    .col-6,
-    .col-7,
-    .col-8,
-    .col-9,
-    .col-10,
-    .col-11,
-    .col-12 {
-        grid-column: span 12;
-    }
+/* Link buton */
+.tm-link-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--tm-primary);
 }
+
+    .tm-link-btn:hover {
+        text-decoration: underline;
+    }
