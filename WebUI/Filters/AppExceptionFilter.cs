@@ -211,7 +211,15 @@ public sealed class AppExceptionFilter(
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;
 		}
+		if(ex is AlreadyExistsAppException aex)
+		{
 
+			context.ModelState.AddModelError(string.Empty, aex.Message);
+
+			context.Result = CreateCurrentActionViewResult(context);
+			context.ExceptionHandled = true;
+			return Task.CompletedTask;
+		}
 		if(isNotFound)
 		{
 			var viewData = new ViewDataDictionary(
