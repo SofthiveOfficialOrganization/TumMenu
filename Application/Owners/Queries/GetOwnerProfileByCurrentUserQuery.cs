@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Application.Owners.DTOs;
 using Domain.Entities;
 using FluentValidation;
@@ -12,25 +13,25 @@ namespace Application.Owners.Queries;
 public sealed record GetOwnerProfileByCurrentUserQuery() : IRequest<OwnerDTO>;
 
 public sealed class GetOwnerProfileByCurrentUserHandler(
-    IRepository<Owner> repoOwner,
-    IUserContext user,
-    IMapper mapper
+	IRepository<Owner> repoOwner,
+	IUserContext user,
+	IMapper mapper
 ) : IRequestHandler<GetOwnerProfileByCurrentUserQuery, OwnerDTO>
 {
-    public async Task<OwnerDTO> Handle(GetOwnerProfileByCurrentUserQuery req, CancellationToken ct)
-    {
-        if(!user.IsAuthenticated) throw new UnauthorizedAppException("Giriş gerekli.");
-        if(!Guid.TryParse(user.OwnerId, out var ownerId))
-            throw new ForbiddenAppException("Owner yetkisi bulunamadı.");
+	public async Task<OwnerDTO> Handle(GetOwnerProfileByCurrentUserQuery req, CancellationToken ct)
+	{
+		if(!user.IsAuthenticated) throw new UnauthorizedAppException("Giriş gerekli.");
+		if(!Guid.TryParse(user.OwnerId, out var ownerId))
+			throw new ForbiddenAppException("Yönetici yetkisi bulunamadı.");
 
-        var owner = await repoOwner.Query()
-            .Where(o => o.Id == ownerId)
-                .Include(o => o.Company)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(ct)
-            ?? throw new NotFoundAppException("Owner profili bulunamadı.");
+		var owner = (await repoOwner.Query()
+			.Where(o => o.Id == ownerId)
+				.Include(o => o.Company)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(ct)).EnsureFound("Yönetici hesabı bulunamadı.");
 
-        var ownerDTO = mapper.Map<OwnerDTO>(owner);
-        return ownerDTO;
-    }
+
+		var ownerDTO = mapper.Map<OwnerDTO>(owner!);
+		return ownerDTO;
+	}
 }

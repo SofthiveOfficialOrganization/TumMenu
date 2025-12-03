@@ -2,13 +2,12 @@
 using Domain.Entities;
 using Mapster;
 
-namespace Application.Staffs
+namespace Application.Staffs;
+
+public class StaffMappingProfiles
 {
-    public class StaffMappingProfiles
+    public void Register(TypeAdapterConfig config)
     {
-        public void Register(TypeAdapterConfig config)
-        {
-            config.NewConfig<Staff, StaffDTO>();
-        }
+        config.NewConfig<Staff, StaffDTO>();
     }
 }

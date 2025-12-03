@@ -3,6 +3,7 @@
 using Application.Abstractions;
 using Application.Categories.DTOs;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
@@ -18,9 +19,8 @@ public class UpdateCategoryHandler(
 {
 	public async Task<CategoryDTO> Handle(UpdateCategoryCommand req, CancellationToken ct)
 	{
-		var category = repoCategory.Query().FirstOrDefault(c => c.Id == req.CategoryId);
-		if(category == null)
-			throw new NotFoundAppException($"Kategori bulunamadı.");
+		var category = repoCategory.Query().FirstOrDefault(c => c.Id == req.CategoryId).EnsureFound("Kategori bulunamadı.");
+
 		mapper.Map(req, category);
 		repoCategory.Update(category);
 		var categoryDTO = mapper.Map<CategoryDTO>(category);

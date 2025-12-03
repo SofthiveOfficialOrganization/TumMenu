@@ -49,17 +49,19 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 }
 
 public class CreateProductCommandMappingProfile(
-	IRepository<Product> repoCategory,
-	IMapper mapper) : IRequestHandler<CreateProductCommand, ProductDTO>
+	IRepository<Product> repoProduct,
+	IRepository<Category> repoCategory,
+	IMapper mapper
+) : IRequestHandler<CreateProductCommand, ProductDTO>
 {
 	public async Task<ProductDTO> Handle(CreateProductCommand req, CancellationToken ct)
 	{
-		var category = await repoCategory.GetByIdAsync(req.CategoryId, ct);
-		if(category is null)
-			throw new NotFoundAppException($"Category with ID {req.CategoryId} was not found.");
+		bool categoryExists = await repoCategory.ExistsAsync(r => r.Id == req.CategoryId, ct);
+		if(!categoryExists)
+			throw new UnprocessableAppException($"Ürünün ekleneceği kategori bulunamadı.");
 
 		var product = mapper.Map<Product>(req);
-		await repoCategory.AddAsync(product, ct);
+		await repoProduct.AddAsync(product, ct);
 		return mapper.Map<ProductDTO>(product);
 	}
 }
