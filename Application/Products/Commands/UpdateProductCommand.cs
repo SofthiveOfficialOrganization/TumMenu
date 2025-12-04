@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.Common.Helpers;
 using Application.Products.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -27,15 +28,13 @@ public sealed record UpdateProductCommand(
 ) : IRequest<ProductDTO>, ITransactionalRequest;
 
 public class UpdateProductCommandHandler(
-	IRepository<Domain.Entities.Product> repoProduct,
+	IRepository<Product> repoProduct,
 	IMapper mapper
 ) : IRequestHandler<UpdateProductCommand, ProductDTO>
 {
 	public async Task<ProductDTO> Handle(UpdateProductCommand req, CancellationToken ct)
 	{
-		var product = await repoProduct.GetByIdAsync(req.Id, ct);
-		if(product is null)
-			throw new NotFoundAppException("Ürün bulunamadı.");
+		var product = (await repoProduct.GetByIdAsync(req.Id, ct)).EnsureFound("Ürün bulunamadı.");
 		mapper.Map(req, product);
 		repoProduct.Update(product);
 		return mapper.Map<ProductDTO>(product);

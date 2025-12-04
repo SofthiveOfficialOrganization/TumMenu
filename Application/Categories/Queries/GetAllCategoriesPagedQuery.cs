@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetAllCategoriesPagedQuery() : PageRequest, IRequest<List<CategoryDTO>>;
+public record GetAllCategoriesPagedQuery(string? Search) : PageRequest, IRequest<List<CategoryDTO>>;
 
 public class GetAllCategoriesPagedHandler(
 	IRepository<Category> repoCategory,
@@ -18,6 +18,10 @@ public class GetAllCategoriesPagedHandler(
 	{
 		var categoryList = await repoCategory.GetPageListAsync(
 			req,
+			c =>
+				string.IsNullOrEmpty(req.Search) ||
+				c.Name.Contains(req.Search) ||
+				c.Slug.Contains(req.Search),
 			orderBy: c => c.OrderBy(c => c.SortOrder),
 			ct: ct
 		);

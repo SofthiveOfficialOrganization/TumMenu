@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.Companies.Queries;
 
-public record GetAllCompaniesPagedQuery() : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
+public record GetAllCompaniesPagedQuery(string? Search) : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
 
 public class GetAllCompaniesPagedHandler(
 	IRepository<Company> repoCompany,
@@ -19,6 +19,10 @@ public class GetAllCompaniesPagedHandler(
 	{
 		var companies = repoCompany.GetPageListAsync(
 			req,
+			c =>
+				string.IsNullOrEmpty(req.Search) ||
+				c.Name.Contains(req.Search) ||
+				c.Slug.Contains(req.Search),
 			orderBy: q => q.OrderBy(c => c.Name),
 			ct: ct
 		);

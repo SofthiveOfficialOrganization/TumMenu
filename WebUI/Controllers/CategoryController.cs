@@ -9,9 +9,9 @@ namespace WebUI.Controllers;
 public class CategoryController(IMediator mediator) : Controller
 {
 	[HttpGet]
-	public async Task<IActionResult> Index(CancellationToken ct)
+	public async Task<IActionResult> Index(GetAllCategoriesPagedQuery req, CancellationToken ct)
 	{
-		var categories = await mediator.Send(new GetAllCategoriesPagedQuery(), ct);
+		var categories = await mediator.Send(req, ct);
 		return View(categories);
 	}
 

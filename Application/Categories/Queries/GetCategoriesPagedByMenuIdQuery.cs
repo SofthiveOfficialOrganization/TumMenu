@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Categories.DTOs;
+using Application.Common.Base.DTOs;
 using Application.Common.Base.Page.RequestBase;
 using Domain.Entities;
 using MapsterMapper;
@@ -7,14 +8,14 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetCategoriesPagedByMenuIdQuery(Guid MenuId) : PageRequest, IRequest<List<CategoryDTO>>;
+public record GetCategoriesPagedByMenuIdQuery(Guid MenuId) : PageRequest, IRequest<PaginatedListDTO<CategoryDTO>>;
 
 public class GetCategoriesByMenuIdHandler(
 	IRepository<Category> repoCategory,
 	IMapper mapper
-) : IRequestHandler<GetCategoriesPagedByMenuIdQuery, List<CategoryDTO>>
+) : IRequestHandler<GetCategoriesPagedByMenuIdQuery, PaginatedListDTO<CategoryDTO>>
 {
-	public async Task<List<CategoryDTO>> Handle(GetCategoriesPagedByMenuIdQuery req, CancellationToken ct)
+	public async Task<PaginatedListDTO<CategoryDTO>> Handle(GetCategoriesPagedByMenuIdQuery req, CancellationToken ct)
 	{
 		var categoryList = await repoCategory.GetPageListAsync(
 			req,
@@ -22,7 +23,7 @@ public class GetCategoriesByMenuIdHandler(
 			orderBy: c => c.OrderBy(c => c.SortOrder),
 			ct: ct
 			);
-		var categoryListDTO = mapper.Map<List<CategoryDTO>>(categoryList);
+		var categoryListDTO = mapper.Map<PaginatedListDTO<CategoryDTO>>(categoryList);
 		return categoryListDTO;
 	}
 }

@@ -28,15 +28,15 @@ public class CompanyController(IMediator mediator) : Controller
 		return View();
 	}
 	[HttpPost("[action]")]
-	public async Task<IActionResult> Create(CreateCompanyCommand request, CancellationToken ct)
+	public async Task<IActionResult> Create(CreateCompanyCommand req, CancellationToken ct)
 	{
-		var company = await mediator.Send(request, ct);
+		var company = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Details), new { id = company.Id });
 	}
 	[HttpGet("[action]")]
-	public async Task<IActionResult> AllCompanies(CancellationToken ct)
+	public async Task<IActionResult> AllCompanies(GetAllCompaniesPagedQuery req, CancellationToken ct)
 	{
-		var compaines = await mediator.Send(new GetAllCompaniesPagedQuery(), ct);
+		var compaines = await mediator.Send(req, ct);
 		return View(compaines);
 	}
 	[HttpGet("[action]")]
@@ -46,9 +46,9 @@ public class CompanyController(IMediator mediator) : Controller
 		return View(companies);
 	}
 	[HttpPost("[action]")]
-	public async Task<IActionResult> Update(UpdateCompanyCommand request, CancellationToken ct)
+	public async Task<IActionResult> Update(UpdateCompanyCommand req, CancellationToken ct)
 	{
-		var company = await mediator.Send(request, ct);
+		var company = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Details), new { id = company.Id });
 	}
 	[HttpPost("[action]/{id}")]

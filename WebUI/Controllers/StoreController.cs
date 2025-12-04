@@ -30,17 +30,17 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
 	[HttpPost("[action]")]
-	public async Task<IActionResult> Create(CreateStoreCommand request, CancellationToken ct)
+	public async Task<IActionResult> Create(CreateStoreCommand req, CancellationToken ct)
 	{
-		var store = await mediator.Send(request, ct);
+		var store = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Details), new { id = store.Id });
 	}
 
 	[HttpPost("[action]")]
-	public async Task<IActionResult> Update(UpdateStoreCommand request, CancellationToken ct)
+	public async Task<IActionResult> Update(UpdateStoreCommand req, CancellationToken ct)
 	{
-		await mediator.Send(request, ct);
-		return RedirectToAction(nameof(Details), new { id = request.Id });
+		await mediator.Send(req, ct);
+		return RedirectToAction(nameof(Details), new { id = req.Id });
 	}
 
 	[HttpPost("[action]/{id}")]
