@@ -7,15 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Images.DTOs;
+namespace Application.Medias.DTOs;
 
-public sealed class ImageDTO : BaseDTO
+public sealed class MediaDTO : BaseDTO
 {
-	public string ImageLink { get; set; } = null!;
+	public string MediaLink { get; set; } = null!;
 	public string? AltText { get; set; }
 	public int SortOrder { get; set; }
 	public Guid ReferenceId { get; set; }
-	public ImageRefType Type { get; set; } = ImageRefType.Unknown;
+	public MediaRefType Type { get; set; } = MediaRefType.Unknown;
 	public string Slot { get; set; } = "default-gallery";
 	public int? Width { get; set; }
 	public int? Height { get; set; }

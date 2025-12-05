@@ -22,7 +22,7 @@ public class GetAllCategoriesPagedHandler(
 				string.IsNullOrEmpty(req.Search) ||
 				c.Name.Contains(req.Search) ||
 				c.Slug.Contains(req.Search),
-			orderBy: c => c.OrderBy(c => c.SortOrder),
+			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.Name),
 			ct: ct
 		);
 		var categoryListDTO = mapper.Map<List<CategoryDTO>>(categoryList);

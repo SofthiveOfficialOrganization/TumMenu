@@ -9,6 +9,6 @@ public sealed class MenuDTO() : BaseDTO
 	public Guid? StoreId { get; set; }
 	public Guid? CompanyId { get; set; }
 	public Guid? MenuTemplateId { get; set; }
-	public ICollection<Image> Images { get; set; } = [];
+	public ICollection<Media> Medias { get; set; } = [];
 	public ICollection<Category> Categories { get; set; } = [];
 }

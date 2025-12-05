@@ -23,7 +23,7 @@ public class GetMenusPagedByStoreHandler(
 		var menus = await repoMenu.GetPageListAsync(
 			request: req,
 			expression: m => m.StoreId == req.StoreId,
-			include: m => m.Include(m => m.Categories).Include(m => m.Images),
+			include: m => m.Include(m => m.Categories).Include(m => m.Medias),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
 			ct: ct
 		);

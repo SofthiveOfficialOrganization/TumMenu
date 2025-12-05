@@ -39,7 +39,7 @@ namespace Infrastructure.Persistence
 		public DbSet<Product> Products => Set<Product>();
 		public DbSet<ProductPrice> ProductPrices => Set<ProductPrice>();
 		public DbSet<Tag> Tags => Set<Tag>();
-		public DbSet<Image> Images => Set<Image>();
+		public DbSet<Media> Medias => Set<Media>();
 		public DbSet<QRCode> QRCodes => Set<QRCode>();
 		public DbSet<QRScanEvent> QRScanEvents => Set<QRScanEvent>();
 		public DbSet<QRDailyStats> QRDailyStats => Set<QRDailyStats>();
@@ -235,8 +235,8 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(t => t.ProductId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Image: tüm referanslar ReferenceId + Type üzerinden
-			builder.Entity<Image>()
+			// Media: tüm referanslar ReferenceId + Type üzerinden
+			builder.Entity<Media>()
 				.HasIndex(i => new { i.ReferenceId, i.Type });
 
 			// Product slug unique
@@ -452,7 +452,7 @@ namespace Infrastructure.Persistence
 				.Property(s => s.Status)
 				.HasConversion<int>();
 
-			builder.Entity<Image>()
+			builder.Entity<Media>()
 				.Property(i => i.Type)
 				.HasConversion<int>();
 

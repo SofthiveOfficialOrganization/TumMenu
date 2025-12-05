@@ -13,7 +13,7 @@ namespace Domain.Entities
 		public MenuStatus Status { get; set; } = MenuStatus.Unknown;
 		public DateTime? PublishedAt { get; set; }
 		public long Version { get; set; } = 1;
-		public ICollection<Image> Images { get; set; } = [];
+		public ICollection<Media> Medias { get; set; } = [];
 		public ICollection<Category> Categories { get; set; } = [];
 	}
 	public enum MenuStatus

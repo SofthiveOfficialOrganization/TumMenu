@@ -20,7 +20,7 @@ public class GetCategoriesByMenuIdHandler(
 		var categoryList = await repoCategory.GetPageListAsync(
 			req,
 			c => c.MenuId == req.MenuId,
-			orderBy: c => c.OrderBy(c => c.SortOrder),
+			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.Name),
 			ct: ct
 			);
 		var categoryListDTO = mapper.Map<PaginatedListDTO<CategoryDTO>>(categoryList);

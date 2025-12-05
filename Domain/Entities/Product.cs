@@ -20,6 +20,6 @@ namespace Domain.Entities
 		public int? EstimatedPreparationTimeInMinutes { get; set; }
 		public ICollection<ProductPrice> Prices { get; set; } = [];
 		public ICollection<Tag> Tags { get; set; } = [];
-		public ICollection<Image> Images { get; set; } = [];
+		public ICollection<Media> Medias { get; set; } = [];
 	}
 }
