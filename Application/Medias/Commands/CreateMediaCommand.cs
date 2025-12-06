@@ -18,6 +18,9 @@ public sealed record CreateMediaCommand(
 	string? Slot,
 	int? Width,
 	int? Height,
+	long? FileSize,
+	string? Extension,
+	string? MimeType,
 	Guid ReferenceId,
 	MediaRefType MediaRefType
 ) : IRequest<MediaDTO>, ITransactionalRequest;

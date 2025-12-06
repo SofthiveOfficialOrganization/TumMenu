@@ -20,6 +20,9 @@ public sealed record UpdateMediaCommand(
 	string? Slot,
 	int? Width,
 	int? Height,
+	long? FileSize,
+	string? Extension,
+	string? MimeType,
 	Guid ReferenceId,
 	MediaRefType MediaRefType
 ) : IRequest<MediaDTO>, ITransactionalRequest;

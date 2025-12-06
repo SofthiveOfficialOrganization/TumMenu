@@ -13,25 +13,23 @@ using System.Threading.Tasks;
 
 namespace Application.Medias.Queries;
 
-public sealed record GetMediasPagedByReferanceIdQuery(
-	Guid ReferanceId,
+public sealed record GetAllMediasPagedQuery(
 	MediaRefType? Type,
 	MediaKind? MediaKind,
 	string? Extension,
 	string? Slot
 ) : PageRequest, IRequest<PaginatedListDTO<MediaDTO>>;
 
-public class GetMediasPagedByReferanceIdHandler(
+public class GetAllMediasPagedHandler(
 	IRepository<Media> repoMedia,
 	IMapper mapper
-) : IRequestHandler<GetMediasPagedByReferanceIdQuery, PaginatedListDTO<MediaDTO>>
+) : IRequestHandler<GetAllMediasPagedQuery, PaginatedListDTO<MediaDTO>>
 {
-	public async Task<PaginatedListDTO<MediaDTO>> Handle(GetMediasPagedByReferanceIdQuery req, CancellationToken ct)
+	public async Task<PaginatedListDTO<MediaDTO>> Handle(GetAllMediasPagedQuery req, CancellationToken ct)
 	{
 		var medias = await repoMedia.GetPageListAsync(
 			req,
 			media =>
-				media.ReferenceId == req.ReferanceId &&
 				(req.Type == null || media.Type == req.Type) &&
 				(req.MediaKind == null || media.Kind == req.MediaKind) &&
 				(string.IsNullOrEmpty(req.Extension) || (media.Extension != null && media.Extension.Contains(req.Extension))) &&

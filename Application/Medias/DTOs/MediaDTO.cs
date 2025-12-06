@@ -11,12 +11,16 @@ namespace Application.Medias.DTOs;
 
 public sealed class MediaDTO : BaseDTO
 {
-	public string MediaLink { get; set; } = null!;
+	public string MediaUrl { get; set; } = null!;
 	public string? AltText { get; set; }
 	public int SortOrder { get; set; }
 	public Guid ReferenceId { get; set; }
 	public MediaRefType Type { get; set; } = MediaRefType.Unknown;
+	public MediaKind Kind { get; set; } = MediaKind.Unknown;
 	public string Slot { get; set; } = "default-gallery";
 	public int? Width { get; set; }
 	public int? Height { get; set; }
+	public long? FileSize { get; set; }
+	public string? Extension { get; set; }
+	public string? MimeType { get; set; }
 }
