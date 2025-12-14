@@ -41,6 +41,7 @@ public class CreateCompanyCommandHandler(
 			throw new AlreadyExistsAppException($"'{req.Slug}' slug'ına sahip bir şirket bulunmakta. Farklı bir slug değeri girin.");
 
 		var company = mapper.Map<Company>(req);
+		company.Slug = req.Slug ?? SlugHelper.Slugify(req.Name);
 		await repoCompany.AddAsync(company, ct);
 		var companyDTO = mapper.Map<CompanyDTO>(company);
 		return companyDTO;
