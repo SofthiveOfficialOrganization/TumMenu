@@ -19,7 +19,7 @@ namespace Domain.Entities
 		public bool? IsVegetarian { get; set; }
 		public int? EstimatedPreparationTimeInMinutes { get; set; }
 		public ICollection<ProductPrice> Prices { get; set; } = [];
-		public ICollection<Tag> Tags { get; set; } = [];
+		public ICollection<ProductTag> ProductTags { get; set; } = [];
 		public ICollection<Media> Medias { get; set; } = [];
 	}
 }

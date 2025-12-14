@@ -68,6 +68,10 @@ namespace Infrastructure.Persistence
 		public DbSet<UsageCounter> UsageCounters => Set<UsageCounter>();
 		public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
 
+		// Many-to-many join
+		public DbSet<ProductTag> ProductTags => Set<ProductTag>();
+
+
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
@@ -228,12 +232,22 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(pp => pp.ProductId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Product(1) -> Tag(n)
-			builder.Entity<Tag>()
-				.HasOne(t => t.Product)
-				.WithMany(p => p.Tags)
-				.HasForeignKey(t => t.ProductId)
-				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<ProductTag>(b =>
+			{
+				b.HasKey(x => new { x.ProductId, x.TagId });
+
+				b.HasOne(x => x.Product)
+					.WithMany(p => p.ProductTags)
+					.HasForeignKey(x => x.ProductId);
+
+				b.HasOne(x => x.Tag)
+					.WithMany(t => t.ProductTags)
+					.HasForeignKey(x => x.TagId);
+			});
+
+			builder.Entity<ProductTag>()
+				.HasQueryFilter(pt => !pt.Product.IsDeleted);
 
 			// Media: tüm referanslar ReferenceId + Type üzerinden
 			builder.Entity<Media>()
@@ -292,6 +306,9 @@ namespace Infrastructure.Persistence
 					.HasForeignKey(x => x.PlanId)
 					.OnDelete(DeleteBehavior.Cascade);
 			});
+
+			builder.Entity<ExtensionPackPlan>()
+				.HasQueryFilter(epp => !epp.ExtensionPack.IsDeleted);
 		}
 
 		#endregion
