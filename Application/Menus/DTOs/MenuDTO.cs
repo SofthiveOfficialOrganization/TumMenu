@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Menus.DTOs;
 
-public sealed class MenuDTO() : BaseDTO
+public sealed class MenuDTO : BaseDTO
 {
 	public string? Name { get; set; }
 	public Guid? StoreId { get; set; }

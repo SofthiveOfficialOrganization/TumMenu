@@ -14,7 +14,9 @@ using System.Threading.Tasks;
 namespace Application.Products.Queries;
 
 public sealed record GetProductsPagedByCategoryIdQuery(
-	Guid CategoryId
+	Guid CategoryId,
+	string? Search,
+	Guid? TagId
 ) : PageRequest, IRequest<PaginatedListDTO<ProductDTO>>;
 
 public class GetProductsByCategoryIdHandler(
@@ -26,7 +28,12 @@ public class GetProductsByCategoryIdHandler(
 	{
 		var products = await repoProduct.GetPageListAsync(
 			req,
-			p => p.CategoryId == req.CategoryId,
+			p =>
+				p.CategoryId == req.CategoryId &&
+				(string.IsNullOrEmpty(req.Search) ||
+				p.Name.Contains(req.Search) ||
+				p.Slug.Contains(req.Search)) &&
+				(req.TagId == null || p.ProductTags.Any(pt => pt.TagId == req.TagId)),
 			orderBy: p => p.OrderBy(p => p.SortOrder),
 			ct: ct
 			);

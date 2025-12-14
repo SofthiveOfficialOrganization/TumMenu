@@ -34,11 +34,11 @@ builder.Services.AddAuthorizationBuilder()
 	.AddPolicy("Admin", p => p.RequireRole("Admin"));
 
 builder.Services.AddRazorPages();
+builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment())
 {
 	app.UseMigrationsEndPoint();
@@ -58,6 +58,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?code={0}");
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllerRoute(
 	name: "default",
