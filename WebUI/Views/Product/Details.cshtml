@@ -1,0 +1,142 @@
+@model ProductDTO
+
+@{
+    ViewData["Title"] = "Ürün Detayı";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@ViewData["Title"]</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
+    </div>
+
+    @if (Model != null)
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2 class="card-title mb-3">@Model.Name</h2>
+                        
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="text-muted mb-4">@Model.Description</p>
+                        }
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <small class="text-muted d-block mb-1">Fiyat</small>
+                                    <span class="fs-5 fw-bold text-primary">@Model.BasePrice.ToString("C2")</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <small class="text-muted d-block mb-1">Kategori ID</small>
+                                    <span class="fs-5">@Model.CategoryId</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Özellikler</h5>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Durum
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success rounded-pill">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger rounded-pill">Pasif</span>
+                                }
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sıra
+                                <span class="badge bg-secondary rounded-pill">@Model.SortOrder</span>
+                            </li>
+                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Hazırlama Süresi
+                                    <span>@Model.EstimatedPreparationTimeInMinutes dk</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Vegan
+                                @if (Model.IsVegan == true)
+                                {
+                                    <span class="text-success"><i class="bi bi-check-circle-fill"></i> Evet</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted"><i class="bi bi-dash-circle"></i> Hayır</span>
+                                }
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Vejetaryen
+                                @if (Model.IsVegetarian == true)
+                                {
+                                    <span class="text-success"><i class="bi bi-check-circle-fill"></i> Evet</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted"><i class="bi bi-dash-circle"></i> Hayır</span>
+                                }
+                            </li>
+                        </ul>
+
+                        @if (!string.IsNullOrEmpty(Model.Allergens))
+                        {
+                            <div class="alert alert-warning">
+                                <h6 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Alerjenler</h6>
+                                <p class="mb-0">@Model.Allergens</p>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Düzenle
+                            </a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i> Sil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Silme Modalı -->
+        <div class="modal fade" id="deleteModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ürünü Sil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>@Model.Name</strong> ürününü silmek istediğinize emin misiniz?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Ürün bulunamadı.
+        </div>
+    }
+</div>

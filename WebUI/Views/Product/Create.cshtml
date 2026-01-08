@@ -1,0 +1,117 @@
+@model Application.Products.Commands.CreateProductCommand
+
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">@ViewData["Title"]</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label asp-for="Name" class="form-label">Ürün Adı</label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label">Açıklama</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label">Kategori</label>
+                                <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                                    <option value="">Seçiniz...</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="BasePrice" class="form-label">Fiyat</label>
+                                <div class="input-group">
+                                    <input asp-for="BasePrice" class="form-control" type="number" step="0.01" />
+                                    <span class="input-group-text">₺</span>
+                                </div>
+                                <span asp-validation-for="BasePrice" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="EstimatedPreparationTimeInMinutes" class="form-label">Hazırlama Süresi (dk)</label>
+                                <input asp-for="EstimatedPreparationTimeInMinutes" class="form-control" type="number" />
+                                <span asp-validation-for="EstimatedPreparationTimeInMinutes" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="SortOrder" class="form-label">Sıralama</label>
+                                <input asp-for="SortOrder" class="form-control" type="number" />
+                                <span asp-validation-for="SortOrder" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Allergens" class="form-label">Alerjenler</label>
+                                <input asp-for="Allergens" class="form-control" placeholder="Örn: Glüten, Süt, Yumurta" />
+                                <span asp-validation-for="Allergens" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label asp-for="Slug" class="form-label">URL Yolu (Slug)</label>
+                                <input asp-for="Slug" class="form-control" placeholder="Otomatik oluşturulur, dilerseniz girebilirsiniz" />
+                                <span asp-validation-for="Slug" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" asp-for="IsActive" />
+                                            <label class="form-check-label" asp-for="IsActive">Aktif (Listede görünsün)</label>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label asp-for="IsVegan" class="form-label">Vegan</label>
+                                            <select asp-for="IsVegan" class="form-select">
+                                                <option value="">Belirtilmedi</option>
+                                                <option value="true">Evet</option>
+                                                <option value="false">Hayır</option>
+                                            </select>
+                                            <span asp-validation-for="IsVegan" class="text-danger"></span>
+                                        </div>
+
+                                        <div>
+                                            <label asp-for="IsVegetarian" class="form-label">Vejetaryen</label>
+                                            <select asp-for="IsVegetarian" class="form-select">
+                                                <option value="">Belirtilmedi</option>
+                                                <option value="true">Evet</option>
+                                                <option value="false">Hayır</option>
+                                            </select>
+                                            <span asp-validation-for="IsVegetarian" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        <div class="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                            <button type="submit" class="btn btn-primary px-4">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -113,39 +114,32 @@ namespace WebUI.Areas.Identity.Pages.Account
                     Input.RememberMe,
                     lockoutOnFailure: false);
 
-                // 🔽🔽🔽 DEĞİŞEN KISIM BURASI 🔽🔽🔽
                 if(result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
 
-                    // Register'da UserName = Email set ettiğimiz için:
-                    var user = await _userManager.FindByNameAsync(Input.Email);
+                    ApplicationUser user = await _userManager.FindByNameAsync(Input.Email);
                     if(user is null)
                     {
-                        // Çok edge case ama güvenli olsun
                         await _signInManager.SignOutAsync();
                         ModelState.AddModelError(string.Empty, "Kullanıcı bulunamadı.");
                         return Page();
                     }
 
-                    // Sadece Owner veya Admin login olsun
                     var roles = await _userManager.GetRolesAsync(user);
                     var allowed = roles.Contains("Owner") || roles.Contains("Admin");
 
                     if(!allowed)
                     {
-                        await _signInManager.SignOutAsync(); // yanlış kullanıcı cookie’yi temizle
+                        await _signInManager.SignOutAsync(); 
                         ModelState.AddModelError(string.Empty, "Bu hesap ile giriş yapılamaz.");
                         return Page();
                     }
 
-                    // Opsiyonel: LastLogin güncelle
                     user.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     await _userManager.UpdateAsync(user);
-
                     return LocalRedirect(returnUrl);
                 }
-                // 🔼🔼🔼 DEĞİŞEN KISIM BURASI 🔼🔼🔼
 
                 if(result.RequiresTwoFactor)
                 {

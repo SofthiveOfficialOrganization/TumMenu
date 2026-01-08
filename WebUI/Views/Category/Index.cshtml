@@ -1,0 +1,165 @@
+@using Application.Categories.DTOs
+@using Application.Common.Base.DTOs
+@model PaginatedListDTO<CategoryDTO>
+
+@{
+    ViewData["Title"] = "Kategoriler";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>@ViewData["Title"]</h1>
+        <!-- Create action requires menuId. Since Index lists categories (possibly from multiple menus or filtered), 
+             we need to know which menu to add to, or if we can pick one.
+             However, the controller `Create(Guid menuId)` suggests we must provide one.
+             If the list is filtered by menuId (e.g. via query string), we can use that.
+             If not, we might need a way to select menu.
+             For now, we check if `MenuId` is in query string or ViewData. 
+             If not available, maybe we hide the button or redirect to a menu selection?
+             Let's check if we can get MenuId from the first item if list is not empty, or from Query.
+        -->
+        @{
+            var menuIdStr = Context.Request.Query["MenuId"].ToString();
+            Guid menuId = Guid.Empty;
+            if (Guid.TryParse(menuIdStr, out var parsedId))
+            {
+                menuId = parsedId;
+            }
+            else if (Model.Items.Any())
+            {
+                menuId = Model.Items.First().MenuId;
+            }
+        }
+
+        @if (menuId != Guid.Empty)
+        {
+            <a asp-action="Create" asp-route-menuId="@menuId" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Yeni Kategori
+            </a>
+        }
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                @if (menuId != Guid.Empty)
+                {
+                    <input type="hidden" name="MenuId" value="@menuId" />
+                }
+                <div class="col-md-4">
+                    <input type="text" name="Search" class="form-control" placeholder="Kategori ara..." value="@Context.Request.Query["Search"]">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-secondary w-100">Ara</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Kategori Adı</th>
+                        <th>Açıklama</th>
+                        <th>Sıra</th>
+                        <th style="width: 150px;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-bold">@item.Name</div>
+                                <small class="text-muted">@item.Slug</small>
+                            </td>
+                            <td>
+                                @item.Description
+                            </td>
+                            <td>@item.SortOrder</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-route-slug="@item.Slug" class="btn btn-sm btn-outline-primary">
+                                        Detay
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                                        Düzenle
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                                        Sil
+                                    </button>
+                                </div>
+
+                                <!-- Silme Modalı -->
+                                <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Kategoriyi Sil</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>@item.Name</strong> kategorisini silmek istediğinize emin misiniz?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sayfalama -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.HasPrevious)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-MenuId="@menuId" asp-route-PageIndex="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Önceki</span>
+                    </li>
+                }
+
+                <li class="page-item disabled">
+                    <span class="page-link">Sayfa @Model.Index / @Model.Pages</span>
+                </li>
+
+                @if (Model.HasNext)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-MenuId="@menuId" asp-route-PageIndex="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Sonraki</span>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Kayıtlı kategori bulunamadı.
+        </div>
+    }
+</div>
