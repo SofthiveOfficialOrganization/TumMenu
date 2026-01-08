@@ -1,108 +1,125 @@
-﻿@*
-    Ortak layout:
-    - Head (SEO + CSS)
-    - Header (logo + menü)
-    - Opsiyonel Hero (@section Hero)
-    - Body (@RenderBody)
-    - Footer
-*@
+﻿@{
+    var pageTitle = ViewData["Title"] as string ?? "Ana Sayfa";
+    var fullTitle = pageTitle + " - Full Menu";
+}
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@fullTitle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>@ViewData["Title"] - tümmenü | Dijital QR Menü Platformu</title>
-
+    <!-- Temel SEO -->
     <meta name="description"
-          content="tümmenü; küçük esnaf ve müşteriler için dijital QR menü platformu. Restoranları keşfedin, menülere gitmeden göz atın, işletmeniz için saniyeler içinde QR menü oluşturun." />
+          content="QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve kendi dijital menünü oluştur." />
+    <meta name="robots" content="index,follow" />
 
-    <!-- Basit Open Graph -->
-    <meta property="og:title" content="tümmenü - Dijital QR Menü Platformu" />
-    <meta property="og:description" content="Restoranların QR menülerini keşfedin, işletmeniz için saniyeler içinde dijital menü oluşturun." />
+    <!-- Open Graph -->
+    <meta property="og:title" content="@fullTitle" />
+    <meta property="og:description"
+          content="Müşteriler için QR menülü restoranları keşfet, işletmeler için dakikalar içinde dijital menüye geç." />
     <meta property="og:type" content="website" />
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Domainini eklediğinde canonical aç -->
+    @* <link rel="canonical" href="https://www.senin-domainin.com@Context.Request.Path" /> *@
 
-    <!-- Tema değişkenleri -->
-    <link rel="stylesheet" href="~/css/globals.css" asp-append-version="true" />
-
-    <!-- Otomatik WebUI stilleri (varsın dursun) -->
-    <link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />
-
-    <!-- Body + layout -->
+    <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-    <!-- Header + hero + footer -->
-    <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
+    @RenderSection("Head", required: false)
 </head>
 <body>
-    <header class="tm-header">
-        <div class="tm-container tm-header-inner">
-            <a asp-controller="Home" asp-action="Index"
-               class="tm-logo" aria-label="Tüm Menü ana sayfa">
-                <div class="tm-logo-icon">TM</div>
-                <span class="tm-logo-text">tümmenü</span>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="site-header__logo">
+                <div class="site-header__logo-icon" aria-hidden="true">🍽</div>
+                <div class="site-header__logo-text">
+                    <span class="site-header__logo-text-main">full</span>
+                    <span class="site-header__logo-text-accent">menu</span>
+                </div>
             </a>
 
-            <nav class="tm-nav" id="tmNav">
-                <a href="#search" class="tm-nav-link">Ne yesem?</a>
-                <a href="#restaurants" class="tm-nav-link">Restoranlar</a>
-                <button class="tm-btn tm-btn-primary" id="qrliOlBtn" type="button">
-                    QR'lı ol
-                </button>
+            <nav class="site-header__nav" aria-label="Ana menü">
+                <a asp-controller="Home" asp-action="Index" class="site-header__nav-link">
+                    Ne yesem?
+                </a>
+                <a asp-controller="Home" asp-action="Restoranlar" class="site-header__nav-link">
+                    Restoranlar
+                </a>
             </nav>
 
-            <button class="tm-nav-toggle" id="navToggle"
-                    aria-label="Menüyü aç veya kapat">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div class="site-header__actions">
+                <a asp-controller="Home" asp-action="BeQr"
+                   class="btn btn--primary">
+                    Be QR
+                </a>
+            </div>
         </div>
     </header>
 
-    <main class="tm-main" role="main">
+    <!-- ANA İÇERİK -->
+    <main id="main-content">
         @RenderBody()
     </main>
 
-    <footer class="tm-footer" id="footer">
-        <div class="tm-container tm-footer-inner">
-            <div class="tm-footer-main">
-                <div class="tm-footer-brand">
-                    <div class="tm-logo">
-                        <div class="tm-logo-icon">TM</div>
-                        <span class="tm-logo-text">tümmenü</span>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="site-footer__top">
+                <div class="site-footer__brand">
+                    <div class="site-footer__brand-title">
+                        <span>full</span><span> menu</span>
                     </div>
                     <p>
-                        Klasik menü ve baskı derdini bırak. Tüm Menü ile hem
-                        müşteriler hem işletmeler için sade bir QR menü deneyimi sun.
+                        Full Menu ile menüleri keşfet, restoranları karşılaştır ve dijital menü sayesinde daha akıllı sipariş ver.
                     </p>
                 </div>
 
-                <div class="tm-footer-columns">
-                    <div class="tm-footer-col">
-                        <h4>Ürün</h4>
-                        <a href="#hero">Nasıl çalışır?</a>
-                        <a href="#search">Restoran ara</a>
-                        <a href="#restaurants">Popüler işletmeler</a>
-                    </div>
-                    <div class="tm-footer-col">
-                        <h4>İşletmeler</h4>
-                        <button type="button" id="qrliOlFooterBtn">QR menüye geç</button>
-                        <a href="#search">Demo talep et</a>
-                        <a href="#footer">Sık sorulan sorular</a>
-                    </div>
+                <div>
+                    <h3 class="site-footer__column-title">Müşteriler için</h3>
+                    <ul class="site-footer__links">
+                        <li><a href="#">Restoran bul</a></li>
+                        <li><a href="#">Menülere göz at</a></li>
+                        <li><a href="#">Popüler yemekler</a></li>
+                        <li><a href="#">Mutfak türleri</a></li>
+                        <li><a href="#">Konumlar</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="site-footer__column-title">İşletmeler için</h3>
+                    <ul class="site-footer__links">
+                        <li><a href="#">Be QR iş ortağı</a></li>
+                        <li><a href="#">Fiyatlandırma</a></li>
+                        <li><a href="#">Özellikler</a></li>
+                        <li><a href="#">Başarı hikâyeleri</a></li>
+                        <li><a href="#">Kaynaklar</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="site-footer__column-title">Şirket</h3>
+                    <ul class="site-footer__links">
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Kariyer</a></li>
+                        <li><a href="#">Basın</a></li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="tm-footer-bottom">
-                <span>© 2025 Tüm Menü. Tüm hakları saklıdır.</span>
-                <span>
-                    <a href="#footer">KVKK</a> ·
-                    <a href="#footer">Çerez politikası</a>
-                </span>
+            <div class="site-footer__bottom">
+                <span>© 2024 Full Menu. Tüm hakları saklıdır.</span>
+                <div class="site-footer__social">
+                    <a href="#" aria-label="Facebook"><span>f</span></a>
+                    <a href="#" aria-label="Instagram"><span>ig</span></a>
+                    <a href="#" aria-label="Twitter"><span>tw</span></a>
+                    <a href="#" aria-label="LinkedIn"><span>in</span></a>
+                </div>
             </div>
         </div>
     </footer>

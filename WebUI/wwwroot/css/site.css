@@ -1,667 +1,493 @@
-/* HERO – soldan ikinci template tonuna yakýn mavi */
+/* Site.css - Ana sayfa (Hero, Search, Popular, Category, CTA) */
 
-.tm-hero {
+/* HERO */
+
+.hero {
+    background: linear-gradient(180deg, var(--color-primary-dark), var(--color-primary-light));
+    color: #ffffff;
     position: relative;
-    background: radial-gradient(circle at top, #d9f0ff 0, #94c5ff 30%, #3b82f6 65%, #1d4ed8 100%);
-    color: #f9fafb;
-    padding: 3.8rem 0 4.4rem;
     overflow: hidden;
 }
 
-    .tm-hero::after {
-        content: "";
-        position: absolute;
-        inset: auto -30% -40%;
-        height: 260px;
-        background: radial-gradient(circle at 50% 0, rgba(191, 219, 254, 0.18), transparent 60%);
-        opacity: 0.7;
-        pointer-events: none;
+.hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px 0 72px;
+}
+
+@media (min-width: 900px) {
+    .hero__inner {
+        flex-direction: row;
+        align-items: center;
+        gap: 56px;
+        padding: 52px 0 96px;
+    }
+}
+
+.hero__left {
+    flex: 1;
+}
+
+.hero__eyebrow {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    opacity: .9;
+    margin: 0 0 8px;
+}
+
+.hero__title {
+    font-size: clamp(30px, 5vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+}
+
+.hero__lead {
+    font-size: 15px;
+    max-width: 480px;
+    line-height: 1.6;
+    opacity: .95;
+    margin: 0 0 18px;
+}
+
+/* Toggle buttons */
+
+.hero-toggle {
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.18);
+    padding: 4px;
+    border-radius: 999px;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.hero-toggle__button {
+    border-radius: 999px;
+    border: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: #e7ffe9;
+    opacity: .85;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    .hero-toggle__button:hover {
+        background: rgba(255, 255, 255, 0.22);
     }
 
-/* Dalga */
+.hero-toggle__icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.24);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
 
-.tm-hero-wave {
+.hero-toggle__button.is-active {
+    background: #ffffff;
+    color: #25692A;
+}
+
+    .hero-toggle__button.is-active .hero-toggle__icon {
+        background: #E6F7E6;
+        color: #25692A;
+    }
+
+/* Avantaj listeleri */
+
+.hero-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+    .hero-benefits li::before {
+        content: "•";
+        margin-right: 6px;
+    }
+
+    .hero-benefits.is-active {
+        display: flex;
+    }
+
+/* Hero sað taraf kart */
+
+.hero__right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 26px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+    .hero-card img {
+        height: 240px;
+        object-fit: cover;
+    }
+
+.hero-card__footer {
+    padding: 12px 16px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-dots {
+    display: flex;
+    gap: 6px;
+}
+
+    .hero-dots span {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: #E2E2E2;
+    }
+
+        .hero-dots span.is-active {
+            width: 16px;
+            background: var(--color-primary);
+        }
+
+/* Dalgalý alt */
+
+.hero-wave {
     position: absolute;
     left: 0;
     right: 0;
     bottom: -1px;
     line-height: 0;
-    z-index: 0;
 }
 
-    .tm-hero-wave svg {
-        display: block;
+    .hero-wave svg {
         width: 100%;
-        height: 60px;
+        height: 80px;
+        display: block;
     }
 
-.tm-hero-inner {
-    position: relative;
-    z-index: 1;
+/* SEARCH SECTION */
+
+.section--search {
+    background: var(--color-bg);
+}
+
+.search-layout {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 24px;
 }
 
-.tm-hero-eyebrow {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    opacity: 0.9;
-    margin: 0 0 0.35rem;
+@media (min-width: 900px) {
+    .search-layout {
+        flex-direction: row;
+        align-items: center;
+        gap: 44px;
+    }
 }
 
-.tm-hero-title {
-    font-size: clamp(1.8rem, 4.2vw, 2.5rem);
-    font-weight: 700;
-    margin: 0 0 0.75rem;
+.search-layout__text {
+    flex: 1.1;
 }
 
-.tm-hero-lead {
-    margin: 0 0 1.15rem;
-    max-width: 30rem;
-    color: #e5e7eb;
+.search-form {
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
 
-.tm-hero-slider {
-    position: relative;
-    min-height: 190px;
-    margin-top: 0.4rem;
+.search-form__row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.tm-hero-slide {
-    display: none;
+@media (min-width: 600px) {
+    .search-form__row {
+        flex-direction: row;
+        align-items: center;
+    }
 }
 
-    .tm-hero-slide.is-active {
-        display: block;
+.search-input {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-input__icon {
+    font-size: 15px;
+}
+
+.search-input input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #555555;
+    background: transparent;
+}
+
+    .search-input input::placeholder {
+        color: #B5B5B5;
     }
 
-    .tm-hero-slide h2 {
-        margin: 0 0 0.4rem;
-        font-size: 1.25rem;
-    }
-
-    .tm-hero-slide p {
-        margin: 0 0 0.75rem;
-        font-size: 0.95rem;
-        color: #e5e7eb;
-    }
-
-.tm-hero-benefits {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem;
-    font-size: 0.88rem;
-    display: grid;
-    gap: 0.35rem;
+.search-form__button {
+    align-self: flex-start;
 }
 
-    .tm-hero-benefits li::before {
-        content: "•";
-        margin-right: 0.4rem;
-        color: #bfdbfe;
-    }
-
-.tm-hero-cta {
+.chip-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
+    gap: 10px;
 }
 
-/* hero içindeki link buton rengini beyaz yap */
-.tm-hero .tm-link-btn {
-    color: #e5e7eb;
-    text-decoration: underline;
-}
-
-.tm-hero-dots {
-    display: flex;
-    gap: 0.45rem;
-    margin-top: 0.9rem;
-}
-
-.tm-hero-dot {
-    width: 7px;
-    height: 7px;
+.chip {
     border-radius: 999px;
-    border: none;
-    background: rgba(148, 163, 184, 0.8);
-    padding: 0;
+    padding: 6px 14px;
+    font-size: 12px;
+    background: #ffffff;
+    border: 1px solid #ECE1D6;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #654B33;
     cursor: pointer;
 }
 
-    .tm-hero-dot.is-active {
-        width: 16px;
-        background: #f9fafb;
-    }
-
-/* Hero görselleri – hep laptop, içerik deðiþiyor */
-
-.tm-hero-visual {
-    position: relative;
-    min-height: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tm-hero-visual-item {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(18px) scale(0.96);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-    .tm-hero-visual-item.is-active {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
-.tm-laptop {
-    width: min(360px, 90vw);
-    border-radius: 24px;
-    padding: 14px 14px 18px;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    box-shadow: var(--tm-shadow-soft);
-}
-
-.tm-laptop-screen {
-    border-radius: 16px;
-    background: #eff6ff;
-    padding: 0.9rem 0.9rem 0.8rem;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Laptop tabaný */
-.tm-laptop-base {
-    margin: 0.25rem auto 0;
-    width: 70%;
-    height: 8px;
+.chip__icon {
+    width: 16px;
+    height: 16px;
     border-radius: 999px;
-    background: #0f172a;
+    background: var(--color-primary-light);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
 }
 
-/* --- Varyant 0: Harita --- */
+/* Map card */
 
-.tm-laptop--map .tm-laptop-screen {
-    background: radial-gradient(circle at 20% 0, #f9fafb 0, #dbeafe 40%, #60a5fa 75%);
+.search-layout__map {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
-.tm-laptop-map {
+.map-card {
+    max-width: 420px;
     width: 100%;
-    height: 120px;
-    border-radius: 14px;
-    background: radial-gradient(circle at 10% 10%, #f9fafb 0, #c4ddff 40%, #60a5fa 70%);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
-}
-
-.tm-laptop-pin {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 999px;
-    background: #1d4ed8;
-    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.25);
-}
-
-.tm-laptop-pin--1 {
-    top: 26%;
-    left: 23%;
-}
-
-.tm-laptop-pin--2 {
-    top: 35%;
-    right: 22%;
-}
-
-.tm-laptop-pin--3 {
-    top: 55%;
-    left: 45%;
-}
-
-/* --- Varyant 1: Restoran listesi --- */
-
-.tm-laptop--list .tm-laptop-screen {
-    background: #f1f5f9;
-}
-
-.tm-laptop-list {
-    display: grid;
-    gap: 0.5rem;
-    margin-bottom: 0.7rem;
-}
-
-.tm-laptop-list-item {
-    height: 26px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #bfdbfe, #e5e7eb);
-}
-
-.tm-laptop-filter {
-    width: 55%;
-    height: 8px;
-    border-radius: 999px;
-    background: #2563eb;
-}
-
-/* --- Varyant 2: Analytics --- */
-
-.tm-laptop--analytics .tm-laptop-screen {
-    background: #0f172a;
-}
-
-.tm-laptop-chart-line {
-    height: 40px;
-    border-radius: 12px;
-    background: radial-gradient(circle at 10% 0, #bef264, #22c55e);
-    margin-bottom: 0.7rem;
-}
-
-.tm-laptop-chart-bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.35rem;
-}
-
-    .tm-laptop-chart-bars span {
-        flex: 1;
-        border-radius: 8px 8px 2px 2px;
-        background: #60a5fa;
-        height: 18px;
-    }
-
-        .tm-laptop-chart-bars span:nth-child(2) {
-            height: 26px;
-        }
-
-        .tm-laptop-chart-bars span:nth-child(3) {
-            height: 22px;
-        }
-
-        .tm-laptop-chart-bars span:nth-child(4) {
-            height: 30px;
-        }
-
-/* --- Varyant 3: QR ekraný --- */
-
-.tm-laptop--qr .tm-laptop-screen {
-    background: #f9fafb;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.8rem;
-    align-items: center;
-}
-
-.tm-laptop-qr {
-    width: 70px;
-    height: 70px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #2563eb, #60a5fa);
-    position: relative;
-}
-
-    .tm-laptop-qr::before,
-    .tm-laptop-qr::after {
-        content: "";
-        position: absolute;
-        inset: 18%;
-        border-radius: 10px;
-        border: 3px solid rgba(249, 250, 251, 0.9);
-    }
-
-    .tm-laptop-qr::after {
-        inset: 44% 12% 12% 44%;
-        border-width: 2px;
-    }
-
-.tm-laptop-qr-lines {
-    display: grid;
-    gap: 0.4rem;
-}
-
-    .tm-laptop-qr-lines span {
-        height: 8px;
-        border-radius: 999px;
-        background: #e5e7eb;
-    }
-
-/* SEARCH + MAPS */
-
-.tm-search {
-    /* Mobilde tamamen ayrýk, desktop'ta hafif overlap */
-    margin-top: 1.5rem;
-    padding: 0 0 3rem;
-}
-
-.tm-search-inner {
-    background: var(--tm-surface);
-    border-radius: var(--tm-radius-lg);
-    box-shadow: var(--tm-shadow-soft);
-    padding: 1.5rem 1.4rem;
-    display: grid;
-    gap: 1.5rem;
-}
-
-.tm-search-panel h2 {
-    margin: 0 0 0.4rem;
-    font-size: 1.25rem;
-}
-
-.tm-search-panel p {
-    margin: 0 0 1.1rem;
-    color: var(--tm-muted);
-    font-size: 0.93rem;
-}
-
-.tm-search-form {
-    display: grid;
-    gap: 0.9rem;
-}
-
-.tm-field {
-    display: grid;
-    gap: 0.3rem;
-    font-size: 0.85rem;
-}
-
-    .tm-field label {
-        font-weight: 500;
-    }
-
-    .tm-field input {
-        border-radius: 999px;
-        border: 1px solid #e5e7eb;
-        padding: 0.55rem 0.9rem;
-        font-size: 0.9rem;
-        outline: none;
-    }
-
-        .tm-field input:focus {
-            border-color: var(--tm-primary);
-            box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
-        }
-
-.tm-search-submit {
-    justify-self: flex-start;
-    margin-top: 0.2rem;
-}
-
-.tm-map-placeholder {
-    border-radius: 20px;
+    background: #ffffff;
+    border-radius: 26px;
+    box-shadow: var(--shadow-soft);
     overflow: hidden;
-    min-height: 210px;
-    background: #e5e7eb; /* Google Map yüklenecek alan */
 }
 
-/* ÝSTATÝSTÝKLER */
-
-.tm-stats {
-    padding: 2.3rem 0 2.4rem;
+.map-card__iframe {
+    width: 100%;
+    height: 260px;
+    border: 0;
 }
 
-.tm-section-header {
-    margin-bottom: 1.5rem;
+/* POPULAR RESTAURANTS */
+
+.section--popular {
+    background: var(--color-bg);
 }
 
-    .tm-section-header h2 {
-        margin: 0 0 0.4rem;
-        font-size: 1.35rem;
-    }
-
-    .tm-section-header p {
-        margin: 0;
-        color: var(--tm-muted);
-        font-size: 0.93rem;
-    }
-
-.tm-section-header--center {
-    text-align: center;
-    max-width: 34rem;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.tm-stats-grid {
+.popular-grid {
     display: grid;
-    gap: 1.2rem;
+    gap: 22px;
 }
 
-.tm-stat-card {
-    background: var(--tm-surface);
-    border-radius: var(--tm-radius-md);
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
-    padding: 1.1rem 1.2rem 1.1rem;
-}
-
-.tm-stat-value {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #111827;
-}
-
-.tm-stat-label {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-top: 0.1rem;
-}
-
-.tm-stat-note {
-    margin: 0.35rem 0 0;
-    font-size: 0.87rem;
-    color: var(--tm-muted);
-}
-
-/* ÝÞLETMELER CTA */
-
-.tm-business-cta {
-    padding: 0 0 3.4rem;
-}
-
-.tm-business-cta-inner {
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
-    border-radius: 24px;
-    padding: 1.7rem 1.5rem 1.8rem;
-    color: #f9fafb;
-    box-shadow: var(--tm-shadow-soft);
-    display: grid;
-    gap: 1.3rem;
-}
-
-.tm-business-copy h2 {
-    margin: 0 0 0.4rem;
-    font-size: 1.3rem;
-}
-
-.tm-business-copy p {
-    margin: 0 0 0.9rem;
-    font-size: 0.93rem;
-    opacity: 0.95;
-}
-
-.tm-business-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
-}
-
-    .tm-business-actions .tm-link-btn {
-        color: #bfdbfe;
+@media (min-width: 900px) {
+    .popular-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-
-.tm-business-steps h3 {
-    margin: 0 0 0.4rem;
-    font-size: 1rem;
 }
 
-.tm-business-steps ol {
-    margin: 0.2rem 0 0.6rem;
-    padding-left: 1.05rem;
-    font-size: 0.9rem;
-}
-
-.tm-business-steps li + li {
-    margin-top: 0.2rem;
-}
-
-.tm-business-note {
-    margin: 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
-}
-
-/* FEATURED (þimdilik kullanýlmýyor ama dursun) */
-
-.tm-featured {
-    padding: 1.2rem 0 3.2rem;
-}
-
-.tm-card-grid {
-    display: grid;
-    gap: 1.4rem;
-}
-
-.tm-restaurant-card {
-    background: var(--tm-surface);
-    border-radius: var(--tm-radius-md);
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+.restaurant-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
-.tm-restaurant-image {
-    height: 150px;
-    background-size: cover;
-    background-position: center;
-}
-
-.tm-restaurant-image--1 {
-    background-image: linear-gradient(135deg, #f97316, #fb923c);
-}
-
-.tm-restaurant-image--2 {
-    background-image: linear-gradient(135deg, #22c55e, #4ade80);
-}
-
-.tm-restaurant-image--3 {
-    background-image: linear-gradient(135deg, #ec4899, #fb7185);
-}
-
-.tm-restaurant-image--4 {
-    background-image: linear-gradient(135deg, #06b6d4, #0ea5e9);
-}
-
-.tm-restaurant-body {
-    padding: 0.9rem 1rem 1.1rem;
-}
-
-    .tm-restaurant-body h3 {
-        margin: 0 0 0.3rem;
-        font-size: 1.02rem;
+    .restaurant-card img {
+        height: 170px;
+        object-fit: cover;
     }
 
-    .tm-restaurant-body p {
-        margin: 0 0 0.6rem;
-        font-size: 0.9rem;
-        color: var(--tm-muted);
-    }
-
-.tm-restaurant-meta {
+.restaurant-card__body {
+    padding: 14px 16px 16px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.6rem;
-    font-size: 0.82rem;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.tm-tag {
-    padding: 0.15rem 0.6rem;
-    border-radius: 999px;
-    background: var(--tm-primary-soft);
-    color: var(--tm-primary-dark);
-    font-weight: 500;
-}
-
-.tm-rating {
+.restaurant-card__name {
+    font-size: 16px;
     font-weight: 600;
-    color: #f97316;
+    margin: 0;
 }
 
-.tm-restaurant-link {
-    font-size: 0.86rem;
-    color: var(--tm-primary-dark);
-    font-weight: 500;
+.restaurant-card__tags {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0;
 }
 
-    .tm-restaurant-link:hover {
-        text-decoration: underline;
+.restaurant-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666666;
+}
+
+.restaurant-card__icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: var(--color-primary-light);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-right: 4px;
+}
+
+.restaurant-card__footer {
+    padding: 0 16px 14px;
+}
+
+/* CATEGORIES */
+
+.section--categories {
+    background: var(--color-bg);
+}
+
+.category-grid {
+    display: grid;
+    gap: 18px;
+}
+
+@media (min-width: 720px) {
+    .category-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
     }
+}
 
-/* RESPONSIVE */
+.category-card {
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: var(--shadow-soft);
+    padding: 18px 14px 16px;
+    text-align: center;
+}
+
+.category-card__image {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+}
+
+.category-card__name {
+    font-weight: 600;
+    margin: 0 0 4px;
+}
+
+.category-card__count {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+/* CTA BAND */
+
+.cta {
+    background: var(--color-secondary-light);
+    color: #ffffff;
+}
+
+.cta__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 32px 0;
+}
+
+.cta__title {
+    font-size: 24px;
+    margin: 0 0 4px;
+}
+
+.cta__subtitle {
+    font-size: 14px;
+    opacity: .9;
+    margin: 0;
+}
+
+.cta__button {
+    margin-top: 4px;
+}
 
 @media (min-width: 768px) {
-    .tm-hero-inner {
+    .cta__inner {
         flex-direction: row;
         align-items: center;
-        gap: 3.25rem;
-    }
-
-    .tm-hero-content {
-        flex: 1.1;
-    }
-
-    .tm-hero-visual {
-        flex: 0.9;
-        min-height: 280px;
-    }
-
-    .tm-search-inner {
-        padding: 1.8rem 1.8rem;
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-        align-items: stretch;
-    }
-
-    .tm-map-placeholder {
-        min-height: 230px;
-    }
-
-    .tm-stats-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .tm-business-cta-inner {
-        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-        padding: 2rem 2.2rem 2.1rem;
     }
 }
 
-@media (min-width: 1024px) {
-    .tm-hero {
-        padding: 4rem 0 4.8rem;
+/* Mobil ekstra düzenlemeler */
+
+@media (max-width: 600px) {
+    .hero__inner {
+        padding: 28px 0 60px;
     }
 
-    /* Desktop'ta hafif overlap */
-    .tm-search {
-        margin-top: -1.6rem;
+    .hero__lead {
+        max-width: 100%;
     }
 
-    .tm-map-placeholder {
-        min-height: 260px;
+    .hero-card img {
+        height: 220px;
     }
 
-    .tm-card-grid {
-        gap: 1.7rem;
-    }
-
-    .tm-restaurant-image {
-        height: 170px;
+    .site-footer {
+        padding-top: 24px;
+        padding-bottom: 16px;
     }
 }

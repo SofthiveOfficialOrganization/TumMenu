@@ -1,0 +1,132 @@
+/* Global.css - Reset, temel layout, ortak stiller */
+
+:root {
+    --color-bg: #F7F2EB;
+    --color-primary: #C4D6B0;
+    --color-primary-dark: #688745;
+    --color-primary-light: #C4D6B0;
+    --color-secondary-dark: #4B3A2D;
+    --color-secondary-light: #5B4634;
+    --color-text-main: #333333;
+    --color-text-secondary: #F7F2EB
+    --color-muted: #777777;
+    --radius-card: 24px;
+    --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
+    --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Reset benzeri basit ayar */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-base);
+    background: var(--color-bg);
+    color: var(--color-text-main);
+    line-height: 1.5;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Layout helpers */
+
+.container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.section {
+    padding: 48px 0;
+}
+
+@media (min-width: 992px) {
+    .section {
+        padding: 72px 0;
+    }
+}
+
+/* Headings ve text */
+
+.section__title {
+    font-size: 26px;
+    margin: 0 0 6px;
+    color: #423426;
+}
+
+.section__subtitle {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+.section-heading {
+    margin-bottom: 24px;
+}
+
+.section-heading--center {
+    text-align: center;
+}
+
+/* Buttons */
+
+.btn {
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn--primary {
+    background: var(--color-primary);
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+    .btn--primary:hover {
+        background: var(--color-primary-dark);
+        transform: translateY(-1px);
+    }
+
+.btn--ghost {
+    background: transparent;
+    border: 1px solid #dddddd;
+    color: #555555;
+}
+
+.btn--full {
+    width: 100%;
+}
+
+/* Mobil için küçük iyileþtirmeler */
+
+@media (max-width: 480px) {
+    .section {
+        padding: 40px 0;
+    }
+}
