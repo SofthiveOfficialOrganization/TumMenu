@@ -1,15 +1,14 @@
 /* Global.css - Reset, temel layout, ortak stiller */
 
 :root {
-    --color-bg: #F7F2EB;
-    --color-primary: #C4D6B0;
-    --color-primary-dark: #688745;
-    --color-primary-light: #C4D6B0;
+    --color-bg: #FCF4EE;
+    --color-primary-dark: #495E31;
+    --color-primary: #688745;
+    --color-primary-light: #AFC794;
     --color-secondary-dark: #4B3A2D;
     --color-secondary-light: #5B4634;
     --color-text-main: #333333;
-    --color-text-secondary: #F7F2EB
-    --color-muted: #777777;
+    --color-text-secondary: #F7F2EB --color-muted: #777777;
     --radius-card: 24px;
     --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
     --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

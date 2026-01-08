@@ -2,8 +2,11 @@
 
 /* HERO */
 
+#main-content{
+    background: var(--color-secondary-dark) !important;
+}
 .hero {
-    background: linear-gradient(180deg, var(--color-primary-dark), var(--color-primary-light));
+    background: linear-gradient(180deg, var(--color-primary), var(--color-primary-light));
     color: #ffffff;
     position: relative;
     overflow: hidden;
@@ -123,53 +126,84 @@
     .hero-benefits.is-active {
         display: flex;
     }
+/* ===== HERO: ayný yerde (overlay) + fade animasyon ===== */
 
-/* Hero sað taraf kart */
-
+/* ÖNEMLÝ: alttaki eski .hero__right display:flex kuralýný override ediyor */
 .hero__right {
     flex: 1;
-    display: flex;
-    justify-content: center;
+    display: grid; /* yan yana deðil, üst üste */
+    place-items: center;
 }
 
-.hero-card {
-    width: 100%;
-    max-width: 420px;
-    background: #ffffff;
-    border-radius: 26px;
-    box-shadow: var(--shadow-soft);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-    .hero-card img {
-        height: 240px;
-        object-fit: cover;
+    /* Senin markup'ta img'ler ayrý divlerde -> hepsini ayný hücreye bindiriyoruz */
+    .hero__right > div {
+        grid-area: 1 / 1;
+        display: grid;
+        place-items: center;
     }
 
-.hero-card__footer {
-    padding: 12px 16px 16px;
-    display: flex;
-    justify-content: center;
-}
-
-.hero-dots {
-    display: flex;
-    gap: 6px;
-}
-
-    .hero-dots span {
-        width: 6px;
-        height: 6px;
-        border-radius: 999px;
-        background: #E2E2E2;
+    /* Görseller: display:none YOK -> animasyon çalýþýr */
+    .hero__right img {
+        display: block;
+        width: 100%;
+        max-width: 520px; /* istersen kaldýr */
+        height: auto;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 280ms ease, transform 280ms ease;
+        pointer-events: none;
     }
 
-        .hero-dots span.is-active {
-            width: 16px;
-            background: var(--color-primary);
+        .hero__right img.is-active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
+
+/* Benefits: eski hâli gibi tek tek görünsün ama fade olsun (display:none kullanmýyoruz) */
+.hero-benefits {
+    display: block; /* senin CSS'teki display:none’i override eder */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: max-height 260ms ease, opacity 420ms ease, transform 420ms ease;
+}
+
+    .hero-benefits.is-active {
+        max-height: 260px; /* liste uzunsa artýr */
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+/* Title + lead: text deðiþirken fade */
+.hero__title.is-swapping,
+.hero__lead.is-swapping {
+    animation: heroFadeSwap 320ms ease;
+}
+
+@keyframes heroFadeSwap {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    45% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    55% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 /* Dalgalý alt */
 

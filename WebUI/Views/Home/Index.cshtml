@@ -52,31 +52,22 @@
         </div>
 
         <div class="hero__right">
-            <div class="hero-card">
-                <img id="hero-main-image"
-                     src="/images/hero-customers.jpg"
-                     data-customers-src="/images/hero-customers.jpg"
-                     data-business-src="/images/hero-business.jpg"
-                     alt="Modern restoran içi"
-                     loading="lazy" />
-
-                <div class="hero-card__footer">
-                    <div class="hero-dots">
-                        <span class="is-active"></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </div>
+            <div >
+                <img id="hero-main-image--customer" class="is-active"
+                     src="~/images/hero-illustration-customer.png" />
             </div>
+          <div >
+                <img id="hero-main-image--business" aria-hidden="true"
+                     src="~/images/hero-illustration-business.png" />
+          </div>
         </div>
     </div>
 
     <!-- Dalgalı alt -->
     <div class="hero-wave" aria-hidden="true">
-        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <svg viewBox="0 0 440 120" preserveAspectRatio="none">
             <path d="M0,64L48,58.7C96,53,192,43,288,58.7C384,75,480,117,576,133.3C672,149,768,139,864,117.3C960,96,1056,64,1152,58.7C1248,53,1344,75,1392,85.3L1440,96L1440,120L0,120Z"
-                  fill="#F5F3EF"></path>
+                  fill="var(--color-bg")></path>
         </svg>
     </div>
 </section>
@@ -281,78 +272,91 @@
         <a href="#" class="btn btn--primary cta__button">Start Your Free Trial</a>
     </div>
 </section>
-
 @section Scripts {
     <script>
-        // Hero toggle - Customers / Businesses
         document.addEventListener('DOMContentLoaded', function () {
-            var buttons = document.querySelectorAll('.hero-toggle__button');
-            var titleEl = document.querySelector('.hero__title');
-            var leadEl = document.querySelector('.hero__lead');
-            var benefitsCustomers = document.querySelector('.hero-benefits--customers');
-            var benefitsBusiness = document.querySelector('.hero-benefits--business');
-            var heroImage = document.getElementById('hero-main-image');
+          var buttons = document.querySelectorAll('.hero-toggle__button');
+          var eyebrowEl = document.querySelector('.hero__eyebrow');
+          var titleEl = document.querySelector('.hero__title');
+          var leadEl = document.querySelector('.hero__lead');
 
-            if (!buttons.length || !titleEl || !leadEl) return;
+          var benefitsCustomers = document.querySelector('.hero-benefits--customers');
+          var benefitsBusiness = document.querySelector('.hero-benefits--business');
+          var heroImageCustomers = document.getElementById('hero-main-image--customer');
+          var heroImageBusiness = document.getElementById('hero-main-image--business');
 
-            var titleTexts = {
-                customers: 'Discover Menus Before You Dine',
-                business: 'Transform Your Restaurant With Digital Menus'
-            };
+          if (!buttons.length) return;
 
-            var leadTexts = {
-                customers: 'Browse thousands of restaurant menus, compare prices, and make informed dining decisions before you go.',
-                business: 'Digitize your menu, update prices in seconds and let customers explore your restaurant from anywhere.'
-            };
+          var titleTexts = {
+            customers: 'Discover Menus Before You Dine',
+            business: 'Transform Your Restaurant With Digital Menus'
+          };
 
-            buttons.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var mode = btn.dataset.mode || 'customers';
+          var leadTexts = {
+            customers: 'Browse thousands of restaurant menus, compare prices, and make informed dining decisions before you go.',
+            business: 'Digitize your menu, update prices in seconds and let customers explore your restaurant from anywhere.'
+          };
 
-                    // Aktif buton
-                    buttons.forEach(function (b) {
-                        b.classList.remove('is-active');
-                        b.setAttribute('aria-selected', 'false');
-                    });
-                    btn.classList.add('is-active');
-                    btn.setAttribute('aria-selected', 'true');
+          // Metni fade swap ile değiştirme
+          function swapText(el, newText){
+            if (!el || !newText) return;
 
-                    // Metinleri değiştir
-                    if (titleTexts[mode]) {
-                        titleEl.textContent = titleTexts[mode];
-                    }
-                    if (leadTexts[mode]) {
-                        leadEl.textContent = leadTexts[mode];
-                    }
+            // animasyonu tekrar tetiklemek için reset
+            el.classList.remove('is-swapping');
+            void el.offsetWidth; // reflow
+            el.classList.add('is-swapping');
 
-                    // Avantaj listeleri
-                    if (benefitsCustomers && benefitsBusiness) {
-                        if (mode === 'customers') {
-                            benefitsCustomers.classList.add('is-active');
-                            benefitsCustomers.removeAttribute('aria-hidden');
-                            benefitsBusiness.classList.remove('is-active');
-                            benefitsBusiness.setAttribute('aria-hidden', 'true');
-                        } else {
-                            benefitsBusiness.classList.add('is-active');
-                            benefitsBusiness.removeAttribute('aria-hidden');
-                            benefitsCustomers.classList.remove('is-active');
-                            benefitsCustomers.setAttribute('aria-hidden', 'true');
-                        }
-                    }
+            // fade-out ortasında metni değiştir
+            window.setTimeout(function(){
+              el.textContent = newText;
+            }, 160);
 
-                    // Hero görseli
-                    if (heroImage) {
-                        var customersSrc = heroImage.getAttribute('data-customers-src');
-                        var businessSrc = heroImage.getAttribute('data-business-src');
+            // animasyon bitince class temizle
+            window.setTimeout(function(){
+              el.classList.remove('is-swapping');
+            }, 340);
+          }
 
-                        if (mode === 'customers' && customersSrc) {
-                            heroImage.src = customersSrc;
-                        } else if (mode === 'business' && businessSrc) {
-                            heroImage.src = businessSrc;
-                        }
-                    }
-                });
+          function setMode(mode){
+            buttons.forEach(function(b){
+              var active = (b.dataset.mode === mode);
+              b.classList.toggle('is-active', active);
+              b.setAttribute('aria-selected', active ? 'true' : 'false');
             });
+
+            // Metinleri animasyonla değiştir
+            swapText(titleEl, titleTexts[mode]);
+            swapText(leadEl, leadTexts[mode]);
+
+            // (İstersen eyebrow da mod'a göre değişsin)
+            // swapText(eyebrowEl, mode === 'customers' ? 'Menüleri Keşfet, Gitmeden Fiyatları Gör' : 'İşletmen için Dijital Menü');
+
+            // Benefits: CSS artık fade yapacak (display:none yok)
+            if (benefitsCustomers && benefitsBusiness){
+              benefitsCustomers.classList.toggle('is-active', mode === 'customers');
+              benefitsCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
+
+              benefitsBusiness.classList.toggle('is-active', mode === 'business');
+              benefitsBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
+            }
+
+            // Görseller: CSS cross-fade yapacak
+            if (heroImageCustomers && heroImageBusiness){
+              heroImageCustomers.classList.toggle('is-active', mode === 'customers');
+              heroImageCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
+
+              heroImageBusiness.classList.toggle('is-active', mode === 'business');
+              heroImageBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
+            }
+          }
+
+          setMode('customers');
+
+          buttons.forEach(function(btn){
+            btn.addEventListener('click', function(){
+              setMode(btn.dataset.mode || 'customers');
+            });
+          });
         });
     </script>
 }

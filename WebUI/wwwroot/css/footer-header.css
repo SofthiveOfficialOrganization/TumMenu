@@ -3,7 +3,7 @@
 /* HEADER */
 
 .site-header {
-    background: var(--color-primary-dark); /* body ile aynı krem ton */
+    background: var(--color-primary); /* body ile aynı krem ton */
     position: sticky;
     top: 0;
     z-index: 40;
@@ -100,7 +100,7 @@
 /* FOOTER */
 
 .site-footer {
-    background: #4B3A2D;
+    background: var(--color-secondary-dark);
     color: #EDE0D1;
     font-size: 13px;
     padding: 28px 0 18px;
