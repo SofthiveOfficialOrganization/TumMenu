@@ -24,14 +24,14 @@ public class MediaController(IMediator mediator) : Controller
 		return View(media);
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]")]
 	public IActionResult Create()
 	{
 		return View();
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Create(CreateMediaCommand req, CancellationToken ct)
 	{
@@ -39,7 +39,7 @@ public class MediaController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Details), new { id = media.Id });
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Update(UpdateMediaCommand req, CancellationToken ct)
 	{
@@ -47,7 +47,7 @@ public class MediaController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Details), new { id = media.Id });
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]/{id}")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{

@@ -33,7 +33,7 @@ public class ProductController(IMediator mediator) : Controller
         return View(products);
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Create(CancellationToken ct)
     {
@@ -42,7 +42,7 @@ public class ProductController(IMediator mediator) : Controller
         return View();
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateProductCommand req, CancellationToken ct)
@@ -54,7 +54,7 @@ public class ProductController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Details), new { id = product.Id });
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpGet("[action]/{id}")]
     public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
     {
@@ -64,7 +64,7 @@ public class ProductController(IMediator mediator) : Controller
         return View(product);
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(UpdateProductCommand req, CancellationToken ct)
@@ -76,7 +76,7 @@ public class ProductController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Details), new { id = product.Id });
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)

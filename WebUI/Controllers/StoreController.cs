@@ -22,7 +22,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(store);
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]")]
 	public IActionResult Create()
 	{

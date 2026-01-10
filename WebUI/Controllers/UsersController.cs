@@ -25,7 +25,7 @@ public sealed class UsersController(IMediator mediator) : ControllerBase
 public class OwnerController : ControllerBase
 {
     [HttpGet("me")]
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     public async Task<IActionResult> Me([FromServices] IMediator mediator, CancellationToken ct)
         => Ok(await mediator.Send(new GetOwnerProfileByCurrentUserQuery(), ct));
 }
