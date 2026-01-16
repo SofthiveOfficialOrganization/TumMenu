@@ -37,7 +37,7 @@ public class ProductController(IMediator mediator) : Controller
     [HttpGet("[action]")]
     public async Task<IActionResult> Create(CancellationToken ct)
     {
-        var categories = await mediator.Send(new GetAllCategoriesPagedQuery(null) { PageSize = 1000 }, ct);
+        var categories = await mediator.Send(new GetAllCategoriesPagedQuery { Search = null, PageSize = 1000 }, ct);
         ViewBag.Categories = new SelectList(categories, "Id", "Name");
         return View();
     }
@@ -59,7 +59,7 @@ public class ProductController(IMediator mediator) : Controller
     public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
     {
         var product = await mediator.Send(new GetProductByIdQuery(id), ct);
-        var categories = await mediator.Send(new GetAllCategoriesPagedQuery(null) { PageSize = 1000 }, ct);
+        var categories = await mediator.Send(new GetAllCategoriesPagedQuery { Search = null, PageSize = 1000 }, ct);
         ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
         return View(product);
     }

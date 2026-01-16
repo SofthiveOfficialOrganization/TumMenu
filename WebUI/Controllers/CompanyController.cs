@@ -18,7 +18,7 @@ public class CompanyController(IMediator mediator) : Controller
 	[HttpGet("[action]/{id}")]
 	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
 	{
-		CompanyDTO? company = await mediator.Send(new GetCompanyByIdQuery(id), ct);
+		CompanyDTO? company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
 		return View(company);
 	}
 	[Authorize(Policy = "OwnerOnly")]
@@ -32,5 +32,12 @@ public class CompanyController(IMediator mediator) : Controller
 	{
 		var company = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Details), new { id = company.Id });
+	}
+	[HttpGet("[action]")]
+	public IActionResult DivideByZeroError()
+	{
+		int zero = 0;
+		int result = 1 / zero;
+		return View();
 	}
 }
