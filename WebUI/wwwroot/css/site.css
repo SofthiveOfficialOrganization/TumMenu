@@ -1,5 +1,20 @@
 /* Site.css - Ana sayfa (Hero, Search, Popular, Category, CTA) */
 
+/* APP */
+
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-main {
+    flex: 1 0 auto;
+}
+
+.site-footer {
+    margin-top: auto;
+}
 /* HERO */
 
 #main-content{
