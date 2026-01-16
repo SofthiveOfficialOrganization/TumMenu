@@ -13,12 +13,13 @@ using System.Threading.Tasks;
 
 namespace Application.Medias.Queries;
 
-public sealed record GetAllMediasPagedQuery(
-	MediaRefType? Type,
-	MediaKind? MediaKind,
-	string? Extension,
-	string? Slot
-) : PageRequest, IRequest<PaginatedListDTO<MediaDTO>>;
+public sealed class GetAllMediasPagedQuery : PageRequest, IRequest<PaginatedListDTO<MediaDTO>>
+{
+	public MediaRefType? Type { get; set; }
+	public MediaKind? MediaKind { get; set; }
+	public string? Extension { get; set; }
+	public string? Slot { get; set; }
+}
 
 public class GetAllMediasPagedHandler(
 	IRepository<Media> repoMedia,

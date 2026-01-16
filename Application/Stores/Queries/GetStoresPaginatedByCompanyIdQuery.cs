@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Stores.Queries;
 
-public sealed record GetStoresPaginatedByCompanyIdQuery
-(
-	Guid CompanyId
-) : PageRequest, IRequest<PaginatedListDTO<StoreDTO>>;
+public sealed class GetStoresPaginatedByCompanyIdQuery : PageRequest, IRequest<PaginatedListDTO<StoreDTO>>
+{
+	public Guid CompanyId { get; set; }
+}
 
 public class GetStoresPaginatedByCompanyIdHandler(
 	IRepository<Store> repoStore,

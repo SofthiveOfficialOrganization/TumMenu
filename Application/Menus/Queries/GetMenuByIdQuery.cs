@@ -8,9 +8,10 @@ using MediatR;
 
 namespace Application.Menus.Queries;
 
-public record GetMenuByIdQuery(
-	Guid MenuId
-) : IRequest<MenuDTO>;
+public class GetMenuByIdQuery : IRequest<MenuDTO>
+{
+	public Guid MenuId { get; set; }
+}
 
 public class GetMenuByIdHandler(
 	IRepository<Menu> repoMenu,

@@ -6,7 +6,10 @@ using MediatR;
 
 namespace Application.Categories.Commands;
 
-public record DeleteCategoryCommand(Guid Id) : IRequest<Guid>, ITransactionalRequest;
+public class DeleteCategoryCommand : IRequest<Guid>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+}
 
 public class DeleteCategoryCommandHandler(
 	IRepository<Category> repoCategory

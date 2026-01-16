@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public record GetAllMenusPagedQuery() : PageRequest, IRequest<MenuDTO>;
+public class GetAllMenusPagedQuery : PageRequest, IRequest<MenuDTO>
+{
+}
 
 public class GetAllMenusPagedHandler(
 	IRepository<Menu> repoMenu,

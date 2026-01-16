@@ -8,7 +8,10 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetCategoriesPagedByMenuIdQuery(Guid MenuId) : PageRequest, IRequest<PaginatedListDTO<CategoryDTO>>;
+public class GetCategoriesPagedByMenuIdQuery : PageRequest, IRequest<PaginatedListDTO<CategoryDTO>>
+{
+	public Guid MenuId { get; set; }
+}
 
 public class GetCategoriesByMenuIdHandler(
 	IRepository<Category> repoCategory,

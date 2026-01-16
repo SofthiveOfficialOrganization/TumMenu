@@ -9,9 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public record GetMenusPagedByStoreQuery(
-	Guid StoreId
-) : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>;
+public class GetMenusPagedByStoreQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>
+{
+	public Guid StoreId { get; set; }
+}
 
 public class GetMenusPagedByStoreHandler(
 	IRepository<Menu> repoMenu,

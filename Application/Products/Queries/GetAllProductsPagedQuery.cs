@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Queries;
 
-public sealed record GetAllProductsPagedQuery(
-	string? Search,
-	Guid? TagId
-) : PageRequest, IRequest<PaginatedListDTO<ProductDTO>>;
+public sealed class GetAllProductsPagedQuery : PageRequest, IRequest<PaginatedListDTO<ProductDTO>>
+{
+	public string? Search { get; set; }
+	public Guid? TagId { get; set; }
+}
 
 public class GetAllProductsPagedHandler(
 	IRepository<Product> repoProduct,

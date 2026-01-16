@@ -6,10 +6,11 @@ using MediatR;
 
 namespace Application.Menus.Commands;
 
-public record CreateMenuToStoreCommand(
-	string Name,
-	Guid StoreId
-) : IRequest<MenuDTO>, ITransactionalRequest;
+public class CreateMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest
+{
+	public string Name { get; set; } = string.Empty;
+	public Guid StoreId { get; set; }
+}
 
 public class CreateMenuToStoreHandler(
 	IRepository<Menu> repoMenu,

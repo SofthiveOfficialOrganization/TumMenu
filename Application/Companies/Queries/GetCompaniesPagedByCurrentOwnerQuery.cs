@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Queries;
 
-public record GetCompaniesPagedByCurrentOwnerQuery() : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
+public class GetCompaniesPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>
+{
+}
 
 public class GetCompaniesPagedByCurrentOwnerHandler(
 	IRepository<Domain.Entities.Company> repoCompany,

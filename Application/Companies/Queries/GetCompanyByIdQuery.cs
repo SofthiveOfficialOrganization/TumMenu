@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Queries;
 
-public record GetCompanyByIdQuery(Guid Id) : IRequest<CompanyDTO>;
+public class GetCompanyByIdQuery : IRequest<CompanyDTO>
+{
+	public Guid Id { get; set; }
+}
 
 public class GetCompanyByIdHandler(
 	IRepository<Domain.Entities.Company> repoCompany,

@@ -7,7 +7,10 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetAllCategoriesPagedQuery(string? Search) : PageRequest, IRequest<List<CategoryDTO>>;
+public class GetAllCategoriesPagedQuery : PageRequest, IRequest<List<CategoryDTO>>
+{
+	public string? Search { get; set; }
+}
 
 public class GetAllCategoriesPagedHandler(
 	IRepository<Category> repoCategory,

@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public record GetMenusPagedByCompanyQuery(
-	Guid CompanyId
-) : PageRequest, IRequest<MenuDTO>;
+public class GetMenusPagedByCompanyQuery : PageRequest, IRequest<MenuDTO>
+{
+	public Guid CompanyId { get; set; }
+}
 
 public class GetMenusPagedByCompanyHandler(
 	IRepository<Menu> repoMenu,
