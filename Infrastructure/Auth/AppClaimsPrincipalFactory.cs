@@ -37,7 +37,7 @@ public sealed class AppClaimsPrincipalFactory
             if(owner.Company is not null)
             {
                 identity.AddClaim(new Claim("company_id", owner.Company.Id.ToString()));
-                identity.AddClaim(new Claim("company_name", owner.Company.Name));
+                identity.AddClaim(new Claim("company_name", owner.Company.Title));
             }
         }
 

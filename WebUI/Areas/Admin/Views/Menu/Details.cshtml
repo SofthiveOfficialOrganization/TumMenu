@@ -82,7 +82,7 @@
                             foreach (var category in Model.Categories.OrderBy(c => c.SortOrder))
                             {
                                 <tr>
-                                    <td class="ps-3 fw-bold text-dark">@category.Name</td>
+                                    <td class="ps-3 fw-bold text-dark">@category.Title</td>
                                     <td class="text-secondary text-truncate" style="max-width: 200px;">@category.Description</td>
                                     <td><span class="badge bg-light text-secondary">@category.SortOrder</span></td>
                                     <td class="text-end pe-3">

@@ -18,7 +18,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <h2 class="card-title mb-3">@Model.Name</h2>
+                        <h2 class="card-title mb-3">@Model.Title</h2>
                         
                         @if (!string.IsNullOrEmpty(Model.Description))
                         {
@@ -120,7 +120,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p><strong>@Model.Name</strong> ürününü silmek istediğinize emin misiniz?</p>
+                        <p><strong>@Model.Title</strong> ürününü silmek istediğinize emin misiniz?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>

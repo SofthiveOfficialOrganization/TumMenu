@@ -23,9 +23,9 @@ public class GetAllCategoriesPagedHandler(
 			req,
 			c =>
 				string.IsNullOrEmpty(req.Search) ||
-				c.Name.Contains(req.Search) ||
+				c.Title.Contains(req.Search) ||
 				c.Slug.Contains(req.Search),
-			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.Name),
+			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.Title),
 			ct: ct
 		);
 		var categoryListDTO = mapper.Map<List<CategoryDTO>>(categoryList);

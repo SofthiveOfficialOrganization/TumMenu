@@ -10,7 +10,7 @@ namespace Application.Products.DTOs;
 
 public sealed class ProductDTO : BaseDTO
 {
-	public string Name { get; set; } = null!;
+	public string Title { get; set; } = null!;
 	public string? Description { get; set; }
 	public Guid? CategoryId { get; set; }
 	public decimal BasePrice { get; set; }

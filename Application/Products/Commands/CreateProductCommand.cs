@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Application.Products.Commands;
 
 public sealed record CreateProductCommand(
-	string Name,
+	string Title,
 	string? Slug,
 	string? Description,
 	decimal BasePrice,
@@ -32,7 +32,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 {
 	public CreateProductCommandValidator()
 	{
-		RuleFor(x => x.Name)
+		RuleFor(x => x.Title)
 			.NotEmpty()
 			.MaximumLength(200);
 		RuleFor(x => x.Slug)

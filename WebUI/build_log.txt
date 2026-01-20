@@ -1,0 +1,26 @@
+  Geri yüklenecek projeler belirleniyor...
+  D:\SoftHive\Projects\2025\TumMenu\Infrastructure\Infrastructure.csproj geri yüklendi (612 ms içinde).
+  d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj geri yüklendi (579 ms içinde).
+  d:\SoftHive\Projects\2025\TumMenu\Domain\Domain.csproj geri yüklendi (577 ms içinde).
+  d:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj geri yüklendi (741 ms içinde).
+  Domain -> D:\SoftHive\Projects\2025\TumMenu\Domain\bin\Debug\net8.0\Domain.dll
+d:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+  Application -> D:\SoftHive\Projects\2025\TumMenu\Application\bin\Debug\net8.0\Application.dll
+C:\Program Files\dotnet\sdk\10.0.102\Sdks\Microsoft.SourceLink.Common\build\Microsoft.SourceLink.Common.targets(56,5): error : 'obj\Debug\net8.0\Infrastructure.sourcelink.json' kaynak bağlantısı dosyasına yazılırken bir hata oluştu: The process cannot access the file 'd:\SoftHive\Projects\2025\TumMenu\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json' because it is being used by another process. [d:\SoftHive\Projects\2025\TumMenu\Infrastructure\Infrastructure.csproj]
+
+Oluşturma BAŞARISIZ OLDU.
+
+d:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmamış. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+d:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+C:\Program Files\dotnet\sdk\10.0.102\Sdks\Microsoft.SourceLink.Common\build\Microsoft.SourceLink.Common.targets(56,5): error : 'obj\Debug\net8.0\Infrastructure.sourcelink.json' kaynak bağlantısı dosyasına yazılırken bir hata oluştu: The process cannot access the file 'd:\SoftHive\Projects\2025\TumMenu\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json' because it is being used by another process. [d:\SoftHive\Projects\2025\TumMenu\Infrastructure\Infrastructure.csproj]
+    5 Uyarı
+    1 Hata
+
+Geçen Süre 00:00:04.44

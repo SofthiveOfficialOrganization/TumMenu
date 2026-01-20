@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
 	public class Company : BaseEntity
 	{
-		[MaxLength(200)] public string Name { get; set; } = null!;
+		[MaxLength(200)] public string Title { get; set; } = null!;
 		[MaxLength(30)] public string Slug { get; set; } = null!;
 
 		// TODO: Make it required after implementing example endpoints and services

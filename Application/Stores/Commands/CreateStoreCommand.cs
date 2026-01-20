@@ -9,7 +9,7 @@ namespace Application.Stores.Commands;
 
 public sealed record CreateStoreCommand
 (
-	string Name,
+	string Title,
 	string Slug,
 	string PhoneNumber,
 	Guid CompanyId

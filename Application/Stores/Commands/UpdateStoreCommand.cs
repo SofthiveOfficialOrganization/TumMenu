@@ -9,7 +9,7 @@ namespace Application.Stores.Commands;
 public sealed record UpdateStoreCommand
 (
 	Guid Id,
-	string Name,
+	string Title,
 	string Slug,
 	string PhoneNumber
 ) : IRequest<Unit>, ITransactionalRequest;

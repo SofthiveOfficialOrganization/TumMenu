@@ -24,7 +24,7 @@ public sealed class GetSesssionByCurrentUserHandler(
             companyId = cid;
             companyName = await repoCompany.Query()
                 .Where(c => c.Id == cid)
-                .Select(c => c.Name)
+                .Select(c => c.Title)
                 .FirstOrDefaultAsync(ct);
         }
 

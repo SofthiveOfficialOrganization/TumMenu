@@ -7,4 +7,5 @@ public abstract class BaseDTO
 	public DateTimeOffset? ModifiedAt { get; init; }
 	public DateTimeOffset? DeletedAt { get; init; }
 	public bool IsDeleted { get; init; }
+	public DateTimeOffset? DeletedAt { get; init; }
 }

@@ -182,8 +182,8 @@ namespace Infrastructure.Persistence
 				.OnDelete(DeleteBehavior.NoAction);
 
 			// Unique slugs
-			builder.Entity<Company>()
-				.HasIndex(x => x.Slug)
+			builder.Entity<Store>()
+				.HasIndex(x => new { x.CompanyId, x.Slug })
 				.IsUnique();
 
 			builder.Entity<Store>()
@@ -255,7 +255,12 @@ namespace Infrastructure.Persistence
 
 			// Product slug unique
 			builder.Entity<Product>()
-				.HasIndex(p => p.Slug)
+				.HasIndex(x => new { x.CategoryId, x.Slug })
+				.IsUnique();
+
+			// Category slug unique
+			builder.Entity<Category>()
+				.HasIndex(x => new { x.MenuId, x.Slug })
 				.IsUnique();
 		}
 

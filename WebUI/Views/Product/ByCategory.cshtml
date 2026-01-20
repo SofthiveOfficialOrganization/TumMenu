@@ -46,7 +46,7 @@
                     {
                         <tr>
                             <td>
-                                <div class="fw-bold">@item.Name</div>
+                                <div class="fw-bold">@item.Title</div>
                                 @if (!string.IsNullOrEmpty(item.Description))
                                 {
                                     <small class="text-muted">@item.Description</small>
@@ -89,7 +89,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p><strong>@item.Name</strong> ürününü silmek istediğinize emin misiniz?</p>
+                                                <p><strong>@item.Title</strong> ürününü silmek istediğinize emin misiniz?</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>

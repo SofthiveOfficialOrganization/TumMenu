@@ -29,8 +29,8 @@ public class GetTagsPagedHandler(
 		var tags = await repoTag.GetPageListAsync(
 			req,
 			tag =>
-				string.IsNullOrEmpty(req.Search) || (tag.Name != null && tag.Name.Contains(req.Search)),
-			orderBy: tag => tag.OrderBy(t => t.Name),
+				string.IsNullOrEmpty(req.Search) || (tag.Title != null && tag.Title.Contains(req.Search)),
+			orderBy: tag => tag.OrderBy(t => t.Title),
 			ct: ct
 		);
 		var tagsDTO = mapper.Map<PaginatedListDTO<TagDTO>>(tags);

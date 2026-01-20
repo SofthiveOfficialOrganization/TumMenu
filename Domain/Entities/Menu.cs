@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
 	public class Menu : BaseEntity
 	{
-		public string Name { get; set; } = null!;
+		public string Title { get; set; } = null!;
 		public Guid? CompanyId { get; set; }
 		public Company? Company { get; set; }
 		public Guid? MenuTemplateId { get; set; }
