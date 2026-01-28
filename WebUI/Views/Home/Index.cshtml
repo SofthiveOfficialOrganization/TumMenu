@@ -2,73 +2,54 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<!-- HERO -->
 <section class="hero" aria-labelledby="hero-heading">
     <div class="container hero__inner">
-        <div class="hero__left">
-            <p class="hero__eyebrow">Menüleri Keşfet, Gitmeden Fiyatları Gör</p>
 
-            <h1 id="hero-heading" class="hero__title">
-                Discover Menus Before You Dine
-            </h1>
+        <div class="hero__left">
+            <p class="hero__eyebrow">Menüleri keşfet • gitmeden fiyatları gör</p>
+
+            <h1 id="hero-heading" class="hero__title">Gitmeden menülere göz at</h1>
 
             <p class="hero__lead">
-                Browse thousands of restaurant menus, compare prices, and make
-                informed dining decisions before you go.
+                Yakınındaki restoranların menülerini incele, fiyatları karşılaştır ve kararını hızlı ver.
             </p>
 
             <div class="hero-toggle" role="tablist" aria-label="Müşteri / İşletme görünümü">
                 <button class="hero-toggle__button is-active"
-                        type="button"
-                        role="tab"
-                        aria-selected="true"
-                        data-mode="customers">
-                    <span class="hero-toggle__icon">👤</span>
-                    For Customers
+                        type="button" role="tab" aria-selected="true" data-mode="customers">
+                    <span class="hero-toggle__icon">👤</span> Müşteriler
                 </button>
 
                 <button class="hero-toggle__button"
-                        type="button"
-                        role="tab"
-                        aria-selected="false"
-                        data-mode="business">
-                    <span class="hero-toggle__icon">🏪</span>
-                    For Businesses
+                        type="button" role="tab" aria-selected="false" data-mode="business">
+                    <span class="hero-toggle__icon">🏪</span> İşletmeler
                 </button>
             </div>
 
-            <!-- Avantaj listeleri: JS ile customers/business arasında geçiş yapıyoruz -->
-            <ul class="hero-benefits hero-benefits--customers is-active">
-                <li>Restoran, kafe ve tatlıcıları tek ekranda gör.</li>
-                <li>Menü ve fiyatlara gitmeden göz at.</li>
-                <li>Favori işletmelerini kaydet.</li>
-            </ul>
+            <div class="hero-benefits-wrap">
+                <ul class="hero-benefits hero-benefits--customers is-active">
+                    <li>Restoranları tek ekranda gör.</li>
+                    <li>Menü ve fiyatlara gitmeden bak.</li>
+                    <li>Favori işletmelerini kaydet.</li>
+                </ul>
 
-            <ul class="hero-benefits hero-benefits--business" aria-hidden="true">
-                <li>QR menü ile masrafsız, hızlı menü güncellemesi yap.</li>
-                <li>Menünü telefondan inceleyen daha fazla müşteriye ulaş.</li>
-                <li>Fiyat ve ürünleri anlık olarak kontrol et.</li>
-            </ul>
-        </div>
-
-        <div class="hero__right">
-            <div >
-                <img id="hero-main-image--customer" class="is-active"
-                     src="~/images/hero-illustration-customer.png" />
+                <ul class="hero-benefits hero-benefits--business" aria-hidden="true">
+                    <li>QR menü ile hızlı menü güncelle.</li>
+                    <li>Daha fazla müşteriye ulaş.</li>
+                    <li>Fiyat ve ürünleri anlık kontrol et.</li>
+                </ul>
             </div>
-          <div >
-                <img id="hero-main-image--business" aria-hidden="true"
-                     src="~/images/hero-illustration-business.png" />
-          </div>
         </div>
-    </div>
 
-    <!-- Dalgalı alt -->
-    <div class="hero-wave" aria-hidden="true">
-        <svg viewBox="0 0 440 120" preserveAspectRatio="none">
-            <path d="M0,64L48,58.7C96,53,192,43,288,58.7C384,75,480,117,576,133.3C672,149,768,139,864,117.3C960,96,1056,64,1152,58.7C1248,53,1344,75,1392,85.3L1440,96L1440,120L0,120Z"
-                  fill="var(--color-bg")></path>
-        </svg>
+        <div class="hero__right" aria-hidden="true">
+            <div>
+                <img id="hero-main-image--customer" class="is-active" src="~/images/hero-illustration-customer.png" alt="" />
+            </div>
+            <div>
+                <img id="hero-main-image--business" src="~/images/hero-illustration-business.png" alt="" />
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -275,63 +256,26 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+          var toggle = document.querySelector('.hero-toggle');
           var buttons = document.querySelectorAll('.hero-toggle__button');
-          var eyebrowEl = document.querySelector('.hero__eyebrow');
-          var titleEl = document.querySelector('.hero__title');
-          var leadEl = document.querySelector('.hero__lead');
 
           var benefitsCustomers = document.querySelector('.hero-benefits--customers');
-          var benefitsBusiness = document.querySelector('.hero-benefits--business');
-          var heroImageCustomers = document.getElementById('hero-main-image--customer');
-          var heroImageBusiness = document.getElementById('hero-main-image--business');
+          var benefitsBusiness  = document.querySelector('.hero-benefits--business');
 
-          if (!buttons.length) return;
-
-          var titleTexts = {
-            customers: 'Discover Menus Before You Dine',
-            business: 'Transform Your Restaurant With Digital Menus'
-          };
-
-          var leadTexts = {
-            customers: 'Browse thousands of restaurant menus, compare prices, and make informed dining decisions before you go.',
-            business: 'Digitize your menu, update prices in seconds and let customers explore your restaurant from anywhere.'
-          };
-
-          // Metni fade swap ile değiştirme
-          function swapText(el, newText){
-            if (!el || !newText) return;
-
-            // animasyonu tekrar tetiklemek için reset
-            el.classList.remove('is-swapping');
-            void el.offsetWidth; // reflow
-            el.classList.add('is-swapping');
-
-            // fade-out ortasında metni değiştir
-            window.setTimeout(function(){
-              el.textContent = newText;
-            }, 160);
-
-            // animasyon bitince class temizle
-            window.setTimeout(function(){
-              el.classList.remove('is-swapping');
-            }, 340);
-          }
+          var imgCustomers = document.getElementById('hero-main-image--customer');
+          var imgBusiness  = document.getElementById('hero-main-image--business');
 
           function setMode(mode){
+            // pill konumu
+            if (toggle) toggle.style.setProperty('--toggle-x', mode === 'business' ? '100%' : '0%');
+
             buttons.forEach(function(b){
               var active = (b.dataset.mode === mode);
               b.classList.toggle('is-active', active);
               b.setAttribute('aria-selected', active ? 'true' : 'false');
             });
 
-            // Metinleri animasyonla değiştir
-            swapText(titleEl, titleTexts[mode]);
-            swapText(leadEl, leadTexts[mode]);
-
-            // (İstersen eyebrow da mod'a göre değişsin)
-            // swapText(eyebrowEl, mode === 'customers' ? 'Menüleri Keşfet, Gitmeden Fiyatları Gör' : 'İşletmen için Dijital Menü');
-
-            // Benefits: CSS artık fade yapacak (display:none yok)
+            // benefits
             if (benefitsCustomers && benefitsBusiness){
               benefitsCustomers.classList.toggle('is-active', mode === 'customers');
               benefitsCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
@@ -340,13 +284,10 @@
               benefitsBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
             }
 
-            // Görseller: CSS cross-fade yapacak
-            if (heroImageCustomers && heroImageBusiness){
-              heroImageCustomers.classList.toggle('is-active', mode === 'customers');
-              heroImageCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
-
-              heroImageBusiness.classList.toggle('is-active', mode === 'business');
-              heroImageBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
+            // images
+            if (imgCustomers && imgBusiness){
+              imgCustomers.classList.toggle('is-active', mode === 'customers');
+              imgBusiness.classList.toggle('is-active', mode === 'business');
             }
           }
 
