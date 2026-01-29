@@ -1,139 +1,251 @@
-﻿/* HeaderFooter.css - Header + Footer */
+﻿/* footer-header.css - HEADER + FOOTER */
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .site-header {
-    background: var(--color-primary); /* body ile aynı krem ton */
+    background: var(--color-primary);
     position: sticky;
     top: 0;
-    z-index: 40;
+    z-index: 50;
+    isolation: isolate; /* dropdown z-index stabil */
 }
 
 .site-header__inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "logo nav actions";
     align-items: center;
-    justify-content: space-between;
     gap: 16px;
-    flex-wrap: wrap;
     padding: 10px 0;
 }
 
+/* LOGO */
 .site-header__logo {
-    display: flex;
+    grid-area: logo;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-weight: 700;
-    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #fff;
+    white-space: nowrap;
 }
 
 .site-header__logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 12px;
-    background: var(--color-primary);
-    display: flex;
+    background: rgba(255,255,255,.18);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    font-size: 18px;
+    color: #fff;
     box-shadow: var(--shadow-soft);
+    font-size: 18px;
 }
 
-.site-header__logo-text-main {
-    color: #333333;
-}
-
-.site-header__logo-text-accent {
-    color: var(--color-primary);
-    margin-left: 4px;
-}
-
+/* NAV pill (desktop) */
 .site-header__nav {
-    display: flex;
+    grid-area: nav;
+    justify-self: center;
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 20px;
-    font-size: 14px;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.16);
 }
 
 .site-header__nav-link {
-    font-weight: 500;
-    color: var(--color-text-secondary);
     position: relative;
+    z-index: 1;
+    color: rgba(255,255,255,.92);
+    font-weight: 900;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
 }
 
-    .site-header__nav-link::after {
+    .site-header__nav-link.is-active {
+        color: #2a5c2a;
+        background: rgba(255,255,255,.92);
+    }
+
+/* ACTIONS */
+.site-header__actions {
+    grid-area: actions;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Header CTA: accent */
+.btn--header {
+    background: var(--color-accent);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(0,0,0,.16);
+}
+
+    .btn--header:hover {
+        background: var(--color-accent-dark);
+        transform: translateY(-1px);
+    }
+
+
+
+/* Burger */
+/* =========================
+   HAMBURGER – DEFAULT (DESKTOP)
+========================= */
+
+/* Hamburger DESKTOP'ta tamamen kapalı */
+.site-header__burger {
+    display: none;
+}
+
+.site-header__burger {
+    border: 0;
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.18);
+    box-shadow: var(--shadow-soft);
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.site-header__burger-lines {
+    width: 18px;
+    height: 12px;
+    position: relative;
+    display: inline-block;
+}
+
+    .site-header__burger-lines::before,
+    .site-header__burger-lines::after {
         content: "";
         position: absolute;
         left: 0;
-        bottom: -4px;
-        width: 0;
+        right: 0;
         height: 2px;
-        background: var(--color-primary);
-        transition: width 0.15s ease;
+        border-radius: 999px;
+        background: rgba(255,255,255,.92);
     }
 
-    .site-header__nav-link:hover::after {
-        width: 100%;
+    .site-header__burger-lines::before {
+        top: 0;
     }
 
-.site-header__actions {
+    .site-header__burger-lines::after {
+        bottom: 0;
+    }
+
+
+/* Mobile dropdown container */
+.site-header__mobile[hidden] {
+    display: none;
+}
+
+.site-header__mobile {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 160;
+    padding: 10px 0 14px;
+}
+
+.site-header__mobile-inner {
+    background: rgba(255,255,255,.16);
+    border-radius: 18px;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+    backdrop-filter: blur(8px);
+}
+
+/* Linkler: arka plansız */
+.site-header__mobile-link {
     display: flex;
     align-items: center;
-    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-weight: 900;
+    color: rgba(255,255,255,1);
+    background: transparent;
+    text-decoration: none;
 }
 
-/* Küçük ekranlarda header düzgün dağılsın */
-
-@media (max-width: 600px) {
-    .site-header__inner {
-        justify-content: space-between;
+    .site-header__mobile-link:hover {
+        background: rgba(255,255,255,.12);
     }
 
+/* MOBILE */
+@media (max-width: 720px) {
+
+    /* Desktop pill nav kapansın */
     .site-header__nav {
-        width: 100%;
-        justify-content: flex-start;
-        margin-left: 42px;
-        margin-top: 6px;
+        display: none;
+    }
+
+    /* Desktop-only kapansın, burger açılsın */
+    .site-header__burger {
+        display: inline-flex;
+    }
+    
+    /* Grid: logo + actions */
+    .site-header__inner {
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "logo actions";
+        gap: 10px;
+    }
+
+    .btn--header {
+        padding: 8px 12px;
+        font-size: 13px;
     }
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 
 .site-footer {
     background: var(--color-secondary-dark);
     color: #EDE0D1;
     font-size: 13px;
-    padding: 28px 0 18px;
+    padding: 22px 0 16px;
 }
 
 .site-footer__top {
     display: grid;
-    gap: 24px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 14px;
 }
 
 .site-footer__brand-title {
     font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: #fff;
 }
-
-    .site-footer__brand-title span:first-child {
-        color: #ffffff;
-    }
-
-    .site-footer__brand-title span:last-child {
-        color: var(--color-primary);
-        margin-left: 4px;
-    }
 
 .site-footer__brand p {
     margin: 0;
+    opacity: .92;
 }
 
 .site-footer__column-title {
-    font-weight: 600;
+    font-weight: 900;
     margin: 0 0 8px;
+    color: #fff;
 }
 
 .site-footer__links {
@@ -147,7 +259,7 @@
 
     .site-footer__links a {
         color: #EDE0D1;
-        opacity: 0.9;
+        opacity: .9;
     }
 
         .site-footer__links a:hover {
@@ -155,38 +267,76 @@
         }
 
 .site-footer__bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255,255,255,.12);
     padding-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .site-footer__social {
     display: flex;
-    gap: 8px;
+    gap: 10px;
 }
 
-    .site-footer__social span {
-        width: 26px;
-        height: 26px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.12);
+    .site-footer__social a {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        color: #fff;
+        font-weight: 900;
     }
 
-/* Daha geniş ekranlarda footer kolonları yan yana */
+/* footer mobile/desktop switch */
+.site-footer__top--desktop {
+    display: none;
+}
+
+.site-footer__top--mobile {
+    display: grid;
+}
+
+.site-footer__acc {
+    background: rgba(255,255,255,.06);
+    border-radius: 16px;
+    padding: 10px 12px;
+}
+
+    .site-footer__acc summary {
+        cursor: pointer;
+        font-weight: 900;
+        color: #fff;
+        list-style: none;
+    }
+
+        .site-footer__acc summary::-webkit-details-marker {
+            display: none;
+        }
+
+    .site-footer__acc[open] {
+        background: rgba(255,255,255,.09);
+    }
 
 @media (min-width: 768px) {
-    .site-footer__top {
-        grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+    .site-footer__top--mobile {
+        display: none;
+    }
+
+    .site-footer__top--desktop {
+        display: grid;
+        grid-template-columns: 1.4fr repeat(3, minmax(0,1fr));
+        gap: 24px;
+        align-items: start;
     }
 
     .site-footer__bottom {
         flex-direction: row;
+        justify-content: space-between;
         align-items: center;
     }
 }

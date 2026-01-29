@@ -1,28 +1,31 @@
 ﻿@{
-    var pageTitle = ViewData["Title"] as string ?? "Ana Sayfa";
-    var fullTitle = pageTitle + " - Full Menu";
+    var pageTitle = ViewData["Title"] as string ?? "Tüm Menü";
+    var fullTitle = $"{pageTitle} | Tüm Menü";
+
+    var description = ViewData["Description"] as string
+        ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
+
+    var canonical = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
 }
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <title>@fullTitle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Temel SEO -->
-    <meta name="description"
-          content="QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve kendi dijital menünü oluştur." />
+    <title>@fullTitle</title>
+    <meta name="description" content="@description" />
     <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="@canonical" />
+
+    <meta name="theme-color" content="#688745" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="@fullTitle" />
-    <meta property="og:description"
-          content="Müşteriler için QR menülü restoranları keşfet, işletmeler için dakikalar içinde dijital menüye geç." />
+    <meta property="og:description" content="@description" />
     <meta property="og:type" content="website" />
-
-    <!-- Domainini eklediğinde canonical aç -->
-    @* <link rel="canonical" href="https://www.senin-domainin.com@Context.Request.Path" /> *@
+    <meta property="og:locale" content="tr_TR" />
 
     <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
@@ -32,98 +35,180 @@
 </head>
 <body class="app-shell">
     <!-- HEADER -->
-    <header class="site-header">
+    <header class="site-header" role="banner">
         <div class="container site-header__inner">
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="site-header__logo">
-                <div class="site-header__logo-icon" aria-hidden="true">🍽</div>
-                <div class="site-header__logo-text">
-                    <span class="site-header__logo-text-main">full</span>
-                    <span class="site-header__logo-text-accent">menu</span>
-                </div>
+
+            <a asp-controller="Home" asp-action="Index" class="site-header__logo" aria-label="Tüm Menü ana sayfa">
+                <span class="site-header__logo-icon" aria-hidden="true">▦</span>
+                <span class="site-header__logo-text">Tüm Menü</span>
             </a>
 
+            <!-- Menü ORTA -->
             <nav class="site-header__nav" aria-label="Ana menü">
-                <a asp-controller="Home" asp-action="Index" class="site-header__nav-link">
-                    Ne yesem?
-                </a>
-                <a asp-controller="Home" asp-action="Restoranlar" class="site-header__nav-link">
-                    Restoranlar
-                </a>
+                <a asp-controller="Home" asp-action="Index" class="site-header__nav-link">Ne yesem?</a>
+                <a asp-controller="Home" asp-action="Restoranlar" class="site-header__nav-link">Restoranlar</a>
             </nav>
 
+            <!-- QR SAĞ -->
             <div class="site-header__actions">
-                <a asp-controller="Home" asp-action="BeQr"
-                   class="btn btn--primary">
-                    Be QR
-                </a>
+                <a asp-controller="Home" asp-action="BeQr" class="btn btn--header">QR’lı Ol</a>
+                <button class="site-header__burger"
+                        type="button"
+                        aria-label="Menüyü aç"
+                        aria-expanded="false"
+                        aria-controls="mobileMenu">
+                    <span class="site-header__burger-lines"></span>
+                </button>
+            </div>
+
+        </div>
+        <div id="mobileMenu" class="site-header__mobile" hidden>
+            <div class="container">
+                <div class="site-header__mobile-inner">
+                    <a class="site-header__mobile-link" asp-controller="Home" asp-action="Index">Ne yesem?</a>
+                    <a class="site-header__mobile-link" asp-controller="Home" asp-action="Restoranlar">Restoranlar</a>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- ANA İÇERİK -->
-    <main class="app-main">
+    <main id="main-content">
         @RenderBody()
     </main>
 
     <!-- FOOTER -->
-    <footer class="site-footer">
+    <footer class="site-footer" role="contentinfo">
         <div class="container">
-            <div class="site-footer__top">
+
+            <!-- Desktop footer -->
+            <div class="site-footer__top site-footer__top--desktop">
                 <div class="site-footer__brand">
-                    <div class="site-footer__brand-title">
-                        <span>full</span><span> menu</span>
-                    </div>
-                    <p>
-                        Full Menu ile menüleri keşfet, restoranları karşılaştır ve dijital menü sayesinde daha akıllı sipariş ver.
-                    </p>
+                    <div class="site-footer__brand-title">Tüm Menü</div>
+                    <p>Menüleri keşfet, fiyatları karşılaştır, işletmen için dijital menüye geç.</p>
                 </div>
 
-                <div>
-                    <h3 class="site-footer__column-title">Müşteriler için</h3>
+                <div class="site-footer__col">
+                    <h3 class="site-footer__column-title">Müşteriler</h3>
                     <ul class="site-footer__links">
                         <li><a href="#">Restoran bul</a></li>
                         <li><a href="#">Menülere göz at</a></li>
-                        <li><a href="#">Popüler yemekler</a></li>
-                        <li><a href="#">Mutfak türleri</a></li>
-                        <li><a href="#">Konumlar</a></li>
+                        <li><a href="#">Popüler yerler</a></li>
+                        <li><a href="#">Kategoriler</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h3 class="site-footer__column-title">İşletmeler için</h3>
+                <div class="site-footer__col">
+                    <h3 class="site-footer__column-title">İşletmeler</h3>
                     <ul class="site-footer__links">
-                        <li><a href="#">Be QR iş ortağı</a></li>
+                        <li><a href="#">QR Menü</a></li>
                         <li><a href="#">Fiyatlandırma</a></li>
                         <li><a href="#">Özellikler</a></li>
-                        <li><a href="#">Başarı hikâyeleri</a></li>
-                        <li><a href="#">Kaynaklar</a></li>
+                        <li><a href="#">Destek</a></li>
                     </ul>
                 </div>
 
-                <div>
+                <div class="site-footer__col">
                     <h3 class="site-footer__column-title">Şirket</h3>
                     <ul class="site-footer__links">
                         <li><a href="#">Hakkımızda</a></li>
                         <li><a href="#">İletişim</a></li>
                         <li><a href="#">Blog</a></li>
-                        <li><a href="#">Kariyer</a></li>
-                        <li><a href="#">Basın</a></li>
                     </ul>
                 </div>
             </div>
 
+            <!-- Mobile footer -->
+            <div class="site-footer__top site-footer__top--mobile">
+                <div class="site-footer__brand">
+                    <div class="site-footer__brand-title">Tüm Menü</div>
+                    <p>Menüleri keşfet, fiyatları karşılaştır, dijital menüye geç.</p>
+                </div>
+
+                <details class="site-footer__acc">
+                    <summary>Müşteriler</summary>
+                    <ul class="site-footer__links">
+                        <li><a href="#">Restoran bul</a></li>
+                        <li><a href="#">Menülere göz at</a></li>
+                        <li><a href="#">Popüler yerler</a></li>
+                        <li><a href="#">Kategoriler</a></li>
+                    </ul>
+                </details>
+
+                <details class="site-footer__acc">
+                    <summary>İşletmeler</summary>
+                    <ul class="site-footer__links">
+                        <li><a href="#">QR Menü</a></li>
+                        <li><a href="#">Fiyatlandırma</a></li>
+                        <li><a href="#">Özellikler</a></li>
+                        <li><a href="#">Destek</a></li>
+                    </ul>
+                </details>
+
+                <details class="site-footer__acc">
+                    <summary>Şirket</summary>
+                    <ul class="site-footer__links">
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </details>
+            </div>
+
             <div class="site-footer__bottom">
-                <span>© 2024 Full Menu. Tüm hakları saklıdır.</span>
+                <span>© @DateTime.Now.Year Tüm Menü. Tüm hakları saklıdır.</span>
                 <div class="site-footer__social">
-                    <a href="#" aria-label="Facebook"><span>f</span></a>
-                    <a href="#" aria-label="Instagram"><span>ig</span></a>
-                    <a href="#" aria-label="Twitter"><span>tw</span></a>
-                    <a href="#" aria-label="LinkedIn"><span>in</span></a>
+                    <a href="#" aria-label="Instagram">ig</a>
+                    <a href="#" aria-label="X">x</a>
+                    <a href="#" aria-label="LinkedIn">in</a>
                 </div>
             </div>
         </div>
     </footer>
 
     @RenderSection("Scripts", required: false)
+    <script>
+        (function () {
+          const btn = document.querySelector(".site-header__burger");
+          const menu = document.getElementById("mobileMenu");
+          const header = document.querySelector(".site-header");
+
+          if (!btn || !menu || !header) return;
+
+          function setOpen(open) {
+            btn.setAttribute("aria-expanded", open ? "true" : "false");
+            menu.hidden = !open;
+
+            document.documentElement.classList.toggle("no-scroll", open);
+            document.body.classList.toggle("no-scroll", open);
+          }
+
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = btn.getAttribute("aria-expanded") === "true";
+            setOpen(!isOpen);
+          });
+
+          menu.addEventListener("click", (e) => {
+            if (e.target.closest("a")) setOpen(false);
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!menu.hidden && !header.contains(e.target)) {
+              setOpen(false);
+            }
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") setOpen(false);
+          });
+
+          window.addEventListener("resize", () => {
+            if (window.innerWidth > 720) setOpen(false);
+          });
+        })();
+    </script>
+
+
 </body>
 </html>

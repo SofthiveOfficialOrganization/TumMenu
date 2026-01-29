@@ -1,74 +1,58 @@
 ﻿@{
     ViewData["Title"] = "Ana Sayfa";
+    ViewData["Description"] = "Yakınındaki restoranların QR menülerini keşfet, fiyatları gitmeden gör ve işletmen için dijital QR menü oluştur.";
 }
 
-<!-- HERO -->
 <section class="hero" aria-labelledby="hero-heading">
     <div class="container hero__inner">
-        <div class="hero__left">
-            <p class="hero__eyebrow">Menüleri Keşfet, Gitmeden Fiyatları Gör</p>
 
-            <h1 id="hero-heading" class="hero__title">
-                Discover Menus Before You Dine
-            </h1>
+        <div class="hero__left">
+            <p class="hero__eyebrow">Menüleri keşfet • Gitmeden fiyatları gör</p>
+
+            <h1 id="hero-heading" class="hero__title">Gitmeden menülere göz at</h1>
 
             <p class="hero__lead">
-                Browse thousands of restaurant menus, compare prices, and make
-                informed dining decisions before you go.
+                Yakınındaki restoranların menülerini incele, fiyatları karşılaştır ve kararını hızlı ver.
             </p>
 
-            <div class="hero-toggle" role="tablist" aria-label="Müşteri / İşletme görünümü">
+            <div class="hero-toggle" aria-label="Müşteri / İşletme görünümü">
                 <button class="hero-toggle__button is-active"
-                        type="button"
-                        role="tab"
-                        aria-selected="true"
-                        data-mode="customers">
-                    <span class="hero-toggle__icon">👤</span>
-                    For Customers
+                        type="button" aria-pressed="true" data-mode="customers">
+                    <span class="hero-toggle__icon">👤</span> Müşteriler
                 </button>
 
                 <button class="hero-toggle__button"
-                        type="button"
-                        role="tab"
-                        aria-selected="false"
-                        data-mode="business">
-                    <span class="hero-toggle__icon">🏪</span>
-                    For Businesses
+                        type="button" aria-pressed="false" data-mode="business">
+                    <span class="hero-toggle__icon">🏪</span> İşletmeler
                 </button>
             </div>
 
-            <!-- Avantaj listeleri: JS ile customers/business arasında geçiş yapıyoruz -->
-            <ul class="hero-benefits hero-benefits--customers is-active">
-                <li>Restoran, kafe ve tatlıcıları tek ekranda gör.</li>
-                <li>Menü ve fiyatlara gitmeden göz at.</li>
-                <li>Favori işletmelerini kaydet.</li>
-            </ul>
+            <div class="hero-benefits-wrap">
+                <ul class="hero-benefits hero-benefits--customers is-active">
+                    <li>Restoranları tek ekranda gör.</li>
+                    <li>Menü ve fiyatlara gitmeden bak.</li>
+                    <li>Favori işletmelerini kaydet.</li>
+                </ul>
 
-            <ul class="hero-benefits hero-benefits--business" aria-hidden="true">
-                <li>QR menü ile masrafsız, hızlı menü güncellemesi yap.</li>
-                <li>Menünü telefondan inceleyen daha fazla müşteriye ulaş.</li>
-                <li>Fiyat ve ürünleri anlık olarak kontrol et.</li>
-            </ul>
-        </div>
-
-        <div class="hero__right">
-            <div >
-                <img id="hero-main-image--customer" class="is-active"
-                     src="~/images/hero-illustration-customer.png" />
+                <ul class="hero-benefits hero-benefits--business" aria-hidden="true">
+                    <li>QR menü ile hızlı menü güncelle.</li>
+                    <li>Daha fazla müşteriye ulaş.</li>
+                    <li>Fiyat ve ürünleri anlık kontrol et.</li>
+                </ul>
             </div>
-          <div >
-                <img id="hero-main-image--business" aria-hidden="true"
-                     src="~/images/hero-illustration-business.png" />
-          </div>
         </div>
-    </div>
 
-    <!-- Dalgalı alt -->
-    <div class="hero-wave" aria-hidden="true">
-        <svg viewBox="0 0 440 120" preserveAspectRatio="none">
-            <path d="M0,64L48,58.7C96,53,192,43,288,58.7C384,75,480,117,576,133.3C672,149,768,139,864,117.3C960,96,1056,64,1152,58.7C1248,53,1344,75,1392,85.3L1440,96L1440,120L0,120Z"
-                  fill="var(--color-bg")></path>
-        </svg>
+        <div class="hero__right" aria-hidden="true">
+            <div>
+                <img id="hero-main-image--customer" class="is-active"
+                     src="~/images/hero-illustration-customer.png" alt="" />
+            </div>
+            <div>
+                <img id="hero-main-image--business"
+                     src="~/images/hero-illustration-business.png" alt="" />
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -76,10 +60,10 @@
 <section class="section section--search" aria-labelledby="search-heading">
     <div class="container search-layout">
         <div class="search-layout__text">
-            <h2 id="search-heading" class="section__title">Find Restaurants Near You</h2>
+            <h2 id="search-heading" class="section__title">Yakınında restoran bul</h2>
             <p class="section__subtitle">
-                Enter your location to discover nearby restaurants with digital menus.
-                View prices and dishes before you visit.
+                Konumunu gir, yakınındaki dijital menülü restoranları keşfet.
+                Gitmeden menü ve fiyatları görüntüle.
             </p>
 
             <form class="search-form" role="search" aria-label="Restoran arama">
@@ -92,34 +76,21 @@
                     </div>
 
                     <button type="submit" class="btn btn--primary search-form__button">
-                        Search Restaurants
+                        Restoran Ara
                     </button>
                 </div>
             </form>
 
             <div class="chip-row" aria-label="Kategori filtreleri">
-                <button class="chip" type="button">
-                    <span class="chip__icon">🍕</span> Pizza
-                </button>
-                <button class="chip" type="button">
-                    <span class="chip__icon">🍔</span> Burgers
-                </button>
-                <button class="chip" type="button">
-                    <span class="chip__icon">🍣</span> Sushi
-                </button>
-                <button class="chip" type="button">
-                    <span class="chip__icon">🍝</span> Italian
-                </button>
-                <button class="chip" type="button">
-                    <span class="chip__icon">🥗</span> Healthy
-                </button>
-                <button class="chip" type="button">
-                    <span class="chip__icon">🍰</span> Desserts
-                </button>
+                <button class="chip" type="button"><span class="chip__icon">🍕</span> Pizza</button>
+                <button class="chip" type="button"><span class="chip__icon">🍔</span> Burger</button>
+                <button class="chip" type="button"><span class="chip__icon">🍣</span> Sushi</button>
+                <button class="chip" type="button"><span class="chip__icon">🍝</span> İtalyan</button>
+                <button class="chip" type="button"><span class="chip__icon">🥗</span> Sağlıklı</button>
+                <button class="chip" type="button"><span class="chip__icon">🍰</span> Tatlı</button>
             </div>
         </div>
 
-        <!-- Google Maps embed -->
         <div class="search-layout__map">
             <div class="map-card">
                 <iframe class="map-card__iframe"
@@ -136,70 +107,58 @@
 <section class="section section--popular" aria-labelledby="popular-heading">
     <div class="container">
         <div class="section-heading section-heading--center">
-            <h2 id="popular-heading" class="section__title">Most Popular Restaurants</h2>
+            <h2 id="popular-heading" class="section__title">Popüler restoranlar</h2>
             <p class="section__subtitle">
-                Discover the top-rated dining spots loved by our community.
+                Topluluğumuzun en çok tercih ettiği mekanları keşfet.
             </p>
         </div>
 
         <div class="popular-grid">
             <article class="restaurant-card">
-                <img src="/images/popular-1.jpg"
-                     alt="The Golden Fork restoranı"
-                     loading="lazy" />
+                <img src="/images/popular-1.jpg" alt="The Golden Fork restoranı" loading="lazy" />
                 <div class="restaurant-card__body">
                     <h3 class="restaurant-card__name">The Golden Fork</h3>
-                    <p class="restaurant-card__tags">
-                        Italian • Fine Dining • European
-                    </p>
+                    <p class="restaurant-card__tags">İtalyan • Fine Dining • Avrupa</p>
                     <div class="restaurant-card__meta">
                         <span><span class="restaurant-card__icon">★</span> 4.9 (320)</span>
                         <span><span class="restaurant-card__icon">📍</span> 2.3 km</span>
-                        <span><span class="restaurant-card__icon">$</span> $$–$$$</span>
+                        <span><span class="restaurant-card__icon">₺</span> ₺₺–₺₺₺</span>
                     </div>
                 </div>
                 <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">View Full Menu</button>
+                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
                 </div>
             </article>
 
             <article class="restaurant-card">
-                <img src="/images/popular-2.jpg"
-                     alt="Urban Bistro"
-                     loading="lazy" />
+                <img src="/images/popular-2.jpg" alt="Urban Bistro" loading="lazy" />
                 <div class="restaurant-card__body">
                     <h3 class="restaurant-card__name">Urban Bistro</h3>
-                    <p class="restaurant-card__tags">
-                        American • Casual Dining • Brunch
-                    </p>
+                    <p class="restaurant-card__tags">Amerikan • Casual • Brunch</p>
                     <div class="restaurant-card__meta">
                         <span><span class="restaurant-card__icon">★</span> 4.7 (245)</span>
                         <span><span class="restaurant-card__icon">📍</span> 1.8 km</span>
-                        <span><span class="restaurant-card__icon">$</span> $$</span>
+                        <span><span class="restaurant-card__icon">₺</span> ₺₺</span>
                     </div>
                 </div>
                 <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">View Full Menu</button>
+                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
                 </div>
             </article>
 
             <article class="restaurant-card">
-                <img src="/images/popular-3.jpg"
-                     alt="Sakura Sushi House"
-                     loading="lazy" />
+                <img src="/images/popular-3.jpg" alt="Sakura Sushi House" loading="lazy" />
                 <div class="restaurant-card__body">
                     <h3 class="restaurant-card__name">Sakura Sushi House</h3>
-                    <p class="restaurant-card__tags">
-                        Japanese • Sushi • Asian Fusion
-                    </p>
+                    <p class="restaurant-card__tags">Japon • Sushi • Asian Fusion</p>
                     <div class="restaurant-card__meta">
                         <span><span class="restaurant-card__icon">★</span> 4.8 (198)</span>
                         <span><span class="restaurant-card__icon">📍</span> 3.1 km</span>
-                        <span><span class="restaurant-card__icon">$</span> $$–$$$</span>
+                        <span><span class="restaurant-card__icon">₺</span> ₺₺–₺₺₺</span>
                     </div>
                 </div>
                 <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">View Full Menu</button>
+                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
                 </div>
             </article>
         </div>
@@ -210,143 +169,84 @@
 <section class="section section--categories" aria-labelledby="categories-heading">
     <div class="container">
         <div class="section-heading section-heading--center">
-            <h2 id="categories-heading" class="section__title">Browse by Food Category</h2>
-            <p class="section__subtitle">
-                Find exactly what you're craving today.
-            </p>
+            <h2 id="categories-heading" class="section__title">Kategorilere göre keşfet</h2>
+            <p class="section__subtitle">Canın ne çekiyorsa hızlıca bul.</p>
         </div>
 
         <div class="category-grid">
             <article class="category-card">
-                <div class="category-card__image">
-                    <img src="/images/cat-pizza.jpg" alt="Pizza" loading="lazy" />
-                </div>
+                <div class="category-card__image"><img src="/images/cat-pizza.jpg" alt="Pizza" loading="lazy" /></div>
                 <h3 class="category-card__name">Pizza</h3>
-                <p class="category-card__count">142 restaurants</p>
+                <p class="category-card__count">142 restoran</p>
             </article>
 
             <article class="category-card">
-                <div class="category-card__image">
-                    <img src="/images/cat-burger.jpg" alt="Burgers" loading="lazy" />
-                </div>
-                <h3 class="category-card__name">Burgers</h3>
-                <p class="category-card__count">98 restaurants</p>
+                <div class="category-card__image"><img src="/images/cat-burger.jpg" alt="Burger" loading="lazy" /></div>
+                <h3 class="category-card__name">Burger</h3>
+                <p class="category-card__count">98 restoran</p>
             </article>
 
             <article class="category-card">
-                <div class="category-card__image">
-                    <img src="/images/cat-sushi.jpg" alt="Sushi" loading="lazy" />
-                </div>
+                <div class="category-card__image"><img src="/images/cat-sushi.jpg" alt="Sushi" loading="lazy" /></div>
                 <h3 class="category-card__name">Sushi</h3>
-                <p class="category-card__count">67 restaurants</p>
+                <p class="category-card__count">67 restoran</p>
             </article>
 
             <article class="category-card">
-                <div class="category-card__image">
-                    <img src="/images/cat-pasta.jpg" alt="Pasta" loading="lazy" />
-                </div>
+                <div class="category-card__image"><img src="/images/cat-pasta.jpg" alt="Pasta" loading="lazy" /></div>
                 <h3 class="category-card__name">Pasta</h3>
-                <p class="category-card__count">85 restaurants</p>
+                <p class="category-card__count">85 restoran</p>
             </article>
 
             <article class="category-card">
-                <div class="category-card__image">
-                    <img src="/images/cat-salad.jpg" alt="Salads" loading="lazy" />
-                </div>
-                <h3 class="category-card__name">Salads</h3>
-                <p class="category-card__count">54 restaurants</p>
+                <div class="category-card__image"><img src="/images/cat-salad.jpg" alt="Salata" loading="lazy" /></div>
+                <h3 class="category-card__name">Salata</h3>
+                <p class="category-card__count">54 restoran</p>
             </article>
         </div>
     </div>
 </section>
 
-<!-- CTA BANDI -->
+<!-- CTA -->
 <section class="cta" aria-labelledby="cta-heading">
     <div class="container cta__inner">
         <div>
-            <h2 id="cta-heading" class="cta__title">Ready to Transform Your Restaurant?</h2>
+            <h2 id="cta-heading" class="cta__title">İşletmeni dijital menüye taşı</h2>
             <p class="cta__subtitle">
-                Join thousands of restaurants providing digital menus to their customers.
+                QR menü ile menünü saniyeler içinde güncelle, daha fazla müşteriye ulaş.
             </p>
         </div>
-        <a href="#" class="btn btn--primary cta__button">Start Your Free Trial</a>
+        <a asp-controller="Home" asp-action="BeQr" class="btn btn--primary cta__button">Hemen Başla</a>
     </div>
 </section>
+
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
           var buttons = document.querySelectorAll('.hero-toggle__button');
-          var eyebrowEl = document.querySelector('.hero__eyebrow');
-          var titleEl = document.querySelector('.hero__title');
-          var leadEl = document.querySelector('.hero__lead');
-
           var benefitsCustomers = document.querySelector('.hero-benefits--customers');
-          var benefitsBusiness = document.querySelector('.hero-benefits--business');
-          var heroImageCustomers = document.getElementById('hero-main-image--customer');
-          var heroImageBusiness = document.getElementById('hero-main-image--business');
-
-          if (!buttons.length) return;
-
-          var titleTexts = {
-            customers: 'Discover Menus Before You Dine',
-            business: 'Transform Your Restaurant With Digital Menus'
-          };
-
-          var leadTexts = {
-            customers: 'Browse thousands of restaurant menus, compare prices, and make informed dining decisions before you go.',
-            business: 'Digitize your menu, update prices in seconds and let customers explore your restaurant from anywhere.'
-          };
-
-          // Metni fade swap ile değiştirme
-          function swapText(el, newText){
-            if (!el || !newText) return;
-
-            // animasyonu tekrar tetiklemek için reset
-            el.classList.remove('is-swapping');
-            void el.offsetWidth; // reflow
-            el.classList.add('is-swapping');
-
-            // fade-out ortasında metni değiştir
-            window.setTimeout(function(){
-              el.textContent = newText;
-            }, 160);
-
-            // animasyon bitince class temizle
-            window.setTimeout(function(){
-              el.classList.remove('is-swapping');
-            }, 340);
-          }
+          var benefitsBusiness  = document.querySelector('.hero-benefits--business');
+          var imgCustomers = document.getElementById('hero-main-image--customer');
+          var imgBusiness  = document.getElementById('hero-main-image--business');
 
           function setMode(mode){
             buttons.forEach(function(b){
               var active = (b.dataset.mode === mode);
               b.classList.toggle('is-active', active);
-              b.setAttribute('aria-selected', active ? 'true' : 'false');
+              b.setAttribute('aria-pressed', active ? 'true' : 'false');
             });
 
-            // Metinleri animasyonla değiştir
-            swapText(titleEl, titleTexts[mode]);
-            swapText(leadEl, leadTexts[mode]);
-
-            // (İstersen eyebrow da mod'a göre değişsin)
-            // swapText(eyebrowEl, mode === 'customers' ? 'Menüleri Keşfet, Gitmeden Fiyatları Gör' : 'İşletmen için Dijital Menü');
-
-            // Benefits: CSS artık fade yapacak (display:none yok)
             if (benefitsCustomers && benefitsBusiness){
               benefitsCustomers.classList.toggle('is-active', mode === 'customers');
-              benefitsCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
-
               benefitsBusiness.classList.toggle('is-active', mode === 'business');
+
+              benefitsCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
               benefitsBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
             }
 
-            // Görseller: CSS cross-fade yapacak
-            if (heroImageCustomers && heroImageBusiness){
-              heroImageCustomers.classList.toggle('is-active', mode === 'customers');
-              heroImageCustomers.setAttribute('aria-hidden', mode === 'customers' ? 'false' : 'true');
-
-              heroImageBusiness.classList.toggle('is-active', mode === 'business');
-              heroImageBusiness.setAttribute('aria-hidden', mode === 'business' ? 'false' : 'true');
+            if (imgCustomers && imgBusiness){
+              imgCustomers.classList.toggle('is-active', mode === 'customers');
+              imgBusiness.classList.toggle('is-active', mode === 'business');
             }
           }
 
