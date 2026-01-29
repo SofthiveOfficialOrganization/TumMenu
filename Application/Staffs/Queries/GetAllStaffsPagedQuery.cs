@@ -9,12 +9,13 @@ using System.Linq.Expressions;
 
 namespace Application.Staffs.Queries;
 
-public record GetAllStaffsPagedQuery(
-	string? FirstName,
-	string? LastName,
-	string? PhoneNumber,
-	string? Email
-) : PageRequest, IRequest<PaginatedListDTO<StaffDTO>>;
+public class GetAllStaffsPagedQuery : PageRequest, IRequest<PaginatedListDTO<StaffDTO>>
+{
+	public string? FirstName { get; set; }
+	public string? LastName { get; set; }
+	public string? PhoneNumber { get; set; }
+	public string? Email { get; set; }
+}
 
 public class GetAllStaffsPagedHandler(
 	IRepository<Staff> repoStaff,

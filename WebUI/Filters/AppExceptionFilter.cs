@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebUI.Contracts;
+using WebUI.Models;
 
 namespace WebUI.Filters;
 
@@ -241,11 +242,17 @@ public sealed class AppExceptionFilter(
 		}
 
 		// Diğerleri → Error view
+		var errorModel = new ErrorViewModel
+		{
+			RequestId = traceId
+		};
+
 		var viewDataError = new ViewDataDictionary(
 			new EmptyModelMetadataProvider(),
 			context.ModelState
 		)
 		{
+			Model = errorModel,
 			["Message"] = _env.IsDevelopment()
 				? ex.Message
 				: "Beklenmeyen bir hata oluştu."
@@ -256,6 +263,10 @@ public sealed class AppExceptionFilter(
 			ViewName = "Error",
 			ViewData = viewDataError
 		};
+
+		context.ExceptionHandled = true;
+		return Task.CompletedTask;
+
 
 		context.ExceptionHandled = true;
 		return Task.CompletedTask;

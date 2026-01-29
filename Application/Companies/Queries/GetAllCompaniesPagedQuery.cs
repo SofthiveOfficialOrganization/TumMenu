@@ -8,7 +8,10 @@ using MediatR;
 
 namespace Application.Companies.Queries;
 
-public record GetAllCompaniesPagedQuery(string? Search) : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>;
+public class GetAllCompaniesPagedQuery : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>
+{
+	public string? Search { get; set; }
+}
 
 public class GetAllCompaniesPagedHandler(
 	IRepository<Company> repoCompany,
@@ -17,7 +20,7 @@ public class GetAllCompaniesPagedHandler(
 {
 	public async Task<PaginatedListDTO<CompanyDTO>> Handle(GetAllCompaniesPagedQuery req, CancellationToken ct)
 	{
-		var companies = repoCompany.GetPageListAsync(
+		var companies = await repoCompany.GetPageListAsync(
 			req,
 			c =>
 				string.IsNullOrEmpty(req.Search) ||
@@ -26,7 +29,7 @@ public class GetAllCompaniesPagedHandler(
 			orderBy: q => q.OrderBy(c => c.Name),
 			ct: ct
 		);
-		var companyDTOs = mapper.Map<PaginatedListDTO<CompanyDTO>>(await companies);
+		var companyDTOs = mapper.Map<PaginatedListDTO<CompanyDTO>>(companies);
 		return companyDTOs;
 	}
 }

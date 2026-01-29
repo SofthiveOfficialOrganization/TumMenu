@@ -7,10 +7,11 @@ using MediatR;
 
 namespace Application.Menus.Commands;
 
-public record CopyMenuCommand(
-	Guid SourceMenuId,
-	Guid TargetMenuId
-) : IRequest<MenuDTO>, ITransactionalRequest;
+public class CopyMenuCommand : IRequest<MenuDTO>, ITransactionalRequest
+{
+	public Guid SourceMenuId { get; set; }
+	public Guid TargetMenuId { get; set; }
+}
 
 public class CopyMenuHandler(
 	IRepository<Menu> repoMenu,

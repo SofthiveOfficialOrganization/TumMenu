@@ -33,9 +33,7 @@
 
     @RenderSection("Head", required: false)
 </head>
-
-<body>
-
+<body class="app-shell">
     <!-- HEADER -->
     <header class="site-header" role="banner">
         <div class="container site-header__inner">
@@ -54,12 +52,12 @@
             <!-- QR SAĞ -->
             <div class="site-header__actions">
                 <a asp-controller="Home" asp-action="BeQr" class="btn btn--header">QR’lı Ol</a>
-                <button class="site-header__burger mobile-only"
+                <button class="site-header__burger"
                         type="button"
                         aria-label="Menüyü aç"
                         aria-expanded="false"
                         aria-controls="mobileMenu">
-                    <span class="site-header__burger-lines" aria-hidden="true"></span>
+                    <span class="site-header__burger-lines"></span>
                 </button>
             </div>
 
@@ -75,7 +73,7 @@
     </header>
 
     <!-- ANA İÇERİK -->
-    <main id="main-content" role="main">
+    <main id="main-content">
         @RenderBody()
     </main>
 
@@ -174,31 +172,43 @@
           const btn = document.querySelector(".site-header__burger");
           const menu = document.getElementById("mobileMenu");
           const header = document.querySelector(".site-header");
+
           if (!btn || !menu || !header) return;
 
           function setOpen(open) {
             btn.setAttribute("aria-expanded", open ? "true" : "false");
             menu.hidden = !open;
-            header.classList.toggle("is-menu-open", open);
+
+            document.documentElement.classList.toggle("no-scroll", open);
+            document.body.classList.toggle("no-scroll", open);
           }
 
-          btn.addEventListener("click", () => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
             const isOpen = btn.getAttribute("aria-expanded") === "true";
             setOpen(!isOpen);
           });
 
-          // Dışarı tıklayınca kapat
-          document.addEventListener("click", (e) => {
-            if (menu.hidden) return;
-            if (!header.contains(e.target)) setOpen(false);
+          menu.addEventListener("click", (e) => {
+            if (e.target.closest("a")) setOpen(false);
           });
 
-          // ESC ile kapat
+          document.addEventListener("click", (e) => {
+            if (!menu.hidden && !header.contains(e.target)) {
+              setOpen(false);
+            }
+          });
+
           document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") setOpen(false);
           });
+
+          window.addEventListener("resize", () => {
+            if (window.innerWidth > 720) setOpen(false);
+          });
         })();
     </script>
+
 
 </body>
 </html>

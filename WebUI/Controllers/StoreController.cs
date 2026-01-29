@@ -22,7 +22,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(store);
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]")]
 	public IActionResult Create()
 	{
@@ -53,7 +53,7 @@ public class StoreController(IMediator mediator) : Controller
 	[HttpGet("[action]/{companyId}")]
 	public async Task<IActionResult> ByCompany(Guid companyId, CancellationToken ct)
 	{
-		var stores = await mediator.Send(new GetStoresPaginatedByCompanyIdQuery(companyId), ct);
+		var stores = await mediator.Send(new GetStoresPaginatedByCompanyIdQuery { CompanyId = companyId }, ct);
 		return View(stores);
 	}
 }

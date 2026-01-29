@@ -14,9 +14,10 @@ using System.Threading.Tasks;
 
 namespace Application.Tags.Queries;
 
-public sealed record GetTagsPagedQuery(
-	string? Search
-) : PageRequest, IRequest<PaginatedListDTO<TagDTO>>;
+public sealed class GetTagsPagedQuery : PageRequest, IRequest<PaginatedListDTO<TagDTO>>
+{
+	public string? Search { get; set; }
+}
 
 public class GetTagsPagedHandler(
 	IRepository<Tag> repoTag,

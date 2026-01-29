@@ -17,14 +17,14 @@ public class TagController(IMediator mediator) : Controller
 		return View(tags);
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]")]
 	public IActionResult Create()
 	{
 		return View();
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Create(CreateTagCommand req, CancellationToken ct)
@@ -36,14 +36,14 @@ public class TagController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Index));
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]/{id}")]
 	public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
 	{
 		return View();
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Update(UpdateTagCommand req, CancellationToken ct)
@@ -55,7 +55,7 @@ public class TagController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Index));
 	}
 
-	[Authorize(Policy = "Owner")]
+	[Authorize(Policy = "OwnerOnly")]
 	[HttpPost("[action]/{id}")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)

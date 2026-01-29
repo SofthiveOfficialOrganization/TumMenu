@@ -8,7 +8,10 @@ using MediatR;
 
 namespace Application.Categories.Queries;
 
-public record GetCategoryByIdQuery(Guid CategoryId) : IRequest<CategoryDTO?>;
+public class GetCategoryByIdQuery : IRequest<CategoryDTO?>
+{
+	public Guid CategoryId { get; set; }
+}
 
 public class GetCategoryByIdHandler(
 	IRepository<Category> repoCategory,

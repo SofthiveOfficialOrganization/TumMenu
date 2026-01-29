@@ -33,16 +33,16 @@ public class ProductController(IMediator mediator) : Controller
         return View(products);
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Create(CancellationToken ct)
     {
-        var categories = await mediator.Send(new GetAllCategoriesPagedQuery(null) { PageSize = 1000 }, ct);
+        var categories = await mediator.Send(new GetAllCategoriesPagedQuery { Search = null, PageSize = 1000 }, ct);
         ViewBag.Categories = new SelectList(categories, "Id", "Name");
         return View();
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateProductCommand req, CancellationToken ct)
@@ -54,17 +54,17 @@ public class ProductController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Details), new { id = product.Id });
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpGet("[action]/{id}")]
     public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
     {
         var product = await mediator.Send(new GetProductByIdQuery(id), ct);
-        var categories = await mediator.Send(new GetAllCategoriesPagedQuery(null) { PageSize = 1000 }, ct);
+        var categories = await mediator.Send(new GetAllCategoriesPagedQuery { Search = null, PageSize = 1000 }, ct);
         ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
         return View(product);
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(UpdateProductCommand req, CancellationToken ct)
@@ -76,7 +76,7 @@ public class ProductController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Details), new { id = product.Id });
     }
 
-    [Authorize(Policy = "Owner")]
+    [Authorize(Policy = "OwnerOnly")]
     [HttpPost("[action]/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)

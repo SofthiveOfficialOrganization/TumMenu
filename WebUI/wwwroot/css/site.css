@@ -1,10 +1,17 @@
 /* Site.css - Ana sayfa (Hero, Search, Popular, Category, CTA) */
 
-/* HERO */
-
-#main-content{
-    background: var(--color-secondary-dark) !important;
+/* APP */
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+
+.app-main {
+    flex: 1 0 auto;
+}
+
+/* HERO */
 .hero {
     background: linear-gradient(180deg, var(--color-primary), var(--color-primary-light));
     color: #ffffff;
@@ -55,8 +62,7 @@
     margin: 0 0 18px;
 }
 
-/* Toggle buttons */
-
+/* Toggle buttons (aria-pressed) */
 .hero-toggle {
     display: inline-flex;
     background: rgba(255, 255, 255, 0.18);
@@ -78,7 +84,7 @@
     background: transparent;
     color: #e7ffe9;
     opacity: .85;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color .15s ease, color .15s ease, opacity .15s ease;
 }
 
     .hero-toggle__button:hover {
@@ -99,6 +105,7 @@
 .hero-toggle__button.is-active {
     background: #ffffff;
     color: #25692A;
+    opacity: 1;
 }
 
     .hero-toggle__button.is-active .hero-toggle__icon {
@@ -106,15 +113,17 @@
         color: #25692A;
     }
 
-/* Avantaj listeleri */
-
+/* Benefits (fade) */
 .hero-benefits {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: max-height 260ms ease, opacity 420ms ease, transform 420ms ease;
     list-style: none;
     padding: 0;
     margin: 0;
-    display: none;
-    flex-direction: column;
-    gap: 8px;
     font-size: 14px;
 }
 
@@ -124,29 +133,28 @@
     }
 
     .hero-benefits.is-active {
-        display: flex;
+        max-height: 260px;
+        opacity: 1;
+        transform: translateY(0);
     }
-/* ===== HERO: ayný yerde (overlay) + fade animasyon ===== */
 
-/* ÖNEMLÝ: alttaki eski .hero__right display:flex kuralýný override ediyor */
+/* HERO: görseller üst üste + fade */
 .hero__right {
     flex: 1;
-    display: grid; /* yan yana deðil, üst üste */
+    display: grid;
     place-items: center;
 }
 
-    /* Senin markup'ta img'ler ayrý divlerde -> hepsini ayný hücreye bindiriyoruz */
     .hero__right > div {
         grid-area: 1 / 1;
         display: grid;
         place-items: center;
     }
 
-    /* Görseller: display:none YOK -> animasyon çalýþýr */
     .hero__right img {
         display: block;
         width: 100%;
-        max-width: 520px; /* istersen kaldýr */
+        max-width: 520px;
         height: auto;
         opacity: 0;
         transform: translateY(10px);
@@ -160,53 +168,7 @@
             pointer-events: auto;
         }
 
-/* Benefits: eski hâli gibi tek tek görünsün ama fade olsun (display:none kullanmýyoruz) */
-.hero-benefits {
-    display: block; /* senin CSS'teki display:none’i override eder */
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: max-height 260ms ease, opacity 420ms ease, transform 420ms ease;
-}
-
-    .hero-benefits.is-active {
-        max-height: 260px; /* liste uzunsa artýr */
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-/* Title + lead: text deðiþirken fade */
-.hero__title.is-swapping,
-.hero__lead.is-swapping {
-    animation: heroFadeSwap 320ms ease;
-}
-
-@keyframes heroFadeSwap {
-    0% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    45% {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-
-    55% {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
 /* Dalgalý alt */
-
 .hero-wave {
     position: absolute;
     left: 0;
@@ -222,7 +184,6 @@
     }
 
 /* SEARCH SECTION */
-
 .section--search {
     background: var(--color-bg);
 }
@@ -326,7 +287,6 @@
 }
 
 /* Map card */
-
 .search-layout__map {
     flex: 1;
     display: flex;
@@ -349,7 +309,6 @@
 }
 
 /* POPULAR RESTAURANTS */
-
 .section--popular {
     background: var(--color-bg);
 }
@@ -424,7 +383,6 @@
 }
 
 /* CATEGORIES */
-
 .section--categories {
     background: var(--color-bg);
 }
@@ -467,8 +425,7 @@
     margin: 0;
 }
 
-/* CTA BAND */
-
+/* CTA */
 .cta {
     background: var(--color-secondary-light);
     color: #ffffff;
@@ -505,8 +462,7 @@
     }
 }
 
-/* Mobil ekstra düzenlemeler */
-
+/* Mobil ekstra */
 @media (max-width: 600px) {
     .hero__inner {
         padding: 28px 0 60px;
@@ -514,10 +470,6 @@
 
     .hero__lead {
         max-width: 100%;
-    }
-
-    .hero-card img {
-        height: 220px;
     }
 
     .site-footer {

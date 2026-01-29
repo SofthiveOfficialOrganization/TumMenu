@@ -1,7 +1,7 @@
 ﻿/* footer-header.css - HEADER + FOOTER */
 
 /* =========================
-   HEADER (premium pill nav)
+   HEADER
 ========================= */
 
 .site-header {
@@ -9,6 +9,7 @@
     position: sticky;
     top: 0;
     z-index: 50;
+    isolation: isolate; /* dropdown z-index stabil */
 }
 
 .site-header__inner {
@@ -45,28 +46,17 @@
     font-size: 18px;
 }
 
-/* NAV pill (orta) */
+/* NAV pill (desktop) */
 .site-header__nav {
     grid-area: nav;
     justify-self: center;
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px;
     border-radius: 999px;
     background: rgba(255,255,255,.16);
-}
-
-.site-header__nav-indicator {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    height: calc(100% - 12px);
-    width: 120px; /* JS update eder */
-    border-radius: 999px;
-    background: rgba(255,255,255,.92);
-    transition: transform 320ms cubic-bezier(.2,.9,.2,1), width 320ms cubic-bezier(.2,.9,.2,1);
 }
 
 .site-header__nav-link {
@@ -82,13 +72,16 @@
 
     .site-header__nav-link.is-active {
         color: #2a5c2a;
+        background: rgba(255,255,255,.92);
     }
 
-/* ACTIONS (QR sağ) */
+/* ACTIONS */
 .site-header__actions {
     grid-area: actions;
     justify-self: end;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Header CTA: accent */
@@ -103,47 +96,18 @@
         transform: translateY(-1px);
     }
 
-/* MOBILE */
-@media (max-width: 720px) {
-    .site-header__inner {
-        grid-template-columns: 1fr auto;
-        grid-template-areas:
-            "logo actions"
-            "nav  nav";
-        gap: 10px;
-    }
 
-    .site-header__nav {
-        justify-self: start;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
 
-        .site-header__nav::-webkit-scrollbar {
-            display: none;
-        }
+/* Burger */
+/* =========================
+   HAMBURGER – DEFAULT (DESKTOP)
+========================= */
 
-    .site-header__nav-link {
-        flex: 0 0 auto;
-    }
-
-    .btn--header {
-        padding: 8px 12px;
-        font-size: 13px;
-    }
-}
-/* Sadece görünürlük yardımcı sınıfları */
-.desktop-only {
-    display: inline-flex;
-}
-
-.mobile-only {
+/* Hamburger DESKTOP'ta tamamen kapalı */
+.site-header__burger {
     display: none;
 }
 
-/* Burger */
 .site-header__burger {
     border: 0;
     cursor: pointer;
@@ -152,7 +116,6 @@
     border-radius: 14px;
     background: rgba(255,255,255,.18);
     box-shadow: var(--shadow-soft);
-    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #fff;
@@ -166,29 +129,24 @@
 }
 
     .site-header__burger-lines::before,
-    .site-header__burger-lines::after,
-    .site-header__burger-lines {
-        background: transparent;
+    .site-header__burger-lines::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.92);
     }
 
-        .site-header__burger-lines::before,
-        .site-header__burger-lines::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.92);
-        }
+    .site-header__burger-lines::before {
+        top: 0;
+    }
 
-        .site-header__burger-lines::before {
-            top: 0;
-        }
+    .site-header__burger-lines::after {
+        bottom: 0;
+    }
 
-        .site-header__burger-lines::after {
-            bottom: 0;
-        }
 
 /* Mobile dropdown container */
 .site-header__mobile[hidden] {
@@ -199,7 +157,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%; /* header'ın hemen altından başlar */
+    top: 100%;
     z-index: 160;
     padding: 10px 0 14px;
 }
@@ -210,17 +168,18 @@
     padding: 10px;
     display: grid;
     gap: 8px;
+    backdrop-filter: blur(8px);
 }
 
-/* Linkler: arka plansız (istediğin gibi) */
+/* Linkler: arka plansız */
 .site-header__mobile-link {
     display: flex;
     align-items: center;
     padding: 10px 12px;
     border-radius: 14px;
     font-weight: 900;
-    color: rgba(255,255,255);
-    background: transparent; /* <-- önemli */
+    color: rgba(255,255,255,1);
+    background: transparent;
     text-decoration: none;
 }
 
@@ -236,25 +195,21 @@
         display: none;
     }
 
-    /* Desktop QR kapansın, burger açılsın */
-    .desktop-only {
-        display: none;
-    }
-
-    .mobile-only {
+    /* Desktop-only kapansın, burger açılsın */
+    .site-header__burger {
         display: inline-flex;
     }
-
-    /* Grid tek satır: logo + burger */
+    
+    /* Grid: logo + actions */
     .site-header__inner {
         grid-template-columns: 1fr auto;
         grid-template-areas: "logo actions";
         gap: 10px;
     }
 
-    /* actions sağda dursun */
-    .site-header__actions {
-        gap: 10px;
+    .btn--header {
+        padding: 8px 12px;
+        font-size: 13px;
     }
 }
 

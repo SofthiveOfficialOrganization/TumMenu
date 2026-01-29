@@ -6,7 +6,10 @@ using MediatR;
 
 namespace Application.Companies.Commands;
 
-public record DeleteCompanyCommand(Guid Id) : IRequest<Unit>, ITransactionalRequest;
+public class DeleteCompanyCommand : IRequest<Unit>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+}
 
 public class DeleteCompanyCommandHandler(
 	IRepository<Company> repoCompany,

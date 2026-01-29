@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Staffs.Queries;
 
-public record GetStaffByIdQuery(Guid Id) : IRequest<StaffDTO>;
+public class GetStaffByIdQuery : IRequest<StaffDTO>
+{
+	public Guid Id { get; set; }
+}
 
 public class GetStaffProfileByIdValidator : AbstractValidator<GetStaffByIdQuery>
 {

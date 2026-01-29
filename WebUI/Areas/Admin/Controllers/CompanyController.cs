@@ -7,39 +7,73 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Owner")] // varsa
-[Route("admin/[controller]/[action]")]
-public sealed class CompanyController : Controller
+[Route("admin/[controller]")]
+public sealed class CompanyController(IMediator mediator) : Controller
 {
-	private readonly IMediator _mediator;
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Create(CancellationToken ct)
+    {
+        return View(new CreateCompanyCommand());
+    }
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost("[action]")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([FromForm] CreateCompanyCommand cmd, CancellationToken ct)
+    {
+        if (!ModelState.IsValid)
+            return View(cmd);
 
-	public CompanyController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+        var dto = await mediator.Send(cmd, ct);
+        return RedirectToAction(nameof(Details), new { id = dto.Id });
+    }
 
-	[HttpGet]
-	public async Task<IActionResult> Create(CancellationToken ct)
-	{
-		// view model doldur vs.
-		return View();
-	}
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+    {
+        var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
+        return View(company);
+    }
 
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Create(CreateCompanyCommand cmd, CancellationToken ct)
-	{
-		if(!ModelState.IsValid)
-			return View(cmd);
+    [Authorize(Policy = "AdminOnly")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> AllCompanies(GetAllCompaniesPagedQuery req, CancellationToken ct)
+    {
+        var compaines = await mediator.Send(req, ct);
+        return View(compaines);
+    }
 
-		var dto = await _mediator.Send(cmd, ct);
-		return RedirectToAction(nameof(Details), new { id = dto.Id });
-	}
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> MyCompanies(CancellationToken ct)
+    {
+        var companies = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery(), ct);
+        return View(companies);
+    }
 
-	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
-	{
-		var company = await _mediator.Send(new GetCompanyByIdQuery(id), ct);
-		return View(company);
-	}
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost("[action]")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Update(UpdateCompanyCommand req, CancellationToken ct)
+    {
+        var company = await mediator.Send(req, ct);
+        return RedirectToAction(nameof(Details), new { id = company.Id });
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost("[action]/{id}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await mediator.Send(new DeleteCompanyCommand { Id = id }, ct);
+        return RedirectToAction(nameof(MyCompanies));
+    }
+    [HttpGet("[action]")]
+    public IActionResult DivideByZeroError()
+    {
+        int zero = 0;
+        int result = 1 / zero;
+        return View();
+    }
 }

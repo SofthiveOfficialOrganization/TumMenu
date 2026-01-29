@@ -8,20 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Categories.Queries;
 
-public record GetCategoryBySlugQuery(string Slug) : IRequest<CategoryDTO?>;
+public class GetCategoryBySlugQuery : IRequest<CategoryDTO?>
+{
+    public string Slug { get; set; } = string.Empty;
+}
 
 public class GetCategoryBySlugHandler(
-	IRepository<Category> repoCategory,
-	IMapper mapper
+    IRepository<Category> repoCategory,
+    IMapper mapper
 ) : IRequestHandler<GetCategoryBySlugQuery, CategoryDTO?>
 {
-	public async Task<CategoryDTO?> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
-	{
-		var category = (await repoCategory.Query()
-			.Where(c => c.Slug == req.Slug)
-			.FirstOrDefaultAsync(ct))
-			.EnsureFound("Kategori bulunamadý.");
+    public async Task<CategoryDTO?> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
+    {
+        var category = (await repoCategory.Query()
+            .Where(c => c.Slug == req.Slug)
+            .FirstOrDefaultAsync(ct)).EnsureFound("Kategori bulunamadÄ±.");
 
-		return mapper.Map<CategoryDTO?>(category);
-	}
+        return mapper.Map<CategoryDTO?>(category);
+    }
 }

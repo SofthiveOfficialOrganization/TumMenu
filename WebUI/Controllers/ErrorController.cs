@@ -1,0 +1,98 @@
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using WebUI.Contracts;
+
+namespace WebUI.Controllers;
+
+public sealed class ErrorController(IWebHostEnvironment env) : Controller
+{
+	private readonly IWebHostEnvironment _env = env;
+
+	[Route("error")]
+	public IActionResult Error()
+	{
+		var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+		var originalPath = feature?.Path ?? string.Empty;
+		var ex = feature?.Error;
+
+		if(IsApiRequest(HttpContext))
+		{
+			var payload = new ApiError
+			{
+				Status = StatusCodes.Status500InternalServerError,
+				Code = "unknown",
+				Message = _env.IsDevelopment() ? ex?.Message ?? "Error" : "Beklenmeyen bir hata oluştu.",
+				TraceId = HttpContext.TraceIdentifier
+			};
+
+			return new JsonResult(payload) { StatusCode = payload.Status };
+		}
+
+		Response.StatusCode = StatusCodes.Status500InternalServerError;
+		ViewData["Message"] = _env.IsDevelopment() ? ex?.Message : "Beklenmeyen bir hata oluştu.";
+		ViewData["TraceId"] = HttpContext.TraceIdentifier;
+
+		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
+	}
+
+	[Route("status-code/{code:int}")]
+	public IActionResult StatusCodePage(int code)
+	{
+		var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+		var originalPath = feature?.OriginalPath ?? string.Empty;
+
+		if(IsApiRequest(HttpContext))
+		{
+			var payload = new ApiError
+			{
+				Status = code,
+				Code = code == StatusCodes.Status404NotFound ? "not_found" : "http_error",
+				Message = code == StatusCodes.Status404NotFound ? "Not Found" : "HTTP error",
+				TraceId = HttpContext.TraceIdentifier
+			};
+
+			return new JsonResult(payload) { StatusCode = code };
+		}
+
+		Response.StatusCode = code;
+		ViewData["Code"] = code;
+		ViewData["TraceId"] = HttpContext.TraceIdentifier;
+
+		if(code == StatusCodes.Status404NotFound)
+			return View(ResolveViewPath(originalPath, adminPath: "NotFound", publicPath: "NotFound"));
+
+		// İstersen diğer kodlar için ayrı view yapabilirsin; şimdilik Error’a düşelim
+		ViewData["Message"] = "İstek işlenemedi.";
+		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
+	}
+
+	private string ResolveViewPath(string originalPath, string adminPath, string publicPath)
+	{
+		var isAdmin = originalPath.StartsWith("/admin", StringComparison.OrdinalIgnoreCase);
+
+		if(isAdmin)
+		{
+			var adminView = $"Areas/Admin/Views/Shared/{adminPath}.cshtml";
+			if(_env.ContentRootFileProvider.GetFileInfo(adminView).Exists)
+				return $"~/{adminView}";
+		}
+
+		return $"~/Views/Shared/{publicPath}.cshtml";
+	}
+
+	private static bool IsApiRequest(HttpContext ctx)
+	{
+		if(ctx.Request.Path.StartsWithSegments("/api"))
+			return true;
+
+		var accept = ctx.Request.Headers.Accept.ToString();
+		if(accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+			return true;
+
+		var requestedWith = ctx.Request.Headers["X-Requested-With"].ToString();
+		if(requestedWith.Equals("XMLHttpRequest", StringComparison.OrdinalIgnoreCase))
+			return true;
+
+		return false;
+	}
+}
