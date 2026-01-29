@@ -10,9 +10,9 @@
     --color-text-main: #333333;
     --color-text-secondary: #F7F2EB;
     --color-muted: #777777;
-    /* Header CTA (QR'lý Ol) */
-    --color-accent: #F59E0B;
-    --color-accent-dark: #D97706;
+    /* Header CTA (QR'lï¿½ Ol) */
+    --color-accent: #970001;
+    --color-accent-dark: #7A0000;
     --radius-card: 24px;
     --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
     --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -25,7 +25,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -51,7 +52,7 @@ a {
 .container {
     max-width: 1160px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 24px;
 }
 
 .section {
@@ -107,10 +108,10 @@ a {
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
 
-    .btn--primary:hover {
-        background: var(--color-primary-dark);
-        transform: translateY(-1px);
-    }
+.btn--primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
 
 .btn--ghost {
     background: transparent;
@@ -122,7 +123,7 @@ a {
     width: 100%;
 }
 
-/* Scroll lock (mobil menü açýkken) */
+/* Scroll lock (mobil menï¿½ aï¿½ï¿½kken) */
 html.no-scroll,
 body.no-scroll {
     overflow: hidden;
@@ -137,7 +138,7 @@ body.no-scroll {
     }
 }
 
-/* Mobil küçük iyileþtirmeler */
+/* Mobil kï¿½ï¿½ï¿½k iyileï¿½tirmeler */
 @media (max-width: 480px) {
     .section {
         padding: 40px 0;
