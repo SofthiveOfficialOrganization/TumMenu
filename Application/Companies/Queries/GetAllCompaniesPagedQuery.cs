@@ -5,6 +5,7 @@ using Application.Companies.DTOs;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Queries;
 
@@ -26,6 +27,7 @@ public class GetAllCompaniesPagedHandler(
 				string.IsNullOrEmpty(req.Search) ||
 				c.Name.Contains(req.Search) ||
 				c.Slug.Contains(req.Search),
+			include: c => c.Include(c => c.Owner),
 			orderBy: q => q.OrderBy(c => c.Name),
 			ct: ct
 		);

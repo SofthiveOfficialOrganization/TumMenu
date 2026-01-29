@@ -11,11 +11,20 @@ namespace WebUI.Areas.Admin.Controllers;
 public sealed class CompanyController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet]
+    public async Task<IActionResult> Index(CancellationToken ct)
+    {
+         var companies = await mediator.Send(new GetAllCompaniesPagedQuery(), ct);
+         return View("AllCompanies", companies);
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]")]
     public async Task<IActionResult> Create(CancellationToken ct)
     {
         return View(new CreateCompanyCommand());
     }
+    
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
@@ -67,7 +76,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeleteCompanyCommand { Id = id }, ct);
-        return RedirectToAction(nameof(MyCompanies));
+        return RedirectToAction(nameof(AllCompanies));
     }
     [HttpGet("[action]")]
     public IActionResult DivideByZeroError()

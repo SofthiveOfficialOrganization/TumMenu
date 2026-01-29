@@ -10,7 +10,7 @@ namespace Application.Menus.Queries;
 
 public class GetMenuByIdQuery : IRequest<MenuDTO>
 {
-	public Guid MenuId { get; set; }
+	public Guid Id { get; set; }
 }
 
 public class GetMenuByIdHandler(
@@ -20,7 +20,7 @@ public class GetMenuByIdHandler(
 {
 	public async Task<MenuDTO> Handle(GetMenuByIdQuery req, CancellationToken ct)
 	{
-		var menu = (await repoMenu.GetByIdAsync(req.MenuId, ct)).EnsureFound("Menü bulunamadı.");
+		var menu = (await repoMenu.GetByIdAsync(req.Id, ct)).EnsureFound("Menü bulunamadı.");
 		var menuDTO = mapper.Map<MenuDTO>(menu);
 		return menuDTO;
 	}

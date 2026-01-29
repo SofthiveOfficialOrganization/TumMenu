@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Horizon UI Admin</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin-horizon.css" asp-append-version="true" />
+</head>
+<body class="horizon-admin">
+    <div class="horizon-layout">
+        <!-- Sidebar -->
+        <aside class="horizon-sidebar">
+            <div class="horizon-logo">
+                TUM <span>MENU</span>
+            </div>
+            
+            <ul class="horizon-menu">
+                <li class="horizon-menu-item">
+                    <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <div class="horizon-menu-icon"><i class="fas fa-home"></i></div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-building"></i></div>
+                            <span>Tüm Şirketler</span>
+                        </a>
+                    </li>
+                }
+                
+                @if (User.IsInRole("Owner"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("MyCompanies", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MyCompanies" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-store"></i></div>
+                            <span>Şirketlerim</span>
+                        </a>
+                    </li>
+                }
+                <li class="horizon-menu-item">
+                    <a href="@Url.Action("MyCategories", "Category", new { area = "Admin" })" class="horizon-menu-link">
+                        <div class="horizon-menu-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 6.00008V4.2844C16 3.51587 16 3.13161 15.8387 2.88321C15.6976 2.66587 15.4776 2.5118 15.2252 2.45345C14.9366 2.38677 14.5755 2.51809 13.8532 2.78073L6.57982 5.4256C6.01064 5.63257 5.72605 5.73606 5.51615 5.91845C5.33073 6.07956 5.18772 6.28374 5.09968 6.51304C5 6.77264 5 7.07546 5 7.6811V12.0001M9 17.0001H15M9 13.5001H15M9 10.0001H15M8.2 21.0001H15.8C16.9201 21.0001 17.4802 21.0001 17.908 20.7821C18.2843 20.5903 18.5903 20.2844 18.782 19.9081C19 19.4802 19 18.9202 19 17.8001V9.20008C19 8.07997 19 7.51992 18.782 7.0921C18.5903 6.71577 18.2843 6.40981 17.908 6.21807C17.4802 6.00008 16.9201 6.00008 15.8 6.00008H8.2C7.0799 6.00008 6.51984 6.00008 6.09202 6.21807C5.71569 6.40981 5.40973 6.71577 5.21799 7.0921C5 7.51992 5 8.07997 5 9.20008V17.8001C5 18.9202 5 19.4802 5.21799 19.9081C5.40973 20.2844 5.71569 20.5903 6.09202 20.7821C6.51984 21.0001 7.07989 21.0001 8.2 21.0001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>Kategoriler</span>
+                    </a>
+                </li>
+
+                <li class="horizon-menu-item">
+                    <a href="@Url.Action("MyMenus", "Menu", new { area = "Admin" })" class="horizon-menu-link">
+                        <div class="horizon-menu-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 6.00008V4.2844C16 3.51587 16 3.13161 15.8387 2.88321C15.6976 2.66587 15.4776 2.5118 15.2252 2.45345C14.9366 2.38677 14.5755 2.51809 13.8532 2.78073L6.57982 5.4256C6.01064 5.63257 5.72605 5.73606 5.51615 5.91845C5.33073 6.07956 5.18772 6.28374 5.09968 6.51304C5 6.77264 5 7.07546 5 7.6811V12.0001M9 17.0001H15M9 13.5001H15M9 10.0001H15M8.2 21.0001H15.8C16.9201 21.0001 17.4802 21.0001 17.908 20.7821C18.2843 20.5903 18.5903 20.2844 18.782 19.9081C19 19.4802 19 18.9202 19 17.8001V9.20008C19 8.07997 19 7.51992 18.782 7.0921C18.5903 6.71577 18.2843 6.40981 17.908 6.21807C17.4802 6.00008 16.9201 6.00008 15.8 6.00008H8.2C7.0799 6.00008 6.51984 6.00008 6.09202 6.21807C5.71569 6.40981 5.40973 6.71577 5.21799 7.0921C5 7.51992 5 8.07997 5 9.20008V17.8001C5 18.9202 5 19.4802 5.21799 19.9081C5.40973 20.2844 5.71569 20.5903 6.09202 20.7821C6.51984 21.0001 7.07989 21.0001 8.2 21.0001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>Menüler</span>
+                    </a>
+                </li>
+
+                <li class="horizon-menu-item">
+                    <a href="#" class="horizon-menu-link">
+                        <div class="horizon-menu-icon"><i class="fas fa-user"></i></div>
+                        <span>Profil</span>
+                    </a>
+                </li>
+                <li class="horizon-menu-item">
+                    <a href="#" class="horizon-menu-link">
+                        <div class="horizon-menu-icon"><i class="fas fa-lock"></i></div>
+                        <span>Çıkış Yap</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="horizon-main">
+            <!-- Navbar -->
+            <nav class="horizon-navbar">
+                <div class="horizon-breadcrumb">
+                    <a href="#">Pages</a> / <span class="current-path">@ViewData["Title"]</span>
+                    <div class="current-page">@ViewData["Title"]</div>
+                </div>
+                
+                <div class="horizon-navbar-actions">
+                    <input type="text" class="horizon-search" placeholder="Search...">
+                    
+                    <i class="far fa-bell horizon-navbar-icon"></i>
+                    <i class="far fa-moon horizon-navbar-icon" id="theme-toggle"></i>
+                    <i class="fas fa-info-circle horizon-navbar-icon"></i>
+                    
+                    <div class="horizon-avatar">
+                        AP
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Body -->
+            <div class="horizon-content">
+                @RenderBody()
+            </div>
+
+            <!-- Footer -->
+            <footer class="horizon-footer">
+                <div>
+                    &copy; @DateTime.Now.Year Horizon UI. All Rights Reserved.
+                </div>
+                <div>
+                    <a href="#">Support</a>
+                    <a href="#">License</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Blog</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        $(document).ready(function() {
+            // Submenu toggle
+            $('.horizon-menu-parent').on('click', function(e) {
+                e.preventDefault();
+                const submenuId = $(this).data('submenu');
+                const submenu = $('#' + submenuId);
+                
+                $(this).toggleClass('open');
+                submenu.toggleClass('open');
+            });
+
+            // Auto-open submenu if a child is active
+            $('.horizon-submenu-link.active').closest('.horizon-submenu').addClass('open').prev('.horizon-menu-parent').addClass('open');
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            const themeToggle = $('#theme-toggle');
+            const body = $('body');
+            const theme = localStorage.getItem('theme');
+
+            // Apply saved theme on load
+            if (theme === 'dark') {
+                body.addClass('dark-mode');
+                themeToggle.removeClass('fa-moon').addClass('fa-sun');
+            }
+
+            // Toggle theme on click
+            themeToggle.on('click', function() {
+                body.toggleClass('dark-mode');
+                
+                if (body.hasClass('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.removeClass('fa-sun').addClass('fa-moon');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

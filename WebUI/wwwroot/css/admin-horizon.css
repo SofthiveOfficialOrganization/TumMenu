@@ -1,0 +1,381 @@
+:root {
+    --horizon-bg: #F4F7FE;
+    --horizon-card-bg: #FFFFFF;
+    --horizon-text-primary: #2B3674;
+    --horizon-text-secondary: #A3AED0;
+    --horizon-primary: #4318FF;
+    --horizon-primary-hover: #3311CC;
+    --horizon-border-radius: 20px;
+    --horizon-sidebar-width: 290px;
+    --sidebar-transition: all 0.3s ease;
+}
+
+body.dark-mode {
+    --horizon-bg: #0B1437;
+    --horizon-card-bg: #111C44;
+    --horizon-text-primary: #FFFFFF;
+    --horizon-text-secondary: #A3AED0;
+    --horizon-primary: #7551FF;
+    --horizon-primary-hover: #5E3DFF;
+}
+
+body.horizon-admin {
+    background-color: var(--horizon-bg);
+    color: var(--horizon-text-primary);
+    font-family: 'DM Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    padding: 0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Layout Grid */
+.horizon-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.horizon-sidebar {
+    width: var(--horizon-sidebar-width);
+    background-color: var(--horizon-card-bg);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: var(--sidebar-transition);
+}
+
+.horizon-logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--horizon-text-primary);
+    margin-bottom: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.horizon-logo span {
+    font-weight: 400;
+}
+
+.horizon-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.horizon-menu-item {
+    margin-bottom: 10px;
+}
+
+.horizon-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.horizon-menu-link:hover,
+.horizon-menu-link.active {
+    color: var(--horizon-text-primary);
+    font-weight: 700;
+}
+
+.horizon-menu-link.active::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 36px;
+    background-color: var(--horizon-primary);
+    border-radius: 4px; /* Optional: rounds the indicator */
+}
+
+.horizon-menu-icon {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.horizon-menu-icon i {
+    font-size: 18px; /* Slightly smaller for filled icons */
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.horizon-menu-icon svg {
+    width: 22px; /* Slightly larger for line icons */
+    height: 22px;
+    stroke-width: 2.2px; /* Thicker lines to match weight */
+}
+
+
+.horizon-menu-link.active .horizon-menu-icon {
+    color: var(--horizon-primary);
+}
+
+/* Submenu Styles */
+.horizon-menu-parent {
+    position: relative;
+}
+
+.horizon-menu-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.horizon-menu-parent.open .horizon-menu-arrow {
+    transform: rotate(180deg);
+}
+
+.horizon-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.horizon-submenu.open {
+    max-height: 200px;
+}
+
+.horizon-submenu-item {
+    margin: 0;
+}
+
+.horizon-submenu-link {
+    display: block;
+    padding: 10px 16px 10px 52px;
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.horizon-submenu-link:hover,
+.horizon-submenu-link.active {
+    color: var(--horizon-text-primary);
+    background-color: rgba(67, 24, 255, 0.05);
+    font-weight: 600;
+}
+
+body.dark-mode .horizon-submenu-link.active {
+    background-color: rgba(117, 81, 255, 0.1);
+}
+
+/* Main Content */
+.horizon-main {
+    flex-grow: 1;
+    margin-left: var(--horizon-sidebar-width);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex items from overflowing horizontally */
+    transition: var(--sidebar-transition);
+}
+
+/* Navbar */
+.horizon-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+    position: sticky;
+    top: 20px;
+    z-index: 900;
+}
+
+body.dark-mode .horizon-navbar {
+    background-color: rgba(17, 28, 68, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.horizon-breadcrumb {
+    font-size: 14px;
+    color: var(--horizon-text-secondary);
+}
+
+.horizon-breadcrumb a {
+    text-decoration: none;
+    color: var(--horizon-text-secondary);
+}
+
+.horizon-breadcrumb .current-page {
+    display: block;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--horizon-text-primary);
+    margin-top: 5px;
+    line-height: 1.2;
+}
+
+.horizon-navbar-actions {
+    background-color: var(--horizon-card-bg);
+    padding: 10px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 14px 17px 40px 4px rgba(112, 144, 176, 0.08);
+}
+
+.horizon-search {
+    background-color: var(--horizon-bg);
+    border: none;
+    border-radius: 49px;
+    padding: 10px 20px;
+    color: var(--horizon-text-primary);
+    outline: none;
+    margin-right: 15px;
+    font-family: inherit;
+}
+
+.horizon-navbar-icon {
+    color: var(--horizon-text-secondary);
+    font-size: 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.horizon-navbar-icon:hover {
+    color: var(--horizon-text-primary);
+}
+
+.horizon-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--horizon-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Content Area */
+.horizon-content {
+    flex-grow: 1;
+}
+
+/* Footer */
+.horizon-footer {
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--horizon-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.horizon-footer a {
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    margin-left: 24px;
+}
+
+.horizon-footer a:hover {
+    color: var(--horizon-text-primary);
+}
+
+/* Utility / Cards */
+.horizon-card {
+    background-color: var(--horizon-card-bg);
+    border-radius: var(--horizon-border-radius);
+    padding: 20px;
+    box-shadow: 0px 20px 50px 0px rgba(112, 144, 176, 0.08); /* Soft shadow */
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 16px !important;
+    border: 1px solid #E0E5F2 !important;
+    border: 1px solid #E0E5F2 !important;
+    min-height: 50px;
+}
+
+body.dark-mode .form-control {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: var(--horizon-text-secondary);
+    opacity: 0.6;
+}
+
+body.dark-mode .text-secondary {
+    color: var(--horizon-text-secondary) !important;
+}
+
+body.dark-mode .text-dark {
+    color: var(--horizon-text-primary) !important;
+}
+
+body.dark-mode .bg-light {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+}
+
+body.dark-mode .horizon-search {
+    background-color: rgba(17, 28, 68, 0.5);
+    color: var(--horizon-text-primary);
+}
+
+body.dark-mode .horizon-search::placeholder {
+    color: var(--horizon-text-secondary);
+    opacity: 0.6;
+}
+
+.btn-primary {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    border-radius: 16px !important;
+    padding: 10px 24px !important;
+}
+.btn-light {
+    border-color: var(--horizon-primary) !important;
+}
+
+@media (max-width: 1200px) {
+    .horizon-sidebar {
+        transform: translateX(-100%);
+    }
+    .horizon-main {
+        margin-left: 0;
+    }
+}

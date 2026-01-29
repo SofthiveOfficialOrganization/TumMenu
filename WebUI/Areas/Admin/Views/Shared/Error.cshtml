@@ -1,0 +1,38 @@
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@inject IWebHostEnvironment Env
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center">
+        <div class="mb-4">
+             <div class="horizon-avatar bg-danger bg-opacity-10 text-danger mx-auto" style="width: 100px; height: 100px; font-size: 40px;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        </div>
+        <h1 class="fw-bold text-dark mb-2">Something went wrong!</h1>
+        <p class="text-secondary mb-4" style="max-width: 400px; margin: 0 auto;">
+            An unexpected error occurred while processing your request. Our team has been notified.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3">
+             <a href="javascript:history.back()" class="btn btn-light text-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Go Back
+            </a>
+            <a asp-controller="Dashboard" asp-action="Index" asp-area="Admin" class="btn btn-primary">
+                Return to Dashboard
+            </a>
+        </div>
+        
+        @if (Env.IsDevelopment())
+        {
+             <div class="mt-5 text-start">
+                 <p class="text-danger fw-bold">Development Mode Info:</p>
+                 <p class="small text-muted">Detailed error information is available in the server logs.</p>
+            </div>
+        }
+    </div>
+</div>
