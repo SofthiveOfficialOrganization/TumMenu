@@ -2,23 +2,32 @@
 
 /* ===== CUSTOM PROPERTIES ===== */
 :root {
-    --qr-gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --qr-gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --qr-gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --qr-glow: 0 0 30px rgba(102, 126, 234, 0.3);
-    --qr-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+
+
+    /* QR Flow ayarları */
+    --qrflow-top-space: clamp(160px, 26vh, 320px);
+    /* üstte tek QR için boşluk */
 }
 
 /* ===== HERO SECTION ===== */
 .qr-hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(to bottom, var(--color-primary) 0%, var(--color-primary-dark) 40%, transparent 100%);
     background-size: 200% 200%;
-    animation: gradientShift 15s ease infinite;
-    padding: 80px 0 120px;
+
+    padding: 60px 0 100px;
     position: relative;
     overflow: hidden;
     color: white;
+
+    /* katmanlar için */
+    isolation: isolate;
 }
+
+/* Arka plan parıltısı (QR karelerini boğmasın diye z-index kontrol) */
+
+
+/* Hafif vignette (kontrast toparlar) */
+
 
 @keyframes gradientShift {
     0% {
@@ -34,24 +43,31 @@
     }
 }
 
-.qr-hero::before {
-    content: '';
+/* ===== QR FLOW (Physics Canvas) ===== */
+.qr-hero__qrflow {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    /* background üstünde, içerik altında */
+    z-index: 1;
+
     pointer-events: none;
+
+    /* kareleri biraz “pop” ettirir */
+    opacity: 0.95;
 }
 
+/* İçerik üstte kalsın */
 .qr-hero__inner {
     display: grid;
     grid-template-columns: 1fr;
     gap: 60px;
     align-items: center;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 @media (min-width: 992px) {
@@ -60,6 +76,55 @@
     }
 }
 
+/* QR Flow açıkken: 2. kolon boşluk bırakmasın + içerik QR’ın altına insin */
+.qr-hero--qrflow {
+    /* istersen burada padding oynayabilirsin */
+}
+
+.qr-hero--qrflow .qr-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+
+    /* üstte tek QR alanı bırak */
+    padding-top: var(--qrflow-top-space);
+    text-align: center;
+}
+
+/* Flow modunda içerikleri ortala */
+.qr-hero--qrflow .qr-hero__content {
+    margin: 0 auto;
+    max-width: 760px;
+}
+
+.qr-hero--qrflow .qr-hero__cta,
+.qr-hero--qrflow .qr-hero__stats {
+    justify-content: center;
+}
+
+/*
+  JS, QR’ı konumlamak için .qr-hero__visual bounding box’ını kullanıyordu.
+  Flow modunda bunu “anchor” gibi kullanıyoruz: görünmez ama ölçüsü var.
+*/
+.qr-hero--qrflow .qr-hero__visual {
+    position: absolute;
+    top: clamp(16px, 2vh, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(44vw, 360px);
+    height: min(44vw, 360px);
+    z-index: 1;
+    opacity: 0;
+    /* anchor görünmez */
+    pointer-events: none;
+}
+
+/* Eski 3D QR görünmesin (flow varken) */
+.qr-hero--qrflow .qr-hero__qr-container,
+.qr-hero--qrflow .qr-hero__particles {
+    display: none !important;
+}
+
+/* ===== HERO CONTENT ===== */
 .qr-hero__badge {
     display: inline-flex;
     align-items: center;
@@ -79,17 +144,17 @@
 }
 
 .qr-hero__title {
-    font-size: 48px;
+    font-size: 36px;
     font-weight: 800;
     line-height: 1.1;
-    margin: 0 0 24px;
+    margin: 0 0 16px;
     display: flex;
     flex-direction: column;
 }
 
 @media (min-width: 768px) {
     .qr-hero__title {
-        font-size: 64px;
+        font-size: 48px;
     }
 }
 
@@ -113,18 +178,24 @@
 }
 
 .qr-hero__subtitle {
-    font-size: 18px;
-    line-height: 1.6;
-    margin: 0 0 40px;
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0 0 24px;
     opacity: 0.95;
     max-width: 540px;
 }
 
+.qr-hero--qrflow .qr-hero__subtitle {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 680px;
+}
+
 .qr-hero__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 24px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .qr-hero__stat {
@@ -132,13 +203,13 @@
 }
 
 .qr-hero__stat-number {
-    font-size: 42px;
+    font-size: 28px;
     font-weight: 800;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .qr-hero__stat-label {
-    font-size: 13px;
+    font-size: 11px;
     opacity: 0.9;
     font-weight: 500;
 }
@@ -165,7 +236,7 @@
     background: rgba(255, 255, 255, 0.25);
 }
 
-/* ===== 3D QR CODE ANIMATION ===== */
+/* ===== 3D QR CODE ANIMATION (Fallback / normal mode) ===== */
 .qr-hero__visual {
     display: flex;
     justify-content: center;
@@ -224,10 +295,7 @@
 /* Particles around QR */
 .qr-hero__particles {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     pointer-events: none;
 }
 
@@ -822,6 +890,11 @@
     .qr-final-cta__title {
         font-size: 32px;
     }
+
+    /* Flow modunda üst boşluğu biraz azalt */
+    .qr-hero--qrflow {
+        --qrflow-top-space: clamp(140px, 22vh, 240px);
+    }
 }
 
 /* ===== ACCESSIBILITY ===== */
@@ -837,5 +910,27 @@
 
     .flip-card:hover .flip-card__inner {
         transform: none;
+    }
+
+    /* motion yoksa canvas’ı kapat, fallback 3D QR görünsün */
+    .qr-hero__qrflow {
+        display: none !important;
+    }
+
+    .qr-hero--qrflow .qr-hero__qr-container {
+        display: block !important;
+    }
+
+    .qr-hero--qrflow .qr-hero__visual {
+        opacity: 1;
+        position: static;
+        transform: none;
+        width: auto;
+        height: auto;
+    }
+
+    .qr-hero--qrflow .qr-hero__inner {
+        padding-top: 0;
+        text-align: left;
     }
 }
