@@ -27,26 +27,34 @@
     grid-area: logo;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
     font-weight: 900;
     letter-spacing: -0.02em;
     color: #fff;
     white-space: nowrap;
 }
 
-.site-header__logo-icon {
-    width: 36px;
-    height: 36px;
+/*.site-header__logo-icon {
+    padding-top:5px;
+    width: auto;
+    height: 95px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, .18);
-    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    box-shadow: var(--shadow-soft);
+    font-size: 18px;
+}*/
+
+
+.site-header__logo-icon {
+    padding-top:5px;
+    width: auto;
+    height: 85px;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
     font-size: 18px;
 }
-
 /* NAV pill (desktop) */
 .site-header__nav {
     grid-area: nav;
