@@ -1,0 +1,439 @@
+@{
+    ViewData["Title"] = "QR'lı Ol";
+    ViewData["Description"] = "İşletmeni dijital dünyaya taşı. QR menü ile maliyetleri düşür, müşteri memnuniyetini artır, menünü saniyeler içinde güncelle.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/BeQr.css" asp-append-version="true" />
+}
+
+<!-- HERO SECTION -->
+<section class="qr-hero" aria-labelledby="qr-hero-heading">
+    <div class="container qr-hero__inner">
+        <div class="qr-hero__content">
+            <div class="qr-hero__badge">
+                <span class="qr-hero__badge-icon">✨</span>
+                <span>Dijital menünün geleceği</span>
+            </div>
+            
+            <h1 id="qr-hero-heading" class="qr-hero__title">
+                <span class="qr-hero__title-line">Menünü</span>
+                <span class="qr-hero__title-line qr-hero__title-line--gradient">Dijital Dünyaya</span>
+                <span class="qr-hero__title-line">Taşı</span>
+            </h1>
+            
+            <p class="qr-hero__subtitle">
+                QR menü ile maliyetleri düşür, müşteri memnuniyetini artır, menünü saniyeler içinde güncelle.
+                Kağıt menüye veda et, geleceğe merhaba de.
+            </p>
+            
+            <div class="qr-hero__stats">
+                <div class="qr-hero__stat">
+                    <div class="qr-hero__stat-number" data-target="5000">0</div>
+                    <div class="qr-hero__stat-label">Aktif İşletme</div>
+                </div>
+                <div class="qr-hero__stat">
+                    <div class="qr-hero__stat-number" data-target="98">0</div>
+                    <div class="qr-hero__stat-label">% Memnuniyet</div>
+                </div>
+                <div class="qr-hero__stat">
+                    <div class="qr-hero__stat-number" data-target="70">0</div>
+                    <div class="qr-hero__stat-label">% Maliyet Tasarrufu</div>
+                </div>
+            </div>
+            
+            <div class="qr-hero__cta">
+                <button class="btn btn--primary btn--large" onclick="document.getElementById('qr-simulator').scrollIntoView({behavior: 'smooth'})">
+                    Hemen Dene
+                </button>
+                <a href="#benefits" class="btn btn--ghost btn--large">
+                    Daha Fazla Öğren
+                </a>
+            </div>
+        </div>
+        
+        <div class="qr-hero__visual">
+            <div class="qr-hero__qr-container">
+                <div class="qr-hero__qr-code">
+                    <div class="qr-hero__qr-inner">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- QR Code Pattern -->
+                            <rect x="10" y="10" width="15" height="15" fill="#688745"/>
+                            <rect x="30" y="10" width="5" height="5" fill="#688745"/>
+                            <rect x="40" y="10" width="5" height="5" fill="#688745"/>
+                            <rect x="50" y="10" width="5" height="5" fill="#688745"/>
+                            <rect x="75" y="10" width="15" height="15" fill="#688745"/>
+                            
+                            <rect x="10" y="30" width="5" height="5" fill="#688745"/>
+                            <rect x="20" y="30" width="5" height="5" fill="#688745"/>
+                            <rect x="35" y="30" width="10" height="5" fill="#688745"/>
+                            <rect x="50" y="30" width="5" height="5" fill="#688745"/>
+                            <rect x="75" y="30" width="5" height="5" fill="#688745"/>
+                            <rect x="85" y="30" width="5" height="5" fill="#688745"/>
+                            
+                            <rect x="10" y="40" width="5" height="5" fill="#688745"/>
+                            <rect x="20" y="40" width="5" height="5" fill="#688745"/>
+                            <rect x="40" y="40" width="15" height="15" fill="#688745"/>
+                            <rect x="75" y="40" width="5" height="5" fill="#688745"/>
+                            <rect x="85" y="40" width="5" height="5" fill="#688745"/>
+                            
+                            <rect x="10" y="50" width="5" height="5" fill="#688745"/>
+                            <rect x="20" y="50" width="5" height="5" fill="#688745"/>
+                            <rect x="75" y="50" width="5" height="5" fill="#688745"/>
+                            <rect x="85" y="50" width="5" height="5" fill="#688745"/>
+                            
+                            <rect x="10" y="75" width="15" height="15" fill="#688745"/>
+                            <rect x="30" y="75" width="5" height="5" fill="#688745"/>
+                            <rect x="45" y="75" width="10" height="5" fill="#688745"/>
+                            <rect x="60" y="75" width="5" height="5" fill="#688745"/>
+                            <rect x="75" y="75" width="15" height="15" fill="#688745"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="qr-hero__particles">
+                    <div class="qr-particle"></div>
+                    <div class="qr-particle"></div>
+                    <div class="qr-particle"></div>
+                    <div class="qr-particle"></div>
+                    <div class="qr-particle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INTERACTIVE QR SIMULATOR -->
+<section id="qr-simulator" class="section qr-simulator" aria-labelledby="simulator-heading">
+    <div class="container">
+        <div class="section-heading section-heading--center">
+            <h2 id="simulator-heading" class="section__title">Kendi QR Kodunu Oluştur</h2>
+            <p class="section__subtitle">
+                İşletme adını yaz, QR kodunu anında gör. Bu kadar basit!
+            </p>
+        </div>
+        
+        <div class="qr-simulator__card">
+            <div class="qr-simulator__input-section">
+                <label for="business-name" class="qr-simulator__label">İşletme Adı</label>
+                <input 
+                    type="text" 
+                    id="business-name" 
+                    class="qr-simulator__input" 
+                    placeholder="Örn: Lezzetli Café"
+                    maxlength="50"
+                />
+                <button class="btn btn--primary qr-simulator__generate-btn" id="generate-qr-btn">
+                    <span class="qr-simulator__btn-icon">⚡</span>
+                    QR Kod Oluştur
+                </button>
+            </div>
+            
+            <div class="qr-simulator__output-section">
+                <div id="qr-code-output" class="qr-simulator__qr-output">
+                    <div class="qr-simulator__placeholder">
+                        <svg class="qr-simulator__placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="7" height="7" stroke-width="2"/>
+                            <rect x="14" y="3" width="7" height="7" stroke-width="2"/>
+                            <rect x="3" y="14" width="7" height="7" stroke-width="2"/>
+                            <rect x="14" y="14" width="7" height="7" stroke-width="2"/>
+                        </svg>
+                        <p>QR kodun burada görünecek</p>
+                    </div>
+                </div>
+                
+                <div class="qr-simulator__actions" id="qr-actions" style="display: none;">
+                    <button class="btn btn--ghost" id="download-qr-btn">
+                        📥 İndir
+                    </button>
+                    <button class="btn btn--primary" id="try-demo-btn">
+                        🚀 Demo Dene
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FLIP CARDS - NEDEN QR? -->
+<section id="benefits" class="section qr-benefits" aria-labelledby="benefits-heading">
+    <div class="container">
+        <div class="section-heading section-heading--center">
+            <h2 id="benefits-heading" class="section__title">Neden QR Menü?</h2>
+            <p class="section__subtitle">
+                Geleneksel menülerin sorunlarına modern çözümler
+            </p>
+        </div>
+        
+        <div class="qr-benefits__grid">
+            <!-- Card 1 -->
+            <div class="flip-card">
+                <div class="flip-card__inner">
+                    <div class="flip-card__front">
+                        <div class="flip-card__icon">💸</div>
+                        <h3 class="flip-card__title">Yüksek Maliyet</h3>
+                        <p class="flip-card__text">
+                            Menü basmak ve sürekli yenilemek pahalı
+                        </p>
+                        <div class="flip-card__hint">Çözümü gör →</div>
+                    </div>
+                    <div class="flip-card__back">
+                        <div class="flip-card__icon flip-card__icon--success">✅</div>
+                        <h3 class="flip-card__title">Sıfır Baskı Maliyeti</h3>
+                        <p class="flip-card__text">
+                            Dijital menü ile menü baskısına hiç para ödeme. 
+                            Güncellemeler anlık ve ücretsiz.
+                        </p>
+                        <div class="flip-card__stat">%70 tasarruf</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="flip-card">
+                <div class="flip-card__inner">
+                    <div class="flip-card__front">
+                        <div class="flip-card__icon">⏰</div>
+                        <h3 class="flip-card__title">Zor Güncelleme</h3>
+                        <p class="flip-card__text">
+                            Fiyat değişikliği için tüm menüleri yeniden bas
+                        </p>
+                        <div class="flip-card__hint">Çözümü gör →</div>
+                    </div>
+                    <div class="flip-card__back">
+                        <div class="flip-card__icon flip-card__icon--success">⚡</div>
+                        <h3 class="flip-card__title">Anında Güncelleme</h3>
+                        <p class="flip-card__text">
+                            Menünü online panelden saniyeler içinde güncelle. 
+                            Değişiklikler hemen yayınlanır.
+                        </p>
+                        <div class="flip-card__stat">5 saniyede güncelle</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="flip-card">
+                <div class="flip-card__inner">
+                    <div class="flip-card__front">
+                        <div class="flip-card__icon">🦠</div>
+                        <h3 class="flip-card__title">Hijyen Sorunu</h3>
+                        <p class="flip-card__text">
+                            Fiziksel menüler ellerde dolaşıyor, temizlik zor
+                        </p>
+                        <div class="flip-card__hint">Çözümü gör →</div>
+                    </div>
+                    <div class="flip-card__back">
+                        <div class="flip-card__icon flip-card__icon--success">📱</div>
+                        <h3 class="flip-card__title">Temassız Menü</h3>
+                        <p class="flip-card__text">
+                            Müşteriler kendi telefonlarından menüye erişir. 
+                            %100 hijyenik ve güvenli.
+                        </p>
+                        <div class="flip-card__stat">Tamamen temassız</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="flip-card">
+                <div class="flip-card__inner">
+                    <div class="flip-card__front">
+                        <div class="flip-card__icon">📄</div>
+                        <h3 class="flip-card__title">Sınırlı Alan</h3>
+                        <p class="flip-card__text">
+                            Kağıt menüde yer sınırlı, tüm bilgileri sığdıramazsın
+                        </p>
+                        <div class="flip-card__hint">Çözümü gör →</div>
+                    </div>
+                    <div class="flip-card__back">
+                        <div class="flip-card__icon flip-card__icon--success">🌟</div>
+                        <h3 class="flip-card__title">Sınırsız İçerik</h3>
+                        <p class="flip-card__text">
+                            Fotoğraflar, açıklamalar, alerjen bilgileri, 
+                            sosyal medya linkleri ve daha fazlası!
+                        </p>
+                        <div class="flip-card__stat">Sınırsız bilgi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATISTICS SECTION -->
+<section class="section qr-stats" aria-labelledby="stats-heading">
+    <div class="container">
+        <div class="section-heading section-heading--center">
+            <h2 id="stats-heading" class="section__title">Rakamlarla QR Menü</h2>
+            <p class="section__subtitle">
+                Dijital menüye geçiş gerçek sonuçlar getiriyor
+            </p>
+        </div>
+        
+        <div class="qr-stats__grid">
+            <div class="stat-card">
+                <div class="stat-card__icon">💰</div>
+                <div class="stat-card__number" data-count="70">0</div>
+                <div class="stat-card__label">% Maliyet Düşüşü</div>
+                <p class="stat-card__desc">Baskı ve güncelleme maliyetlerinde ortalama tasarruf</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card__icon">⚡</div>
+                <div class="stat-card__number" data-count="5">0</div>
+                <div class="stat-card__label">Saniyede Güncelleme</div>
+                <p class="stat-card__desc">Menü değişikliklerini anında yayınla</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card__icon">😊</div>
+                <div class="stat-card__number" data-count="95">0</div>
+                <div class="stat-card__label">% Müşteri Memnuniyeti</div>
+                <p class="stat-card__desc">Müşteriler dijital menüleri tercih ediyor</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card__icon">🌍</div>
+                <div class="stat-card__number" data-count="100">0</div>
+                <div class="stat-card__label">% Çevre Dostu</div>
+                <p class="stat-card__desc">Kağıt israfını tamamen ortadan kaldır</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUCCESS STORIES CAROUSEL -->
+<section class="section qr-stories" aria-labelledby="stories-heading">
+    <div class="container">
+        <div class="section-heading section-heading--center">
+            <h2 id="stories-heading" class="section__title">Başarı Hikayeleri</h2>
+            <p class="section__subtitle">
+                Markalar neden QR menüye geçti?
+            </p>
+        </div>
+        
+        <div class="carousel">
+            <div class="carousel__track">
+                <!-- Story 1 -->
+                <div class="carousel__slide carousel__slide--active">
+                    <div class="story-card">
+                        <div class="story-card__header">
+                            <div class="story-card__logo">🍕</div>
+                            <div class="story-card__info">
+                                <h3 class="story-card__name">Pizzeria Bella</h3>
+                                <p class="story-card__location">İstanbul, Türkiye</p>
+                            </div>
+                        </div>
+                        <blockquote class="story-card__quote">
+                            "QR menüye geçtikten sonra aylık menü baskı maliyetimiz %80 düştü. 
+                            Artık sezonluk ürünleri anında ekleyip çıkarabiliyoruz. Müşterilerimiz 
+                            de temassız menüyü çok beğendi!"
+                        </blockquote>
+                        <div class="story-card__stats">
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">%80</div>
+                                <div class="story-card__stat-label">Maliyet Düşüşü</div>
+                            </div>
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">3 Ay</div>
+                                <div class="story-card__stat-label">Kullanım Süresi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Story 2 -->
+                <div class="carousel__slide">
+                    <div class="story-card">
+                        <div class="story-card__header">
+                            <div class="story-card__logo">☕</div>
+                            <div class="story-card__info">
+                                <h3 class="story-card__name">Café Modern</h3>
+                                <p class="story-card__location">Ankara, Türkiye</p>
+                            </div>
+                        </div>
+                        <blockquote class="story-card__quote">
+                            "Günde 3-4 kez menü değişikliği yapıyorduk. QR menü sayesinde 
+                            kahvaltı, öğle ve akşam menülerini otomatik olarak değiştiriyoruz. 
+                            Operasyonumuz çok kolaylaştı!"
+                        </blockquote>
+                        <div class="story-card__stats">
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">%90</div>
+                                <div class="story-card__stat-label">Zaman Tasarrufu</div>
+                            </div>
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">6 Ay</div>
+                                <div class="story-card__stat-label">Kullanım Süresi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Story 3 -->
+                <div class="carousel__slide">
+                    <div class="story-card">
+                        <div class="story-card__header">
+                            <div class="story-card__logo">🍔</div>
+                            <div class="story-card__info">
+                                <h3 class="story-card__name">Burger House</h3>
+                                <p class="story-card__location">İzmir, Türkiye</p>
+                            </div>
+                        </div>
+                        <blockquote class="story-card__quote">
+                            "Müşterilerimiz artık gelmeden önce menümüze bakıp karar verebiliyor. 
+                            Bu da sipariş sürecini hızlandırdı. QR menü modern bir restoran için 
+                            olmazsa olmaz!"
+                        </blockquote>
+                        <div class="story-card__stats">
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">%45</div>
+                                <div class="story-card__stat-label">Sipariş Hızı Artışı</div>
+                            </div>
+                            <div class="story-card__stat">
+                                <div class="story-card__stat-value">1 Yıl</div>
+                                <div class="story-card__stat-label">Kullanım Süresi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel__btn carousel__btn--prev" aria-label="Önceki hikaye">
+                ‹
+            </button>
+            <button class="carousel__btn carousel__btn--next" aria-label="Sonraki hikaye">
+                ›
+            </button>
+            
+            <div class="carousel__indicators">
+                <button class="carousel__indicator carousel__indicator--active" aria-label="Hikaye 1"></button>
+                <button class="carousel__indicator" aria-label="Hikaye 2"></button>
+                <button class="carousel__indicator" aria-label="Hikaye 3"></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="qr-final-cta">
+    <div class="container qr-final-cta__inner">
+        <h2 class="qr-final-cta__title">Hazır mısın?</h2>
+        <p class="qr-final-cta__subtitle">
+            İşletmeni dijital dünyaya taşı, QR menünün avantajlarından yararlan
+        </p>
+        <div class="qr-final-cta__actions">
+            <button class="btn btn--primary btn--large" onclick="document.getElementById('qr-simulator').scrollIntoView({behavior: 'smooth'})">
+                Ücretsiz Dene
+            </button>
+            <a href="#stories" class="btn btn--ghost btn--large">
+                Başarı Hikayelerini İncele
+            </a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="~/js/beqr.js" asp-append-version="true"></script>
+}

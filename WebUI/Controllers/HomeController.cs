@@ -15,11 +15,20 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult BeQr()
+    {
+        return View();
+    }
+    public IActionResult WhatToEat()
+    {
+        return View();
+    }
+
     public IActionResult NotFound()
     {
         return View();
     }
-    public IActionResult Restoranlar()
+    public IActionResult Restaurants()
     {
         return View();
     }
