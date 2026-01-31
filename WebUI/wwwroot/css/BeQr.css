@@ -118,11 +118,7 @@
     pointer-events: none;
 }
 
-/* Eski 3D QR görünmesin (flow varken) */
-.qr-hero--qrflow .qr-hero__qr-container,
-.qr-hero--qrflow .qr-hero__particles {
-    display: none !important;
-}
+
 
 /* ===== HERO CONTENT ===== */
 .qr-hero__badge {
@@ -257,7 +253,6 @@
     border-radius: 24px;
     padding: 40px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-    animation: float 6s ease-in-out infinite;
     position: relative;
     z-index: 2;
 }
@@ -292,65 +287,101 @@
     height: 100%;
 }
 
-/* Particles around QR */
-.qr-hero__particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+/* ===== QR BUILD ANIMATION ===== */
+#qr-build-animation {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(11, 1fr);
+    gap: 3px;
+    width: 100%;
+    height: 100%;
 }
 
-.qr-particle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    animation: particleFloat 4s ease-in-out infinite;
+.qr-cell {
+    background: transparent;
+    border-radius: 2px;
+    transform: scale(0);
+    opacity: 0;
+    transition: none;
 }
 
-.qr-particle:nth-child(1) {
-    top: 20%;
-    left: 10%;
-    animation-delay: 0s;
+.qr-cell--filled {
+    background: var(--color-primary);
 }
 
-.qr-particle:nth-child(2) {
-    top: 60%;
-    right: 15%;
-    animation-delay: 0.5s;
+.qr-cell--animating {
+    animation: qrCellPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.qr-particle:nth-child(3) {
-    bottom: 30%;
-    left: 20%;
-    animation-delay: 1s;
-}
-
-.qr-particle:nth-child(4) {
-    top: 40%;
-    right: 10%;
-    animation-delay: 1.5s;
-}
-
-.qr-particle:nth-child(5) {
-    bottom: 20%;
-    right: 30%;
-    animation-delay: 2s;
-}
-
-@keyframes particleFloat {
-
-    0%,
-    100% {
-        transform: translate(0, 0);
+@keyframes qrCellPop {
+    0% {
+        transform: scale(0) rotate(-10deg);
         opacity: 0;
     }
 
-    50% {
-        transform: translate(20px, -40px);
+    60% {
+        transform: scale(1.15) rotate(3deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
         opacity: 1;
     }
 }
+
+/* Hazır Badge */
+.qr-hero__ready-badge {
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    opacity: 0;
+    transform: scale(0.5) translateY(10px);
+    transition: none;
+    z-index: 10;
+}
+
+.qr-hero__ready-badge--visible {
+    animation: readyBadgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes readyBadgePop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(10px);
+    }
+
+    70% {
+        transform: scale(1.1) translateY(-2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.qr-hero__ready-icon {
+    font-size: 16px;
+}
+
+.qr-hero__ready-text {
+    letter-spacing: 0.5px;
+}
+
+
+
+
 
 /* ===== QR SIMULATOR ===== */
 .qr-simulator {
@@ -902,7 +933,6 @@
 
     .qr-hero,
     .qr-hero__qr-code,
-    .qr-particle,
     .flip-card__inner,
     .carousel__slide {
         animation: none !important;
@@ -933,4 +963,414 @@
         padding-top: 0;
         text-align: left;
     }
+}
+
+/* ===== PHONE SCAN OVERLAY ===== */
+.qr-hero__qr-code {
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-phone-overlay {
+    position: absolute;
+    inset: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 10;
+}
+
+.qr-phone-overlay.active {
+    opacity: 1;
+}
+
+.qr-phone-frame {
+    width: 90%;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.85);
+    border-radius: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.qr-phone-notch {
+    width: 80px;
+    height: 20px;
+    background: #1a1a1a;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 8px;
+}
+
+.qr-phone-screen {
+    flex: 1;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-camera-ui {
+    width: 70%;
+    height: 70%;
+    position: relative;
+}
+
+.qr-camera-corners {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--color-primary);
+    border-radius: 12px;
+    /* Corner effect */
+    clip-path: polygon(0 0, 30% 0, 30% 3px, 3px 3px, 3px 30%, 0 30%,
+            0 70%, 3px 70%, 3px 97%, 30% 97%, 30% 100%, 0 100%,
+            100% 100%, 100% 70%, 70% 70%, 70% 100%, 70% 100%, 70% 97%, 97% 97%, 97% 70%, 100% 70%,
+            100% 30%, 97% 30%, 97% 3px, 70% 3px, 70% 0, 100% 0);
+}
+
+/* Simpler approach with pseudo elements */
+.qr-camera-corners::before,
+.qr-camera-corners::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--color-primary);
+}
+
+.qr-camera-corners::before {
+    top: -2px;
+    left: -2px;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+}
+
+.qr-camera-corners::after {
+    top: -2px;
+    right: -2px;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0;
+}
+
+/* Hidden until simpler corners are used */
+.qr-camera-corners {
+    border: none;
+    clip-path: none;
+}
+
+/* Corner elements */
+.qr-camera-ui::before,
+.qr-camera-ui::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--color-primary);
+}
+
+.qr-camera-ui::before {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px;
+}
+
+.qr-camera-ui::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+}
+
+/* Scan Beam */
+.qr-scan-beam {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--color-primary) 20%,
+            #90EE90 50%,
+            var(--color-primary) 80%,
+            transparent 100%);
+    box-shadow:
+        0 0 15px var(--color-primary),
+        0 0 30px rgba(104, 135, 69, 0.5);
+    border-radius: 2px;
+    top: 0;
+    opacity: 0;
+    transform: scaleX(0.8);
+}
+
+.qr-phone-overlay.scanning .qr-scan-beam {
+    opacity: 1;
+    transform: scaleX(1);
+    animation: scanBeam 2s ease-in-out forwards;
+}
+
+@keyframes scanBeam {
+    0% {
+        top: 5%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 90%;
+        opacity: 0;
+    }
+}
+
+/* ===== MENU PREVIEW ===== */
+.qr-menu-preview {
+    position: absolute;
+    inset: 20px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 15;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.qr-menu-preview.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.qr-menu-preview__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.qr-menu-preview__icon {
+    font-size: 24px;
+}
+
+.qr-menu-preview__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+}
+
+.qr-menu-preview__items {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.qr-menu-preview__item {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmerItem 1.5s infinite;
+}
+
+.qr-menu-preview__item:nth-child(1) {
+    width: 100%;
+}
+
+.qr-menu-preview__item:nth-child(2) {
+    width: 85%;
+}
+
+.qr-menu-preview__item:nth-child(3) {
+    width: 70%;
+}
+
+@keyframes shimmerItem {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.qr-menu-preview__badge {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    animation: badgePulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes badgePulse {
+    from {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+    }
+
+    to {
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+    }
+}
+
+/* ===== QR CODE BUILD ANIMATION ===== */
+#qr-real-code {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#qr-real-code canvas,
+#qr-real-code img {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#qr-real-code.qr-built canvas,
+#qr-real-code.qr-built img {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Grid overlay for build animation */
+.qr-build-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(21, 1fr);
+    grid-template-rows: repeat(21, 1fr);
+    gap: 1px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.qr-build-cell {
+    background: var(--color-primary);
+    opacity: 0;
+    transform: scale(0);
+    border-radius: 1px;
+}
+
+.qr-build-cell.animate {
+    animation: cellBuild 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes cellBuild {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(-15deg);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.1) rotate(3deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+/* ===== TOUCH HINT (MOBILE) ===== */
+.qr-touch-hint {
+    display: none;
+    position: absolute;
+    bottom: -48px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 999px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: touchPulse 2s ease-in-out infinite;
+    cursor: pointer;
+}
+
+.qr-touch-hint__icon {
+    font-size: 18px;
+    animation: fingerTap 1s ease-in-out infinite;
+}
+
+@keyframes touchPulse {
+
+    0%,
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+@keyframes fingerTap {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@media (max-width: 768px) {
+    .qr-touch-hint {
+        display: flex;
+    }
+
+    .qr-hero__qr-container {
+        cursor: pointer;
+    }
+}
+
+/* QR scanned state */
+.qr-hero__qr-code.scanned .qr-hero__qr-inner {
+    opacity: 0.3;
+    filter: blur(2px);
+    transition: all 0.5s ease;
 }

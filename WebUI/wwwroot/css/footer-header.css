@@ -46,15 +46,16 @@
 
 
 .site-header__logo-icon {
-    padding-top:5px;
+    padding-top: 5px;
     width: auto;
-    height: 85px;
+    height: 75px;
     border-radius: 12px;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: 18px;
 }
+
 /* NAV pill (desktop) */
 .site-header__nav {
     grid-area: nav;

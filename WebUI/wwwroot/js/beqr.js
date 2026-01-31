@@ -3,6 +3,168 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // ========================
+    // REAL QR CODE WITH BUILD ANIMATION
+    // ========================
+    const initRealQRCode = () => {
+        const qrContainer = document.getElementById('qr-real-code');
+        const phoneOverlay = document.getElementById('qr-phone-overlay');
+        const menuPreview = document.getElementById('qr-menu-preview');
+        const scanTrigger = document.getElementById('qr-scan-trigger');
+        const touchHint = document.getElementById('qr-touch-hint');
+        const qrCodeElement = document.querySelector('.qr-hero__qr-code');
+
+        if (!qrContainer) return;
+
+        // Real QR Code URL
+        const qrUrl = 'https://tummenu.com.tr';
+
+        // Create build overlay for animation
+        const buildOverlay = document.createElement('div');
+        buildOverlay.className = 'qr-build-overlay';
+
+        // Create 21x21 grid of cells for build animation
+        const gridSize = 21;
+        const cells = [];
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'qr-build-cell';
+            buildOverlay.appendChild(cell);
+            cells.push(cell);
+        }
+        qrContainer.appendChild(buildOverlay);
+
+        // Generate real QR code (hidden initially)
+        const qrInstance = new QRCode(qrContainer, {
+            text: qrUrl,
+            width: 200,
+            height: 200,
+            colorDark: '#688745',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // QR Build Animation - cells appear randomly then fade, revealing real QR
+        const animateBuild = () => {
+            // Shuffle cells for random animation order
+            const shuffledCells = [...cells].sort(() => Math.random() - 0.5);
+            const totalDuration = 1800; // ms
+            const delayBetweenCells = totalDuration / shuffledCells.length;
+
+            // Animate each cell with stagger
+            shuffledCells.forEach((cell, index) => {
+                setTimeout(() => {
+                    cell.classList.add('animate');
+                }, index * delayBetweenCells);
+            });
+
+            // After animation, show real QR code and hide overlay
+            setTimeout(() => {
+                qrContainer.classList.add('qr-built');
+                buildOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    buildOverlay.remove();
+                }, 500);
+            }, totalDuration + 300);
+        };
+
+        // Start build animation after short delay
+        setTimeout(animateBuild, 300);
+
+        // ========================
+        // PHONE SCAN SIMULATION
+        // ========================
+        let isScanning = false;
+        let scanTimeout = null;
+        let resetTimeout = null;
+
+        const startScanSimulation = () => {
+            if (isScanning) return;
+            isScanning = true;
+
+            // Clear any pending resets
+            if (resetTimeout) {
+                clearTimeout(resetTimeout);
+                resetTimeout = null;
+            }
+
+            // Hide touch hint
+            if (touchHint) touchHint.style.opacity = '0';
+
+            // Show phone overlay
+            phoneOverlay.classList.add('active');
+
+            // Start scanning after phone appears
+            setTimeout(() => {
+                phoneOverlay.classList.add('scanning');
+            }, 400);
+
+            // After scan completes, show menu preview
+            scanTimeout = setTimeout(() => {
+                phoneOverlay.classList.remove('scanning');
+                phoneOverlay.classList.remove('active');
+                qrCodeElement.classList.add('scanned');
+                menuPreview.classList.add('visible');
+            }, 2800); // 400ms delay + 2s scan + 400ms buffer
+        };
+
+        const resetScanSimulation = () => {
+            resetTimeout = setTimeout(() => {
+                isScanning = false;
+                phoneOverlay.classList.remove('active', 'scanning');
+                qrCodeElement.classList.remove('scanned');
+                menuPreview.classList.remove('visible');
+
+                if (touchHint) touchHint.style.opacity = '1';
+
+                if (scanTimeout) {
+                    clearTimeout(scanTimeout);
+                    scanTimeout = null;
+                }
+            }, 500);
+        };
+
+        // Desktop: hover trigger
+        if (window.innerWidth > 768) {
+            scanTrigger.addEventListener('mouseenter', startScanSimulation);
+            scanTrigger.addEventListener('mouseleave', resetScanSimulation);
+        }
+
+        // Mobile: click/touch trigger
+        scanTrigger.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (isScanning) {
+                    // If already scanning, reset
+                    if (resetTimeout) clearTimeout(resetTimeout);
+                    resetScanSimulation();
+                } else {
+                    startScanSimulation();
+                    // Auto reset after showing menu preview
+                    setTimeout(() => {
+                        resetScanSimulation();
+                    }, 4500);
+                }
+            }
+        });
+
+        // Touch hint click also triggers
+        if (touchHint) {
+            touchHint.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!isScanning) {
+                    startScanSimulation();
+                    setTimeout(() => {
+                        resetScanSimulation();
+                    }, 4500);
+                }
+            });
+        }
+    };
+
+    // Initialize real QR code with animation
+    initRealQRCode();
+
+
+    // ========================
     // HERO STATS COUNTER ANIMATION
     // ========================
     const animateCounter = (element, target, duration = 2000) => {
