@@ -5,6 +5,7 @@ using Application.Menus.DTOs;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
@@ -20,7 +21,13 @@ public class GetMenuByIdHandler(
 {
 	public async Task<MenuDTO> Handle(GetMenuByIdQuery req, CancellationToken ct)
 	{
-		var menu = (await repoMenu.GetByIdAsync(req.Id, ct)).EnsureFound("Menü bulunamadı.");
+		var menu = await repoMenu.Query()
+			.Include(x => x.Categories)
+			.ThenInclude(x => x.CategoryLibraryItem)
+			.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
+			
+		_ = menu ?? throw new NotFoundAppException("Menü bulunamadı.");
+		
 		var menuDTO = mapper.Map<MenuDTO>(menu);
 		return menuDTO;
 	}

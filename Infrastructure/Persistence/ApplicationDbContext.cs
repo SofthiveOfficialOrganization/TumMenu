@@ -36,6 +36,7 @@ namespace Infrastructure.Persistence
 		// Menu & product
 		public DbSet<Menu> Menus => Set<Menu>();
 		public DbSet<Category> Categories => Set<Category>();
+		public DbSet<CategoryLibraryItem> CategoryLibraryItems => Set<CategoryLibraryItem>();
 		public DbSet<Product> Products => Set<Product>();
 		public DbSet<ProductPrice> ProductPrices => Set<ProductPrice>();
 		public DbSet<Tag> Tags => Set<Tag>();
@@ -218,6 +219,24 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(ca => ca.MenuId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// CategoryLibraryItem(1) -> Category(n)
+			builder.Entity<Category>()
+				.HasOne(c => c.CategoryLibraryItem)
+				.WithMany()
+				.HasForeignKey(c => c.CategoryLibraryItemId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			// CategoryLibraryItem Self-Referencing (Parent/Children)
+			builder.Entity<CategoryLibraryItem>()
+				.HasOne(c => c.Parent)
+				.WithMany(c => c.Children)
+				.HasForeignKey(c => c.ParentId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			builder.Entity<CategoryLibraryItem>()
+				.HasIndex(c => c.Slug)
+				.IsUnique();
+
 			// Category(1) -> Product(n)
 			builder.Entity<Product>()
 				.HasOne(p => p.Category)
@@ -256,11 +275,6 @@ namespace Infrastructure.Persistence
 			// Product slug unique
 			builder.Entity<Product>()
 				.HasIndex(x => new { x.CategoryId, x.Slug })
-				.IsUnique();
-
-			// Category slug unique
-			builder.Entity<Category>()
-				.HasIndex(x => new { x.MenuId, x.Slug })
 				.IsUnique();
 		}
 

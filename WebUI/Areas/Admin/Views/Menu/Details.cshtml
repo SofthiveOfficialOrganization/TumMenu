@@ -82,16 +82,27 @@
                             foreach (var category in Model.Categories.OrderBy(c => c.SortOrder))
                             {
                                 <tr>
-                                    <td class="ps-3 fw-bold text-dark">@category.Title</td>
-                                    <td class="text-secondary text-truncate" style="max-width: 200px;">@category.Description</td>
+                                    <td class="ps-3 fw-bold text-dark">@category.CategoryLibraryItem.Title</td>
+                                    <td class="text-secondary text-truncate" style="max-width: 200px;">@category.CategoryLibraryItem.Description</td>
                                     <td><span class="badge bg-light text-secondary">@category.SortOrder</span></td>
                                     <td class="text-end pe-3">
-                                        <a asp-controller="Category" asp-action="Details" asp-route-slug="@category.Slug" class="btn btn-sm btn-light text-primary me-2">
+                                        <a asp-controller="CategoryLibraryItem" asp-action="Details" asp-route-slug="@category.CategoryLibraryItem.Slug" class="btn btn-sm btn-light text-primary me-2">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-light text-success">
+                                        <!-- Edit Category Link might need adjustment if we are editing the Link (sort order) or the Library Item -->
+                                        <!-- Assuming we want to edit the Link or the Item? For now let's point to Library Item Edit, or maybe we need a EditCategoryLink action -->
+                                        <!-- The old code pointed to Category Edit. Now we have CategoryLibraryItem Edit. -->
+                                        <!-- But wait, if I want to change SortOrder, I need to edit the Category (Link). -->
+                                        <!-- If I want to change Title, I edit CategoryLibraryItem. -->
+                                        <!-- For now, let's point to LibraryItem Edit for Title/Slug changes. -->
+                                        <a asp-controller="CategoryLibraryItem" asp-action="Edit" asp-route-id="@category.CategoryLibraryItemId" class="btn btn-sm btn-light text-success">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this category?');">
+                                            <button type="submit" class="btn btn-sm btn-light text-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             }

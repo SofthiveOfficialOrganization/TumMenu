@@ -1,0 +1,20 @@
+  Geri y├╝klenecek projeler belirleniyor...
+  Geri y├╝kleme i├ğin t├╝m projeler g├╝ncel.
+  Domain -> D:\SoftHive\Projects\2025\TumMenu\Domain\bin\Debug\net8.0\Domain.dll
+  Application -> D:\SoftHive\Projects\2025\TumMenu\Application\bin\Debug\net8.0\Application.dll
+  Infrastructure -> D:\SoftHive\Projects\2025\TumMenu\Infrastructure\bin\Debug\net8.0\Infrastructure.dll
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Areas\Admin\Views\CategoryLibraryItem\Index.cshtml(2,27): error CS0234: 'Models' t├╝r veya ad alan─▒ ad─▒ 'Application.Common' ad alan─▒nda yok (bir derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Controllers\HomeController.cs(18,26): warning CS0114: 'HomeController.NotFound()' devral─▒nm─▒┼ş 'ControllerBase.NotFound()' ├╝yesini gizliyor. Ge├ğerli ├╝yenin bu uygulamay─▒ ge├ğersiz k─▒lmas─▒ i├ğin override anahtar s├Âzc├╝─ş├╝n├╝ ekleyin. Aksi takdirde new anahtar s├Âzc├╝─ş├╝n├╝ ekleyin. [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Areas\Admin\Views\CategoryLibraryItem\Index.cshtml(3,8): error CS0246: 'PaginatedList<>' t├╝r├╝ veya ad alan─▒ ad─▒ bulunamad─▒ (bir using y├Ânergeniz veya derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\obj\Debug\net8.0\Microsoft.CodeAnalysis.Razor.Compiler\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\Areas_Admin_Views_CategoryLibraryItem_Index_cshtml.g.cs(464,71): error CS0246: 'PaginatedList<>' t├╝r├╝ veya ad alan─▒ ad─▒ bulunamad─▒ (bir using y├Ânergeniz veya derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+
+Olu┼şturma BA┼ŞARISIZ OLDU.
+
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Controllers\HomeController.cs(18,26): warning CS0114: 'HomeController.NotFound()' devral─▒nm─▒┼ş 'ControllerBase.NotFound()' ├╝yesini gizliyor. Ge├ğerli ├╝yenin bu uygulamay─▒ ge├ğersiz k─▒lmas─▒ i├ğin override anahtar s├Âzc├╝─ş├╝n├╝ ekleyin. Aksi takdirde new anahtar s├Âzc├╝─ş├╝n├╝ ekleyin. [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Areas\Admin\Views\CategoryLibraryItem\Index.cshtml(2,27): error CS0234: 'Models' t├╝r veya ad alan─▒ ad─▒ 'Application.Common' ad alan─▒nda yok (bir derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\Areas\Admin\Views\CategoryLibraryItem\Index.cshtml(3,8): error CS0246: 'PaginatedList<>' t├╝r├╝ veya ad alan─▒ ad─▒ bulunamad─▒ (bir using y├Ânergeniz veya derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+D:\SoftHive\Projects\2025\TumMenu\WebUI\obj\Debug\net8.0\Microsoft.CodeAnalysis.Razor.Compiler\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\Areas_Admin_Views_CategoryLibraryItem_Index_cshtml.g.cs(464,71): error CS0246: 'PaginatedList<>' t├╝r├╝ veya ad alan─▒ ad─▒ bulunamad─▒ (bir using y├Ânergeniz veya derleme ba┼şvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+    1 Uyar─▒
+    3 Hata
+
+Ge├ğen S├╝re 00:00:10.06

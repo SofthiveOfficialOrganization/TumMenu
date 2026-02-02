@@ -1,10 +1,12 @@
 using Application.Companies.Commands;
+using Application.Companies.DTOs;
 using Application.Companies.Queries;
 using Application.Menus.Commands;
 using Application.Menus.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebUI.Areas.Admin.Controllers;
 
@@ -42,6 +44,19 @@ public sealed class MenuController(IMediator mediator) : Controller
     [HttpGet("[action]")]
     public async Task<IActionResult> CreateToCompany(CancellationToken ct)
     {
+        IEnumerable<CompanyDTO> items;
+        if (User.IsInRole("Admin"))
+        {
+             var result = await mediator.Send(new GetAllCompaniesPagedQuery { PageSize = 1000 }, ct);
+             items = result.Items;
+        }
+        else
+        {
+             var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery { PageSize = 1000 }, ct);
+             items = result.Items;
+        }
+
+        ViewBag.Companies = new SelectList(items, "Id", "Title");
         return View(new CreateMenuToCompanyCommand());
     }
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -50,7 +65,21 @@ public sealed class MenuController(IMediator mediator) : Controller
     public async Task<IActionResult> CreateToCompany([FromForm] CreateMenuToCompanyCommand cmd, CancellationToken ct)
     {
         if (!ModelState.IsValid)
+        {
+            IEnumerable<CompanyDTO> items;
+            if (User.IsInRole("Admin"))
+            {
+                 var result = await mediator.Send(new GetAllCompaniesPagedQuery { PageSize = 1000 }, ct);
+                 items = result.Items;
+            }
+            else
+            {
+                 var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery { PageSize = 1000 }, ct);
+                 items = result.Items;
+            }
+            ViewBag.Companies = new SelectList(items, "Id", "Title");
             return View(cmd);
+        }
 
         var dto = await mediator.Send(cmd, ct);
         return RedirectToAction(nameof(Details), new { id = dto.Id });

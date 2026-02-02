@@ -31,6 +31,7 @@ public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyComm
 }
 public class CreateCompanyCommandHandler(
 	IRepository<Company> repoCompany,
+	IRepository<Owner> repoOwner,
 	IMapper mapper,
 	IUserContext userContext
 ) : IRequestHandler<CreateCompanyCommand, CompanyDTO>
@@ -47,7 +48,8 @@ public class CreateCompanyCommandHandler(
 
 		var company = mapper.Map<Company>(req);
 		company.Slug = req.Slug ?? SlugHelper.Slugify(req.Title);
-		company.OwnerId = userContext.UserId;
+		var owner = await repoOwner.Query().Where(o => o.ApplicationUserId == userContext.UserId).FirstOrDefaultAsync(ct);
+		company.OwnerId = owner.Id;
 		await repoCompany.AddAsync(company, ct);
 		var companyDTO = mapper.Map<CompanyDTO>(company);
 		return companyDTO;
