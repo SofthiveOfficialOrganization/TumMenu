@@ -24,7 +24,7 @@ public class GetCategoriesByCurrentOwnerHandler(
 		var categoryList = await repoCategory.GetPageListAsync(
 			req,
 			c => c.Menu.Company.Owner.ApplicationUserId == userId,
-			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.Name),
+			orderBy: c => c.OrderBy(c => c.SortOrder).ThenBy(c => c.CategoryLibraryItem.Title),
 			ct: ct
 			);
 		var categoryListDTO = mapper.Map<PaginatedListDTO<CategoryDTO>>(categoryList);
