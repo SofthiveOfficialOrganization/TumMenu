@@ -20,17 +20,17 @@ public class GetCompaniesPagedByCurrentOwnerHandler(
 {
 	public async Task<PaginatedListDTO<CompanyDTO>> Handle(GetCompaniesPagedByCurrentOwnerQuery req, CancellationToken ct)
 	{
-		var ownerId = userContext.UserId;
+		var applicationUserId = userContext.UserId;
 
 		var companies = await repoCompany.GetPageListAsync(
 			req,
-			c => c.Owner != null && c.Owner.ApplicationUserId == ownerId,
+			c => c.Owner != null && c.Owner.ApplicationUserId == applicationUserId,
 			include: q => q
 				.Include(c => c.BaseMenu)
 				.Include(c => c.Subscription)
 				.Include(c => c.PaymentMethods)
 				.Include(c => c.Stores),
-			orderBy: q => q.OrderBy(c => c.Name),
+			orderBy: q => q.OrderBy(c => c.Title),
 			enableTracking: false,
 			ct: ct
 		);

@@ -1,6 +1,6 @@
 @using Application.Common.Base.DTOs
 @using Application.Categories.DTOs
-@model PaginatedListDTO<CategoryDTO>
+@model PaginatedListDTO<CategoryLibraryItemDTO>
 
 @{
     ViewData["Title"] = "My Categories";
@@ -20,10 +20,9 @@
                 <table class="table table-borderless align-middle table-hover">
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
-                            <th class="ps-3">Name</th>
-                            <th>Menu ID</th>
+                            <th class="ps-3">Title</th>
                             <th>Slug</th>
-                             <th>Order</th>
+                            <th>Description</th>
                             <th class="text-end pe-3">Actions</th>
                         </tr>
                     </thead>
@@ -38,16 +37,11 @@
                                             <div class="horizon-avatar bg-light text-warning me-3">
                                                 <i class="fas fa-tags"></i>
                                             </div>
-                                            <span class="fw-bold text-dark">@item.Name</span>
+                                            <span class="fw-bold text-dark">@item.Title</span>
                                         </div>
                                     </td>
-                                    <td class="text-secondary small">
-                                        <a asp-controller="Menu" asp-action="Details" asp-route-id="@item.MenuId" class="text-decoration-none">
-                                            @item.MenuId
-                                        </a>
-                                    </td>
                                     <td class="text-secondary small">@item.Slug</td>
-                                    <td><span class="badge bg-light text-dark">@item.SortOrder</span></td>
+                                    <td class="text-secondary small text-truncate" style="max-width: 200px;">@item.Description</td>
                                     <td class="text-end pe-3">
                                         <a asp-action="Details" asp-route-slug="@item.Slug" class="btn btn-sm btn-light text-primary me-2" title="Details">
                                             <i class="fas fa-eye"></i>

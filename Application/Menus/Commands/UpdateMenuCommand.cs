@@ -26,7 +26,7 @@ public class UpdateMenuCommandHandler(
 		if(menu is null)
 			throw new KeyNotFoundException("Menü bulunamadı.");
 		if(req.Name is not null)
-			menu.Name = req.Name;
+			menu.Title = req.Name;
 
 		repoMenu.Update(menu);
 		return menu;

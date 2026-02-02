@@ -260,7 +260,7 @@ public sealed class AppExceptionFilter(
 
 		context.Result = new ViewResult
 		{
-			ViewName = "Error",
+			ViewName = "~/Views/Shared/Error.cshtml",
 			ViewData = viewDataError
 		};
 

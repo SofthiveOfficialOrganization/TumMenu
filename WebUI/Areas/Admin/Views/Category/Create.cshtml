@@ -1,48 +1,55 @@
-@using Application.Categories.Commands
-@model CreateCategoryCommand
+@using Application.Menus.Commands
+@model AddCategoryToMenuCommand
 
 @{
-    ViewData["Title"] = "Create Category";
-    var menuId = Context.Request.Query["menuId"];
+    ViewData["Title"] = "Add Category to Menu";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Create Category</h4>
-            
-            <form asp-action="Create" method="post">
-                <input type="hidden" asp-for="MenuId" value="@menuId" />
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Name" class="form-label text-secondary small text-uppercase fw-bold">Name</label>
-                        <input asp-for="Name" class="form-control" placeholder="Category Name" />
-                        <span asp-validation-for="Name" class="text-danger small"></span>
-                    </div>
-                     <div class="col-md-6 mb-3">
-                         <label asp-for="Slug" class="form-label text-secondary small text-uppercase fw-bold">Slug (Optional)</label>
-                         <input asp-for="Slug" class="form-control" placeholder="custom-slug" />
-                         <span asp-validation-for="Slug" class="text-danger small"></span>
-                         <div class="form-text">Leave empty to auto-generate from name.</div>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="fw-bold mb-1">Add Category to Menu</h5>
+                    <p class="text-secondary small mb-0">Select a category from the library to add to this menu.</p>
                 </div>
+                <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-sm btn-light text-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Menu
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="MenuId" />
 
                 <div class="mb-3">
-                    <label asp-for="Description" class="form-label text-secondary small text-uppercase fw-bold">Description</label>
-                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Description of the category..."></textarea>
-                    <span asp-validation-for="Description" class="text-danger small"></span>
+                    <label asp-for="CategoryLibraryItemId" class="form-label text-secondary small text-uppercase fw-bold">Category Library Item</label>
+                    <select asp-for="CategoryLibraryItemId" class="form-select form-select-lg" asp-items="ViewBag.CategoryLibraryItems">
+                        <option value="">-- Select Category --</option>
+                    </select>
+                    <span asp-validation-for="CategoryLibraryItemId" class="text-danger"></span>
+                    <div class="form-text">Choose a category template from the library.</div>
                 </div>
 
-                <div class="mb-4">
-                    <label asp-for="SortOrder" class="form-label text-secondary small text-uppercase fw-bold">Sort Order</label>
-                    <input asp-for="SortOrder" class="form-control" type="number" value="0" />
-                    <span asp-validation-for="SortOrder" class="text-danger small"></span>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SortOrder" class="form-label text-secondary small text-uppercase fw-bold">Sort Order</label>
+                        <input asp-for="SortOrder" class="form-control" type="number" />
+                        <span asp-validation-for="SortOrder" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check mt-4 pt-2">
+                             <input class="form-check-input" type="checkbox" asp-for="IsActive">
+                             <label class="form-check-label text-dark fw-bold" asp-for="IsActive">
+                                Active on Menu
+                             </label>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@menuId" class="btn btn-light text-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Category</button>
+                <div class="text-end border-top pt-3 mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-plus me-1"></i> Add Category
+                    </button>
                 </div>
             </form>
         </div>

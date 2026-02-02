@@ -9,5 +9,5 @@ namespace Application.Tags.DTOs;
 
 public sealed class TagDTO : BaseDTO
 {
-	public string Name { get; set; } = null!;
+	public string Title { get; set; } = null!;
 }

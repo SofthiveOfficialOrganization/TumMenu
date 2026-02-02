@@ -6,7 +6,7 @@ namespace Domain.Entities
 	public class Store : BaseEntity
 	{
 		[MaxLength(200)]
-		public string Name { get; set; } = null!;
+		public string Title { get; set; } = null!;
 		[MaxLength(50)]
 		public string Slug { get; set; } = null!;
 		public string PhoneNumber { get; set; } = null!;

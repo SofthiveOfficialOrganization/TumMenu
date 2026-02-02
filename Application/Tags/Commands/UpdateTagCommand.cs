@@ -11,7 +11,7 @@ namespace Application.Tags.Commands;
 
 public sealed record UpdateTagCommand(
 	Guid Id,
-	string Name
+	string Title
 ) : IRequest<Guid>, ITransactionalRequest;
 
 public class UpdateTagCommandHandler(
@@ -21,7 +21,7 @@ public class UpdateTagCommandHandler(
 	public async Task<Guid> Handle(UpdateTagCommand req, CancellationToken ct)
 	{
 		var tag = await repoTag.GetByIdAsync(req.Id, ct).EnsureFound("Etiket bulunamadı");
-		tag!.Name = req.Name;
+		tag!.Title = req.Title;
 		repoTag.Update(tag);
 		return tag.Id;
 	}

@@ -60,7 +60,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdPlacementId");
 
-                    b.ToTable("AdClicks");
+                    b.ToTable("AdClicks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdCreative", b =>
@@ -100,7 +100,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdCreatives");
+                    b.ToTable("AdCreatives", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdImpression", b =>
@@ -141,7 +141,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdPlacementId");
 
-                    b.ToTable("AdImpressions");
+                    b.ToTable("AdImpressions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdPlacement", b =>
@@ -192,7 +192,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdSlotId");
 
-                    b.ToTable("AdPlacements");
+                    b.ToTable("AdPlacements", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdRevenueImport", b =>
@@ -238,7 +238,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdRevenueImports");
+                    b.ToTable("AdRevenueImports", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdSlot", b =>
@@ -281,7 +281,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.ToTable("AdSlots");
+                    b.ToTable("AdSlots", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Address", b =>
@@ -338,7 +338,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("StoreId")
                         .IsUnique();
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicationRole", b =>
@@ -527,10 +527,55 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.ToTable("AuditLogs");
+                    b.ToTable("AuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryLibraryItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("MenuId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryLibraryItemId");
+
+                    b.HasIndex("MenuId");
+
+                    b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CategoryLibraryItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -546,13 +591,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconKey")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("MenuId")
+                    b.Property<Guid?>("MediaId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
@@ -561,22 +608,27 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenuId");
+                    b.HasIndex("MediaId");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("CategoryLibraryItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
@@ -606,11 +658,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -618,6 +665,11 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -627,10 +679,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[OwnerId] IS NOT NULL");
 
-                    b.HasIndex("Slug")
-                        .IsUnique();
-
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExtensionPack", b =>
@@ -657,17 +706,17 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("ExtensionPacks");
+                    b.ToTable("ExtensionPacks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExtensionPackPlan", b =>
@@ -754,7 +803,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.InvoiceLine", b =>
@@ -804,7 +853,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLines");
+                    b.ToTable("InvoiceLines", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Media", b =>
@@ -903,7 +952,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ReferenceId", "Type");
 
-                    b.ToTable("Medias");
+                    b.ToTable("Medias", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Menu", b =>
@@ -936,10 +985,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("datetime2");
 
@@ -948,6 +993,10 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid?>("StoreId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
@@ -960,7 +1009,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -1017,7 +1066,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Owner", b =>
@@ -1053,7 +1102,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owners", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PaymentMethod", b =>
@@ -1124,7 +1173,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Plan", b =>
@@ -1157,16 +1206,16 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("MonthlyPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
                     b.Property<int>("ProductLimit")
                         .HasColumnType("int");
 
                     b.Property<bool>("ThemeCustomization")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<decimal>("WelcomeDiscountAmount")
                         .HasColumnType("decimal(18,2)");
@@ -1179,7 +1228,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plans");
+                    b.ToTable("Plans", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PlanFeature", b =>
@@ -1222,7 +1271,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("PlanId", "Key")
                         .IsUnique();
 
-                    b.ToTable("PlanFeatures");
+                    b.ToTable("PlanFeatures", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -1274,11 +1323,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -1287,14 +1331,17 @@ namespace Infrastructure.Migrations
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("Slug")
+                    b.HasIndex("CategoryId", "Slug")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductPrice", b =>
@@ -1335,7 +1382,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductPrices");
+                    b.ToTable("ProductPrices", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductTag", b =>
@@ -1350,7 +1397,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags");
+                    b.ToTable("ProductTags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRCode", b =>
@@ -1415,7 +1462,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[StoreId] IS NOT NULL");
 
-                    b.ToTable("QRCodes");
+                    b.ToTable("QRCodes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRDailyStats", b =>
@@ -1459,7 +1506,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("QRCodeId", "Day")
                         .IsUnique();
 
-                    b.ToTable("QRDailyStats");
+                    b.ToTable("QRDailyStats", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRScanEvent", b =>
@@ -1514,7 +1561,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("QRCodeId");
 
-                    b.ToTable("QRScanEvents");
+                    b.ToTable("QRScanEvents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Staff", b =>
@@ -1567,7 +1614,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Staffs");
+                    b.ToTable("Staffs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Store", b =>
@@ -1597,11 +1644,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1611,14 +1653,20 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.HasIndex("CompanyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("Stores");
+                    b.HasIndex("CompanyId", "Slug")
+                        .IsUnique();
+
+                    b.ToTable("Stores", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Subscription", b =>
@@ -1685,7 +1733,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag", b =>
@@ -1712,14 +1760,14 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UsageCounter", b =>
@@ -1764,7 +1812,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CompanyId", "Key", "Period")
                         .IsUnique();
 
-                    b.ToTable("UsageCounters");
+                    b.ToTable("UsageCounters", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.WebhookEvent", b =>
@@ -1811,7 +1859,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WebhookEvents");
+                    b.ToTable("WebhookEvents", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1989,13 +2037,37 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
+                    b.HasOne("Domain.Entities.CategoryLibraryItem", "CategoryLibraryItem")
+                        .WithMany()
+                        .HasForeignKey("CategoryLibraryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Menu", "Menu")
                         .WithMany("Categories")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("CategoryLibraryItem");
+
                     b.Navigation("Menu");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CategoryLibraryItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaId");
+
+                    b.HasOne("Domain.Entities.CategoryLibraryItem", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Media");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
@@ -2345,6 +2417,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Medias");
 
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CategoryLibraryItem", b =>
+                {
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>

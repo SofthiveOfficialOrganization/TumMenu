@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Application.Tags.Commands;
 
 public sealed record CreateTagCommand(
-	string Name
+	string Title
 ) : IRequest<Guid>, ITransactionalRequest;
 
 public class CreateTagCommandHandler(
@@ -23,7 +23,7 @@ public class CreateTagCommandHandler(
 {
 	public async Task<Guid> Handle(CreateTagCommand req, CancellationToken ct)
 	{
-		var exists = await repoTag.ExistsAsync(t => t.Name == req.Name, ct);
+		var exists = await repoTag.ExistsAsync(t => t.Title == req.Title, ct);
 		if(exists)
 			throw new AlreadyExistsAppException("Verilen isimde bir etiket zaten mevcut.");
 		var tag = mapper.Map<Tag>(req);

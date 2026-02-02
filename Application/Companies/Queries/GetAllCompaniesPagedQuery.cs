@@ -25,10 +25,10 @@ public class GetAllCompaniesPagedHandler(
 			req,
 			c =>
 				string.IsNullOrEmpty(req.Search) ||
-				c.Name.Contains(req.Search) ||
+				c.Title.Contains(req.Search) ||
 				c.Slug.Contains(req.Search),
 			include: c => c.Include(c => c.Owner),
-			orderBy: q => q.OrderBy(c => c.Name),
+			orderBy: c => c.OrderBy(c => c.Title),
 			ct: ct
 		);
 		var companyDTOs = mapper.Map<PaginatedListDTO<CompanyDTO>>(companies);

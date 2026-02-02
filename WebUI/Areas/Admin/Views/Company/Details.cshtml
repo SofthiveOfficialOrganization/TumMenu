@@ -10,9 +10,9 @@
         <!-- Profile Card -->
         <div class="horizon-card text-center h-100">
             <div class="horizon-avatar mx-auto mb-3" style="width: 80px; height: 80px; font-size: 32px;">
-                @Model.Name.Substring(0, 1).ToUpper()
+                @Model.Title.Substring(0, 1).ToUpper()
             </div>
-            <h4 class="fw-bold text-dark mb-1">@Model.Name</h4>
+            <h4 class="fw-bold text-dark mb-1">@Model.Title</h4>
             <p class="text-secondary small">Company Profile</p>
             
             <div class="mt-4 d-flex justify-content-center gap-3">
@@ -41,7 +41,7 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <label class="text-secondary small text-uppercase fw-bold mb-1">Company Name</label>
-                    <p class="fw-bold text-dark">@Model.Name</p>
+                    <p class="fw-bold text-dark">@Model.Title</p>
                 </div>
                 <div class="col-md-6">
                     <label class="text-secondary small text-uppercase fw-bold mb-1">Slug</label>

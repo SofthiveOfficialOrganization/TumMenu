@@ -30,7 +30,7 @@ public class GetAllProductsPagedHandler(
 			req,
 			p =>
 				(string.IsNullOrEmpty(req.Search) ||
-				p.Name.Contains(req.Search) ||
+				p.Title.Contains(req.Search) ||
 				p.Slug.Contains(req.Search)) &&
 				(req.TagId == null || p.ProductTags.Any(pt => pt.TagId == req.TagId)),
 			orderBy: p => p.OrderBy(p => p.SortOrder),

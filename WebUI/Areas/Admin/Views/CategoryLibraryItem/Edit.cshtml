@@ -1,6 +1,6 @@
 @using Application.Categories.Commands
 @using Application.Categories.DTOs
-@model CategoryDTO
+@model CategoryLibraryItemDTO
 
 @{
     ViewData["Title"] = "Edit Category";
@@ -21,13 +21,11 @@
             
             <form asp-action="Edit" method="post">
                 <input type="hidden" name="Id" value="@Model.Id" />
-                <input type="hidden" name="MenuId" value="@Model.MenuId" /> <!-- Kept for reference or redirect logic if needed -->
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                         <label for="Name" class="form-label text-secondary small text-uppercase fw-bold">Name</label>
-                         <input name="Name" class="form-control" value="@Model.Name" placeholder="Category Name" />
-                         <!-- Validation span usually needs the name match -->
+                         <label for="Title" class="form-label text-secondary small text-uppercase fw-bold">Title</label>
+                         <input name="Title" class="form-control" value="@Model.Title" placeholder="Category Title" />
                     </div>
                      <div class="col-md-6 mb-3">
                          <label for="Slug" class="form-label text-secondary small text-uppercase fw-bold">Slug</label>
@@ -41,12 +39,12 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="SortOrder" class="form-label text-secondary small text-uppercase fw-bold">Sort Order</label>
-                    <input name="SortOrder" class="form-control" type="number" value="@Model.SortOrder" />
+                    <label for="IconKey" class="form-label text-secondary small text-uppercase fw-bold">Icon Key</label>
+                    <input name="IconKey" class="form-control" value="@Model.IconKey" placeholder="e.g. fa-solid fa-utensils" />
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Details" asp-route-slug="@Model.Slug" class="btn btn-light text-secondary">Cancel</a>
+                    <a asp-action="Index" class="btn btn-light text-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>

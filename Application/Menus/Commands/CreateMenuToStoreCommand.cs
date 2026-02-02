@@ -8,7 +8,7 @@ namespace Application.Menus.Commands;
 
 public class CreateMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest
 {
-	public string Name { get; set; } = string.Empty;
+	public string Title { get; set; } = string.Empty;
 	public Guid StoreId { get; set; }
 }
 

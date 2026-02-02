@@ -15,7 +15,7 @@ public class CompanyMappingProfiles
 		config.NewConfig<CreateCompanyCommand, Company>()
 			.Map(dest => dest.Slug,
 				src => string.IsNullOrWhiteSpace(src.Slug)
-					? SlugHelper.Slugify(src.Name)
+					? SlugHelper.Slugify(src.Title)
 					: src.Slug);
 		config.NewConfig<UpdateCompanyCommand, Company>();
 	}

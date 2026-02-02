@@ -1,5 +1,5 @@
 @using Application.Categories.DTOs
-@model CategoryDTO
+@model CategoryLibraryItemDTO
 
 @{
     ViewData["Title"] = "Category Details";
@@ -20,7 +20,12 @@
 
             <div class="mb-3">
                 <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Name</label>
-                <p class="fw-bold text-dark fs-5">@Model.Name</p>
+                <p class="fw-bold text-dark fs-5">@Model.Title</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Slug</label>
+                <p class="text-dark">@Model.Slug</p>
             </div>
 
             <div class="mb-3">
@@ -28,19 +33,13 @@
                 <p class="text-dark">@(!string.IsNullOrEmpty(Model.Description) ? Model.Description : "No description")</p>
             </div>
             
-            <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Sort Order</label>
-                <span class="badge bg-light text-dark">@Model.SortOrder</span>
-            </div>
-
-            <div class="mb-3">
-                 <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Menu</label>
-                 <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="text-primary text-decoration-none">
-                     View Menu
-                 </a>
+             <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Icon Key</label>
+                <p class="text-dark">@(!string.IsNullOrEmpty(Model.IconKey) ? Model.IconKey : "No icon")</p>
             </div>
 
             <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                <a asp-action="Index" class="btn btn-light text-secondary">Back to List</a>
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
                     <i class="fas fa-edit me-2"></i> Edit Category
                 </a>

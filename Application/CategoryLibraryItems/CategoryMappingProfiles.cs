@@ -9,8 +9,10 @@ public class CategoryMappingProfiles
 {
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<CategoryLibraryItem, CategoryLibraryItemDTO>();
         config.NewConfig<Category, CategoryDTO>();
-        config.NewConfig<CreateCategoryCommand, Category>();
-        config.NewConfig<UpdateCategoryCommand, Category>();
+        
+        config.NewConfig<CreateCategoryLibraryItemCommand, CategoryLibraryItem>();
+        config.NewConfig<UpdateCategoryLibraryItemCommand, CategoryLibraryItem>();
     }
 }
