@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Common.Base.Page.RequestBase;
+using Application.Common.Base.DTOs;
 using Application.Menus.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -8,16 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public class GetAllMenusPagedQuery : PageRequest, IRequest<MenuDTO>
+public class GetAllMenusPagedQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>
 {
 }
 
 public class GetAllMenusPagedHandler(
 	IRepository<Menu> repoMenu,
 	IMapper mapper
-) : IRequestHandler<GetAllMenusPagedQuery, MenuDTO>
+) : IRequestHandler<GetAllMenusPagedQuery, PaginatedListDTO<MenuDTO>>
 {
-	public async Task<MenuDTO> Handle(GetAllMenusPagedQuery req, CancellationToken ct)
+	public async Task<PaginatedListDTO<MenuDTO>> Handle(GetAllMenusPagedQuery req, CancellationToken ct)
 	{
 		var menu = await repoMenu.GetPageListAsync(
 			request: req,
@@ -26,7 +27,7 @@ public class GetAllMenusPagedHandler(
 			ct: ct
 		);
 
-		var menuDTO = mapper.Map<MenuDTO>(menu);
+		var menuDTO = mapper.Map<PaginatedListDTO<MenuDTO>>(menu);
 		return menuDTO;
 	}
 }
