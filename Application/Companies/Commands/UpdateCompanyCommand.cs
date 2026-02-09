@@ -25,7 +25,14 @@ public class UpdateCompanyHandler(
 		var company = await repoCompany.Query().FirstOrDefaultAsync(c => c.Id == req.Id, ct);
 		if(company == null)
 			throw new NotFoundAppException("Şirket bulunamadı");
+		if(req.Slug != company.Slug)
+		{
+			var slugExists = await repoCompany.Query().AnyAsync(c => c.Slug == req.Slug, ct);
+			if(slugExists)
+				throw new AlreadyExistsAppException("Bu slug zaten kullanılıyor");
+		}
 		mapper.Map(req, company);
+		repoCompany.Update(company);
 		var companyDTO = mapper.Map<CompanyDTO>(company);
 		return companyDTO;
 	}
