@@ -29,7 +29,7 @@ public sealed class ErrorController(IWebHostEnvironment env) : Controller
 		}
 
 		Response.StatusCode = StatusCodes.Status500InternalServerError;
-		ViewData["Message"] = _env.IsDevelopment() ? ex?.Message : "Beklenmeyen bir hata oluştu.";
+		ViewData["Message"] = ex != null ? $"{ex.Message}\n{ex.StackTrace}" : "Beklenmeyen bir hata oluştu.";
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
 
 		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));

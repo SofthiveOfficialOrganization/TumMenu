@@ -27,12 +27,10 @@
             </a>
         </div>
         
-        @if (Env.IsDevelopment())
-        {
-             <div class="mt-5 text-start">
-                 <p class="text-danger fw-bold">Development Mode Info:</p>
-                 <p class="small text-muted">Detailed error information is available in the server logs.</p>
-            </div>
-        }
+        <div class="mt-5 text-start">
+             <p class="text-danger fw-bold">Error Details:</p>
+             <pre class="small text-muted" style="white-space: pre-wrap;">@ViewData["Message"]</pre>
+             <p class="small text-muted"><strong>Trace ID:</strong> @ViewData["TraceId"]</p>
+        </div>
     </div>
 </div>
