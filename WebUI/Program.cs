@@ -41,9 +41,9 @@ builder.Services
     .AddRazorPages()
     .AddMvcOptions(options =>
     {
-        // options.Filters.Add<AppExceptionFilter>();
+        options.Filters.Add<AppExceptionFilter>();
         options.Filters.Add<ValidationLoggingFilter>();
-        // options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 
