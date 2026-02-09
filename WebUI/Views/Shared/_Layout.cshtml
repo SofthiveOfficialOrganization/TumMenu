@@ -52,7 +52,15 @@
 
             <!-- QR SAĞ -->
             <div class="site-header__actions">
-                <a asp-controller="Home" asp-action="BeQr" class="btn btn--header">QR’lı Ol</a>
+                @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "BeQr")
+                {
+                   <a  class="btn btn--header btn--ghost" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+                   <a  class="btn btn--header" asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="BeQr" class="btn btn--header">QR’lı Ol</a>
+                }
                 <button class="site-header__burger"
                         type="button"
                         aria-label="Menüyü aç"
@@ -67,7 +75,15 @@
             <div class="site-header__mobile-inner">
                 <a class="site-header__mobile-link" asp-controller="Home" asp-action="WhatToEat">Ne yesem?</a>
                 <a class="site-header__mobile-link" asp-controller="Home" asp-action="Restaurants">Restoranlar</a>
-                <a class="site-header__mobile-link" asp-controller="Home" asp-action="BeQr">QR’lı Ol</a>
+                @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "BeQr")
+                {
+                     <a class="site-header__mobile-link" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+                     <a class="site-header__mobile-link" asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+                }
+                else
+                {
+                    <a class="site-header__mobile-link" asp-controller="Home" asp-action="BeQr">QR’lı Ol</a>
+                }
             </div>
         </div>
     </header>
@@ -165,6 +181,42 @@
             </div>
         </div>
     </footer>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var successMessage = @Json.Serialize(TempData["Success"]);
+            var errorMessage = @Json.Serialize(TempData["Error"]);
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            if (successMessage) {
+                Toast.fire({
+                    icon: 'success',
+                    title: successMessage
+                });
+            }
+
+            if (errorMessage) {
+                Toast.fire({
+                    icon: 'error',
+                    title: errorMessage
+                });
+            }
+        });
+    </script>
 
     @RenderSection("Scripts", required: false)
     <script>
