@@ -1,7 +1,13 @@
-﻿
+﻿@using Application.Stores.DTOs
+@using Application.Stores.Queries
 @{
     ViewData["Title"] = "Ana Sayfa";
     ViewData["Description"] = "Yakınındaki restoranların QR menülerini keşfet, fiyatları gitmeden gör ve işletmen için dijital QR menü oluştur.";
+    var homepageStores = ViewBag.HomepageStores as HomepageStoresDTO;
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/home-stores.css" asp-append-version="true" />
 }
 
 <section class="hero" aria-labelledby="hero-heading">
@@ -67,13 +73,13 @@
                 Gitmeden menü ve fiyatları görüntüle.
             </p>
 
-            <form class="search-form" role="search" aria-label="Restoran arama">
+            <form id="homeSearchForm" class="search-form" role="search" aria-label="Restoran arama">
                 <div class="search-form__row">
                     <div class="search-input">
                         <span class="search-input__icon">🔍</span>
-                        <input type="search"
-                               placeholder="Şehir, ilçe veya adres gir..."
-                               aria-label="Restoran konumu gir" />
+                        <input id="homeSearchInput" type="search"
+                               placeholder="Restoran, ürün veya kategori ara..."
+                               aria-label="Arama terimi girin" />
                     </div>
 
                     <button type="submit" class="btn btn--primary search-form__button">
@@ -104,109 +110,240 @@
     </div>
 </section>
 
+<!-- YENİ RESTORANLAR -->
+<section class="section section--stores" aria-labelledby="new-heading">
+    <div class="container">
+        <div class="section-heading">
+            <h2 id="new-heading" class="section__title">🆕 Yeni restoranlar</h2>
+            <p class="section__subtitle">Platformumuza yeni katılan mekanları keşfet.</p>
+        </div>
+        <div class="home-store-grid">
+            @if (homepageStores?.NewStores != null)
+            {
+                @foreach (var store in homepageStores.NewStores)
+                {
+                    <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <div class="home-store-card__img-wrap">
+                            @if (!string.IsNullOrEmpty(store.ImageUrl))
+                            {
+                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="home-store-card__no-img">🍽️</div>
+                            }
+                        </div>
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">@store.Title</h3>
+                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                            {
+                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                            }
+                        </div>
+                    </a>
+                }
+            }
+            <!-- Örnek kartlar (4 adet) -->
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍽️</div>
+                    <span class="home-store-card__badge">Yeni</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Lezzet Durağı</h3>
+                    <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🥗</div>
+                    <span class="home-store-card__badge">Yeni</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Yeşil Bahçe</h3>
+                    <p class="home-store-card__location">📍 Moda, İstanbul</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🥩</div>
+                    <span class="home-store-card__badge">Yeni</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Et Evi</h3>
+                    <p class="home-store-card__location">📍 Bostancı, İstanbul</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">☕</div>
+                    <span class="home-store-card__badge">Yeni</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Kahve Molası</h3>
+                    <p class="home-store-card__location">📍 Caddebostan, İstanbul</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- POPÜLER RESTORANLAR -->
-<section class="section section--popular" aria-labelledby="popular-heading">
+<section class="section section--stores" aria-labelledby="popular-heading">
     <div class="container">
-        <div class="section-heading section-heading--center">
-            <h2 id="popular-heading" class="section__title">Popüler restoranlar</h2>
-            <p class="section__subtitle">
-                Topluluğumuzun en çok tercih ettiği mekanları keşfet.
-            </p>
+        <div class="section-heading">
+            <h2 id="popular-heading" class="section__title">🔥 Popüler restoranlar</h2>
+            <p class="section__subtitle">Topluluğumuzun en çok tercih ettiği mekanlar.</p>
         </div>
-
-        <div class="popular-grid">
-            <article class="restaurant-card">
-                <img src="/images/popular-1.jpg" alt="The Golden Fork restoranı" loading="lazy" />
-                <div class="restaurant-card__body">
-                    <h3 class="restaurant-card__name">The Golden Fork</h3>
-                    <p class="restaurant-card__tags">İtalyan • Fine Dining • Avrupa</p>
-                    <div class="restaurant-card__meta">
-                        <span><span class="restaurant-card__icon">★</span> 4.9 (320)</span>
-                        <span><span class="restaurant-card__icon">📍</span> 2.3 km</span>
-                        <span><span class="restaurant-card__icon">₺</span> ₺₺–₺₺₺</span>
-                    </div>
+        <div class="home-store-grid">
+            @if (homepageStores?.PopularStores != null)
+            {
+                @foreach (var store in homepageStores.PopularStores)
+                {
+                    <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <div class="home-store-card__img-wrap">
+                            @if (!string.IsNullOrEmpty(store.ImageUrl))
+                            {
+                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="home-store-card__no-img">🍽️</div>
+                            }
+                        </div>
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">@store.Title</h3>
+                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                            {
+                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                            }
+                        </div>
+                    </a>
+                }
+            }
+            <!-- Örnek kartlar (4 adet) -->
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍔</div>
+                    <span class="home-store-card__badge">Popüler</span>
                 </div>
-                <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Burger House</h3>
+                    <p class="home-store-card__location">📍 Beşiktaş, İstanbul</p>
                 </div>
-            </article>
-
-            <article class="restaurant-card">
-                <img src="/images/popular-2.jpg" alt="Urban Bistro" loading="lazy" />
-                <div class="restaurant-card__body">
-                    <h3 class="restaurant-card__name">Urban Bistro</h3>
-                    <p class="restaurant-card__tags">Amerikan • Casual • Brunch</p>
-                    <div class="restaurant-card__meta">
-                        <span><span class="restaurant-card__icon">★</span> 4.7 (245)</span>
-                        <span><span class="restaurant-card__icon">📍</span> 1.8 km</span>
-                        <span><span class="restaurant-card__icon">₺</span> ₺₺</span>
-                    </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍕</div>
+                    <span class="home-store-card__badge">Popüler</span>
                 </div>
-                <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Pizza Roma</h3>
+                    <p class="home-store-card__location">📍 Şişli, İstanbul</p>
                 </div>
-            </article>
-
-            <article class="restaurant-card">
-                <img src="/images/popular-3.jpg" alt="Sakura Sushi House" loading="lazy" />
-                <div class="restaurant-card__body">
-                    <h3 class="restaurant-card__name">Sakura Sushi House</h3>
-                    <p class="restaurant-card__tags">Japon • Sushi • Asian Fusion</p>
-                    <div class="restaurant-card__meta">
-                        <span><span class="restaurant-card__icon">★</span> 4.8 (198)</span>
-                        <span><span class="restaurant-card__icon">📍</span> 3.1 km</span>
-                        <span><span class="restaurant-card__icon">₺</span> ₺₺–₺₺₺</span>
-                    </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🌭</div>
+                    <span class="home-store-card__badge">Popüler</span>
                 </div>
-                <div class="restaurant-card__footer">
-                    <button class="btn btn--primary btn--full">Menüyü Gör</button>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Sosisçi Baba</h3>
+                    <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
                 </div>
-            </article>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🌮</div>
+                    <span class="home-store-card__badge">Popüler</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Taco Meksika</h3>
+                    <p class="home-store-card__location">📍 Beyoğlu, İstanbul</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>
 
-<!-- KATEGORİLER -->
-<section class="section section--categories" aria-labelledby="categories-heading">
+<!-- GÜNÜN RESTORANLARI -->
+<section class="section section--stores" aria-labelledby="daily-heading">
     <div class="container">
-        <div class="section-heading section-heading--center">
-            <h2 id="categories-heading" class="section__title">Kategorilere göre keşfet</h2>
-            <p class="section__subtitle">Canın ne çekiyorsa hızlıca bul.</p>
+        <div class="section-heading">
+            <h2 id="daily-heading" class="section__title">⭐ Günün restoranları</h2>
+            <p class="section__subtitle">Bugün için önerilen mekanlar.</p>
         </div>
-
-        <div class="category-grid">
-            <article class="category-card">
-                <div class="category-card__image"><img src="/images/cat-pizza.jpg" alt="Pizza" loading="lazy" /></div>
-                <h3 class="category-card__name">Pizza</h3>
-                <p class="category-card__count">142 restoran</p>
-            </article>
-
-            <article class="category-card">
-                <div class="category-card__image"><img src="/images/cat-burger.jpg" alt="Burger" loading="lazy" /></div>
-                <h3 class="category-card__name">Burger</h3>
-                <p class="category-card__count">98 restoran</p>
-            </article>
-
-            <article class="category-card">
-                <div class="category-card__image"><img src="/images/cat-sushi.jpg" alt="Sushi" loading="lazy" /></div>
-                <h3 class="category-card__name">Sushi</h3>
-                <p class="category-card__count">67 restoran</p>
-            </article>
-
-            <article class="category-card">
-                <div class="category-card__image"><img src="/images/cat-pasta.jpg" alt="Pasta" loading="lazy" /></div>
-                <h3 class="category-card__name">Pasta</h3>
-                <p class="category-card__count">85 restoran</p>
-            </article>
-
-            <article class="category-card">
-                <div class="category-card__image"><img src="/images/cat-salad.jpg" alt="Salata" loading="lazy" /></div>
-                <h3 class="category-card__name">Salata</h3>
-                <p class="category-card__count">54 restoran</p>
-            </article>
+        <div class="home-store-grid">
+            @if (homepageStores?.DailyStores != null)
+            {
+                @foreach (var store in homepageStores.DailyStores)
+                {
+                    <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <div class="home-store-card__img-wrap">
+                            @if (!string.IsNullOrEmpty(store.ImageUrl))
+                            {
+                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="home-store-card__no-img">🍽️</div>
+                            }
+                        </div>
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">@store.Title</h3>
+                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                            {
+                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                            }
+                        </div>
+                    </a>
+                }
+            }
+            <!-- Örnek kartlar (4 adet) -->
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍣</div>
+                    <span class="home-store-card__badge">Günün seçimi</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Sakura Sushi</h3>
+                    <p class="home-store-card__location">📍 Çankaya, Ankara</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍲</div>
+                    <span class="home-store-card__badge">Günün seçimi</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Anadolu Sofrası</h3>
+                    <p class="home-store-card__location">📍 Ulus, Ankara</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍜</div>
+                    <span class="home-store-card__badge">Günün seçimi</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Asya Wok</h3>
+                    <p class="home-store-card__location">📍 Çayyolu, Ankara</p>
+                </div>
+            </a>
+            <a class="home-store-card" href="#">
+                <div class="home-store-card__img-wrap">
+                    <div class="home-store-card__no-img">🍝</div>
+                    <span class="home-store-card__badge">Günün seçimi</span>
+                </div>
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">İtalyan İşi</h3>
+                    <p class="home-store-card__location">📍 Bahçelievler, Ankara</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>
+
 
 <!-- CTA -->
 <section class="cta" aria-labelledby="cta-heading">
@@ -224,6 +361,7 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+          // Hero toggle
           var buttons = document.querySelectorAll('.hero-toggle__button');
           var benefitsCustomers = document.querySelector('.hero-benefits--customers');
           var benefitsBusiness  = document.querySelector('.hero-benefits--business');
@@ -256,6 +394,27 @@
           buttons.forEach(function(btn){
             btn.addEventListener('click', function(){
               setMode(btn.dataset.mode || 'customers');
+            });
+          });
+
+          // Search form → redirect to Restaurants page
+          var homeSearchForm = document.getElementById('homeSearchForm');
+          var homeSearchInput = document.getElementById('homeSearchInput');
+
+          homeSearchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var term = homeSearchInput.value.trim();
+            var url = '/Home/Restaurants';
+            if (term) url += '?search=' + encodeURIComponent(term);
+            window.location.href = url;
+          });
+
+          // Chips → redirect to Restaurants with search
+          var chips = document.querySelectorAll('.chip-row .chip');
+          chips.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+              var text = chip.textContent.trim();
+              window.location.href = '/Home/Restaurants?search=' + encodeURIComponent(text);
             });
           });
         });

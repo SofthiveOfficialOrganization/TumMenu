@@ -1,0 +1,152 @@
+@using Application.Categories.DTOs
+@{
+    ViewData["Title"] = "Restoranlar";
+    ViewData["Description"] = "Yakınındaki restoranları keşfet, menüleri incele, filtrele ve karşılaştır.";
+    var categories = ViewBag.Categories as List<CategoryLibraryItemDTO> ?? new List<CategoryLibraryItemDTO>();
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/restaurants.css" asp-append-version="true" />
+}
+
+<!-- HERO MINI -->
+<section class="rest-hero" aria-labelledby="rest-hero-heading">
+    <div class="container rest-hero__inner">
+        <h1 id="rest-hero-heading" class="rest-hero__title">Restoranları Keşfet</h1>
+        <p class="rest-hero__subtitle">Yakınındaki restoranları bul, menüleri incele, fiyatları karşılaştır.</p>
+
+        <form id="searchForm" class="rest-search" role="search" aria-label="Restoran arama">
+            <div class="rest-search__input-wrap">
+                <svg class="rest-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                </svg>
+                <input id="searchInput" type="search"
+                       placeholder="Restoran, ürün veya kategori ara..."
+                       aria-label="Arama terimi girin"
+                       autocomplete="off" />
+            </div>
+            <button type="submit" class="btn btn--primary rest-search__btn">Ara</button>
+        </form>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="rest-content">
+    <div class="container rest-content__layout">
+
+        <!-- FILTER SIDEBAR -->
+        <aside id="filterPanel" class="rest-filters" aria-label="Filtreler">
+            <div class="rest-filters__header">
+                <h2 class="rest-filters__title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/>
+                        <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
+                        <circle cx="10" cy="18" r="2"/><circle cx="6" cy="6" r="2"/>
+                    </svg>
+                    Filtreler
+                </h2>
+                <button id="clearFilters" type="button" class="rest-filters__clear">Temizle</button>
+            </div>
+
+            <!-- Kategori -->
+            <div class="rest-filters__group">
+                <h3 class="rest-filters__group-title">Kategoriler</h3>
+                <div id="categoryFilters" class="rest-filters__chips">
+                    @foreach (var cat in categories)
+                    {
+                        <button type="button" class="rest-chip" data-category-id="@cat.Id">
+                            @if (!string.IsNullOrEmpty(cat.IconKey))
+                            {
+                                <span class="rest-chip__icon">@cat.IconKey</span>
+                            }
+                            @cat.Title
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Vegan -->
+            <div class="rest-filters__group">
+                <h3 class="rest-filters__group-title">Diyet</h3>
+                <label class="rest-toggle">
+                    <input id="veganToggle" type="checkbox" class="rest-toggle__input" />
+                    <span class="rest-toggle__slider"></span>
+                    <span class="rest-toggle__label">🌱 Sadece Vegan</span>
+                </label>
+            </div>
+
+            <!-- Mesafe -->
+            <div class="rest-filters__group">
+                <h3 class="rest-filters__group-title">Uzaklık</h3>
+                <div id="distanceFilters" class="rest-filters__distance-btns">
+                    <button type="button" class="rest-dist-btn" data-distance="10">10 km</button>
+                    <button type="button" class="rest-dist-btn" data-distance="20">20 km</button>
+                    <button type="button" class="rest-dist-btn" data-distance="30">30 km</button>
+                    <button type="button" class="rest-dist-btn" data-distance="50">50 km</button>
+                </div>
+            </div>
+
+            <!-- İl / İlçe -->
+            <div class="rest-filters__group">
+                <h3 class="rest-filters__group-title">Konum</h3>
+                <div class="rest-filters__location">
+                    <input id="cityInput" type="text" placeholder="İl" class="rest-input" />
+                    <input id="districtInput" type="text" placeholder="İlçe" class="rest-input" />
+                </div>
+                <button id="useMyLocation" type="button" class="rest-filters__loc-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                    </svg>
+                    Konumumu Kullan
+                </button>
+            </div>
+        </aside>
+
+        <!-- FILTER TOGGLE (MOBILE) -->
+        <button id="filterToggle" type="button" class="rest-filter-toggle" aria-controls="filterPanel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/>
+                <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
+                <circle cx="10" cy="18" r="2"/><circle cx="6" cy="6" r="2"/>
+            </svg>
+            Filtreler
+        </button>
+
+        <!-- RESULTS -->
+        <div class="rest-results">
+            <div class="rest-results__header">
+                <p id="resultCount" class="rest-results__count"></p>
+            </div>
+
+            <div id="resultGrid" class="rest-results__grid">
+                <!-- Cards rendered by JS -->
+            </div>
+
+            <!-- Loading -->
+            <div id="loadingIndicator" class="rest-results__loading" hidden>
+                <div class="rest-spinner"></div>
+                <p>Restoranlar yükleniyor...</p>
+            </div>
+
+            <!-- Empty state -->
+            <div id="emptyState" class="rest-results__empty" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <h3>Sonuç bulunamadı</h3>
+                <p>Farklı bir arama terimi veya filtre deneyin.</p>
+            </div>
+
+            <!-- Load more -->
+            <div id="loadMoreWrap" class="rest-results__load-more" hidden>
+                <button id="loadMoreBtn" type="button" class="btn btn--outline rest-results__load-btn">
+                    Daha Fazla Göster
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/restaurants.js" asp-append-version="true"></script>
+}
