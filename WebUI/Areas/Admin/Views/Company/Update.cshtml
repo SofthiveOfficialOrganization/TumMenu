@@ -1,0 +1,46 @@
+@using Application.Companies.Commands
+@model UpdateCompanyCommand
+
+@{
+    ViewData["Title"] = "Update Company";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-4 text-center">
+                <h3 class="fw-bold text-primary">Update Company</h3>
+                <p class="text-secondary">Update the details for your company below</p>
+            </div>
+
+            <form asp-area="Admin" asp-controller="Company" asp-action="Update" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="mb-4">
+                    <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Company Name</label>
+                    <input asp-for="Title" class="form-control" placeholder="e.g. My Awesome Restaurant" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Slug" class="form-label fw-bold text-secondary small text-uppercase">Slug (URL Path)</label>
+                    <input asp-for="Slug" class="form-control" placeholder="e.g. my-awesome-restaurant" />
+                    <span asp-validation-for="Slug" class="text-danger small"></span>
+                    <div class="form-text text-muted small">This will be used in your digital menu URL.</div>
+                </div>
+
+                <div class="d-grid gap-3 mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                        <i class="fas fa-save me-2"></i> Update Company
+                    </button>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-light text-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

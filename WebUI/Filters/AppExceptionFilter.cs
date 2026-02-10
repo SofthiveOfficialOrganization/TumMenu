@@ -258,6 +258,11 @@ public sealed class AppExceptionFilter(
 				: "Beklenmeyen bir hata oluştu."
 		};
 
+		// Set TempData["Error"] for the toast notification
+		var factory = httpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+		var tempData = factory.GetTempData(httpContext);
+		tempData["Error"] = _env.IsDevelopment() ? ex.Message : "Beklenmeyen bir hata oluştu.";
+
 		context.Result = new ViewResult
 		{
 			ViewName = "~/Views/Shared/Error.cshtml",

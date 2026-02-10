@@ -29,8 +29,11 @@ public sealed class ErrorController(IWebHostEnvironment env) : Controller
 		}
 
 		Response.StatusCode = StatusCodes.Status500InternalServerError;
-		ViewData["Message"] = _env.IsDevelopment() ? ex?.Message : "Beklenmeyen bir hata oluştu.";
+		var message = ex != null ? $"{ex.Message}" : "Beklenmeyen bir hata oluştu.";
+		ViewData["Message"] = message;
+		// ViewData["Message"] = ex != null ? $"{ex.Message}\n{ex.StackTrace}" : "Beklenmeyen bir hata oluştu.";
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
+		TempData["Error"] = message;
 
 		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
 	}
@@ -62,7 +65,9 @@ public sealed class ErrorController(IWebHostEnvironment env) : Controller
 			return View(ResolveViewPath(originalPath, adminPath: "NotFound", publicPath: "NotFound"));
 
 		// İstersen diğer kodlar için ayrı view yapabilirsin; şimdilik Error’a düşelim
-		ViewData["Message"] = "İstek işlenemedi.";
+		var msg = "İstek işlenemedi.";
+		ViewData["Message"] = msg;
+		TempData["Error"] = msg;
 		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
 	}
 
