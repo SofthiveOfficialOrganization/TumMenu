@@ -47,6 +47,7 @@
             <nav class="site-header__nav" aria-label="Ana menü">
                 <a asp-controller="Home" asp-action="WhatToEat" class="site-header__nav-link">Ne yesem?</a>
                 <a asp-controller="Home" asp-action="Restaurants" class="site-header__nav-link">Restoranlar</a>
+                <a asp-controller="Home" asp-action="Pricing" class="site-header__nav-link">Fiyatlandırma</a>
             
             </nav>
 
@@ -74,6 +75,7 @@
             <div class="site-header__mobile-inner">
                 <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="WhatToEat">Ne yesem?</a>
                 <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="Restaurants">Restoranlar</a>
+                <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="Pricing">Fiyatlandırma</a>
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {
                     <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="BeQr">QR’lı Ol</a>
@@ -101,29 +103,27 @@
                 <div class="site-footer__col">
                     <h3 class="site-footer__column-title">Müşteriler</h3>
                     <ul class="site-footer__links">
-                        <li><a href="#">Restoran bul</a></li>
-                        <li><a href="#">Menülere göz at</a></li>
-                        <li><a href="#">Popüler yerler</a></li>
-                        <li><a href="#">Kategoriler</a></li>
+                        <li><a href="/#popular-section">Popüler Restoranlar</a></li>
+                        <li><a href="/#daily-section">Günün Restoranları</a></li>
+                        <li><a href="/#new-section">Yeni Restoranlar</a></li>
                     </ul>
                 </div>
 
                 <div class="site-footer__col">
                     <h3 class="site-footer__column-title">İşletmeler</h3>
                     <ul class="site-footer__links">
-                        <li><a href="#">QR Menü</a></li>
-                        <li><a href="#">Fiyatlandırma</a></li>
-                        <li><a href="#">Özellikler</a></li>
-                        <li><a href="#">Destek</a></li>
+                        <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
+                        <li><a href="/Home/BeQr">QR'lı Ol</a></li>
+                        <li><a href="/Home/Pricing">Fiyatlandırma</a></li>
                     </ul>
                 </div>
 
                 <div class="site-footer__col">
                     <h3 class="site-footer__column-title">Şirket</h3>
                     <ul class="site-footer__links">
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">İletişim</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="/Home/About">Hakkımızda</a></li>
+                        <li><a href="/Home/Contact">İletişim</a></li>
+                        <li><a href="/Home/Legal">Yasal Bilgiler</a></li>
                     </ul>
                 </div>
             </div>
@@ -138,29 +138,28 @@
                 <details class="site-footer__acc">
                     <summary>Müşteriler</summary>
                     <ul class="site-footer__links">
-                        <li><a href="#">Restoran bul</a></li>
-                        <li><a href="#">Menülere göz at</a></li>
-                        <li><a href="#">Popüler yerler</a></li>
-                        <li><a href="#">Kategoriler</a></li>
+                        <li><a href="/#popular-section">Popüler Restoranlar</a></li>
+                        <li><a href="/#daily-section">Günün Restoranları</a></li>
+                        <li><a href="/#new-section">Yeni Restoranlar</a></li>
                     </ul>
                 </details>
 
                 <details class="site-footer__acc">
                     <summary>İşletmeler</summary>
                     <ul class="site-footer__links">
-                        <li><a href="#">QR Menü</a></li>
-                        <li><a href="#">Fiyatlandırma</a></li>
-                        <li><a href="#">Özellikler</a></li>
-                        <li><a href="#">Destek</a></li>
+                        <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
+                        <li><a href="/Home/BeQr">QR'lı Ol</a></li>
+                        <li><a href="/Home/Pricing">Fiyatlandırma</a></li>
                     </ul>
                 </details>
 
                 <details class="site-footer__acc">
-                    <summary>Şirket</summary>
+                    <summary>Hakkımızda</summary>
                     <ul class="site-footer__links">
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">İletişim</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="/Home/About">Hakkımızda</a></li>
+                        <li><a href="/Home/Legal#section-privacy">Politikamız</a></li>
+                        <li><a href="/Home/Legal#section-kvkk">KVKK &amp; Gizlilik</a></li>
+                        <li><a href="/Home/Contact">İletişim</a></li>
                     </ul>
                 </details>
             </div>

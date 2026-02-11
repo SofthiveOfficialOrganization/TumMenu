@@ -1,0 +1,191 @@
+@{
+    ViewData["Title"] = "Yasal Bilgiler";
+    ViewData["Description"] = "Gizlilik politikası, KVKK, çerez politikası ve kullanım koşulları.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/legal.css" asp-append-version="true" />
+}
+
+<!-- HERO -->
+<section class="legal-hero">
+    <div class="container legal-hero__inner">
+        <h1 class="legal-hero__title">Yasal Bilgiler</h1>
+        <p class="legal-hero__subtitle">
+            Şeffaflık ilkemiz gereği tüm yasal metinlerimize buradan ulaşabilirsiniz.
+        </p>
+    </div>
+</section>
+
+<!-- TABS (Sticky) -->
+<nav class="legal-tabs" aria-label="Yasal belgeler menüsü">
+    <div class="container">
+        <ul class="legal-tabs__list" role="tablist">
+            <li>
+                <button class="legal-tab-btn is-active" role="tab" aria-selected="true" aria-controls="section-privacy" id="tab-privacy" onclick="switchTab('privacy')">Gizlilik Politikası</button>
+            </li>
+            <li>
+                <button class="legal-tab-btn" role="tab" aria-selected="false" aria-controls="section-kvkk" id="tab-kvkk" onclick="switchTab('kvkk')">KVKK</button>
+            </li>
+            <li>
+                <button class="legal-tab-btn" role="tab" aria-selected="false" aria-controls="section-cookie" id="tab-cookie" onclick="switchTab('cookie')">Çerez Politikası</button>
+            </li>
+            <li>
+                <button class="legal-tab-btn" role="tab" aria-selected="false" aria-controls="section-terms" id="tab-terms" onclick="switchTab('terms')">Kullanıcı Sözleşmesi</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container legal-content">
+    
+    <!-- GİZLİLİK POLİTİKASI -->
+    <section id="section-privacy" class="legal-section is-active" role="tabpanel" aria-labelledby="tab-privacy">
+        <div class="legal-text-block">
+            <h2>Gizlilik Politikası</h2>
+            <p><strong>Son Güncelleme:</strong> @DateTime.Now.ToString("dd.MM.yyyy")</p>
+            
+            <h3>1. Giriş</h3>
+            <p>
+                Tüm Menü ("Şirket") olarak, kullanıcılarımızın gizliliğine saygı duyuyor ve verilerinizi korumaya önem veriyoruz. 
+                Bu Gizlilik Politikası, hizmetlerimizi kullandığınızda topladığımız bilgileri ve bu bilgileri nasıl kullandığımızı açıklar.
+            </p>
+
+            <h3>2. Toplanan Bilgiler</h3>
+            <ul>
+                <li><strong>Kişisel Bilgiler:</strong> Ad, e-posta adresi, telefon numarası (kayıt olurken).</li>
+                <li><strong>Kullanım Verileri:</strong> IP adresi, tarayıcı türü, ziyaret edilen sayfalar.</li>
+            </ul>
+
+            <h3>3. Bilgilerin Kullanımı</h3>
+            <p>
+                Topladığımız verileri hizmetlerimizi sağlamak, geliştirmek ve sizinle iletişim kurmak için kullanıyoruz. 
+                Verileriniz yasal zorunluluklar haricinde üçüncü taraflarla paylaşılmaz.
+            </p>
+            
+            <p>Detaylı bilgi için <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a> adresinden bize ulaşabilirsiniz.</p>
+        </div>
+    </section>
+
+    <!-- KVKK -->
+    <section id="section-kvkk" class="legal-section" role="tabpanel" aria-labelledby="tab-kvkk">
+        <div class="legal-text-block">
+            <h2>Kişisel Verilerin Korunması (KVKK)</h2>
+            <p>
+                6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, kişisel verileriniz veri sorumlusu sıfatıyla 
+                Tüm Menü tarafından aşağıda açıklanan kapsamda işlenebilecektir.
+            </p>
+
+            <h3>Veri İşleme Amaçları</h3>
+            <p>
+                Kişisel verileriniz; hizmetlerimizin sunulması, üyelik işlemlerinin gerçekleştirilmesi, 
+                kampanya ve bildirimlerin iletilmesi amaçlarıyla işlenmektedir.
+            </p>
+
+            <h3>Haklarınız</h3>
+            <p>KVKK'nın 11. maddesi uyarınca veri sahipleri;</p>
+            <ul>
+                <li>Kişisel veri işlenip işlenmediğini öğrenme,</li>
+                <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
+                <li>Verilerin silinmesini veya yok edilmesini isteme haklarına sahiptir.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ÇEREZ POLİTİKASI -->
+    <section id="section-cookie" class="legal-section" role="tabpanel" aria-labelledby="tab-cookie">
+        <div class="legal-text-block">
+            <h2>Çerez Politikası</h2>
+            <p>
+                Web sitemizde kullanıcı deneyimini iyileştirmek için çerezler (cookies) kullanmaktayız.
+            </p>
+
+            <h3>Kullandığımız Çerez Türleri</h3>
+            <ul>
+                <li><strong>Zorunlu Çerezler:</strong> Sitenin çalışması için gereklidir.</li>
+                <li><strong>Analitik Çerezler:</strong> Ziyaretçi sayılarını ve trafiği analiz etmemizi sağlar.</li>
+                <li><strong>İşlevsel Çerezler:</strong> Tercihlerinizi hatırlamamıza yardımcı olur.</li>
+            </ul>
+
+            <p>
+                Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz.
+            </p>
+        </div>
+    </section>
+
+    <!-- KULLANICI SÖZLEŞMESİ -->
+    <section id="section-terms" class="legal-section" role="tabpanel" aria-labelledby="tab-terms">
+        <div class="legal-text-block">
+            <h2>Kullanıcı Sözleşmesi</h2>
+            <h3>1. Taraflar</h3>
+            <p>
+                İşbu sözleşme, Tüm Menü platformuna üye olan kullanıcı ("Üye") ile Tüm Menü ("Şirket") arasında akdedilmiştir.
+            </p>
+
+            <h3>2. Hizmetin Kapsamı</h3>
+            <p>
+                Tüm Menü, işletmelerin dijital menü oluşturmasını ve kullanıcıların bu menüleri görüntülemesini sağlayan bir platformdur.
+            </p>
+
+            <h3>3. Üyenin Yükümlülükleri</h3>
+            <p>
+                Üye, siteyi kullanırken yasalara ve genel ahlak kurallarına uygun davranacağını kabul eder.
+            </p>
+
+            <h3>4. Fesih</h3>
+            <p>
+                Şirket, işbu sözleşmeye aykırı davranış tespit etmesi halinde üyeliği tek taraflı olarak sonlandırma hakkına sahiptir.
+            </p>
+        </div>
+    </section>
+
+</div>
+
+@section Scripts {
+    <script>
+        function switchTab(tabId) {
+            // Update URL hash without scrolling
+            history.pushState(null, null, '#' + tabId);
+
+            // Hide all sections
+            document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('is-active'));
+            
+            // Deactivate all buttons
+            document.querySelectorAll('.legal-tab-btn').forEach(b => {
+                b.classList.remove('is-active');
+                b.setAttribute('aria-selected', 'false');
+            });
+
+            // Activate target
+            document.getElementById('section-' + tabId).classList.add('is-active');
+            
+            const btn = document.getElementById('tab-' + tabId);
+            if (btn) {
+                btn.classList.add('is-active');
+                btn.setAttribute('aria-selected', 'true');
+                
+                // Scroll button into view on mobile
+                btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        // Handle initial hash
+        document.addEventListener('DOMContentLoaded', () => {
+             // If no hash, default to privacy
+            const hash = window.location.hash.replace('#', '') || 'privacy';
+            // Verify if section exists
+            if (document.getElementById('section-' + hash)) {
+                switchTab(hash);
+            }
+        });
+        
+        // Handle back/forward navigation
+        window.addEventListener('hashchange', () => {
+             const hash = window.location.hash.replace('#', '');
+             if (hash && document.getElementById('section-' + hash)) {
+                 switchTab(hash);
+             }
+        });
+    </script>
+}

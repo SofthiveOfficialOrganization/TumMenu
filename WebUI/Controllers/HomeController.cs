@@ -1,13 +1,14 @@
 using Application.Categories.Queries;
 using Application.Stores.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebUI.Models;
 
 namespace WebUI.Controllers;
 
-public class HomeController(IMediator mediator) : Controller
+public class HomeController(IMediator mediator, IEmailSender emailSender) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -18,7 +19,7 @@ public class HomeController(IMediator mediator) : Controller
 
     public IActionResult Privacy()
     {
-        return View();
+        return Redirect("/Home/Legal#section-privacy");
     }
     public IActionResult BeQr()
     {
@@ -27,6 +28,47 @@ public class HomeController(IMediator mediator) : Controller
     public IActionResult WhatToEat()
     {
         return View();
+    }
+
+    [HttpGet]
+    public IActionResult Contact()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Contact(ContactViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            var htmlMessage = $@"
+                <h3>İletişim Formundan Yeni Mesaj</h3>
+                <p><strong>Ad Soyad:</strong> {model.Name}</p>
+                <p><strong>E-posta:</strong> {model.Email}</p>
+                <p><strong>Konu:</strong> {model.Subject}</p>
+                <hr />
+                <p><strong>Mesaj:</strong></p>
+                <p>{model.Message}</p>
+            ";
+
+            // Destek mailine gönder
+            await emailSender.SendEmailAsync("destek@tummenu.com.tr", $"İletişim Formu: {model.Subject}", htmlMessage);
+
+            TempData["Success"] = "Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.";
+            return RedirectToAction(nameof(Contact));
+        }
+        catch (Exception ex)
+        {
+            // Log error
+            TempData["Error"] = "Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.";
+            return View(model);
+        }
     }
 
     public IActionResult NotFound()
@@ -48,6 +90,24 @@ public class HomeController(IMediator mediator) : Controller
     {
         var result = await mediator.Send(query, ct);
         return Json(result);
+    }
+
+    [HttpGet]
+    public IActionResult Legal()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult About()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult Pricing()
+    {
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
