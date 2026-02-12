@@ -1,0 +1,173 @@
+/* ============================================================
+   LEGAL PAGE — legal.css
+   ============================================================ */
+
+/* ── Hero ── */
+.legal-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 64px 0 48px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.legal-hero__inner {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.legal-hero__title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    margin: 0 0 16px;
+    color: var(--color-secondary-dark);
+}
+
+.legal-hero__subtitle {
+    font-size: 18px;
+    color: var(--color-muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ── Tab Navigation (Sticky) ── */
+.legal-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 16px 0;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.legal-tabs__list {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    /* Scrollbar space */
+}
+
+/* Hide scrollbar */
+.legal-tabs__list::-webkit-scrollbar {
+    display: none;
+}
+
+.legal-tab-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-muted);
+    padding: 10px 20px;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.legal-tab-btn:hover {
+    color: var(--color-secondary-dark);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.legal-tab-btn.is-active {
+    background: var(--color-secondary-dark);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(75, 58, 45, 0.2);
+}
+
+/* ── Content Sections ── */
+.legal-content {
+    min-height: 60vh;
+    padding-bottom: 80px;
+}
+
+.legal-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.legal-section.is-active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.legal-text-block {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text-main);
+}
+
+.legal-text-block h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 40px 0 20px;
+    color: var(--color-secondary-dark);
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.legal-text-block h2:first-child {
+    margin-top: 0;
+}
+
+.legal-text-block h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+    color: var(--color-secondary-dark);
+}
+
+.legal-text-block p {
+    margin-bottom: 16px;
+}
+
+.legal-text-block ul {
+    margin-bottom: 16px;
+    padding-left: 20px;
+}
+
+.legal-text-block li {
+    margin-bottom: 8px;
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 640px) {
+    .legal-tabs {
+        padding: 12px 24px;
+        /* Add side padding for scroll start */
+        margin: 0 -24px 32px;
+        /* Negative margin to span full width */
+        width: calc(100% + 48px);
+    }
+
+    .legal-tabs__list {
+        justify-content: flex-start;
+        /* Left align on mobile for scrolling */
+        padding-right: 24px;
+        /* End padding */
+    }
+}

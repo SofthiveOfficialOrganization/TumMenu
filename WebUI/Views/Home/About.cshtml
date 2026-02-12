@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Hakkımızda";
+    ViewData["Description"] = "Tüm Menü'nün hikayesi, misyonu ve vizyonu hakkında bilgi edinin.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/about.css" asp-append-version="true" />
+}
+
+<!-- HERO -->
+<section class="about-hero">
+    <div class="container about-hero__inner">
+        <p class="about-hero__eyebrow">Biz Kimiz?</p>
+        <h1 class="about-hero__title">Restoran Deneyimini Dijitalleştiriyoruz</h1>
+        <p class="about-hero__lead">
+            Tüm Menü, restoran ve kafe sektörünün dijital dönüşümüne öncülük etmek amacıyla kurulmuş bir teknoloji platformudur.
+        </p>
+    </div>
+    <div class="about-hero__image-container">
+        <!-- Placeholder visual -->
+        <div class="about-hero__image-placeholder">
+            <div class="about-hero__icon">🚀</div>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="section about-content">
+    <div class="container">
+        
+        <div class="about-grid">
+            <!-- Story -->
+            <div class="about-card">
+                <div class="about-card__header">
+                    <span class="about-card__icon">📖</span>
+                    <h2 class="about-card__title">Hikayemiz</h2>
+                </div>
+                <div class="about-card__body">
+                    <p>
+                        Yeme-içme sektöründeki "güncel olmayan fiyatlar" ve "yıpranmış menüler" sorununu fark eden 3 arkadaşın bir araya gelmesiyle başlayan yolculuğumuz, bugün yüzlerce işletmeye hizmet veren büyük bir aileye dönüştü.
+                    </p>
+                    <p>
+                        2024 yılında "Menüye ulaşmak bu kadar zor olmamalı" diyerek yola çıktık. İşletmelerin kağıt israfını önleyen, müşterilerin hijyenik ve güncel menülere anında ulaşmasını sağlayan bir platform hayal ettik ve Tüm Menü'yü geliştirdik.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Mission -->
+            <div class="about-card about-card--highlight">
+                <div class="about-card__header">
+                    <span class="about-card__icon">🎯</span>
+                    <h2 class="about-card__title">Misyonumuz</h2>
+                </div>
+                <div class="about-card__body">
+                    <p>
+                        <strong>Amacımız;</strong> işletmelerin operasyonel verimliliğini artırırken, son kullanıcılar için menü keşfini daha kolay, şeffaf ve keyifli hale getiren yenilikçi teknolojiler geliştirmektir.
+                    </p>
+                    <ul class="about-list">
+                        <li>Sıfır kağıt israfı ile çevre dostu çözümler</li>
+                        <li>Anlık güncellenebilen dinamik menüler</li>
+                        <li>Kesintisiz ve hızlı kullanıcı deneyimi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vision / Future -->
+        <div class="about-vision">
+            <h2 class="about-vision__title">Gelecek Vizyonumuz</h2>
+            <p class="about-vision__text">
+                Sadece bir QR menü sağlayıcısı olmak değil; restoranların tüm dijital ihtiyaçlarını karşılayan, müşteri sadakat programsı ve sipariş yönetimi özellikleriyle de entegre çalışan uçtan uca bir ekosistem olmayı hedefliyoruz.
+            </p>
+        </div>
+
+    </div>
+</section>

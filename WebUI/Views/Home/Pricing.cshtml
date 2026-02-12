@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Fiyatlandırma";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/pricing.css" asp-append-version="true" />
+}
+
+<section class="pricing-hero">
+    <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 700px;">
+            <h1 class="display-4 fw-bold mb-3">İşletmenizi Büyütün</h1>
+            <p class="lead text-muted">İhtiyaçlarınıza uygun planı seçin ve hemen başlayın. Şeffaf fiyatlandırma, gizli ücret yok.</p>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            <!-- Free Plan -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="pricing-title">Ücretsiz</div>
+                        <div class="pricing-price">0 ₺<span class="pricing-period">/ay</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li><i class="bi bi-check-circle-fill"></i>5 Adet Menü</li>
+                            <li><i class="bi bi-check-circle-fill"></i>1 Adet Şirket</li>
+                            <li><i class="bi bi-check-circle-fill"></i>3 Adet Dükkan</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Temel Destek</li>
+                            <li class="disabled"><i class="bi bi-x-circle-fill"></i>Reklamsız Deneyim</li>
+                        </ul>
+                        <button type="button" class="btn btn-pricing btn-pricing-outline">Hemen Başla</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pricing-card pricing-card--premium">
+                    <div class="pricing-header">
+                        <div class="pricing-title">Premium</div>
+                        <div class="pricing-price">199 ₺<span class="pricing-period">/ay</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Menü</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Şirket</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Dükkan</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Gelişmiş Analitik</li>
+                            <li><i class="bi bi-check-circle-fill"></i>7/24 Öncelikli Destek</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Reklamsız Deneyim</li>
+                        </ul>
+                        <button type="button" class="btn btn-pricing btn-pricing-primary">Premium'a Geç</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

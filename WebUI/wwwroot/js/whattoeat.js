@@ -26,6 +26,38 @@
         { name: 'Tantuni', emoji: '🌮', tags: ['aci', 'hizli', 'protein'], reason: 'Acılı, hızlı, doyurucu. Ne istersin?', alt: 'Çiğ Köfte Dürüm' },
         { name: 'Künefe', emoji: '🧀', tags: ['tatli'], reason: 'Sıcak peynirli, şerbetli mutluluk.', alt: 'Katmer' },
         { name: 'Menemen', emoji: '🍳', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Sabah akşam her zaman iyi gider.', alt: 'Omlet' },
+        // ── Yeni eklenen yemekler ──
+        { name: 'Lahmacun', emoji: '🫓', tags: ['hizli', 'ekonomik'], reason: 'İnce hamur, bolca lezzet. Klasiklerin klasiği.', alt: 'Etli Ekmek' },
+        { name: 'Döner', emoji: '🥙', tags: ['protein', 'hizli'], reason: 'Her zaman, her yerde güzel!', alt: 'İskender' },
+        { name: 'İskender Kebap', emoji: '🥩', tags: ['protein'], reason: 'Tereyağlı, yoğurtlu bir şölen.', alt: 'Döner' },
+        { name: 'Köfte Ekmek', emoji: '🍖', tags: ['protein', 'hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin kralı.', alt: 'Kasap Burger' },
+        { name: 'Pide', emoji: '🫓', tags: ['protein'], reason: 'Karadeniz usulü, içi dolu dolu.', alt: 'Lahmacun' },
+        { name: 'Tost', emoji: '🥪', tags: ['hizli', 'ekonomik'], reason: 'Basit ama asla sıradan değil.', alt: 'Kumru' },
+        { name: 'Kokoreç', emoji: '🌯', tags: ['aci', 'protein', 'hizli'], reason: 'Cesurların tercihi, pişman olmayacaksın!', alt: 'Midye Dolma' },
+        { name: 'Mantı', emoji: '🥟', tags: ['protein'], reason: 'Anneannenin mutfağından geldi sanki.', alt: 'Düşes Patates' },
+        { name: 'Çiğ Köfte Dürüm', emoji: '🌱', tags: ['vegan', 'aci', 'hizli', 'ekonomik'], reason: 'Acılı, limonlu, tam kıvamında.', alt: 'Falafel Wrap' },
+        { name: 'Adana Kebap', emoji: '🍢', tags: ['aci', 'protein'], reason: 'Biber acısıyla efsane bir lezzet.', alt: 'Urfa Kebap' },
+        { name: 'Pilav Üstü Kuru Fasulye', emoji: '🍛', tags: ['protein', 'ekonomik'], reason: 'Türkiye\'nin resmi fast food\'u 😄', alt: 'Nohut Yemeği' },
+        { name: 'Balık Ekmek', emoji: '🐟', tags: ['protein', 'hafif'], reason: 'Deniz kenarı havası evine gelsin.', alt: 'Balık Tava' },
+        { name: 'Kumpir', emoji: '🥔', tags: ['protein', 'hizli'], reason: 'İçine ne istersen koyabilirsin!', alt: 'Patates Kızartması' },
+        { name: 'Gözleme', emoji: '🫓', tags: ['ekonomik', 'hafif'], reason: 'Yufka + peynir = mutluluk formülü.', alt: 'Börek' },
+        { name: 'Börek', emoji: '🥧', tags: ['ekonomik'], reason: 'Çıtır çıtır, katkat lezzet.', alt: 'Poğaça' },
+        { name: 'Midye Dolma', emoji: '🦪', tags: ['hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin vazgeçilmezi.', alt: 'Midye Tava' },
+        { name: 'Etli Ekmek', emoji: '🫓', tags: ['protein'], reason: 'Konya usulü, uzun ve doyurucu.', alt: 'Lahmacun' },
+        { name: 'Izgara Tavuk', emoji: '🍗', tags: ['protein', 'hafif'], reason: 'Sağlıklı ve lezzetli protein kaynağı.', alt: 'Tavuk Şiş' },
+        { name: 'Noodle', emoji: '🍜', tags: ['hizli'], reason: 'Asya esintili, hızlı ve doyurucu.', alt: 'Ramen' },
+        { name: 'Ramen', emoji: '🍜', tags: ['protein'], reason: 'Derin tat, zengin et suyu.', alt: 'Noodle' },
+        { name: 'Taco', emoji: '🌮', tags: ['aci', 'hizli'], reason: 'Meksika esintisi, eğlenceli yemek!', alt: 'Burrito' },
+        { name: 'Poké Bowl', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Taze, renkli ve sağlıklı.', alt: 'Sushi Set' },
+        { name: 'Simit', emoji: '🥯', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Çay yanında efsane ikili.', alt: 'Poğaça' },
+        { name: 'Baklava', emoji: '🍯', tags: ['tatli'], reason: 'Antep fıstıklı, şerbetli mükemmellik.', alt: 'Künefe' },
+        { name: 'Dondurma', emoji: '🍦', tags: ['tatli', 'hizli'], reason: 'Her mevsim, her zaman tatlı kriz ilacı.', alt: 'Profiterol' },
+        { name: 'Profiterol', emoji: '🍫', tags: ['tatli'], reason: 'Çikolata şelalesi altında ekler.', alt: 'Brownie' },
+        { name: 'Tavuk Kanat', emoji: '🍗', tags: ['protein', 'aci', 'hizli'], reason: 'Soslu kanatlar, parmak yalatan lezzet.', alt: 'Acılı Tavuk' },
+        { name: 'Wrap', emoji: '🌯', tags: ['hafif', 'hizli'], reason: 'İçi renkli, hafif ve pratik.', alt: 'Falafel Wrap' },
+        { name: 'Kısır', emoji: '🌿', tags: ['vegan', 'hafif', 'ekonomik'], reason: 'Narli, limonlu, ferahlatıcı.', alt: 'Mercimek Köftesi' },
+        { name: 'Nohut Yemeği', emoji: '🍛', tags: ['vegan', 'ekonomik', 'protein'], reason: 'Pilavla beraber enfes!', alt: 'Kuru Fasulye' },
+        { name: 'Sarma', emoji: '🥬', tags: ['hafif', 'ekonomik'], reason: 'Zeytinyağlı, soğuk ya da sıcak muhteşem.', alt: 'Biber Dolma' },
     ];
 
     // ── Eğlence metinleri ──
@@ -38,6 +70,10 @@
         'Bu üçlü seni hayal kırıklığına uğratmaz 💯',
         'Midene güveniyoruz 😎',
         'Hadi bakalım, karar zamanı! 🚀',
+        'Bu sefer farklı bir şey var 🎯',
+        'Damak tadına güvendik 🤌',
+        'Yemek ruhu seninle olsun 🧘',
+        'Her çevirişte yeni bir macera! 🎢',
     ];
 
     // ── Bütçe önerileri ──
@@ -89,6 +125,8 @@
     let activeTags = new Set();
     let currentRotation = 0;
     let isSpinning = false;
+    let lastPicks = new Set(); // Son gösterilen yemekleri takip et
+    const wheelFace = document.querySelector('.wte-wheel__face');
 
     // ═══════════════════
     //  CHIP SEÇİMİ
@@ -111,6 +149,54 @@
             chip.style.animation = 'none';
             chip.offsetHeight; // reflow
             chip.style.animation = '';
+
+            // Çarktaki etiketleri güncelle
+            updateWheelLabels();
+        });
+    }
+
+    // ═══════════════════
+    //  ÇARK ETİKETLERİNİ GÜNCELLE
+    // ═══════════════════
+    function updateWheelLabels() {
+        if (!wheelFace) return;
+
+        let pool = [...FOODS];
+
+        // Aktif tag'lara göre filtrele
+        if (activeTags.size > 0) {
+            const filtered = pool.filter(f =>
+                f.tags.some(t => activeTags.has(t))
+            );
+            if (filtered.length >= 8) {
+                pool = filtered;
+            } else if (filtered.length > 0) {
+                // Filtrelenen yeterli değilse, filtrelenenleri öne al, geri kalanıyla tamamla
+                const rest = FOODS.filter(f => !filtered.includes(f));
+                shuffle(rest);
+                pool = [...filtered, ...rest];
+            }
+        }
+
+        shuffle(pool);
+        const items = pool.slice(0, 8);
+
+        // Mevcut etiketleri güncelle
+        const labels = wheelFace.querySelectorAll('.wte-wheel__label');
+        labels.forEach((label, i) => {
+            if (items[i]) {
+                // Kısa bir fade efekti
+                label.style.opacity = '0';
+                label.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => {
+                    // Uzun isimleri kısalt (çarkta max 14 karakter)
+                    const shortName = items[i].name.length > 14
+                        ? items[i].name.substring(0, 14) + '…'
+                        : items[i].name;
+                    label.textContent = `${items[i].emoji} ${shortName}`;
+                    label.style.opacity = '1';
+                }, 250);
+            }
         });
     }
 
@@ -161,9 +247,20 @@
             if (filtered.length >= 3) pool = filtered;
         }
 
+        // Daha önce gösterilenleri çıkar (tekrar yapmamak için)
+        let freshPool = pool.filter(f => !lastPicks.has(f.name));
+        // Eğer yeterli yemek kalmadıysa, listeyi sıfırla
+        if (freshPool.length < 3) {
+            lastPicks.clear();
+            freshPool = pool;
+        }
+
         // Karıştır ve 3 seç
-        shuffle(pool);
-        const picks = pool.slice(0, 3);
+        shuffle(freshPool);
+        const picks = freshPool.slice(0, 3);
+
+        // Seçilenleri son gösterilenler listesine ekle
+        picks.forEach(p => lastPicks.add(p.name));
 
         // Fun metin
         resultsFun.textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
