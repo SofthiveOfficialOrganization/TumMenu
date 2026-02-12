@@ -266,12 +266,9 @@ public sealed class AppExceptionFilter(
 		context.Result = new ViewResult
 		{
 			ViewName = "~/Views/Shared/Error.cshtml",
-			ViewData = viewDataError
+			ViewData = viewDataError,
+			TempData = tempData
 		};
-
-		context.ExceptionHandled = true;
-		return Task.CompletedTask;
-
 
 		context.ExceptionHandled = true;
 		return Task.CompletedTask;
@@ -297,12 +294,13 @@ public sealed class AppExceptionFilter(
 			context.ModelState
 		);
 
-		// Model'i set etmek zorunda değilsin; ModelState zaten form değerlerini tutuyor.
+		var tempData = GetTempData(context.HttpContext);
 
 		return new ViewResult
 		{
 			ViewName = actionName,
-			ViewData = viewData
+			ViewData = viewData,
+			TempData = tempData
 		};
 	}
 
@@ -321,5 +319,11 @@ public sealed class AppExceptionFilter(
 			return true;
 
 		return false;
+	}
+
+	private static ITempDataDictionary GetTempData(HttpContext httpContext)
+	{
+		var factory = httpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
+		return factory.GetTempData(httpContext);
 	}
 }

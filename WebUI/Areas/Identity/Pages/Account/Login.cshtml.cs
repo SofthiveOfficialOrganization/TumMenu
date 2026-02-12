@@ -138,6 +138,12 @@ namespace WebUI.Areas.Identity.Pages.Account
 
                     user.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     await _userManager.UpdateAsync(user);
+
+                    if (roles.Contains("Admin") || roles.Contains("Owner"))
+                    {
+                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
 

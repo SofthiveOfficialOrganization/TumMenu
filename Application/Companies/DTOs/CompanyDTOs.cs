@@ -15,3 +15,5 @@ public sealed class CompanyLiteDTO : BaseDTO, ISluggableDTO
 	public string Title { get; set; } = null!;
 	public string Slug { get; set; } = null!;
 }
+
+public record CompanyFilterDTO(Guid Id, string Title);

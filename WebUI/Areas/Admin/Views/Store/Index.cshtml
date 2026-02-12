@@ -1,0 +1,179 @@
+@using Application.Stores.DTOs
+@using Application.Common.Base.DTOs
+@using Application.Companies.Queries
+@model PaginatedListDTO<StoreDTO>
+@{
+    ViewData["Title"] = "Dükkanlar";
+    var currentCompanyId = ViewBag.CurrentCompanyId as Guid?;
+    var currentCompanyName = ViewBag.CurrentCompanyName as string;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                   <h4 class="fw-bold mb-1">Dükkanlar</h4>
+                   <p class="text-secondary small mb-0">Dükkanlarınızı ve şubelerinizi yönetin.</p>
+                </div>
+                <div class="d-flex gap-2">
+                      <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
+                        <input type="hidden" name="companyId" id="selectedCompanyId" value="@currentCompanyId" />
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-white btn-sm dropdown-toggle" onclick="CompanySelector.open()">
+                                <i class="fas fa-filter text-secondary me-2"></i>
+                                <span id="selectedCompanyName">
+                                    @if (currentCompanyId.HasValue && !string.IsNullOrEmpty(currentCompanyName))
+                                    {
+                                        @currentCompanyName
+                                    }
+                                    else
+                                    {
+                                        <text>Tüm Şirketler</text>
+                                    }
+                                </span>
+                            </button>
+                            @if (currentCompanyId.HasValue)
+                            {
+                                <a asp-action="Index" class="btn btn-sm btn-light text-danger" title="Filtreyi Temizle"><i class="fas fa-times"></i></a>
+                            }
+                        </div>
+                    </form>
+                    <a asp-action="Create" asp-route-companyId="@currentCompanyId" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i> Yeni Dükkan
+                    </a>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle table-hover">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase border-bottom">
+                            <th class="ps-3">Dükkan Adı</th>
+                            <th>Şirket</th>
+                            <th>Telefon</th>
+                            <th>Adres</th>
+                            <th class="text-end pe-3">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Items.Any())
+                        {
+                            foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="horizon-avatar bg-light text-primary me-3">
+                                                @if(!string.IsNullOrEmpty(item.Title))
+                                                {
+                                                    @item.Title.Substring(0, 1).ToUpper()
+                                                }
+                                                else
+                                                {
+                                                    <span>?</span>
+                                                }
+                                            </div>
+                                            <div>
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="fw-bold text-dark d-block text-decoration-none">@item.Title</a>
+                                                <small class="text-muted">@item.Slug</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Company != null)
+                                        {
+                                            <a asp-controller="Company" asp-action="Index" asp-fragment="@item.Company.Id" class="badge bg-light text-secondary text-decoration-none">
+                                                <i class="fas fa-building me-1"></i> @item.Company.Title
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-secondary">@item.PhoneNumber</td>
+                                    <td class="text-secondary">
+                                         @if (item.Address != null)
+                                        {
+                                            <span class="d-inline-block text-truncate" style="max-width: 200px;" title="@item.Address.FullAddress">
+                                                @item.Address.FullAddress
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="btn-group">
+                                            <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success" title="Düzenle">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu dükkanı silmek istediğinize emin misiniz?');">
+                                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-secondary">
+                                    <div class="mb-3">
+                                        <span class="fa-stack fa-2x">
+                                            <i class="fas fa-circle fa-stack-2x text-light"></i>
+                                            <i class="fas fa-store fa-stack-1x text-secondary opacity-50"></i>
+                                        </span>
+                                    </div>
+                                    <h5>Kayıtlı dükkan bulunamadı</h5>
+                                    <p class="small">Henüz bir dükkan oluşturulmamış.</p>
+                                    <a asp-action="Create" asp-route-companyId="@currentCompanyId" class="btn btn-primary mt-2">Dükkan Oluştur</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+             <!-- Pagination -->
+            @if (Model != null && Model.Pages > 1)
+            {
+                   <div class="d-flex justify-content-center mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item @(Model.Index == 0 ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Index - 1)" asp-route-companyId="@currentCompanyId">Önceki</a>
+                            </li>
+                             @for (int i = 0; i < Model.Pages; i++)
+                            {
+                                <li class="page-item @(Model.Index == i ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-companyId="@currentCompanyId">@(i + 1)</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Index == Model.Pages - 1 ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Index + 1)" asp-route-companyId="@currentCompanyId">Sonraki</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<partial name="_CompanySelector" />
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            CompanySelector.init(function(id, title) {
+                $('#selectedCompanyId').val(id);
+                $('#selectedCompanyName').text(title);
+                // Auto submit form on selection
+                $('form[class*="d-flex"]').submit(); 
+            });
+        });
+    </script>
+}

@@ -41,12 +41,32 @@
                     </li>
                 }
                 
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Store", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-store"></i></div>
+                            <span>Tüm Dükkanlar</span>
+                        </a>
+                    </li>
+                }
+                
                 @if (User.IsInRole("Owner"))
                 {
                     <li class="horizon-menu-item">
                         <a href="@Url.Action("MyCompanies", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MyCompanies" ? "active" : "")">
                             <div class="horizon-menu-icon"><i class="fas fa-store"></i></div>
                             <span>Şirketlerim</span>
+                        </a>
+                    </li>
+                }
+
+                @if (User.IsInRole("Owner"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Store", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-store-alt"></i></div>
+                            <span>Dükkanlarım</span>
                         </a>
                     </li>
                 }
@@ -99,7 +119,7 @@
                     </a>
                 </li>
                 <li class="horizon-menu-item">
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Dashboard", new { area = "Admin" })" method="post">
                         <button type="submit" class="horizon-menu-link w-100 text-start border-0 bg-transparent">
                             <div class="horizon-menu-icon"><i class="fas fa-lock"></i></div>
                             <span>Çıkış Yap</span>

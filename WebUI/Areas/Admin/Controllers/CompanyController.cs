@@ -100,4 +100,18 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		int result = 1 / zero;
 		return View();
 	}
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Search(string? term, int page = 0, int pageSize = 10, CancellationToken ct = default)
+    {
+        var query = new GetCompanyListForSearchQuery
+        {
+            SearchTerm = term,
+            Page = page,
+            PageSize = pageSize
+        };
+        var result = await mediator.Send(query, ct);
+        return Json(result);
+    }
 }

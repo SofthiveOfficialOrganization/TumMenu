@@ -1,0 +1,122 @@
+@using Application.Stores.DTOs
+@model StoreDTO
+
+@{
+    ViewData["Title"] = "Dükkan Detayı";
+}
+
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                @Model.Title
+            </h2>
+            <div class="text-muted mt-1">
+                @Model.Slug
+            </div>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+            <div class="btn-list">
+                <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary d-none d-sm-inline-block">
+                    <i class="fas fa-edit me-1"></i> Düzenle
+                </a>
+                <a asp-action="Index" class="btn btn-secondary d-none d-sm-inline-block">
+                    <i class="fas fa-arrow-left me-1"></i> Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards mt-3">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Genel Bilgiler</h3>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-5">Telefon:</dt>
+                    <dd class="col-7">@Model.PhoneNumber</dd>
+
+                    <dt class="col-5">Şirket:</dt>
+                    <dd class="col-7">
+                        @if (Model.Company != null)
+                        {
+                            <a asp-controller="Company" asp-action="Details" asp-route-id="@Model.Company.Id">@Model.Company.Title</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-5">Oluşturulma:</dt>
+                    <dd class="col-7">@Model.CreatedAt?.ToString("d")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Adres Bilgisi</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Address != null)
+                {
+                    <p><strong>Adres:</strong> @Model.Address.FullAddress</p>
+                    @if (Model.Address.Latitude.HasValue && Model.Address.Longitude.HasValue)
+                    {
+                        <div class="mt-2">
+                            <small class="text-muted">Konum: @Model.Address.Latitude, @Model.Address.Longitude</small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">Adres bilgisi bulunamadı.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Personel Listesi (@Model.Staffs.Count)</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>E-Posta</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Staffs.Any())
+                        {
+                            foreach (var staff in Model.Staffs)
+                            {
+                                <tr>
+                                    <td>@staff.FirstName @staff.LastName</td>
+                                    <td>@staff.Email</td>
+                                    <td>@staff.Role</td> <!-- Check strict property name in StaffDTO -->
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Personel bulunamadı.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

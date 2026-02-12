@@ -54,7 +54,7 @@
             <div class="site-header__actions">
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "BeQr")
                 {
-                    <a class="btn btn--header btn--ghost" asp-area="Identity" asp-page="/Account/Login">Hesabım</a>
+                    <a class="btn btn--header" asp-area="Identity" asp-page="/Account/Login">Hesabım</a>
                 }
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {

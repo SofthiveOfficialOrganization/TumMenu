@@ -10,6 +10,7 @@ namespace Application.Companies.Queries;
 
 public class GetCompaniesPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<CompanyDTO>>
 {
+	public string? Search { get; set; }
 }
 
 public class GetCompaniesPagedByCurrentOwnerHandler(
@@ -24,7 +25,8 @@ public class GetCompaniesPagedByCurrentOwnerHandler(
 
 		var companies = await repoCompany.GetPageListAsync(
 			req,
-			c => c.Owner != null && c.Owner.ApplicationUserId == applicationUserId,
+			c => (c.Owner != null && c.Owner.ApplicationUserId == applicationUserId) &&
+				 (string.IsNullOrEmpty(req.Search) || c.Title.Contains(req.Search) || c.Slug.Contains(req.Search)),
 			include: q => q
 				.Include(c => c.BaseMenu)
 				.Include(c => c.Subscription)

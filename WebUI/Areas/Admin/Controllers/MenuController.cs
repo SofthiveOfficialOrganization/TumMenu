@@ -3,6 +3,7 @@ using Application.Companies.DTOs;
 using Application.Companies.Queries;
 using Application.Menus.Commands;
 using Application.Menus.Queries;
+using Application.Stores.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,22 @@ public sealed class MenuController(IMediator mediator) : Controller
     public async Task<IActionResult> CreateToStore([FromForm] CreateMenuToStoreCommand cmd, CancellationToken ct)
     {
         if (!ModelState.IsValid)
+        {
+            if (cmd.StoreId != Guid.Empty)
+            {
+                // Try to find the store to repopulate the name
+                try 
+                {
+                    var store = await mediator.Send(new GetStoreByIdQuery(cmd.StoreId), ct);
+                    ViewBag.StoreName = store.Title;
+                }
+                catch 
+                { 
+                    // Ignore if not found, user will just see empty name
+                }
+            }
             return View(cmd);
+        }
 
         var dto = await mediator.Send(cmd, ct);
         return RedirectToAction(nameof(Details), new { id = dto.Id });
@@ -42,23 +58,11 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]")]
-    public async Task<IActionResult> CreateToCompany(CancellationToken ct)
+    public IActionResult CreateToCompany()
     {
-        IEnumerable<CompanyDTO> items;
-        if (User.IsInRole("Admin"))
-        {
-             var result = await mediator.Send(new GetAllCompaniesPagedQuery { PageSize = 1000 }, ct);
-             items = result.Items;
-        }
-        else
-        {
-             var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery { PageSize = 1000 }, ct);
-             items = result.Items;
-        }
-
-        ViewBag.Companies = new SelectList(items, "Id", "Title");
         return View(new CreateMenuToCompanyCommand());
     }
+
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost("[action]")]
     [ValidateAntiForgeryToken]
@@ -66,18 +70,18 @@ public sealed class MenuController(IMediator mediator) : Controller
     {
         if (!ModelState.IsValid)
         {
-            IEnumerable<CompanyDTO> items;
-            if (User.IsInRole("Admin"))
+            if (cmd.CompanyId != Guid.Empty)
             {
-                 var result = await mediator.Send(new GetAllCompaniesPagedQuery { PageSize = 1000 }, ct);
-                 items = result.Items;
+                try
+                {
+                    var company = await mediator.Send(new GetCompanyByIdQuery { Id = cmd.CompanyId }, ct);
+                    ViewBag.CompanyName = company.Title;
+                }
+                catch
+                {
+                    // Ignore
+                }
             }
-            else
-            {
-                 var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery { PageSize = 1000 }, ct);
-                 items = result.Items;
-            }
-            ViewBag.Companies = new SelectList(items, "Id", "Title");
             return View(cmd);
         }
 
@@ -134,6 +138,54 @@ public sealed class MenuController(IMediator mediator) : Controller
         await mediator.Send(new DeleteMenuCommand { Id = id }, ct);
         return RedirectToAction(nameof(AllMenus));
     }
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> SearchCompanies(string? search, int page = 1, int pageSize = 10, CancellationToken ct = default)
+    {
+        IEnumerable<CompanyDTO> items;
+        long totalCount = 0;
+
+        if (User.IsInRole("Admin"))
+        {
+            var result = await mediator.Send(new GetAllCompaniesPagedQuery 
+            { 
+                Search = search, 
+                Page = page - 1, 
+                PageSize = pageSize 
+            }, ct);
+            items = result.Items;
+            totalCount = result.Count;
+        }
+        else
+        {
+            var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery 
+            { 
+                Search = search, 
+                Page = page - 1, 
+                PageSize = pageSize 
+            }, ct);
+            items = result.Items;
+            totalCount = result.Count;
+        }
+
+        return Json(new { items, totalCount });
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> SearchStores(string? search, Guid? companyId, int page = 1, int pageSize = 10, CancellationToken ct = default)
+    {
+        var result = await mediator.Send(new GetStoresPagedQuery 
+        { 
+            Search = search, 
+            CompanyId = companyId,
+            Page = page - 1, 
+            PageSize = pageSize 
+        }, ct);
+
+        return Json(new { items = result.Items, totalCount = result.Count });
+    }
+
     [HttpGet("[action]")]
     public IActionResult DivideByZeroError()
     {

@@ -5,6 +5,89 @@
     ViewData["Title"] = "Create Menu for Company";
 }
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const companyModal = new bootstrap.Modal(document.getElementById('companyModal'));
+            const searchInput = document.getElementById('companySearchInput');
+            const searchBtn = document.getElementById('searchCompanyBtn');
+            const companyList = document.getElementById('companyList');
+            const selectedCompanyId = document.getElementById('CompanyId');
+            const selectedCompanyName = document.getElementById('SelectedCompanyName');
+            const selectCompanyBtn = document.getElementById('btnSelectCompany');
+
+            let currentPage = 1;
+
+            selectCompanyBtn.addEventListener('click', function() {
+                loadCompanies();
+                companyModal.show();
+            });
+
+            searchBtn.addEventListener('click', function() {
+                currentPage = 1;
+                loadCompanies();
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    currentPage = 1;
+                    loadCompanies();
+                }
+            });
+
+            async function loadCompanies() {
+                const query = searchInput.value;
+                companyList.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"></div></div>';
+                
+                try {
+                    const response = await fetch(`/admin/Menu/SearchCompanies?search=${encodeURIComponent(query)}&page=${currentPage}&pageSize=10`);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const data = await response.json();
+                    
+                    renderCompanies(data.items);
+                } catch (error) {
+                    console.error('Error:', error);
+                    companyList.innerHTML = '<div class="text-danger p-3">Error loading companies.</div>';
+                }
+            }
+
+            function renderCompanies(companies) {
+                companyList.innerHTML = '';
+                if (companies.length === 0) {
+                    companyList.innerHTML = '<div class="p-3 text-muted">No companies found.</div>';
+                    return;
+                }
+
+                const listGroup = document.createElement('div');
+                listGroup.className = 'list-group';
+
+                companies.forEach(company => {
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+                    item.innerHTML = `
+                        <div>
+                            <div class="fw-bold">${company.title}</div>
+                            <small class="text-muted">${company.slug}</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Select</span>
+                    `;
+                    item.onclick = function() {
+                        selectedCompanyId.value = company.id;
+                        selectedCompanyName.value = company.title;
+                        companyModal.hide();
+                    };
+                    listGroup.appendChild(item);
+                });
+
+                companyList.appendChild(listGroup);
+            }
+        });
+    </script>
+}
+
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="horizon-card">
@@ -18,12 +101,13 @@
                 </div>
                 
                 <div class="mb-4">
-                    <label asp-for="CompanyId" class="form-label text-secondary small text-uppercase fw-bold">Company</label>
-                    <select asp-for="CompanyId" class="form-select" asp-items="ViewBag.Companies">
-                        <option value="">-- Select Company --</option>
-                    </select>
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Company</label>
+                    <div class="input-group">
+                        <input type="text" id="SelectedCompanyName" class="form-control" readonly placeholder="No company selected" value="@ViewBag.CompanyName" />
+                        <button type="button" class="btn btn-outline-secondary" id="btnSelectCompany">Select Company</button>
+                    </div>
+                    <input type="hidden" asp-for="CompanyId" />
                     <span asp-validation-for="CompanyId" class="text-danger small"></span>
-                    <div class="form-text">Choose the company to associate with this menu.</div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
@@ -35,6 +119,23 @@
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<!-- Modal -->
+<div class="modal fade" id="companyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Company</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="companySearchInput" placeholder="Search by name or slug...">
+                    <button class="btn btn-primary" type="button" id="searchCompanyBtn">Search</button>
+                </div>
+                <div id="companyList" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
