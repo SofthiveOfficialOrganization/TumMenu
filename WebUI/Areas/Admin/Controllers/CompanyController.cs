@@ -62,6 +62,16 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpGet("[action]")]
+	public async Task<IActionResult> MyCompany(CancellationToken ct)
+	{
+		var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+		if (company == null)
+			return RedirectToAction(nameof(Create));
+		return RedirectToAction(nameof(Details), new { id = company.Id });
+	}
+
+	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet("[action]/{id}")]
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
@@ -91,6 +101,13 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
 		await mediator.Send(new DeleteCompanyCommand { Id = id }, ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			// Owner sildiğinde, yeni şirket oluşturmaya yönlendir (veya MyCompany action'ına)
+			return RedirectToAction(nameof(Create));
+		}
+		
 		return RedirectToAction(nameof(AllCompanies));
 	}
 	[HttpGet("[action]")]
@@ -112,6 +129,14 @@ public sealed class CompanyController(IMediator mediator) : Controller
             PageSize = pageSize
         };
         var result = await mediator.Send(query, ct);
+        return Json(result);
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new CheckCompanySlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
         return Json(result);
     }
 }

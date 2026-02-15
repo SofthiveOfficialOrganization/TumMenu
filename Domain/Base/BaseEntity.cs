@@ -16,13 +16,14 @@ namespace Domain.Base
         public void Created(string? userId = null)
         {
             if(CreatedAt != default) return;
-            CreatedAt = DateTimeOffset.UtcNow;
+            // TRT (UTC+3)
+            CreatedAt = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3));
             CreatedBy = userId ?? string.Empty;
         }
 
         public void Modified(string? userId = null, bool isDeleted = false)
         {
-            ModifiedAt = DateTimeOffset.UtcNow;
+            ModifiedAt = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3));
             ModifiedBy = userId;
             if(isDeleted) Deleted(userId);
         }
@@ -30,7 +31,7 @@ namespace Domain.Base
         public void Deleted(string? userId = null)
         {
             IsDeleted = true;
-            DeletedAt = DateTimeOffset.UtcNow;
+            DeletedAt = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3));
             ModifiedBy = userId;
             ModifiedAt = DeletedAt;
         }

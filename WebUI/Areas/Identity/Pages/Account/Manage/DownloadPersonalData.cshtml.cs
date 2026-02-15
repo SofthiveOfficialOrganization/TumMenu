@@ -25,7 +25,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
 
         public IActionResult OnGet()
         {
-            return NotFound();
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -33,7 +33,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));

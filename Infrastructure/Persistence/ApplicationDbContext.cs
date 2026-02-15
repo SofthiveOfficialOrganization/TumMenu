@@ -182,14 +182,28 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(c => c.DefaultPaymentMethodId)
 				.OnDelete(DeleteBehavior.NoAction);
 
-			// Unique slugs
+			// Unique slugs (Active records only)
+			builder.Entity<Company>()
+				.HasIndex(c => c.Slug)
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
+
+			// Ensure OwnerId is unique only for active companies
+			builder.Entity<Company>()
+				.HasIndex(c => c.OwnerId, "IX_Companies_OwnerId_Active")
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0 AND [OwnerId] IS NOT NULL");
+
+
 			builder.Entity<Store>()
 				.HasIndex(x => new { x.CompanyId, x.Slug })
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 
 			builder.Entity<Store>()
 				.HasIndex(x => x.Slug)
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 		}
 
 		#endregion
@@ -235,7 +249,8 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<CategoryLibraryItem>()
 				.HasIndex(c => c.Slug)
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0 AND [Slug] IS NOT NULL");
 
 			// Category(1) -> Product(n)
 			builder.Entity<Product>()
@@ -272,10 +287,11 @@ namespace Infrastructure.Persistence
 			builder.Entity<Media>()
 				.HasIndex(i => new { i.ReferenceId, i.Type });
 
-			// Product slug unique
+			// Product slug unique (Active only)
 			builder.Entity<Product>()
 				.HasIndex(x => new { x.CategoryId, x.Slug })
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 		}
 
 		#endregion
@@ -307,7 +323,8 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<PlanFeature>()
 				.HasIndex(pf => new { pf.PlanId, pf.Key })
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 
 			// Plan <-> ExtensionPack (many-to-many via ExtensionPackPlan)
 			builder.Entity<ExtensionPackPlan>(eb =>
@@ -339,7 +356,8 @@ namespace Infrastructure.Persistence
 			// AdSlot
 			builder.Entity<AdSlot>()
 				.HasIndex(s => s.Key)
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0 AND [Key] IS NOT NULL");
 
 			// AdPlacement -> AdSlot / AdCreative
 			builder.Entity<AdPlacement>()
@@ -378,7 +396,8 @@ namespace Infrastructure.Persistence
 			// QRCode / stats
 			builder.Entity<QRCode>()
 				.HasIndex(q => q.PublicKey)
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0 AND [PublicKey] IS NOT NULL");
 
 			builder.Entity<QRCode>()
 				.HasOne<Menu>()
@@ -400,7 +419,8 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<QRDailyStats>()
 				.HasIndex(s => new { s.QRCodeId, s.Day })
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 
 			// UsageCounter
 			builder.Entity<UsageCounter>()
@@ -411,7 +431,8 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<UsageCounter>()
 				.HasIndex(u => new { u.CompanyId, u.Key, u.Period })
-				.IsUnique();
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 
 			// Notification -> Company (optional)
 			builder.Entity<Notification>()

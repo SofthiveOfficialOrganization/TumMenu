@@ -12,7 +12,8 @@ public class UpdateCompanyCommand : IRequest<CompanyDTO>, ITransactionalRequest
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; } = string.Empty;
-	public string Slug { get; set; } = string.Empty;
+	private string _slug = string.Empty;
+	public string Slug { get => _slug; set => _slug = value ?? string.Empty; }
 }
 
 public class UpdateCompanyHandler(

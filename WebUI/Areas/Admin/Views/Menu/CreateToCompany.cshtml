@@ -2,7 +2,7 @@
 @model CreateMenuToCompanyCommand
 
 @{
-    ViewData["Title"] = "Create Menu for Company";
+    ViewData["Title"] = "Şirket İçin Menü Oluştur";
 }
 
 @section Scripts {
@@ -49,14 +49,14 @@
                     renderCompanies(data.items);
                 } catch (error) {
                     console.error('Error:', error);
-                    companyList.innerHTML = '<div class="text-danger p-3">Error loading companies.</div>';
+                    companyList.innerHTML = '<div class="text-danger p-3">Şirketler yüklenirken hata oluştu.</div>';
                 }
             }
 
             function renderCompanies(companies) {
                 companyList.innerHTML = '';
                 if (companies.length === 0) {
-                    companyList.innerHTML = '<div class="p-3 text-muted">No companies found.</div>';
+                    companyList.innerHTML = '<div class="p-3 text-muted">Şirket bulunamadı.</div>';
                     return;
                 }
 
@@ -72,7 +72,7 @@
                             <div class="fw-bold">${company.title}</div>
                             <small class="text-muted">${company.slug}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill">Select</span>
+                        <span class="badge bg-primary rounded-pill">Seç</span>
                     `;
                     item.onclick = function() {
                         selectedCompanyId.value = company.id;
@@ -91,28 +91,34 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Create Menu for Company</h4>
+            <h4 class="fw-bold mb-4">Şirket İçin Menü Oluştur</h4>
             
             <form asp-action="CreateToCompany" method="post">
                 <div class="mb-3">
-                    <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Menu Name</label>
-                    <input asp-for="Title" class="form-control" placeholder="e.g. Summer Menu" />
+                    <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Menü Adı</label>
+                    <input asp-for="Title" class="form-control" placeholder="örn. Yaz Menüsü" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="form-label text-secondary small text-uppercase fw-bold">Company</label>
-                    <div class="input-group">
-                        <input type="text" id="SelectedCompanyName" class="form-control" readonly placeholder="No company selected" value="@ViewBag.CompanyName" />
-                        <button type="button" class="btn btn-outline-secondary" id="btnSelectCompany">Select Company</button>
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Şirket</label>
+                    <div class="d-flex gap-2">
+                        <input type="text" id="SelectedCompanyName" class="form-control" readonly placeholder="Şirket seçilmedi" value="@ViewBag.CompanyName" />
+                        <button type="button" class="btn btn-primary px-4" id="btnSelectCompany">
+                            <i class="fas fa-search me-2"></i>Seç
+                        </button>
                     </div>
                     <input type="hidden" asp-for="CompanyId" />
                     <span asp-validation-for="CompanyId" class="text-danger small"></span>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="MyMenus" class="btn btn-light text-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Menu</button>
+                    <a asp-action="MyMenus" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>İptal
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-check me-2"></i>Menü Oluştur
+                    </button>
                 </div>
             </form>
         </div>
@@ -124,13 +130,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Select Company</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Şirket Seç</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="companySearchInput" placeholder="Search by name or slug...">
-                    <button class="btn btn-primary" type="button" id="searchCompanyBtn">Search</button>
+                    <input type="text" class="form-control" id="companySearchInput" placeholder="Ad veya slug ile ara...">
+                    <button class="btn btn-primary" type="button" id="searchCompanyBtn">Ara</button>
                 </div>
                 <div id="companyList" style="max-height: 400px; overflow-y: auto;">
                     <!-- Results will be loaded here -->

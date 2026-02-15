@@ -1,0 +1,384 @@
+@{
+    ViewData["Title"] = "UI Test Playground";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="horizon-card">
+            <h4 class="fw-bold mb-1"><i class="fas fa-flask me-2 text-primary"></i>UI Test Playground</h4>
+            <p class="text-secondary small mb-0">Bileşenleri ve efektleri test etmek için kullanın.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 1: Skeleton / Shimmer Loading
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-1">🦴 Skeleton Loading</h5>
+                    <p class="text-secondary small mb-0">Sayfa yüklenirken gösterilen shimmer efekti</p>
+                </div>
+                <button class="btn btn-primary btn-sm" id="toggleSkeleton">
+                    <i class="fas fa-play me-1"></i> Göster / Gizle
+                </button>
+            </div>
+            <div id="skeletonDemo" class="p-3 rounded" style="background: var(--horizon-bg); border-radius: 16px;">
+                <!-- Stat Cards Skeleton -->
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="skeleton-card">
+                            <div class="skeleton-line" style="width:45%;height:14px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:65%;height:28px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:30%;height:12px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="skeleton-card">
+                            <div class="skeleton-line" style="width:55%;height:14px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:50%;height:28px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:35%;height:12px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 d-none d-md-block">
+                        <div class="skeleton-card">
+                            <div class="skeleton-line" style="width:40%;height:14px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:60%;height:28px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:25%;height:12px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 d-none d-md-block">
+                        <div class="skeleton-card">
+                            <div class="skeleton-line" style="width:50%;height:14px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:45%;height:28px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:40%;height:12px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Table Skeleton -->
+                <div class="skeleton-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="skeleton-line" style="width:160px;height:20px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:240px;height:12px;"></div>
+                        </div>
+                        <div class="skeleton-line" style="width:100px;height:36px;border-radius:16px;"></div>
+                    </div>
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div class="d-flex align-items-center py-3" style="border-top:1px solid rgba(163,174,208,0.1);">
+                            <div class="skeleton-line skeleton-circle" style="width:40px;height:40px;flex-shrink:0;margin-right:14px;"></div>
+                            <div style="flex:1;">
+                                <div class="skeleton-line" style="width:@(35 + i * 10)%;height:14px;margin-bottom:6px;"></div>
+                                <div class="skeleton-line" style="width:@(20 + i * 8)%;height:11px;"></div>
+                            </div>
+                            <div class="skeleton-line d-none d-md-block" style="width:70px;height:14px;margin-left:16px;"></div>
+                            <div class="skeleton-line" style="width:30px;height:30px;border-radius:8px;margin-left:16px;"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 2: Buttons & Badges
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">🎨 Butonlar</h5>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-primary btn-sm">Primary SM</button>
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-primary btn-lg">Primary LG</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-outline-secondary">Secondary</button>
+                <button class="btn btn-success">Success</button>
+                <button class="btn btn-danger">Danger</button>
+                <button class="btn btn-warning">Warning</button>
+                <button class="btn btn-info">Info</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-primary" disabled>Disabled</button>
+                <button class="btn btn-light"><i class="fas fa-edit me-1"></i> İkonlu</button>
+                <button class="btn btn-primary"><i class="fas fa-plus me-1"></i> Ekle</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">🏷️ Rozetler & Etiketler</h5>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-primary">Primary</span>
+                <span class="badge bg-success">Aktif</span>
+                <span class="badge bg-danger">Pasif</span>
+                <span class="badge bg-warning text-dark">Beklemede</span>
+                <span class="badge bg-info">Bilgi</span>
+                <span class="badge bg-secondary">Varsayılan</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-primary bg-opacity-10 text-primary">Soluk Primary</span>
+                <span class="badge bg-success bg-opacity-10 text-success">Soluk Aktif</span>
+                <span class="badge bg-danger bg-opacity-10 text-danger">Soluk Hata</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-light text-dark fw-normal"><i class="fas fa-user me-1"></i> Admin</span>
+                <span class="badge bg-light text-dark fw-normal"><i class="fas fa-store me-1"></i> Owner</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 3: Cards
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-6 col-md-3">
+        <div class="horizon-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-chart-line fa-2x text-primary me-3"></i>
+                <h5 class="mb-0 text-secondary">İstatistik</h5>
+            </div>
+            <h3 class="fw-bold">1,234</h3>
+            <span class="text-success small"><i class="fas fa-arrow-up"></i> +12.5%</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="horizon-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-users fa-2x text-primary me-3"></i>
+                <h5 class="mb-0 text-secondary">Kullanıcılar</h5>
+            </div>
+            <h3 class="fw-bold">567</h3>
+            <span class="text-danger small"><i class="fas fa-arrow-down"></i> -3.2%</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="horizon-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-shopping-cart fa-2x text-primary me-3"></i>
+                <h5 class="mb-0 text-secondary">Siparişler</h5>
+            </div>
+            <h3 class="fw-bold">89</h3>
+            <span class="text-success small"><i class="fas fa-arrow-up"></i> +7.8%</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="horizon-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-dollar-sign fa-2x text-primary me-3"></i>
+                <h5 class="mb-0 text-secondary">Gelir</h5>
+            </div>
+            <h3 class="fw-bold">₺45.2K</h3>
+            <span class="text-success small"><i class="fas fa-arrow-up"></i> +15.1%</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 4: Forms
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">📝 Form Elemanları</h5>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Text Input</label>
+                <input type="text" class="form-control" placeholder="Yazı yazın...">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Select</label>
+                <select class="form-control">
+                    <option>Seçenek 1</option>
+                    <option>Seçenek 2</option>
+                    <option>Seçenek 3</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Textarea</label>
+                <textarea class="form-control" rows="3" placeholder="Uzun metin..."></textarea>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline-secondary">İptal</button>
+                <button class="btn btn-primary"><i class="fas fa-check me-1"></i> Kaydet</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">📊 Tablo Örneği</h5>
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle table-hover">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase border-bottom">
+                            <th class="ps-3">Ad</th>
+                            <th>Durum</th>
+                            <th class="text-end pe-3">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="horizon-avatar bg-light text-primary me-3">A</div>
+                                    <span class="fw-bold text-dark">Ahmet Yılmaz</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success">Aktif</span></td>
+                            <td class="text-end pe-3">
+                                <button class="btn btn-sm btn-light text-success"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="horizon-avatar bg-light text-primary me-3">M</div>
+                                    <span class="fw-bold text-dark">Mehmet Demir</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-warning bg-opacity-10 text-warning">Beklemede</span></td>
+                            <td class="text-end pe-3">
+                                <button class="btn btn-sm btn-light text-success"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="horizon-avatar bg-light text-primary me-3">Z</div>
+                                    <span class="fw-bold text-dark">Zeynep Kara</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-danger bg-opacity-10 text-danger">Pasif</span></td>
+                            <td class="text-end pe-3">
+                                <button class="btn btn-sm btn-light text-success"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-light text-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 5: Loading States
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="horizon-card text-center py-5">
+            <h5 class="fw-bold mb-3">⏳ Spinner</h5>
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="text-secondary small mt-3">Bootstrap Spinner</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="horizon-card text-center py-5">
+            <h5 class="fw-bold mb-3">🔄 Grow Spinner</h5>
+            <div class="spinner-grow text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+            <p class="text-secondary small mt-3">Bootstrap Grow</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="horizon-card text-center py-5">
+            <h5 class="fw-bold mb-3">💀 Skeleton Satır</h5>
+            <div class="px-3">
+                <div class="skeleton-line" style="width:80%;height:16px;margin:0 auto 10px;"></div>
+                <div class="skeleton-line" style="width:60%;height:14px;margin:0 auto 10px;"></div>
+                <div class="skeleton-line" style="width:90%;height:12px;margin:0 auto;"></div>
+            </div>
+            <p class="text-secondary small mt-3">Shimmer Lines</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 6: Empty States
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="horizon-card text-center py-5">
+            <div class="mb-3">
+                <span class="fa-stack fa-3x">
+                    <i class="fas fa-circle fa-stack-2x text-light"></i>
+                    <i class="fas fa-inbox fa-stack-1x text-secondary opacity-50"></i>
+                </span>
+            </div>
+            <h5 class="text-secondary">Veri bulunamadı</h5>
+            <p class="text-secondary small">Bu alanda henüz bir kayıt bulunmuyor.</p>
+            <button class="btn btn-primary mt-2"><i class="fas fa-plus me-2"></i>Yeni Ekle</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="horizon-card text-center py-5">
+            <div class="mb-3">
+                <span class="fa-stack fa-3x">
+                    <i class="fas fa-circle fa-stack-2x text-light"></i>
+                    <i class="fas fa-search fa-stack-1x text-secondary opacity-50"></i>
+                </span>
+            </div>
+            <h5 class="text-secondary">Sonuç bulunamadı</h5>
+            <p class="text-secondary small">Arama kriterlerinize uygun sonuç yok.</p>
+            <button class="btn btn-outline-secondary mt-2"><i class="fas fa-redo me-2"></i>Filtreleri Temizle</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SECTION 7: Alerts & Toasts
+     ========================================== -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">🔔 Bildirimler & SweetAlert</h5>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="btn btn-success btn-sm" onclick="TumMenuAlerts.popup('success', 'Başarılı!', 'İşlem tamamlandı.')">
+                    <i class="fas fa-check me-1"></i> Başarı
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="TumMenuAlerts.popup('error', 'Hata!', 'Bir şeyler yanlış gitti.')">
+                    <i class="fas fa-times me-1"></i> Hata
+                </button>
+                <button class="btn btn-warning btn-sm" onclick="TumMenuAlerts.confirm('Emin misiniz?', 'Bu işlem geri alınamaz!').then(res => { if(res) TumMenuAlerts.toast('success', 'Silindi!'); })">
+                    <i class="fas fa-exclamation-triangle me-1"></i> Onay
+                </button>
+                <button class="btn btn-info btn-sm" onclick="TumMenuAlerts.toast('info', 'Bilgi toast mesajı')">
+                    <i class="fas fa-info-circle me-1"></i> Toast
+                </button>
+            </div>
+            <div class="alert alert-primary d-flex align-items-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <div>Bu bir <strong>bilgi</strong> uyarısıdır.</div>
+            </div>
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <div>İşlem <strong>başarılı</strong> bir şekilde tamamlandı.</div>
+            </div>
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <div>Bir <strong>hata</strong> meydana geldi.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#toggleSkeleton').on('click', function() {
+                $('#skeletonDemo').slideToggle(300);
+            });
+        });
+    </script>
+}

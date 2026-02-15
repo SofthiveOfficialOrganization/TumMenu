@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Horizon UI Admin</title>
+    <title>@ViewData["Title"] - TumMenu Admin</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,10 +13,20 @@
     
     <!-- Core CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/admin-horizon.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-tummenu.css" asp-append-version="true" />
+    <script>
+        // Apply dark mode BEFORE render to prevent white flash
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+    <link rel="stylesheet" href="~/css/skeleton.css" asp-append-version="true" />
 </head>
 <body class="horizon-admin">
     <div class="horizon-layout">
+        <!-- Sidebar Overlay -->
+        <div class="horizon-sidebar-overlay" id="sidebarOverlay"></div>
+        
         <!-- Sidebar -->
         <aside class="horizon-sidebar">
             <div class="horizon-logo">
@@ -27,14 +37,14 @@
                 <li class="horizon-menu-item">
                     <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
                         <div class="horizon-menu-icon"><i class="fas fa-home"></i></div>
-                        <span>Dashboard</span>
+                        <span>Panel</span>
                     </a>
                 </li>
 
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="horizon-menu-item">
-                        <a href="@Url.Action("Index", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                        <a href="@Url.Action("AllCompanies", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Company" && ViewContext.RouteData.Values["Action"]?.ToString() == "AllCompanies" ? "active" : "")">
                             <div class="horizon-menu-icon"><i class="fas fa-building"></i></div>
                             <span>Tüm Şirketler</span>
                         </a>
@@ -54,9 +64,9 @@
                 @if (User.IsInRole("Owner"))
                 {
                     <li class="horizon-menu-item">
-                        <a href="@Url.Action("MyCompanies", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MyCompanies" ? "active" : "")">
-                            <div class="horizon-menu-icon"><i class="fas fa-store"></i></div>
-                            <span>Şirketlerim</span>
+                        <a href="@Url.Action("MyCompany", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Company" && ViewContext.RouteData.Values["Action"]?.ToString() == "Details" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-building"></i></div>
+                            <span>Şirketim</span>
                         </a>
                     </li>
                 }
@@ -112,6 +122,16 @@
                     </li>
                 }
 
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Playground", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Playground" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-flask"></i></div>
+                            <span>UI Test</span>
+                        </a>
+                    </li>
+                }
+
                 <li class="horizon-menu-item">
                     <a asp-area="Identity" asp-page="/Account/Manage/Index" class="horizon-menu-link @(ViewContext.RouteData.Values["Area"]?.ToString() == "Identity" && ViewContext.RouteData.Values["Page"]?.ToString()?.StartsWith("/Account/Manage") == true ? "active" : "")">
                         <div class="horizon-menu-icon"><i class="fas fa-user"></i></div>
@@ -133,9 +153,14 @@
         <div class="horizon-main">
             <!-- Navbar -->
             <nav class="horizon-navbar">
-                <div class="horizon-breadcrumb">
-                    <a href="#">Pages</a> / <span class="current-path">@ViewData["Title"]</span>
+                <div class="d-flex align-items-center">
+                    <button class="horizon-hamburger" id="sidebarToggle" aria-label="Menüyü aç">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="horizon-breadcrumb">
+                        <a href="#">Sayfalar</a> / <span class="current-path">@ViewData["Title"]</span>
                     <div class="current-page">@ViewData["Title"]</div>
+                    </div>
                 </div>
                 
 @using Microsoft.AspNetCore.Identity
@@ -145,7 +170,7 @@
 @* ... existing code for Head ... *@
 
                 <div class="horizon-navbar-actions">
-                    <input type="text" class="horizon-search" placeholder="Search...">
+                    <input type="text" class="horizon-search" placeholder="Ara...">
                     
                     <i class="far fa-bell horizon-navbar-icon"></i>
                     <i class="far fa-moon horizon-navbar-icon" id="theme-toggle"></i>
@@ -169,20 +194,86 @@
                 </div>
             </nav>
 
+            <!-- Skeleton Loading Screen -->
+            <div class="skeleton-screen" id="skeletonScreen">
+                <div class="skeleton-wrapper">
+                    <!-- Skeleton: Stat Cards Row -->
+                    <div class="row mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="skeleton-card">
+                                <div class="skeleton-line" style="width:40%;height:14px;margin-bottom:12px;"></div>
+                                <div class="skeleton-line" style="width:60%;height:28px;margin-bottom:8px;"></div>
+                                <div class="skeleton-line" style="width:30%;height:12px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="skeleton-card">
+                                <div class="skeleton-line" style="width:50%;height:14px;margin-bottom:12px;"></div>
+                                <div class="skeleton-line" style="width:55%;height:28px;margin-bottom:8px;"></div>
+                                <div class="skeleton-line" style="width:25%;height:12px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 d-none d-md-block">
+                            <div class="skeleton-card">
+                                <div class="skeleton-line" style="width:45%;height:14px;margin-bottom:12px;"></div>
+                                <div class="skeleton-line" style="width:50%;height:28px;margin-bottom:8px;"></div>
+                                <div class="skeleton-line" style="width:35%;height:12px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 d-none d-md-block">
+                            <div class="skeleton-card">
+                                <div class="skeleton-line" style="width:55%;height:14px;margin-bottom:12px;"></div>
+                                <div class="skeleton-line" style="width:45%;height:28px;margin-bottom:8px;"></div>
+                                <div class="skeleton-line" style="width:40%;height:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skeleton: Main Card with Table -->
+                    <div class="skeleton-card">
+                        <!-- Card header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <div class="skeleton-line" style="width:180px;height:22px;margin-bottom:8px;"></div>
+                                <div class="skeleton-line" style="width:260px;height:13px;"></div>
+                            </div>
+                            <div class="skeleton-line" style="width:120px;height:38px;border-radius:16px;"></div>
+                        </div>
+
+                        <!-- Table rows -->
+                        <div style="border-top:1px solid rgba(163,174,208,0.15);padding-top:16px;">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <div class="d-flex align-items-center py-3" style="border-bottom:1px solid rgba(163,174,208,0.08);">
+                                    <div class="skeleton-line skeleton-circle" style="width:40px;height:40px;flex-shrink:0;margin-right:14px;"></div>
+                                    <div style="flex:1;">
+                                        <div class="skeleton-line" style="width:@(40 + i * 8)%;height:14px;margin-bottom:6px;"></div>
+                                        <div class="skeleton-line" style="width:@(25 + i * 5)%;height:11px;"></div>
+                                    </div>
+                                    <div class="skeleton-line d-none d-md-block" style="width:80px;height:14px;margin-left:20px;"></div>
+                                    <div class="skeleton-line d-none d-md-block" style="width:60px;height:14px;margin-left:20px;"></div>
+                                    <div class="skeleton-line" style="width:32px;height:32px;border-radius:8px;margin-left:20px;"></div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Content Body -->
-            <div class="horizon-content">
+            <div class="horizon-content" id="realContent">
                 @RenderBody()
             </div>
 
             <!-- Footer -->
             <footer class="horizon-footer">
                 <div>
-                    &copy; @DateTime.Now.Year Horizon UI. All Rights Reserved.
+                    &copy; @DateTime.Now.Year TumMenu. Tüm Hakları Saklıdır.
                 </div>
                 <div>
-                    <a href="#">Support</a>
-                    <a href="#">License</a>
-                    <a href="#">Terms of Use</a>
+                    <a href="#">Destek</a>
+                    <a href="#">Lisans</a>
+                    <a href="#">Kullanım Şartları</a>
                     <a href="#">Blog</a>
                 </div>
             </footer>
@@ -194,38 +285,43 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     
+    <!-- Skeleton → Content Swap -->
+    <script>
+        (function() {
+            function showContent() {
+                var skeleton = document.getElementById('skeletonScreen');
+                var content = document.getElementById('realContent');
+                if (skeleton && content) {
+                    skeleton.classList.add('skeleton-hidden');
+                    content.classList.add('content-loaded');
+                }
+            }
+            // Show content when page fully loads (fonts, images, etc.)
+            if (document.readyState === 'complete') {
+                showContent();
+            } else {
+                window.addEventListener('load', showContent);
+            }
+            // Safety timeout: max 3 seconds of skeleton
+            setTimeout(showContent, 3000);
+        })();
+    </script>
+    
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/tummenu-alerts.js" asp-append-version="true"></script>
     
     <script>
         $(document).ready(function() {
             var successMessage = @Json.Serialize(TempData["Success"]);
             var errorMessage = @Json.Serialize(TempData["Error"]);
 
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
             if (successMessage) {
-                Toast.fire({
-                    icon: 'success',
-                    title: successMessage
-                });
+                TumMenuAlerts.toast('success', successMessage);
             }
 
             if (errorMessage) {
-                Toast.fire({
-                    icon: 'error',
-                    title: errorMessage
-                });
+                TumMenuAlerts.toast('error', errorMessage);
             }
         });
     </script>
@@ -251,11 +347,57 @@
 
     <script>
         $(document).ready(function() {
+            const sidebar = $('.horizon-sidebar');
+            const overlay = $('#sidebarOverlay');
+            const toggleBtn = $('#sidebarToggle');
+
+            function openSidebar() {
+                sidebar.addClass('sidebar-open');
+                overlay.addClass('active');
+                $('body').css('overflow', 'hidden');
+            }
+
+            function closeSidebar() {
+                sidebar.removeClass('sidebar-open');
+                overlay.removeClass('active');
+                $('body').css('overflow', '');
+            }
+
+            toggleBtn.on('click', function() {
+                if (sidebar.hasClass('sidebar-open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay.on('click', function() {
+                closeSidebar();
+            });
+
+            // Close sidebar when a menu link is clicked (mobile)
+            $('.horizon-menu-link, .horizon-submenu-link').on('click', function() {
+                if ($(window).width() <= 1200) {
+                    closeSidebar();
+                }
+            });
+
+            // Close on window resize if going above breakpoint
+            $(window).on('resize', function() {
+                if ($(window).width() > 1200) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
             const themeToggle = $('#theme-toggle');
             const body = $('body');
             const theme = localStorage.getItem('theme');
 
-            // Apply saved theme on load
+            // Sync icon state with saved theme (class already applied in <head>)
             if (theme === 'dark') {
                 body.addClass('dark-mode');
                 themeToggle.removeClass('fa-moon').addClass('fa-sun');
@@ -264,6 +406,7 @@
             // Toggle theme on click
             themeToggle.on('click', function() {
                 body.toggleClass('dark-mode');
+                $('html').toggleClass('dark-mode');
                 
                 if (body.hasClass('dark-mode')) {
                     localStorage.setItem('theme', 'dark');

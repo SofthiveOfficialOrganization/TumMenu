@@ -1,0 +1,92 @@
+/* ======================================
+   SKELETON / SHIMMER LOADING
+   ====================================== */
+
+/* Skeleton base */
+.skeleton-wrapper {
+    padding: 0;
+}
+
+.skeleton-line {
+    background: var(--horizon-bg, #F4F7FE);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.4) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+/* Dark mode skeleton */
+html.dark-mode .skeleton-line,
+body.dark-mode .skeleton-line {
+    background: rgba(163, 174, 208, 0.08);
+}
+
+html.dark-mode .skeleton-line::after,
+body.dark-mode .skeleton-line::after {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.06) 50%,
+        transparent 100%
+    );
+}
+
+/* Skeleton shapes */
+.skeleton-circle {
+    border-radius: 50%;
+}
+
+.skeleton-card {
+    background: var(--horizon-card-bg, #FFFFFF);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 50px 0 rgba(112,144,176,0.08);
+    margin-bottom: 20px;
+}
+
+html.dark-mode .skeleton-card,
+body.dark-mode .skeleton-card {
+    background: var(--horizon-card-bg, #111C44);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Content visibility toggle */
+.horizon-content {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.horizon-content.content-loaded {
+    opacity: 1;
+}
+
+/* Skeleton screen visibility */
+.skeleton-screen {
+    transition: opacity 0.3s ease;
+}
+
+.skeleton-screen.skeleton-hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}

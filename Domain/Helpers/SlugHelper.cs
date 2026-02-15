@@ -33,6 +33,7 @@ namespace Domain.Helpers
             }
             var slug = sb.ToString().Trim('-');
             while(slug.Contains("--")) slug = slug.Replace("--", "-");
+            if(slug.Length > 30) slug = slug[..30].TrimEnd('-');
             return slug;
         }
     }

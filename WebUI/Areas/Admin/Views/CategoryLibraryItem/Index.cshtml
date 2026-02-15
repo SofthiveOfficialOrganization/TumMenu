@@ -1,82 +1,126 @@
 @using Application.Categories.DTOs
-@using Application.Categories.DTOs
 @using Application.Common.Base.Page
 @model IPaginate<CategoryLibraryItemDTO>
 
 @{
-    ViewData["Title"] = "Category Library";
+    ViewData["Title"] = "Kategori Kütüphanesi";
 }
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <h2 class="fw-bold">Category Library</h2>
-        <p class="text-secondary">Manage your central category definitions.</p>
-    </div>
-    <div class="col-md-6 text-end">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fa-solid fa-plus me-2"></i>New Category
-        </a>
-    </div>
-</div>
-
-<div class="horizon-card p-0 overflow-hidden">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="bg-light">
-                <tr>
-                    <th class="ps-4">Title</th>
-                    <th>Slug</th>
-                    <th>Description</th>
-                    <th class="text-end pe-4">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Items)
-                {
-                    <tr>
-                        <td class="ps-4">
-                            <div class="fw-bold">@item.Title</div>
-                            @if(!string.IsNullOrEmpty(item.IconKey))
+<div class="row">
+    <div class="col-md-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Kategori Kütüphanesi</h4>
+                    <p class="text-secondary small mb-0">Merkezi kategori tanımlamalarını yönetin.</p>
+                </div>
+                <div>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i> Yeni Kategori
+                    </a>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle table-hover">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase border-bottom">
+                            <th class="ps-3">Başlık</th>
+                            <th>Slug</th>
+                            <th>Açıklama</th>
+                            <th class="text-end pe-3">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Items.Any())
+                        {
+                            foreach (var item in Model.Items)
                             {
-                                <div class="small text-muted"><i class="@item.IconKey me-1"></i> @item.IconKey</div>
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="horizon-avatar bg-light text-primary me-3">
+                                                @if(!string.IsNullOrEmpty(item.IconKey))
+                                                {
+                                                     <i class="@item.IconKey"></i>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.Title.Substring(0, 1).ToUpper()</span>
+                                                }
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">@item.Title</div>
+                                                @if(!string.IsNullOrEmpty(item.IconKey))
+                                                {
+                                                    <small class="text-muted">@item.IconKey</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@item.Slug</td>
+                                    <td class="text-secondary">
+                                        <span class="d-inline-block text-truncate" style="max-width: 300px;" title="@item.Description">
+                                            @item.Description
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="btn-group">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success" title="Düzenle">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?');">
+                                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                        </td>
-                        <td>@item.Slug</td>
-                        <td class="text-truncate" style="max-width: 300px;">@item.Description</td>
-                        <td class="text-end pe-4">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-1">
-                                <i class="fa-solid fa-pen"></i>
-                            </a>
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Add Pagination Here if needed -->
-    @if (Model.Pages > 1)
-    {
-        <div class="p-3 border-top">
-            <!-- Pagination Partial or Code -->
-            <nav>
-                <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                        <a class="page-link" asp-route-Page="@(Model.Index - 1)">Previous</a>
-                    </li>
-                    <li class="page-item disabled">
-                        <span class="page-link">@(Model.Index + 1) / @Model.Pages</span>
-                    </li>
-                    <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                        <a class="page-link" asp-route-Page="@(Model.Index + 1)">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                        }
+                        else
+                        {
+                             <tr>
+                                <td colspan="4" class="text-center py-5 text-secondary">
+                                    <div class="mb-3">
+                                        <span class="fa-stack fa-2x">
+                                            <i class="fas fa-circle fa-stack-2x text-light"></i>
+                                            <i class="fas fa-layer-group fa-stack-1x text-secondary opacity-50"></i>
+                                        </span>
+                                    </div>
+                                    <h5>Kategori bulunamadı</h5>
+                                    <p class="small">Henüz bir kategori oluşturulmamış.</p>
+                                    <a asp-action="Create" class="btn btn-primary mt-2">Kategori Oluştur</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            @if (Model != null && Model.Pages > 1)
+            {
+                <div class="d-flex justify-content-center mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index" asp-route-Page="@(Model.Index - 1)">Önceki</a>
+                            </li>
+                             @for (int i = 0; i < Model.Pages; i++)
+                            {
+                                <li class="page-item @(Model.Index == i ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" asp-route-Page="@i">@(i + 1)</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index" asp-route-Page="@(Model.Index + 1)">Sonraki</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
         </div>
-    }
+    </div>
 </div>

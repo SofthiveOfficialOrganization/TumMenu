@@ -68,7 +68,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Yeni e-posta")]
             public string NewEmail { get; set; }
         }
 
@@ -90,7 +90,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             await LoadAsync(user);
@@ -102,7 +102,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             if(!ModelState.IsValid)
@@ -127,11 +127,11 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                     "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "E-posta değiştirme onay bağlantısı gönderildi. Lütfen e-postanızı kontrol edin.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "E-postanız değişmedi.";
             return RedirectToPage();
         }
 
@@ -140,7 +140,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             if(!ModelState.IsValid)
@@ -163,7 +163,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "Doğrulama e-postası gönderildi. Lütfen e-postanızı kontrol edin.";
             return RedirectToPage();
         }
     }

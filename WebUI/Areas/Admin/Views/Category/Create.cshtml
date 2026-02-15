@@ -2,7 +2,7 @@
 @model AddCategoryToMenuCommand
 
 @{
-    ViewData["Title"] = "Add Category to Menu";
+    ViewData["Title"] = "Menüye Kategori Ekle";
 }
 
 <div class="row justify-content-center">
@@ -10,11 +10,11 @@
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h5 class="fw-bold mb-1">Add Category to Menu</h5>
-                    <p class="text-secondary small mb-0">Select a category from the library to add to this menu.</p>
+                    <h5 class="fw-bold mb-1">Menüye Kategori Ekle</h5>
+                    <p class="text-secondary small mb-0">Bu menüye eklemek için kütüphaneden bir kategori seçin.</p>
                 </div>
                 <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-sm btn-light text-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Menu
+                    <i class="fas fa-arrow-left me-1"></i> Menüye Dön
                 </a>
             </div>
 
@@ -22,17 +22,17 @@
                 <input type="hidden" asp-for="MenuId" />
 
                 <div class="mb-3">
-                    <label asp-for="CategoryLibraryItemId" class="form-label text-secondary small text-uppercase fw-bold">Category Library Item</label>
+                    <label asp-for="CategoryLibraryItemId" class="form-label text-secondary small text-uppercase fw-bold">Kategori Kütüphanesi Öğesi</label>
                     <select asp-for="CategoryLibraryItemId" class="form-select form-select-lg" asp-items="ViewBag.CategoryLibraryItems">
-                        <option value="">-- Select Category --</option>
+                        <option value="">-- Kategori Seç --</option>
                     </select>
                     <span asp-validation-for="CategoryLibraryItemId" class="text-danger"></span>
-                    <div class="form-text">Choose a category template from the library.</div>
+                    <div class="form-text">Kütüphaneden bir kategori şablonu seçin.</div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label asp-for="SortOrder" class="form-label text-secondary small text-uppercase fw-bold">Sort Order</label>
+                        <label asp-for="SortOrder" class="form-label text-secondary small text-uppercase fw-bold">Sıralama</label>
                         <input asp-for="SortOrder" class="form-control" type="number" />
                         <span asp-validation-for="SortOrder" class="text-danger"></span>
                     </div>
@@ -40,15 +40,18 @@
                         <div class="form-check mt-4 pt-2">
                              <input class="form-check-input" type="checkbox" asp-for="IsActive">
                              <label class="form-check-label text-dark fw-bold" asp-for="IsActive">
-                                Active on Menu
+                                Menüde Aktif
                              </label>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-end border-top pt-3 mt-4">
+                <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>İptal
+                    </a>
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="fas fa-plus me-1"></i> Add Category
+                        <i class="fas fa-plus me-1"></i> Kategori Ekle
                     </button>
                 </div>
             </form>

@@ -21,7 +21,10 @@ public class DeleteCompanyCommandHandler(
 		var company = await repoCompany.GetByIdAsync(req.Id, ct);
 		if(company == null)
 			throw new NotFoundAppException("Şirket bulunamadı");
+
+		// Soft delete (DB index handles uniqueness for IsDeleted=0)
 		repoCompany.SoftDelete(company);
+		
 		return Unit.Value;
 	}
 }

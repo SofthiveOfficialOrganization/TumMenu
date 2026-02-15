@@ -2,7 +2,7 @@
 @model MenuDTO
 
 @{
-    ViewData["Title"] = "Menu Details";
+    ViewData["Title"] = "Menü Detayları";
 }
 
 <div class="row">
@@ -11,8 +11,8 @@
         <div class="horizon-card h-100">
             <div class="d-flex justify-content-between align-items-start mb-4">
                 <div>
-                    <h5 class="fw-bold mb-1">Menu Information</h5>
-                    <p class="text-secondary small">Basic details about the menu.</p>
+                    <h5 class="fw-bold mb-1">Menü Bilgileri</h5>
+                    <p class="text-secondary small">Menü hakkında temel bilgiler.</p>
                 </div>
                 <div class="horizon-avatar bg-light text-primary">
                     <i class="fas fa-clipboard-list"></i>
@@ -20,34 +20,34 @@
             </div>
 
             <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Name</label>
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">İsim</label>
                 <p class="fw-bold text-dark fs-5">@Model.Name</p>
             </div>
 
             <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Owner Context</label>
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Sahip Bağlamı</label>
                 @if(Model.CompanyId.HasValue)
                 {
-                     <p class="mb-0"><span class="badge bg-primary bg-opacity-10 text-primary">Company ID: @Model.CompanyId</span></p>
+                     <p class="mb-0"><span class="badge bg-primary bg-opacity-10 text-primary">Şirket ID: @Model.CompanyId</span></p>
                 }
                 else if(Model.StoreId.HasValue)
                 {
-                     <p class="mb-0"><span class="badge bg-info bg-opacity-10 text-info">Store ID: @Model.StoreId</span></p>
+                     <p class="mb-0"><span class="badge bg-info bg-opacity-10 text-info">Dükkan ID: @Model.StoreId</span></p>
                 }
                 else
                 {
-                    <p class="text-muted fst-italic">Unassigned</p>
+                    <p class="text-muted fst-italic">Atanmamış</p>
                 }
             </div>
             
             <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Template</label>
-                <p class="text-dark">@(Model.MenuTemplateId.HasValue ? Model.MenuTemplateId.ToString() : "Default Template")</p>
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Şablon</label>
+                <p class="text-dark">@(Model.MenuTemplateId.HasValue ? Model.MenuTemplateId.ToString() : "Varsayılan Şablon")</p>
             </div>
 
              <div class="pt-3 border-top mt-auto">
                  <div class="d-flex justify-content-between small text-secondary">
-                     <span>Created: @Model.CreatedAt?.ToString("d")</span>
+                     <span>Oluşturuldu: @Model.CreatedAt?.ToString("d")</span>
                  </div>
              </div>
         </div>
@@ -58,11 +58,11 @@
         <div class="horizon-card h-100">
              <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h5 class="fw-bold mb-1">Categories</h5>
-                    <p class="text-secondary small mb-0">Manage categories in this menu.</p>
+                    <h5 class="fw-bold mb-1">Kategoriler</h5>
+                    <p class="text-secondary small mb-0">Bu menüdeki kategorileri yönetin.</p>
                 </div>
                 <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" class="btn btn-sm btn-primary">
-                    <i class="fas fa-plus me-1"></i> Add Category
+                    <i class="fas fa-plus me-1"></i> Kategori Ekle
                 </a>
             </div>
             
@@ -70,10 +70,10 @@
                 <table class="table table-borderless align-middle table-hover">
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
-                            <th class="ps-3">Name</th>
-                            <th>Description</th>
-                            <th>Order</th>
-                            <th class="text-end pe-3">Actions</th>
+                            <th class="ps-3">İsim</th>
+                            <th>Açıklama</th>
+                            <th>Sıra</th>
+                            <th class="text-end pe-3">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,8 +98,8 @@
                                         <a asp-controller="CategoryLibraryItem" asp-action="Edit" asp-route-id="@category.CategoryLibraryItemId" class="btn btn-sm btn-light text-success">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this category?');">
-                                            <button type="submit" class="btn btn-sm btn-light text-danger">
+                                        <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" id="deleteCategory-@category.Id">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" onclick="TumMenuAlerts.confirm('Bu kategoriyi kaldırmak istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Kaldır!').then(res => { if(res) document.getElementById('deleteCategory-@category.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -112,7 +112,7 @@
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-secondary">
                                     <i class="fas fa-tags fa-2x mb-3 d-block opacity-50"></i>
-                                    No categories yet.
+                                    Henüz kategori yok.
                                 </td>
                             </tr>
                         }

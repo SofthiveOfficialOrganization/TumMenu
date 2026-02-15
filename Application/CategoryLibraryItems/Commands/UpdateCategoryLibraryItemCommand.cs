@@ -19,6 +19,7 @@ public class UpdateCategoryLibraryItemCommand : IRequest<CategoryLibraryItemDTO>
 	public string Title { get; set; } = string.Empty;
 	public string? Description { get; set; }
 	public string? Slug { get; set; }
+	public string? IconKey { get; set; }
 }
 
 public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryLibraryItemCommand>

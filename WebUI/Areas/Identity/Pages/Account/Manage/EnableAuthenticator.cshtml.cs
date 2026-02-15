@@ -77,7 +77,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             [Required]
             [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Text)]
-            [Display(Name = "Verification Code")]
+            [Display(Name = "Doğrulama Kodu")]
             public string Code { get; set; }
         }
 
@@ -86,7 +86,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             await LoadSharedKeyAndQrCodeUriAsync(user);
@@ -99,7 +99,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             if(!ModelState.IsValid)
@@ -125,7 +125,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-            StatusMessage = "Your authenticator app has been verified.";
+            StatusMessage = "Doğrulayıcı uygulamanız doğrulandı.";
 
             if(await _userManager.CountRecoveryCodesAsync(user) == 0)
             {

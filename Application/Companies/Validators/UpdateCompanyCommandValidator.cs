@@ -13,6 +13,6 @@ public class UpdateCompanyCommandValidator : AbstractValidator<UpdateCompanyComm
 
 		RuleFor(x => x.Slug)
 			.NotEmpty().WithMessage("Slug boş olamaz.")
-			.MaximumLength(200).WithMessage("Slug en fazla 200 karakter olabilir.");
+			.MaximumLength(30).WithMessage("Slug en fazla 30 karakter olabilir.");
 	}
 }

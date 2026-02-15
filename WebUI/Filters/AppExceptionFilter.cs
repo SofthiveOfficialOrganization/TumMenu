@@ -214,10 +214,15 @@ public sealed class AppExceptionFilter(
 		}
 		if(ex is AlreadyExistsAppException aex)
 		{
+			var aexTempData = GetTempData(httpContext);
+			aexTempData["Error"] = aex.Message;
 
-			context.ModelState.AddModelError(string.Empty, aex.Message);
+			var referer = httpContext.Request.Headers["Referer"].ToString();
+			if(!string.IsNullOrEmpty(referer))
+				context.Result = new RedirectResult(referer);
+			else
+				context.Result = new RedirectResult("/admin/Dashboard");
 
-			context.Result = CreateCurrentActionViewResult(context);
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;
 		}
@@ -236,6 +241,22 @@ public sealed class AppExceptionFilter(
 				ViewName = "NotFound",
 				ViewData = viewData
 			};
+
+			context.ExceptionHandled = true;
+			return Task.CompletedTask;
+		}
+
+		if(ex is DbUpdateException dbUpdateEx)
+		{
+			var (dbCode, dbMsg) = Infrastructure.Persistence.DbErrorTranslator.Translate(dbUpdateEx);
+			var dbTempData = GetTempData(httpContext);
+			dbTempData["Error"] = dbMsg;
+
+			var dbReferer = httpContext.Request.Headers["Referer"].ToString();
+			if(!string.IsNullOrEmpty(dbReferer))
+				context.Result = new RedirectResult(dbReferer);
+			else
+				context.Result = new RedirectResult("/admin/Dashboard");
 
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;

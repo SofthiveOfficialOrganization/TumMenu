@@ -1,0 +1,1218 @@
+:root {
+    --horizon-bg: #F4F7FE;
+    --horizon-card-bg: #FFFFFF;
+    --horizon-text-primary: #2B3674;
+    --horizon-text-secondary: #A3AED0;
+    --horizon-primary: #4318FF;
+    --horizon-primary-hover: #3311CC;
+    --horizon-border-radius: 20px;
+    --horizon-sidebar-width: 290px;
+    --sidebar-transition: all 0.3s ease;
+}
+
+html.dark-mode,
+body.dark-mode {
+    --horizon-bg: #0B1437;
+    --horizon-card-bg: #111C44;
+    --horizon-text-primary: #FFFFFF;
+    --horizon-text-secondary: #A3AED0;
+    --horizon-primary: #7551FF;
+    --horizon-primary-hover: #5E3DFF;
+}
+
+body.horizon-admin {
+    background-color: var(--horizon-bg);
+    color: var(--horizon-text-primary);
+    font-family: 'DM Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    padding: 0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Layout Grid */
+.horizon-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.horizon-sidebar {
+    width: var(--horizon-sidebar-width);
+    background-color: var(--horizon-card-bg);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: var(--sidebar-transition);
+}
+
+.horizon-logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--horizon-text-primary);
+    margin-bottom: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.horizon-logo span {
+    font-weight: 400;
+}
+
+.horizon-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.horizon-menu-item {
+    margin-bottom: 10px;
+}
+
+.horizon-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.horizon-menu-link:hover,
+.horizon-menu-link.active {
+    color: var(--horizon-text-primary);
+    font-weight: 700;
+}
+
+.horizon-menu-link.active::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 36px;
+    background-color: var(--horizon-primary);
+    border-radius: 4px; /* Optional: rounds the indicator */
+}
+
+.horizon-menu-icon {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.horizon-menu-icon i {
+    font-size: 18px; /* Slightly smaller for filled icons */
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.horizon-menu-icon svg {
+    width: 22px; /* Slightly larger for line icons */
+    height: 22px;
+    stroke-width: 2.2px; /* Thicker lines to match weight */
+}
+
+
+.horizon-menu-link.active .horizon-menu-icon {
+    color: var(--horizon-primary);
+}
+
+/* Submenu Styles */
+.horizon-menu-parent {
+    position: relative;
+}
+
+.horizon-menu-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.horizon-menu-parent.open .horizon-menu-arrow {
+    transform: rotate(180deg);
+}
+
+.horizon-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.horizon-submenu.open {
+    max-height: 200px;
+}
+
+.horizon-submenu-item {
+    margin: 0;
+}
+
+.horizon-submenu-link {
+    display: block;
+    padding: 10px 16px 10px 52px;
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.horizon-submenu-link:hover,
+.horizon-submenu-link.active {
+    color: var(--horizon-text-primary);
+    background-color: rgba(67, 24, 255, 0.05);
+    font-weight: 600;
+}
+
+html.dark-mode .horizon-submenu-link.active,
+body.dark-mode .horizon-submenu-link.active {
+    background-color: rgba(117, 81, 255, 0.1);
+}
+
+/* Main Content */
+.horizon-main {
+    flex-grow: 1;
+    margin-left: var(--horizon-sidebar-width);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex items from overflowing horizontally */
+    transition: var(--sidebar-transition);
+}
+
+/* Navbar */
+.horizon-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+    position: sticky;
+    top: 20px;
+    z-index: 900;
+}
+
+html.dark-mode .horizon-navbar,
+body.dark-mode .horizon-navbar {
+    background-color: rgba(17, 28, 68, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.horizon-breadcrumb {
+    font-size: 14px;
+    color: var(--horizon-text-secondary);
+}
+
+.horizon-breadcrumb a {
+    text-decoration: none;
+    color: var(--horizon-text-secondary);
+}
+
+.horizon-breadcrumb .current-page {
+    display: block;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--horizon-text-primary);
+    margin-top: 5px;
+    line-height: 1.2;
+}
+
+.horizon-navbar-actions {
+    background-color: var(--horizon-card-bg);
+    padding: 10px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 14px 17px 40px 4px rgba(112, 144, 176, 0.08);
+}
+
+.horizon-search {
+    background-color: var(--horizon-bg);
+    border: none;
+    border-radius: 49px;
+    padding: 10px 20px;
+    color: var(--horizon-text-primary);
+    outline: none;
+    margin-right: 15px;
+    font-family: inherit;
+}
+
+.horizon-navbar-icon {
+    color: var(--horizon-text-secondary);
+    font-size: 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.horizon-navbar-icon:hover {
+    color: var(--horizon-text-primary);
+}
+
+.horizon-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--horizon-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Content Area */
+.horizon-content {
+    flex-grow: 1;
+}
+
+/* Footer */
+.horizon-footer {
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--horizon-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.horizon-footer a {
+    color: var(--horizon-text-secondary);
+    text-decoration: none;
+    margin-left: 24px;
+}
+
+.horizon-footer a:hover {
+    color: var(--horizon-text-primary);
+}
+
+/* Utility / Cards */
+.horizon-card {
+    background-color: var(--horizon-card-bg);
+    border-radius: var(--horizon-border-radius);
+    padding: 20px;
+    box-shadow: 0px 20px 50px 0px rgba(112, 144, 176, 0.08); /* Soft shadow */
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 16px !important;
+    border: 1px solid #E0E5F2 !important;
+    min-height: 50px;
+}
+
+/* Fix input-group border-radius so children join properly */
+.input-group > .form-control {
+    border-radius: 0 !important;
+}
+.input-group > .form-control:last-child,
+.input-group > .form-control:only-child {
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+}
+.input-group > .form-control:first-child {
+    border-top-left-radius: 16px !important;
+    border-bottom-left-radius: 16px !important;
+}
+.input-group > .input-group-text:first-child {
+    border-top-left-radius: 16px !important;
+    border-bottom-left-radius: 16px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.input-group > .input-group-text:last-child {
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+.input-group-text {
+    border: 1px solid #E0E5F2 !important;
+    min-height: 50px;
+}
+
+html.dark-mode .form-control,
+body.dark-mode .form-control {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .form-control::placeholder,
+body.dark-mode .form-control::placeholder {
+    color: var(--horizon-text-secondary);
+    opacity: 0.6;
+}
+
+html.dark-mode .text-secondary,
+body.dark-mode .text-secondary {
+    color: var(--horizon-text-secondary) !important;
+}
+
+html.dark-mode .text-dark,
+body.dark-mode .text-dark {
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .bg-light,
+body.dark-mode .bg-light {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+}
+
+html.dark-mode .horizon-search,
+body.dark-mode .horizon-search {
+    background-color: rgba(17, 28, 68, 0.5);
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .horizon-search::placeholder,
+body.dark-mode .horizon-search::placeholder {
+    color: var(--horizon-text-secondary);
+    opacity: 0.6;
+}
+
+/* ======================================
+   COMPREHENSIVE DARK MODE OVERRIDES
+   ====================================== */
+
+/* Cards */
+html.dark-mode .card,
+body.dark-mode .card,
+html.dark-mode .horizon-card,
+body.dark-mode .horizon-card {
+    background-color: var(--horizon-card-bg) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .card-header,
+body.dark-mode .card-header {
+    background-color: rgba(17, 28, 68, 0.3) !important;
+    border-bottom-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .card-body,
+body.dark-mode .card-body {
+    background-color: transparent !important;
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .card-footer,
+body.dark-mode .card-footer {
+    background-color: rgba(17, 28, 68, 0.3) !important;
+    border-top-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .card-title,
+body.dark-mode .card-title {
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Form labels */
+html.dark-mode .form-label,
+body.dark-mode .form-label {
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .form-check-label,
+body.dark-mode .form-check-label {
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Form select */
+html.dark-mode .form-select,
+body.dark-mode .form-select {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Input readonly */
+html.dark-mode .form-control[readonly],
+body.dark-mode .form-control[readonly] {
+    background-color: rgba(17, 28, 68, 0.3) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Tables */
+html.dark-mode .table,
+body.dark-mode .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--horizon-text-primary);
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .table th,
+body.dark-mode .table th {
+    color: var(--horizon-text-secondary) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .table td,
+body.dark-mode .table td {
+    color: var(--horizon-text-primary) !important;
+    border-color: rgba(163, 174, 208, 0.08) !important;
+}
+
+html.dark-mode .table-hover > tbody > tr:hover,
+body.dark-mode .table-hover > tbody > tr:hover {
+    --bs-table-hover-bg: rgba(117, 81, 255, 0.06);
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .table-striped > tbody > tr:nth-of-type(odd),
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    --bs-table-striped-bg: rgba(17, 28, 68, 0.3);
+}
+
+/* Buttons */
+html.dark-mode .btn-outline-secondary,
+body.dark-mode .btn-outline-secondary {
+    color: var(--horizon-text-secondary) !important;
+    border-color: rgba(163, 174, 208, 0.3) !important;
+}
+
+html.dark-mode .btn-outline-secondary:hover,
+body.dark-mode .btn-outline-secondary:hover {
+    background-color: rgba(163, 174, 208, 0.1) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .btn-light,
+body.dark-mode .btn-light {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .btn-light:hover,
+body.dark-mode .btn-light:hover {
+    background-color: rgba(17, 28, 68, 0.7) !important;
+}
+
+html.dark-mode .btn-close,
+body.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Modals */
+html.dark-mode .modal-content,
+body.dark-mode .modal-content {
+    background-color: var(--horizon-card-bg) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .modal-header,
+body.dark-mode .modal-header {
+    border-bottom-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .modal-footer,
+body.dark-mode .modal-footer {
+    border-top-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .modal-title,
+body.dark-mode .modal-title {
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Dropdowns */
+html.dark-mode .dropdown-menu,
+body.dark-mode .dropdown-menu {
+    background-color: var(--horizon-card-bg) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .dropdown-item,
+body.dark-mode .dropdown-item {
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .dropdown-item:hover,
+html.dark-mode .dropdown-item:focus,
+body.dark-mode .dropdown-item:hover,
+body.dark-mode .dropdown-item:focus {
+    background-color: rgba(117, 81, 255, 0.08) !important;
+}
+
+html.dark-mode .dropdown-divider,
+body.dark-mode .dropdown-divider {
+    border-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+/* Pagination */
+html.dark-mode .page-link,
+body.dark-mode .page-link {
+    background-color: var(--horizon-card-bg) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .page-link:hover,
+body.dark-mode .page-link:hover {
+    background-color: rgba(117, 81, 255, 0.1) !important;
+}
+
+html.dark-mode .page-item.active .page-link,
+body.dark-mode .page-item.active .page-link {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    color: #fff !important;
+}
+
+html.dark-mode .page-item.disabled .page-link,
+body.dark-mode .page-item.disabled .page-link {
+    background-color: rgba(17, 28, 68, 0.3) !important;
+    color: var(--horizon-text-secondary) !important;
+}
+
+/* Alerts */
+html.dark-mode .alert-primary,
+body.dark-mode .alert-primary {
+    background-color: rgba(117, 81, 255, 0.15) !important;
+    border-color: rgba(117, 81, 255, 0.25) !important;
+    color: #c4b5fd !important;
+}
+
+html.dark-mode .alert-success,
+body.dark-mode .alert-success {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(16, 185, 129, 0.25) !important;
+    color: #6ee7b7 !important;
+}
+
+html.dark-mode .alert-danger,
+body.dark-mode .alert-danger {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.25) !important;
+    color: #fca5a5 !important;
+}
+
+html.dark-mode .alert-warning,
+body.dark-mode .alert-warning {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    border-color: rgba(245, 158, 11, 0.25) !important;
+    color: #fcd34d !important;
+}
+
+html.dark-mode .alert-info,
+body.dark-mode .alert-info {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.25) !important;
+    color: #93c5fd !important;
+}
+
+/* Text utilities */
+html.dark-mode .fw-bold,
+body.dark-mode .fw-bold {
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode h1, html.dark-mode h2, html.dark-mode h3,
+html.dark-mode h4, html.dark-mode h5, html.dark-mode h6,
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode p,
+body.dark-mode p {
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode label,
+body.dark-mode label {
+    color: var(--horizon-text-primary);
+}
+
+/* Borders */
+html.dark-mode .border,
+body.dark-mode .border {
+    border-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .border-bottom,
+body.dark-mode .border-bottom {
+    border-bottom-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+html.dark-mode .border-top,
+body.dark-mode .border-top {
+    border-top-color: rgba(163, 174, 208, 0.15) !important;
+}
+
+/* List groups */
+html.dark-mode .list-group-item,
+body.dark-mode .list-group-item {
+    background-color: var(--horizon-card-bg) !important;
+    border-color: rgba(163, 174, 208, 0.15) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .list-group-item:hover,
+body.dark-mode .list-group-item:hover {
+    background-color: rgba(117, 81, 255, 0.06) !important;
+}
+
+/* Form floating */
+html.dark-mode .form-floating > label,
+body.dark-mode .form-floating > label {
+    color: var(--horizon-text-secondary) !important;
+}
+
+html.dark-mode .form-control:disabled,
+body.dark-mode .form-control:disabled,
+html.dark-mode .form-control[disabled],
+body.dark-mode .form-control[disabled] {
+    background-color: rgba(17, 28, 68, 0.3) !important;
+    color: var(--horizon-text-secondary) !important;
+    opacity: 0.7;
+}
+
+/* Input group */
+html.dark-mode .input-group-text,
+body.dark-mode .input-group-text {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Nav pills/tabs in manage pages */
+html.dark-mode .nav-link,
+body.dark-mode .nav-link {
+    color: var(--horizon-text-primary) !important;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+.btn-primary {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    border-radius: 16px !important;
+    padding: 10px 24px !important;
+}
+.btn-light {
+    border-color: var(--horizon-primary) !important;
+}
+
+/* ======================================
+   HAMBURGER TOGGLE BUTTON
+   ====================================== */
+.horizon-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--horizon-text-primary);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.horizon-hamburger:hover {
+    background-color: var(--horizon-bg);
+}
+
+/* ======================================
+   SIDEBAR OVERLAY
+   ====================================== */
+.horizon-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.horizon-sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ======================================
+   RESPONSIVE: TABLET & BELOW (≤1200px)
+   ====================================== */
+@media (max-width: 1200px) {
+    .horizon-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .horizon-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .horizon-sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .horizon-main {
+        margin-left: 0;
+    }
+}
+
+/* ======================================
+   RESPONSIVE: TABLET (≤992px)
+   ====================================== */
+@media (max-width: 992px) {
+    .horizon-main {
+        padding: 20px;
+    }
+
+    .horizon-breadcrumb .current-page {
+        font-size: 26px;
+    }
+
+    .horizon-navbar-actions {
+        padding: 6px 10px;
+    }
+
+    .horizon-search {
+        width: 140px;
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+}
+
+/* ======================================
+   RESPONSIVE: MOBILE (≤768px)
+   ====================================== */
+@media (max-width: 768px) {
+    .horizon-main {
+        padding: 15px;
+    }
+
+    .horizon-navbar {
+        flex-wrap: nowrap;
+        gap: 8px;
+        padding: 10px 15px;
+        border-radius: 12px;
+        top: 10px;
+    }
+
+    /* Left side (hamburger + breadcrumb) must shrink */
+    .horizon-navbar > .d-flex {
+        min-width: 0;
+        overflow: hidden;
+        flex-shrink: 1;
+    }
+
+    /* Right side (actions) must NOT shrink */
+    .horizon-navbar-actions {
+        flex-shrink: 0;
+    }
+
+    .horizon-breadcrumb {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .horizon-breadcrumb .current-page {
+        font-size: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Table: horizontally scrollable on mobile */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Table action buttons: stay on one line */
+    .table td.text-end {
+        white-space: nowrap;
+    }
+
+    .table td a.btn,
+    .table td button.btn,
+    .table td form {
+        display: inline-flex;
+    }
+
+    .horizon-navbar-actions {
+        border-radius: 20px;
+        padding: 6px 8px;
+        gap: 2px;
+    }
+
+    .horizon-search {
+        display: none;
+    }
+
+    .horizon-navbar-icon {
+        font-size: 16px;
+        margin: 0 6px;
+    }
+
+    .horizon-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    /* Card headers: wrap to stack title + actions */
+    .horizon-card .d-flex.justify-content-between {
+        flex-wrap: wrap !important;
+        gap: 12px;
+    }
+
+    .horizon-card .d-flex.justify-content-between > .d-flex.gap-2 {
+        width: 100%;
+    }
+
+    .horizon-card .d-flex.justify-content-between > .d-flex.gap-2 form.d-flex {
+        flex: 1;
+    }
+
+    .horizon-card .d-flex.justify-content-between > .d-flex.gap-2 form.d-flex input.form-control {
+        min-width: 0 !important;
+        flex: 1;
+    }
+
+    /* Card padding */
+    .horizon-card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    /* Footer */
+    .horizon-footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding-top: 30px;
+    }
+
+    .horizon-footer a {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    /* Pagination responsive */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .d-flex.justify-content-between.align-items-center.mt-4 {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    /* Form controls */
+    .form-control {
+        min-height: 44px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+/* ======================================
+   RESPONSIVE: SMALL MOBILE (≤576px)
+   ====================================== */
+@media (max-width: 576px) {
+    .horizon-main {
+        padding: 10px;
+    }
+
+    .horizon-navbar {
+        margin-bottom: 15px;
+        top: 5px;
+    }
+
+    .horizon-breadcrumb .current-page {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
+    }
+
+    .horizon-breadcrumb {
+        font-size: 12px;
+    }
+
+    .horizon-card {
+        padding: 14px;
+        border-radius: 14px;
+        margin-bottom: 12px;
+    }
+
+    .horizon-content .row {
+        --bs-gutter-x: 0.75rem;
+    }
+    
+    /* Table text smaller */
+    .table {
+        font-size: 13px;
+    }
+
+    .table .btn-sm {
+        padding: 4px 6px;
+        font-size: 12px;
+    }
+
+    /* Navbar actions compact */
+    .horizon-navbar-actions .d-flex.align-items-center.ms-3 {
+        margin-left: 0.5rem !important;
+    }
+
+    .horizon-navbar-actions .text-end.me-2 {
+        display: none !important;
+    }
+
+    .horizon-footer {
+        font-size: 12px;
+    }
+}
+
+/* Button White Fix */
+.btn-white {
+    background-color: #ffffff;
+    border-color: #E0E5F2;
+    color: var(--horizon-text-primary);
+}
+
+.btn-white:hover {
+    background-color: #f8f9fa;
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .btn-white,
+body.dark-mode .btn-white {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    border-color: rgba(163, 174, 208, 0.2) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .btn-white:hover,
+body.dark-mode .btn-white:hover {
+    background-color: rgba(17, 28, 68, 0.7) !important;
+}
+
+/* Bootstrap Component Dark Mode Overrides */
+
+/* List Group */
+html.dark-mode .list-group-item,
+body.dark-mode .list-group-item {
+    background-color: var(--horizon-card-bg);
+    border-color: rgba(163, 174, 208, 0.2);
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .list-group-item-action:hover,
+body.dark-mode .list-group-item-action:hover {
+    background-color: rgba(17, 28, 68, 0.5);
+    color: var(--horizon-text-primary);
+}
+
+/* Pagination */
+html.dark-mode .page-link,
+body.dark-mode .page-link {
+    background-color: var(--horizon-card-bg);
+    border-color: rgba(163, 174, 208, 0.2);
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .page-link:hover,
+body.dark-mode .page-link:hover {
+    background-color: rgba(17, 28, 68, 0.5);
+    border-color: rgba(163, 174, 208, 0.2);
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .page-item.disabled .page-link,
+body.dark-mode .page-item.disabled .page-link {
+    background-color: rgba(17, 28, 68, 0.3);
+    border-color: rgba(163, 174, 208, 0.1);
+    color: var(--horizon-text-secondary);
+}
+
+html.dark-mode .page-item.active .page-link,
+body.dark-mode .page-item.active .page-link {
+    background-color: var(--horizon-primary);
+    border-color: var(--horizon-primary);
+    color: #ffffff;
+}
+
+
+/* Modal */
+html.dark-mode .modal-content,
+body.dark-mode .modal-content {
+    background-color: var(--horizon-card-bg);
+    border-color: rgba(163, 174, 208, 0.2);
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .modal-header,
+body.dark-mode .modal-header,
+html.dark-mode .modal-footer,
+body.dark-mode .modal-footer {
+    border-color: rgba(163, 174, 208, 0.2);
+}
+
+html.dark-mode .btn-close,
+body.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Form Control */
+html.dark-mode .form-control,
+body.dark-mode .form-control {
+    background-color: rgba(17, 28, 68, 0.5);
+    border-color: rgba(163, 174, 208, 0.2) !important; /* Force border color */
+    color: var(--horizon-text-primary);
+}
+
+html.dark-mode .form-control::placeholder,
+body.dark-mode .form-control::placeholder {
+    color: var(--horizon-text-secondary);
+    opacity: 0.7;
+}
+
+html.dark-mode .form-control:focus,
+body.dark-mode .form-control:focus {
+    background-color: rgba(17, 28, 68, 0.6);
+    border-color: var(--horizon-primary) !important;
+    color: var(--horizon-text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(67, 24, 255, 0.25);
+}
+
+html.dark-mode .input-group-text,
+body.dark-mode .input-group-text {
+    background-color: rgba(17, 28, 68, 0.6);
+    border-color: rgba(163, 174, 208, 0.2);
+    color: var(--horizon-text-secondary);
+}
+
+/* ======================================
+   SWEETALERT2 DARK MODE OVERRIDES
+   ====================================== */
+
+/* Popup Container */
+html.dark-mode .swal2-popup,
+body.dark-mode .swal2-popup {
+    background-color: var(--horizon-card-bg) !important;
+    color: var(--horizon-text-primary) !important;
+    border: 1px solid rgba(163, 174, 208, 0.15) !important;
+}
+
+/* Titles & Text & Content */
+html.dark-mode .swal2-title,
+body.dark-mode .swal2-title,
+html.dark-mode .swal2-content,
+body.dark-mode .swal2-content,
+html.dark-mode .swal2-html-container,
+body.dark-mode .swal2-html-container {
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Close Button */
+html.dark-mode .swal2-close,
+body.dark-mode .swal2-close {
+    color: var(--horizon-text-secondary) !important;
+}
+
+html.dark-mode .swal2-close:hover,
+body.dark-mode .swal2-close:hover {
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Icons */
+html.dark-mode .swal2-icon.swal2-warning,
+body.dark-mode .swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+
+html.dark-mode .swal2-icon.swal2-error,
+body.dark-mode .swal2-icon.swal2-error {
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+html.dark-mode .swal2-icon.swal2-success,
+body.dark-mode .swal2-icon.swal2-success {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+
+/* Buttons */
+/* Confirm button uses --horizon-primary via JS config, but we ensure text is white */
+html.dark-mode .swal2-styled.swal2-confirm,
+body.dark-mode .swal2-styled.swal2-confirm {
+    background-color: var(--horizon-primary) !important; 
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .swal2-styled.swal2-cancel,
+body.dark-mode .swal2-styled.swal2-cancel {
+    background-color: rgba(17, 28, 68, 0.5) !important;
+    color: var(--horizon-text-secondary) !important;
+}
+
+html.dark-mode .swal2-styled.swal2-cancel:hover,
+body.dark-mode .swal2-styled.swal2-cancel:hover {
+    background-color: rgba(17, 28, 68, 0.7) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+/* Toast specific tweaks if needed */
+html.dark-mode .swal2-toast,
+body.dark-mode .swal2-toast {
+    background-color: var(--horizon-card-bg) !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5) !important;
+}

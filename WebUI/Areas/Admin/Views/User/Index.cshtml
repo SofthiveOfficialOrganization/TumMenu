@@ -3,7 +3,7 @@
 @model PaginatedListDTO<UserWithRolesDTO>
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "Kullanıcılar";
 }
 
 <div class="row">
@@ -11,12 +11,12 @@
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                   <h4 class="fw-bold mb-1">User Management</h4>
-                   <p class="text-secondary small mb-0">View all registered users and their roles.</p>
+                   <h4 class="fw-bold mb-1">Kullanıcı Yönetimi</h4>
+                   <p class="text-secondary small mb-0">Tüm kayıtlı kullanıcıları ve rollerini görüntüleyin.</p>
                 </div>
                 <div class="d-flex gap-2">
                      <form method="get" class="d-flex align-items-center">
-                        <input type="text" name="Search" class="form-control me-2" placeholder="Search users..." value="@Context.Request.Query["Search"]" style="min-width: 250px;">
+                        <input type="text" name="Search" class="form-control me-2" placeholder="Kullanıcı ara..." value="@Context.Request.Query["Search"]">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
@@ -26,10 +26,10 @@
                 <table class="table table-borderless align-middle table-hover">
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
-                            <th class="ps-3">User</th>
-                            <th>Email</th>
-                            <th>Roles</th>
-                            <th class="text-end pe-3">Actions</th>
+                            <th class="ps-3">Kullanıcı</th>
+                            <th>E-posta</th>
+                            <th>Roller</th>
+                            <th class="text-end pe-3">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,12 +56,12 @@
                                         }
                                         @if(!item.Roles.Any())
                                         {
-                                            <span class="badge bg-light text-secondary">No Role</span>
+                                            <span class="badge bg-light text-secondary">Rol Yok</span>
                                         }
                                     </td>
                                     <td class="text-end pe-3">
                                         <!-- Actions placeholder -->
-                                        <button class="btn btn-sm btn-light text-secondary" disabled title="Edit not implemented">
+                                        <button class="btn btn-sm btn-light text-secondary" disabled title="Düzenleme henüz eklenmedi">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     </td>
@@ -73,7 +73,7 @@
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-secondary">
                                     <i class="fas fa-users fa-3x mb-3 d-block opacity-50"></i>
-                                    No users found.
+                                    Kullanıcı bulunamadı.
                                 </td>
                             </tr>
                         }
@@ -86,12 +86,12 @@
             {
                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                     <div class="text-secondary small">
-                        Showing @Model.Items.Count of @Model.Count entries
+                        @Model.Count kayıttan @Model.Items.Count tanesi gösteriliyor
                     </div>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Previous</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
                             </li>
                             @for (int i = 1; i <= Model.Pages; i++)
                             {
@@ -100,7 +100,7 @@
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Next</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

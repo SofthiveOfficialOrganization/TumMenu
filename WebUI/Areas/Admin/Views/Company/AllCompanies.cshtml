@@ -3,22 +3,22 @@
 @model PaginatedListDTO<CompanyDTO>
 
 @{
-    ViewData["Title"] = "All Companies";
+    ViewData["Title"] = "Tüm Şirketler";
 }
 
 <div class="row">
     <div class="col-md-12">
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold">Companies List</h4>
+                <h4 class="fw-bold">Şirket Listesi</h4>
                 <div class="d-flex gap-2">
                      <form method="get" class="d-flex align-items-center">
                          <!-- Note: Controller likely expects 'Index' or 'PageIndex' depending on query binder, assumes Index based on DTO -->
-                        <input type="text" name="Search" class="form-control me-2" placeholder="Search companies..." value="@Context.Request.Query["Search"]" style="min-width: 250px;">
+                        <input type="text" name="Search" class="form-control me-2" placeholder="Şirket ara..." value="@Context.Request.Query["Search"]">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </form>
                     <a asp-action="Create" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i> Add Company
+                        <i class="fas fa-plus me-2"></i> Şirket Ekle
                     </a>
                 </div>
             </div>
@@ -82,19 +82,19 @@
                                         </span>
                                     </td>
                                     <td class="text-end pe-3">
-                                        <a asp-controller="Store" asp-action="Index" asp-route-companyId="@item.Id" class="btn btn-sm btn-light text-info me-2" title="Stores">
+                                        <a asp-controller="Store" asp-action="Index" asp-route-companyId="@item.Id" class="btn btn-sm btn-light text-info me-2" title="Dükkanlar">
                                             <i class="fas fa-store"></i>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Details">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Edit">
+                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this company?');">
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-light text-danger" title="Delete">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu Şirketi Silmek İstediğinize Emin Misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -107,7 +107,7 @@
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-secondary">
                                     <i class="fas fa-folder-open fa-3x mb-3 d-block opacity-50"></i>
-                                    No companies found.
+                                    Şirket bulunamadı.
                                 </td>
                             </tr>
                         }
@@ -115,17 +115,17 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
+            <!-- Sayfalama -->
             @if (Model != null && Model.Pages > 1)
             {
                 <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                     <div class="text-secondary small">
-                        Showing @Model.Items.Count of @Model.Count entries
+                        @Model.Count kayıttan @Model.Items.Count tanesi gösteriliyor
                     </div>
-                    <nav aria-label="Page navigation">
+                    <nav aria-label="Sayfa navigasyonu">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Previous</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
                             </li>
                             @for (int i = 1; i <= Model.Pages; i++)
                             {
@@ -134,7 +134,7 @@
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Next</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

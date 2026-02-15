@@ -2,39 +2,51 @@
 @model UpdateCompanyCommand
 
 @{
-    ViewData["Title"] = "Update Company";
+    ViewData["Title"] = "Şirket Güncelle";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
             <div class="mb-4 text-center">
-                <h3 class="fw-bold text-primary">Update Company</h3>
-                <p class="text-secondary">Update the details for your company below</p>
+                <h3 class="fw-bold text-primary">Şirket Güncelle</h3>
+                <p class="text-secondary">Şirketinizin bilgilerini aşağıdan güncelleyin</p>
             </div>
 
-            <form asp-area="Admin" asp-controller="Company" asp-action="Update" method="post">
+            <form asp-area="Admin" asp-controller="Company" asp-action="Update" method="post" id="updateCompanyForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
                 
                 <div class="mb-4">
-                    <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Company Name</label>
-                    <input asp-for="Title" class="form-control" placeholder="e.g. My Awesome Restaurant" />
+                    <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Şirket Adı</label>
+                    <input asp-for="Title" class="form-control" placeholder="örn. Köfteci Yusuf" id="titleInput" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-4">
-                    <label asp-for="Slug" class="form-label fw-bold text-secondary small text-uppercase">Slug (URL Path)</label>
-                    <input asp-for="Slug" class="form-control" placeholder="e.g. my-awesome-restaurant" />
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label asp-for="Slug" class="form-label fw-bold text-secondary small text-uppercase mb-0">Slug (URL Yolu)</label>
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="slugManualToggle" checked>
+                            <label class="form-check-label small text-secondary" for="slugManualToggle">El ile düzenle</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input asp-for="Slug" class="form-control" placeholder="örn. kofteci-yusuf" id="slugInput" />
+                        <span class="input-group-text" id="slugStatus" style="min-width: 42px; justify-content: center;">
+                            <i class="fas fa-pencil-alt text-primary" id="slugIcon"></i>
+                        </span>
+                    </div>
                     <span asp-validation-for="Slug" class="text-danger small"></span>
-                    <div class="form-text text-muted small">This will be used in your digital menu URL.</div>
+                    <div id="slugFeedback" class="small mt-1" style="display:none;"></div>
+                    <div class="form-text text-muted small">Dijital menü URL'inizde kullanılacaktır.</div>
                 </div>
 
                 <div class="d-grid gap-3 mt-5">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                        <i class="fas fa-save me-2"></i> Update Company
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm" id="submitBtn">
+                        <i class="fas fa-save me-2"></i> Şirketi Güncelle
                     </button>
-                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-light text-secondary">Cancel</a>
+                    <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-light text-secondary">İptal</a>
                 </div>
             </form>
         </div>
@@ -43,4 +55,132 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+    $(document).ready(function () {
+        const titleInput = $('#titleInput');
+        const slugInput = $('#slugInput');
+        const slugToggle = $('#slugManualToggle');
+        const slugIcon = $('#slugIcon');
+        const slugFeedback = $('#slugFeedback');
+        const submitBtn = $('#submitBtn');
+        const companyId = '@Model?.Id';
+        const checkUrl = '@Url.Action("CheckSlug", "Company", new { area = "Admin" })';
+        const originalSlug = slugInput.val();
+
+        let debounceTimer = null;
+        let isManual = true; // starts unlocked for update
+        let slugAvailable = true;
+
+        function slugify(text) {
+            const turkishMap = {
+                'ğ':'g','ü':'u','ş':'s','ı':'i','ö':'o','ç':'c',
+                'Ğ':'g','Ü':'u','Ş':'s','İ':'i','I':'i','Ö':'o','Ç':'c'
+            };
+            let result = text.trim().toLowerCase();
+            result = result.split('').map(c => turkishMap[c] || c).join('');
+            result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            result = result.replace(/[^a-z0-9\s\-_]/g, '');
+            result = result.replace(/[\s_]+/g, '-');
+            result = result.replace(/-+/g, '-');
+            result = result.replace(/^-|-$/g, '');
+            if (result.length > 30) {
+                result = result.substring(0, 30).replace(/-$/, '');
+            }
+            return result;
+        }
+
+        function checkSlugAvailability(slug) {
+            if (!slug) {
+                slugFeedback.hide();
+                slugAvailable = true;
+                return;
+            }
+            // Same as original → skip check
+            if (slug === originalSlug) {
+                slugFeedback.hide();
+                slugIcon.removeClass('fa-times-circle fa-check-circle text-danger text-success')
+                    .addClass(isManual ? 'fa-pencil-alt text-primary' : 'fa-lock text-secondary');
+                slugAvailable = true;
+                return;
+            }
+            $.get(checkUrl, { slug: slug, excludeId: companyId }, function (data) {
+                slugFeedback.show();
+                if (data.available) {
+                    slugFeedback.html('<i class="fas fa-check-circle text-success me-1"></i> ' + data.message)
+                        .removeClass('text-danger').addClass('text-success');
+                    slugIcon.removeClass('fa-lock fa-pencil-alt fa-times-circle text-danger text-secondary text-primary')
+                        .addClass('fa-check-circle text-success');
+                    slugAvailable = true;
+                } else {
+                    slugFeedback.html('<i class="fas fa-times-circle text-danger me-1"></i> ' + data.message)
+                        .removeClass('text-success').addClass('text-danger');
+                    slugIcon.removeClass('fa-lock fa-pencil-alt fa-check-circle text-success text-secondary text-primary')
+                        .addClass('fa-times-circle text-danger');
+                    slugAvailable = false;
+                }
+            });
+        }
+
+        function debouncedCheck(slug) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                checkSlugAvailability(slug);
+            }, 500);
+        }
+
+        // Title → auto slug (only when toggle is off)
+        titleInput.on('input', function () {
+            if (!isManual) {
+                const slug = slugify($(this).val());
+                slugInput.val(slug);
+                debouncedCheck(slug);
+            }
+        });
+
+        // Manual toggle
+        slugToggle.on('change', function () {
+            isManual = $(this).is(':checked');
+            if (isManual) {
+                slugInput.prop('readonly', false).focus();
+                slugIcon.removeClass('fa-lock fa-check-circle fa-times-circle text-success text-danger text-secondary')
+                    .addClass('fa-pencil-alt text-primary');
+                slugFeedback.hide();
+            } else {
+                slugInput.prop('readonly', true);
+                const slug = slugify(titleInput.val());
+                slugInput.val(slug);
+                slugIcon.removeClass('fa-pencil-alt fa-check-circle fa-times-circle text-primary text-success text-danger')
+                    .addClass('fa-lock text-secondary');
+                slugFeedback.hide();
+                slugAvailable = true;
+                if (slug) debouncedCheck(slug);
+            }
+        });
+
+        // Manual slug input
+        slugInput.on('input', function () {
+            if (isManual) {
+                let val = $(this).val().toLowerCase()
+                    .replace(/[^a-z0-9\-]/g, '')
+                    .replace(/-+/g, '-');
+                if (val.length > 30) val = val.substring(0, 30);
+                $(this).val(val);
+                debouncedCheck(val);
+            }
+        });
+
+        // Block submit if slug unavailable
+        $('#updateCompanyForm').on('submit', function (e) {
+            if (!slugAvailable) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Slug kullanılamaz',
+                    text: 'Lütfen farklı bir slug değeri girin.',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+        });
+    });
+    </script>
 }

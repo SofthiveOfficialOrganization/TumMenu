@@ -56,7 +56,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             CurrentLogins = await _userManager.GetLoginsAsync(user);
@@ -79,18 +79,18 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if(!result.Succeeded)
             {
-                StatusMessage = "The external login was not removed.";
+                StatusMessage = "Harici giriş kaldırılamadı.";
                 return RedirectToPage();
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "The external login was removed.";
+            StatusMessage = "Harici giriş kaldırıldı.";
             return RedirectToPage();
         }
 
@@ -110,7 +110,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
@@ -123,14 +123,14 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var result = await _userManager.AddLoginAsync(user, info);
             if(!result.Succeeded)
             {
-                StatusMessage = "The external login was not added. External logins can only be associated with one account.";
+                StatusMessage = "Harici giriş eklenemedi. Harici girişler yalnızca bir hesapla ilişkilendirilebilir.";
                 return RedirectToPage();
             }
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            StatusMessage = "The external login was added.";
+            StatusMessage = "Harici giriş eklendi.";
             return RedirectToPage();
         }
     }

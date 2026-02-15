@@ -1,62 +1,214 @@
 @using Application.Companies.Queries
 @using Application.Stores.Commands
 @model Application.Stores.DTOs.StoreDTO
+
 @{
-    ViewData["Title"] = "Yeni Dükkan Ekle";
+    ViewData["Title"] = "Dükkan Oluştur";
 }
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Yeni Dükkan Ekle</h3>
-    </div>
-    <div class="card-body">
-        <form asp-action="Create" method="post">
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">Dükkan Adı</label>
-                <input asp-for="Title" class="form-control" required />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="Slug" class="form-label">Slug (URL Kısmı)</label>
-                <input asp-for="Slug" class="form-control" required />
-                <span asp-validation-for="Slug" class="text-danger"></span>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-4 text-center">
+                <h3 class="fw-bold text-primary">Yeni Dükkan Oluştur</h3>
+                <p class="text-secondary">Yeni dükkanınız için bilgileri aşağıya girin</p>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="PhoneNumber" class="form-label">Telefon Numarası</label>
-                <input asp-for="PhoneNumber" class="form-control" required />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="CompanyId" class="form-label">Şirket</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="companyNameDisplay" value="@ViewBag.CurrentCompanyName" placeholder="Şirket Seçiniz" readonly style="background-color: #fff; cursor: pointer;" onclick="CompanySelector.open()">
-                    <button class="btn btn-outline-secondary" type="button" onclick="CompanySelector.open()"><i class="fas fa-search"></i></button>
+            <form asp-action="Create" method="post" id="createStoreForm">
+                @Html.AntiForgeryToken()
+                
+                <div class="mb-4">
+                     <label asp-for="CompanyId" class="form-label fw-bold text-secondary small text-uppercase">Şirket</label>
+                    <div class="input-group">
+                        @if (ViewBag.IsFixedCompany == true)
+                        {
+                            <input type="text" class="form-control" id="companyNameDisplay" value="@ViewBag.CurrentCompanyName" readonly style="background-color: #e9ecef;">
+                        }
+                        else
+                        {
+                            <input type="text" class="form-control" id="companyNameDisplay" value="@ViewBag.CurrentCompanyName" placeholder="Şirket Seçiniz" readonly style="cursor: pointer; background-color: #fff;" onclick="CompanySelector.open()">
+                             <button class="btn btn-outline-primary" type="button" onclick="CompanySelector.open()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        }
+                    </div>
+                    <input type="hidden" asp-for="CompanyId" id="selectedCompanyId" />
+                    <span asp-validation-for="CompanyId" class="text-danger small"></span>
                 </div>
-                <input type="hidden" asp-for="CompanyId" id="selectedCompanyId" />
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
 
-            <!-- Include Modal -->
-            <partial name="_CompanySelector" />
+                <div class="mb-4">
+                    <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Dükkan Adı</label>
+                    <input asp-for="Title" class="form-control" placeholder="örn. Merkez Şube" id="titleInput" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
 
-            @section Scripts {
-                <script>
-                    $(document).ready(function() {
-                        CompanySelector.init(function(id, title) {
-                            $('#selectedCompanyId').val(id);
-                            $('#companyNameDisplay').val(title);
-                        });
-                    });
-                </script>
-            }
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label asp-for="Slug" class="form-label fw-bold text-secondary small text-uppercase mb-0">Slug (URL Yolu)</label>
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="slugManualToggle">
+                            <label class="form-check-label small text-secondary" for="slugManualToggle">El ile düzenle</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input asp-for="Slug" class="form-control" placeholder="otomatik oluşturulacak" id="slugInput" readonly />
+                        <span class="input-group-text" id="slugStatus" style="min-width: 42px; justify-content: center;">
+                            <i class="fas fa-lock text-secondary" id="slugIcon"></i>
+                        </span>
+                    </div>
+                    <span asp-validation-for="Slug" class="text-danger small"></span>
+                    <div id="slugFeedback" class="small mt-1" style="display:none;"></div>
+                    <div class="form-text text-muted small">Boş bırakılırsa dükkan adından otomatik oluşturulur.</div>
+                </div>
 
-            <div class="form-footer">
-                <button type="submit" class="btn btn-primary">Kaydet</button>
-                <a asp-action="Index" class="btn btn-link">İptal</a>
-            </div>
-        </form>
+                 <div class="mb-4">
+                    <label asp-for="PhoneNumber" class="form-label fw-bold text-secondary small text-uppercase">Telefon Numarası</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="örn. 0555 555 55 55" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-5">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>İptal
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4" id="submitBtn">
+                        <i class="fas fa-check-circle me-2"></i> Dükkan Oluştur
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<!-- Include Modal -->
+<partial name="_CompanySelector" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+    $(document).ready(function () {
+        // Company Selector Init
+         CompanySelector.init(function(id, title) {
+            $('#selectedCompanyId').val(id);
+            $('#companyNameDisplay').val(title);
+        });
+
+        // Slug Logic
+        const titleInput = $('#titleInput');
+        const slugInput = $('#slugInput');
+        const slugToggle = $('#slugManualToggle');
+        const slugIcon = $('#slugIcon');
+        const slugFeedback = $('#slugFeedback');
+        const submitBtn = $('#submitBtn');
+        const checkUrl = '@Url.Action("CheckSlug", "Store", new { area = "Admin" })';
+
+        let debounceTimer = null;
+        let isManual = false;
+        let slugAvailable = true;
+
+        // Client-side slugify matching backend SlugHelper
+        function slugify(text) {
+            const turkishMap = {
+                'ğ':'g','ü':'u','ş':'s','ı':'i','ö':'o','ç':'c',
+                'Ğ':'g','Ü':'u','Ş':'s','İ':'i','I':'i','Ö':'o','Ç':'c'
+            };
+            let result = text.trim().toLowerCase();
+            result = result.split('').map(c => turkishMap[c] || c).join('');
+            result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            result = result.replace(/[^a-z0-9\s\-_]/g, '');
+            result = result.replace(/[\s_]+/g, '-');
+            result = result.replace(/-+/g, '-');
+            result = result.replace(/^-|-$/g, '');
+            if (result.length > 30) {
+                result = result.substring(0, 30).replace(/-$/, '');
+            }
+            return result;
+        }
+
+        function checkSlugAvailability(slug) {
+            if (!slug) {
+                slugFeedback.hide();
+                slugAvailable = true;
+                return;
+            }
+            $.get(checkUrl, { slug: slug }, function (data) {
+                slugFeedback.show();
+                if (data.available) {
+                    slugFeedback.html('<i class="fas fa-check-circle text-success me-1"></i> ' + data.message)
+                        .removeClass('text-danger').addClass('text-success');
+                    slugIcon.removeClass('fa-lock fa-times-circle text-danger text-secondary')
+                        .addClass('fa-check-circle text-success');
+                    slugAvailable = true;
+                } else {
+                    slugFeedback.html('<i class="fas fa-times-circle text-danger me-1"></i> ' + data.message)
+                        .removeClass('text-success').addClass('text-danger');
+                    slugIcon.removeClass('fa-lock fa-check-circle text-success text-secondary')
+                        .addClass('fa-times-circle text-danger');
+                    slugAvailable = false;
+                }
+            });
+        }
+
+        function debouncedCheck(slug) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                checkSlugAvailability(slug);
+            }, 500);
+        }
+
+        // Title → auto slug
+        titleInput.on('input', function () {
+            if (!isManual) {
+                const slug = slugify($(this).val());
+                slugInput.val(slug);
+                debouncedCheck(slug);
+            }
+        });
+
+        // Manual toggle
+        slugToggle.on('change', function () {
+            isManual = $(this).is(':checked');
+            if (isManual) {
+                slugInput.prop('readonly', false).focus();
+                slugIcon.removeClass('fa-lock fa-check-circle fa-times-circle text-success text-danger text-secondary')
+                    .addClass('fa-pencil-alt text-primary');
+            } else {
+                slugInput.prop('readonly', true);
+                const slug = slugify(titleInput.val());
+                slugInput.val(slug);
+                slugIcon.removeClass('fa-pencil-alt fa-check-circle fa-times-circle text-primary text-success text-danger')
+                    .addClass('fa-lock text-secondary');
+                slugFeedback.hide();
+                slugAvailable = true;
+                if (slug) debouncedCheck(slug);
+            }
+        });
+
+        // Manual slug input
+        slugInput.on('input', function () {
+            if (isManual) {
+                // Enforce slug format as user types
+                let val = $(this).val().toLowerCase()
+                    .replace(/[^a-z0-9\-]/g, '')
+                    .replace(/-+/g, '-');
+                if (val.length > 30) val = val.substring(0, 30);
+                $(this).val(val);
+                debouncedCheck(val);
+            }
+        });
+
+        // Block submit if slug unavailable
+        $('#createStoreForm').on('submit', function (e) {
+            if (!slugAvailable) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Slug kullanılamaz',
+                    text: 'Lütfen farklı bir slug değeri girin.',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+        });
+    });
+    </script>
+}

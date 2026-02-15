@@ -15,6 +15,15 @@ public class StoreController(IMediator mediator) : Controller
 	[HttpGet]
 	public async Task<IActionResult> Index(Guid? companyId, int page = 1, CancellationToken ct = default)
 	{
+		if (!companyId.HasValue && User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany != null)
+			{
+				return RedirectToAction(nameof(Index), new { companyId = ownerCompany.Id });
+			}
+		}
+
         if (companyId.HasValue)
         {
             var company = await mediator.Send(new GetCompanyByIdQuery { Id = companyId.Value }, ct);
@@ -43,11 +52,25 @@ public class StoreController(IMediator mediator) : Controller
 	[HttpGet("[action]")]
 	public async Task<IActionResult> Create(Guid? companyId, CancellationToken ct)
 	{
-        if (companyId.HasValue)
+		bool isFixedCompany = false;
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany != null)
+			{
+				companyId = ownerCompany.Id;
+				ViewBag.CurrentCompanyName = ownerCompany.Title;
+				isFixedCompany = true;
+			}
+		}
+
+        if (!isFixedCompany && companyId.HasValue)
         {
              var company = await mediator.Send(new GetCompanyByIdQuery { Id = companyId.Value }, ct);
              ViewBag.CurrentCompanyName = company.Title;
         }
+
+		ViewBag.IsFixedCompany = isFixedCompany;
 		return View(new Application.Stores.DTOs.StoreDTO { CompanyId = companyId ?? Guid.Empty });
 	}
 
@@ -87,5 +110,11 @@ public class StoreController(IMediator mediator) : Controller
 	public IActionResult ByCompany(Guid companyId)
 	{
 		return RedirectToAction(nameof(Index), new { companyId });
+	}
+	[HttpGet("[action]")]
+	public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
+	{
+		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
+		return Json(result);
 	}
 }
