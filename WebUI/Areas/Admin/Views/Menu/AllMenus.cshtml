@@ -33,6 +33,7 @@
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
+                            <th>Durum</th>
                             <th>İlişkili</th>
                             <th>Şablon ID</th>
                             <th>Oluşturulma Tarihi</th>
@@ -50,8 +51,18 @@
                                             <div class="horizon-avatar bg-light text-primary me-3">
                                                 <i class="fas fa-clipboard-list"></i>
                                             </div>
-                                            <span class="fw-bold text-dark">@item.Name</span>
+                                            <span class="fw-bold text-dark">@item.Title</span>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Status == Domain.Entities.MenuStatus.Active)
+                                        {
+                                            <span class="badge bg-success">AKTİF</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-light text-secondary">PASİF</span>
+                                        }
                                     </td>
                                     <td class="text-secondary">
                                         @if(item.CompanyId.HasValue)
@@ -73,9 +84,7 @@
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+
                                         
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu menüyü silmek istediğinize emin misiniz?');">
                                             @Html.AntiForgeryToken()

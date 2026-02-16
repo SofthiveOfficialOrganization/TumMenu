@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Menus;
 
-public class MenuMappingProfiles
+public class MenuMappingProfiles : IRegister
 {
 	public void Register(TypeAdapterConfig config)
 	{

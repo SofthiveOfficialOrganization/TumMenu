@@ -30,6 +30,7 @@
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
+                            <th>Durum</th>
                             <th>Kategoriler</th>
                              <th>Oluşturulma Tarihi</th>
                             <th class="text-end pe-3">İşlemler</th>
@@ -47,9 +48,19 @@
                                                 <i class="fas fa-utensils"></i>
                                             </div>
                                             <div>
-                                                <span class="fw-bold text-dark d-block">@item.Name</span>
+                                                <span class="fw-bold text-dark d-block">@item.Title</span>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if (item.Status == Domain.Entities.MenuStatus.Active)
+                                        {
+                                            <span class="badge bg-success">AKTİF</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-light text-secondary">PASİF</span>
+                                        }
                                     </td>
                                     <td class="text-secondary">
                                         <span class="badge bg-light text-dark fw-normal">
@@ -61,9 +72,7 @@
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+
                                         <a asp-controller="Category" asp-action="Create" asp-route-menuId="@item.Id" class="btn btn-sm btn-light text-warning me-2" title="Kategori Ekle">
                                             <i class="fas fa-tags"></i>
                                         </a>

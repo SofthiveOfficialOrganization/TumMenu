@@ -11,6 +11,7 @@ namespace Application.Categories.Queries;
 public class GetAllCategoryLibraryItemsPagedQuery : PageRequest, IRequest<IPaginate<CategoryLibraryItemDTO>>
 {
 	public string? Search { get; set; }
+	public List<Guid>? ExcludeIds { get; set; }
 }
 
 public class GetAllCategoriesPagedHandler(
@@ -23,9 +24,10 @@ public class GetAllCategoriesPagedHandler(
 		var categoryLibItemList = await repoCategoryLibrary.GetPageListAsync(
 			req,
 			c =>
-				string.IsNullOrEmpty(req.Search) ||
+				(req.ExcludeIds == null || !req.ExcludeIds.Contains(c.Id)) &&
+				(string.IsNullOrEmpty(req.Search) ||
 				c.Title.Contains(req.Search) ||
-				c.Slug.Contains(req.Search),
+				c.Slug.Contains(req.Search)),
 			orderBy: c => c.OrderBy(c => c.Title),
 			ct: ct
 		);

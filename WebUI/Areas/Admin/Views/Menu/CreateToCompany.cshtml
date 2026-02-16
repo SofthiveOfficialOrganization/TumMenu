@@ -99,6 +99,18 @@
                     <input asp-for="Title" class="form-control" placeholder="örn. Yaz Menüsü" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
+
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label text-secondary small text-uppercase fw-bold">Durum</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Inactive">Pasif (Varsayılan)</option>
+                        <option value="Active">Aktif</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger small"></span>
+                    <div class="form-text text-muted small">
+                        "Aktif" seçilirse, bu şirketin diğer tüm menüleri pasif duruma getirilir.
+                    </div>
+                </div>
                 
                 <div class="mb-4">
                     <label class="form-label text-secondary small text-uppercase fw-bold">Şirket</label>

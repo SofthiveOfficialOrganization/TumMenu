@@ -60,7 +60,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdPlacementId");
 
-                    b.ToTable("AdClicks");
+                    b.ToTable("AdClicks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdCreative", b =>
@@ -100,7 +100,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdCreatives");
+                    b.ToTable("AdCreatives", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdImpression", b =>
@@ -141,7 +141,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdPlacementId");
 
-                    b.ToTable("AdImpressions");
+                    b.ToTable("AdImpressions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdPlacement", b =>
@@ -192,7 +192,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AdSlotId");
 
-                    b.ToTable("AdPlacements");
+                    b.ToTable("AdPlacements", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdRevenueImport", b =>
@@ -238,7 +238,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdRevenueImports");
+                    b.ToTable("AdRevenueImports", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AdSlot", b =>
@@ -282,7 +282,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0 AND [Key] IS NOT NULL");
 
-                    b.ToTable("AdSlots");
+                    b.ToTable("AdSlots", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Address", b =>
@@ -339,7 +339,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("StoreId")
                         .IsUnique();
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicationRole", b =>
@@ -528,7 +528,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.ToTable("AuditLogs");
+                    b.ToTable("AuditLogs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -573,7 +573,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CategoryLibraryItem", b =>
@@ -630,7 +630,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0 AND [Slug] IS NOT NULL");
 
-                    b.ToTable("CategoryLibraryItems");
+                    b.ToTable("CategoryLibraryItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Company", b =>
@@ -685,7 +685,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0 AND [OwnerId] IS NOT NULL");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExtensionPack", b =>
@@ -722,7 +722,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExtensionPacks");
+                    b.ToTable("ExtensionPacks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExtensionPackPlan", b =>
@@ -809,7 +809,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.InvoiceLine", b =>
@@ -859,7 +859,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLines");
+                    b.ToTable("InvoiceLines", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Media", b =>
@@ -958,7 +958,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ReferenceId", "Type");
 
-                    b.ToTable("Medias");
+                    b.ToTable("Medias", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Menu", b =>
@@ -1015,7 +1015,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -1072,7 +1072,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ToUserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Owner", b =>
@@ -1108,7 +1108,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owners", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PaymentMethod", b =>
@@ -1179,7 +1179,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Plan", b =>
@@ -1234,7 +1234,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plans");
+                    b.ToTable("Plans", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PlanFeature", b =>
@@ -1278,7 +1278,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("PlanFeatures");
+                    b.ToTable("PlanFeatures", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -1349,7 +1349,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductPrice", b =>
@@ -1390,7 +1390,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductPrices");
+                    b.ToTable("ProductPrices", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductTag", b =>
@@ -1405,7 +1405,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags");
+                    b.ToTable("ProductTags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRCode", b =>
@@ -1471,7 +1471,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[StoreId] IS NOT NULL");
 
-                    b.ToTable("QRCodes");
+                    b.ToTable("QRCodes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRDailyStats", b =>
@@ -1516,7 +1516,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("QRDailyStats");
+                    b.ToTable("QRDailyStats", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.QRScanEvent", b =>
@@ -1571,7 +1571,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("QRCodeId");
 
-                    b.ToTable("QRScanEvents");
+                    b.ToTable("QRScanEvents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Staff", b =>
@@ -1624,7 +1624,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Staffs");
+                    b.ToTable("Staffs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Store", b =>
@@ -1678,7 +1678,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Stores");
+                    b.ToTable("Stores", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Subscription", b =>
@@ -1745,7 +1745,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag", b =>
@@ -1779,7 +1779,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UsageCounter", b =>
@@ -1825,7 +1825,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("UsageCounters");
+                    b.ToTable("UsageCounters", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.WebhookEvent", b =>
@@ -1872,7 +1872,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WebhookEvents");
+                    b.ToTable("WebhookEvents", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

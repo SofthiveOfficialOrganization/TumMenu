@@ -412,6 +412,7 @@ body.dark-mode .horizon-card {
     background-color: var(--horizon-card-bg) !important;
     border-color: rgba(163, 174, 208, 0.15) !important;
     color: var(--horizon-text-primary);
+    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
 html.dark-mode .card-header,

@@ -12,7 +12,7 @@ namespace Application.Menus.Commands;
 
 public sealed record UpdateMenuCommand(
 	Guid Id,
-	string? Name
+	string? Title
 ) : IRequest<Menu>, ITransactionalRequest;
 
 public class UpdateMenuCommandHandler(
@@ -25,8 +25,8 @@ public class UpdateMenuCommandHandler(
 		var menu = await repoMenu.GetByIdAsync(req.Id, ct);
 		if(menu is null)
 			throw new KeyNotFoundException("Menü bulunamadı.");
-		if(req.Name is not null)
-			menu.Title = req.Name;
+		if(req.Title is not null)
+			menu.Title = req.Title;
 
 		repoMenu.Update(menu);
 		return menu;

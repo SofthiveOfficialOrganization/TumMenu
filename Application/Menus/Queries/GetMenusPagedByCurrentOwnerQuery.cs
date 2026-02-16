@@ -9,21 +9,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public class GetMenusPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>{}
+public class GetMenusPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>> { }
 
 public class GetMenusPagedByCurrentOwnerHandler(
 	IRepository<Menu> repoMenu,
 	IMapper mapper,
-    IUserContext userContext
+	IUserContext userContext
 ) : IRequestHandler<GetMenusPagedByCurrentOwnerQuery, PaginatedListDTO<MenuDTO>>
 {
 	public async Task<PaginatedListDTO<MenuDTO>> Handle(GetMenusPagedByCurrentOwnerQuery req, CancellationToken ct)
 	{
-        var applicationUserId = userContext.UserId;
+		var applicationUserId = userContext.UserId;
 		var menu = await repoMenu.GetPageListAsync(
 			request: req,
-			expression: m => m.Company != null && m.Company.Owner != null && m.Company.Owner.ApplicationUserId == applicationUserId,
-			include: m => m.Include(m => m.Categories).Include(m => m.Medias),
+			expression: m =>
+				(m.CompanyId != null && m.Company!.Owner!.ApplicationUserId == applicationUserId) ||
+				(m.StoreId != null && m.Store!.Company.Owner!.ApplicationUserId == applicationUserId),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
 			ct: ct
 		);
