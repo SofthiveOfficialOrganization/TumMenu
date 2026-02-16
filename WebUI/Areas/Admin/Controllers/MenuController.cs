@@ -89,55 +89,161 @@ public sealed class MenuController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Details), new { id = dto.Id });
     }
 
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Details(Guid id, CancellationToken ct)
-    {
-        var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
-        return View(menu);
-    }
+    	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpGet("{id:guid}")]
+	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+	{
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			// Verify ownership
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id)
+				{
+					isOwner = true;
+				}
+				else if (menu.StoreId.HasValue)
+				{
+					// If linked to store, check store's company
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id)
+					{
+						isOwner = true;
+					}
+				}
+			}
 
-    [Authorize(Policy = "AdminOnly")]
-    [HttpGet("[action]")]
-    public async Task<IActionResult> AllMenus(GetAllMenusPagedQuery req, CancellationToken ct)
-    {
-        var menus = await mediator.Send(req, ct);
-        return View(menus);
-    }
+			if (!isOwner) return Forbid();
+		}
 
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
-    public async Task<IActionResult> MyMenus(CancellationToken ct)
-    {
-        var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery(), ct);
-        return View(menus);
-    }
+		return View(menu);
+	}
 
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]/{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, CancellationToken ct)
-    {
-        var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
-        return View(new UpdateMenuCommand(menu.Id, menu.Name));
-    }
+	[Authorize(Policy = "AdminOnly")]
+	[HttpGet("[action]")]
+	public async Task<IActionResult> AllMenus(GetAllMenusPagedQuery req, CancellationToken ct)
+	{
+		var menus = await mediator.Send(req, ct);
+		return View(menus);
+	}
 
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(UpdateMenuCommand req, CancellationToken ct)
-    {
-        var menu = await mediator.Send(req, ct);
-        return RedirectToAction(nameof(Details), new { id = menu.Id });
-    }
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpGet("[action]")]
+	public async Task<IActionResult> MyMenus(CancellationToken ct)
+	{
+		var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery(), ct);
+		return View(menus);
+	}
 
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]/{id}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
-    {
-        await mediator.Send(new DeleteMenuCommand { Id = id }, ct);
-        return RedirectToAction(nameof(AllMenus));
-    }
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpGet("[action]/{id:guid}")]
+	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
+	{
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+				else if (menu.StoreId.HasValue)
+				{
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id) isOwner = true;
+				}
+			}
+			if (!isOwner) return Forbid();
+		}
+
+		return View(new UpdateMenuCommand(menu.Id, menu.Title));
+	}
+
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpPost("[action]")]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Update(UpdateMenuCommand req, CancellationToken ct)
+	{
+		// Ideally we should check ownership here too but we need to fetch the menu first.
+		// For now relying on the query handler's scoping might not be enough if ID is forged.
+		// Let's fetch to verify.
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = req.Id }, ct);
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+				else if (menu.StoreId.HasValue)
+				{
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id) isOwner = true;
+				}
+			}
+			if (!isOwner) return Forbid();
+		}
+
+		var updatedMenu = await mediator.Send(req, ct);
+		return RedirectToAction(nameof(Details), new { id = updatedMenu.Id });
+	}
+
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpPost("[action]/{id}")]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> SetActive(Guid id, CancellationToken ct)
+	{
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+				else if (menu.StoreId.HasValue)
+				{
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id) isOwner = true;
+				}
+			}
+			if (!isOwner) return Forbid();
+		}
+
+		await mediator.Send(new SetMenuActiveCommand { Id = id }, ct);
+		return RedirectToAction(nameof(Details), new { id });
+	}
+	
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpPost("[action]/{id}")]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+	{
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+				else if (menu.StoreId.HasValue)
+				{
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id) isOwner = true;
+				}
+			}
+			if (!isOwner) return Forbid();
+		}
+
+		await mediator.Send(new DeleteMenuCommand { Id = id }, ct);
+		return RedirectToAction(nameof(AllMenus));
+	}    
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]")]
     public async Task<IActionResult> SearchCompanies(string? search, int page = 1, int pageSize = 10, CancellationToken ct = default)

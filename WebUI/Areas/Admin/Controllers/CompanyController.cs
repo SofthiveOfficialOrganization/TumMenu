@@ -10,7 +10,7 @@ namespace WebUI.Areas.Admin.Controllers;
 [Route("admin/[controller]")]
 public sealed class CompanyController(IMediator mediator) : Controller
 {
-	[Authorize(Policy = "OwnerOrAdmin")]
+	[Authorize(Policy = "AdminOnly")]
 	[HttpGet]
 	public async Task<IActionResult> Index(CancellationToken ct)
 	{
@@ -42,6 +42,16 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
 	{
 		var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || ownerCompany.Id != company.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		return View(company);
 	}
 
@@ -76,6 +86,16 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || ownerCompany.Id != company.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		var cmd = new UpdateCompanyCommand
 		{
 			Id = company.Id,
@@ -91,6 +111,15 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		if(!ModelState.IsValid)
 			return View(req);
 
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || ownerCompany.Id != req.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		var company = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Details), new { id = company.Id });
 	}
@@ -100,6 +129,15 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || ownerCompany.Id != id)
+			{
+				return Forbid();
+			}
+		}
+
 		await mediator.Send(new DeleteCompanyCommand { Id = id }, ct);
 		
 		if (User.IsInRole("Owner"))

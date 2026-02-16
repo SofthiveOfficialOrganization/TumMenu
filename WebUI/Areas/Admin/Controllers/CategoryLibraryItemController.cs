@@ -12,6 +12,7 @@ namespace WebUI.Areas.Admin.Controllers;
 [Route("admin/category-library")]
 public class CategoryLibraryItemController(IMediator mediator, IMapper mapper) : Controller
 {
+	[Authorize(Roles = "Admin,Owner")]
 	[HttpGet]
 	public async Task<IActionResult> Index(GetAllCategoryLibraryItemsPagedQuery req, CancellationToken ct)
 	{
@@ -46,6 +47,7 @@ public class CategoryLibraryItemController(IMediator mediator, IMapper mapper) :
 		return View(categories);
 	}
 
+	[Authorize(Roles = "Admin")]
 	[HttpGet("[action]/{id:guid}")]
 	public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
 	{
@@ -56,6 +58,7 @@ public class CategoryLibraryItemController(IMediator mediator, IMapper mapper) :
 		return View(cmd);
 	}
 
+	[Authorize(Roles = "Admin")]
 	[HttpPost("[action]")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Edit(UpdateCategoryLibraryItemCommand cmd, CancellationToken ct)
@@ -70,6 +73,7 @@ public class CategoryLibraryItemController(IMediator mediator, IMapper mapper) :
 	}
 
 
+	[Authorize(Roles = "Admin")]
 	[HttpPost("[action]/{id}")]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
