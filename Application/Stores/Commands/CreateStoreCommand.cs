@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.Addresses.DTOs;
 using Application.Common.Exceptions;
 using Application.Stores.DTOs;
 using Domain.Entities;
@@ -7,13 +8,14 @@ using MediatR;
 
 namespace Application.Stores.Commands;
 
-public sealed record CreateStoreCommand
-(
-	string Title,
-	string Slug,
-	string PhoneNumber,
-	Guid CompanyId
-) : IRequest<StoreDTO>, ITransactionalRequest;
+public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest
+{
+	public string Title { get; set; } = string.Empty;
+	public string Slug { get; set; } = string.Empty;
+	public string PhoneNumber { get; set; } = string.Empty;
+	public Guid CompanyId { get; set; }
+	public AddressDTO? Address { get; set; }
+}
 
 public class CreateStoreCommandHandler(
 	IRepository<Store> repoStore,

@@ -1,3 +1,4 @@
+using Application.Addresses.DTOs;
 using Application.Common.Base.DTOs;
 using Application.Companies.DTOs;
 using Application.Staffs.DTOs;
@@ -18,6 +19,6 @@ public sealed class StoreDTO : BaseDTO
 	public string PhoneNumber { get; set; } = null!;
 	public Guid CompanyId { get; set; }
 	public CompanyDTO? Company { get; set; }
-	public Address? Address { get; set; }
+	public AddressDTO? Address { get; set; }
 	public List<StaffDTO> Staffs { get; set; } = new List<StaffDTO>();
 }

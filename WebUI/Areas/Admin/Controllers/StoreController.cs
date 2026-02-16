@@ -13,14 +13,25 @@ namespace WebUI.Areas.Admin.Controllers;
 public class StoreController(IMediator mediator) : Controller
 {
 	[HttpGet]
-	public async Task<IActionResult> Index(Guid? companyId, int page = 1, CancellationToken ct = default)
+	public async Task<IActionResult> Index(Guid? companyId, string? search, int page = 1, CancellationToken ct = default)
 	{
+		bool isFixedCompany = false;
 		if (!companyId.HasValue && User.IsInRole("Owner"))
 		{
 			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
 			if (ownerCompany != null)
 			{
-				return RedirectToAction(nameof(Index), new { companyId = ownerCompany.Id });
+				return RedirectToAction(nameof(Index), new { companyId = ownerCompany.Id, search });
+			}
+		}
+		
+		if (User.IsInRole("Owner"))
+		{
+			// Verify if the requested CompanyId matches the Owner's company to consider it "fixed"
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany != null && companyId == ownerCompany.Id)
+			{
+				isFixedCompany = true;
 			}
 		}
 
@@ -30,11 +41,14 @@ public class StoreController(IMediator mediator) : Controller
             ViewBag.CurrentCompanyName = company.Title;
         }
 		ViewBag.CurrentCompanyId = companyId;
+		ViewBag.CurrentSearch = search;
+		ViewBag.IsFixedCompany = isFixedCompany;
 
-		var query = new GetStoresPaginatedByCurrentUserQuery
+		var query = new GetStoresPagedQuery
 		{
 			CompanyId = companyId,
-			Page = page,
+			Search = search,
+			Page = page - 1,
 			PageSize = 20 
 		};
 		
@@ -46,6 +60,16 @@ public class StoreController(IMediator mediator) : Controller
 	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
+		
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || store.CompanyId != ownerCompany.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		return View(store);
 	}
 
@@ -77,6 +101,20 @@ public class StoreController(IMediator mediator) : Controller
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Create(CreateStoreCommand req, CancellationToken ct)
 	{
+		// Owner can only create for their company
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany != null)
+			{
+				req.CompanyId = ownerCompany.Id; // Force company ID
+			}
+			else
+			{
+				return Forbid(); // Should have a company
+			}
+		}
+
 		var store = await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Index), new { companyId = store.CompanyId });
 	}
@@ -85,23 +123,51 @@ public class StoreController(IMediator mediator) : Controller
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
-        // We might want to show company info or allow changing it (if admin)
-        // For now just basic update
+		
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || store.CompanyId != ownerCompany.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		return View(store);
 	}
 
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Update(UpdateStoreCommand req, CancellationToken ct)
 	{
+		if (User.IsInRole("Owner"))
+		{
+			// Fetch store to verify company (since req might not have companyId or it might be forged - though command usually just updates fields)
+			// But we need to know if the store belongs to owner.
+			var store = await mediator.Send(new GetStoreByIdQuery(req.Id), ct);
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || store.CompanyId != ownerCompany.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Index)); 
-        // Or redirect to Details/Index with filter? 
-        // For simplicity index is fine, user can filter again.
 	}
 
 	[HttpPost("[action]/{id}")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
+		if (User.IsInRole("Owner"))
+		{
+			var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (ownerCompany == null || store.CompanyId != ownerCompany.Id)
+			{
+				return Forbid();
+			}
+		}
+
 		await mediator.Send(new DeleteStoreCommand(id), ct);
 		return RedirectToAction(nameof(Index));
 	}
