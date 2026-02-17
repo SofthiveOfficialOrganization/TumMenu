@@ -1,0 +1,411 @@
+@model Application.Companies.Commands.CreateCompanyCommand
+
+@{
+    ViewData["Title"] = "Hoşgeldiniz - Kurulum Sihirbazı";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; 
+}
+
+<div class="row min-vh-100 align-items-center justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0 overflow-hidden">
+            <div class="card-body p-0">
+                <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.5s ease-in-out; width: 300%;">
+                    
+                    <!-- Step 1: Create Company -->
+                    <div class="wizard-step w-100 p-5" id="step-company">
+                        <div class="text-center mb-4">
+                            <h2 class="h3 fw-bold text-primary">Hoşgeldiniz!</h2>
+                            <p class="text-muted">Başlamak için şirketinizi oluşturalım.</p>
+                        </div>
+                        <form id="form-company">
+                            <div class="mb-3">
+                                <label for="CompanyTitle" class="form-label">Şirket Adı</label>
+                                <input type="text" class="form-control form-control-lg" id="CompanyTitle" name="Title" required placeholder="Örn: Güzel Yemekler A.Ş.">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label for="CompanySlug" class="form-label mb-0">Şirket Linki (Opsiyonel)</label>
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" id="CompanySlugToggle">
+                                        <label class="form-check-label small text-secondary" for="CompanySlugToggle">El ile düzenle</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text">tummenu.com/</span>
+                                    <input type="text" class="form-control" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
+                                    <span class="input-group-text border-start-0 bg-white" id="CompanySlugStatus">
+                                        <i class="fas fa-lock text-secondary" id="CompanySlugIcon"></i>
+                                    </span>
+                                </div>
+                                <div id="CompanySlugFeedback" class="small mt-1" style="display:none;"></div>
+                                <small class="text-muted">Boş bırakırsanız otomatik oluşturulur.</small>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Şirketi Oluştur ve Devam Et <i class="bi bi-arrow-right"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Create Store -->
+                    <div class="wizard-step w-100 p-5" id="step-store">
+                        <div class="text-center mb-4">
+                            <h2 class="h3 fw-bold text-success">Harika! Şimdi İlk Şubeni Ekle</h2>
+                            <p class="text-muted">Müşterilerinizin sizi bulması için bir şube ekleyin.</p>
+                        </div>
+                        <form id="form-store">
+                            <input type="hidden" id="StoreCompanyId" name="CompanyId">
+                            <div class="mb-3">
+                                <label for="StoreTitle" class="form-label">Şube Adı</label>
+                                <input type="text" class="form-control form-control-lg" id="StoreTitle" name="Title" required placeholder="Örn: Merkez Şube">
+                            </div>
+                            <div class="mb-3">
+                                <label for="StorePhone" class="form-label">Telefon Numarası</label>
+                                <input type="tel" class="form-control" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
+                            </div>
+                             <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label for="StoreSlug" class="form-label mb-0">Şube Linki (Opsiyonel)</label>
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" id="StoreSlugToggle">
+                                        <label class="form-check-label small text-secondary" for="StoreSlugToggle">El ile düzenle</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text">tummenu.com/sirket/</span>
+                                    <input type="text" class="form-control" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
+                                    <span class="input-group-text border-start-0 bg-white" id="StoreSlugStatus">
+                                        <i class="fas fa-lock text-secondary" id="StoreSlugIcon"></i>
+                                    </span>
+                                </div>
+                                <div id="StoreSlugFeedback" class="small mt-1" style="display:none;"></div>
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">Şubeyi Kaydet ve Menüye Geç <i class="bi bi-arrow-right"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 3: Create Menu -->
+                    <div class="wizard-step w-100 p-5" id="step-menu">
+                        <div class="text-center mb-4">
+                            <h2 class="h3 fw-bold text-info">Son Adım: Menünü Oluştur</h2>
+                            <p class="text-muted">Hemen sipariş almaya başlamak için bir menü oluştur.</p>
+                        </div>
+                        <form id="form-menu">
+                            <input type="hidden" id="MenuStoreId" name="StoreId">
+                            <div class="mb-3">
+                                <label for="MenuTitle" class="form-label">Menü Adı</label>
+                                <input type="text" class="form-control form-control-lg" id="MenuTitle" name="Title" required placeholder="Örn: Ana Menü">
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="MenuStatus" name="Status" value="1" checked>
+                                <label class="form-check-label" for="MenuStatus">
+                                    Bu menüyü aktif yap
+                                </label>
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-info btn-lg text-white">Kurulumu Tamamla <i class="bi bi-check-lg"></i></button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Disable global scrolling for the wizard page layout specifically if needed */
+    /* .content-wrapper { overflow: hidden; } */ 
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            let currentStep = 0;
+            const wizard = $('#onboarding-wizard');
+            
+            // --- Shared Slug Logic ---
+            function slugify(text) {
+                const turkishMap = {
+                    'ğ':'g','ü':'u','ş':'s','ı':'i','ö':'o','ç':'c',
+                    'Ğ':'g','Ü':'u','Ş':'s','İ':'i','I':'i','Ö':'o','Ç':'c'
+                };
+                let result = text.trim().toLowerCase();
+                result = result.split('').map(c => turkishMap[c] || c).join('');
+                result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                result = result.replace(/[^a-z0-9\s\-_]/g, '');
+                result = result.replace(/[\s_]+/g, '-');
+                result = result.replace(/-+/g, '-');
+                result = result.replace(/^-|-$/g, '');
+                if (result.length > 30) {
+                    result = result.substring(0, 30).replace(/-$/, '');
+                }
+                return result;
+            }
+
+            function setupSlugHandling(prefix, checkUrl) {
+                const titleInput = $('#' + prefix + 'Title');
+                const slugInput = $('#' + prefix + 'Slug');
+                const slugToggle = $('#' + prefix + 'SlugToggle');
+                const slugIcon = $('#' + prefix + 'SlugIcon');
+                const slugFeedback = $('#' + prefix + 'SlugFeedback');
+                let debounceTimer = null;
+                let isManual = false;
+
+                function checkSlugAvailability(slug) {
+                    if (!slug) {
+                        slugFeedback.hide();
+                        return;
+                    }
+                    $.get(checkUrl, { slug: slug }, function (data) {
+                        slugFeedback.show();
+                        if (data.available) {
+                            slugFeedback.html('<i class="fas fa-check-circle text-success me-1"></i> ' + data.message)
+                                .removeClass('text-danger').addClass('text-success');
+                            slugIcon.removeClass('fa-lock fa-times-circle text-danger text-secondary')
+                                .addClass('fa-check-circle text-success');
+                        } else {
+                            slugFeedback.html('<i class="fas fa-times-circle text-danger me-1"></i> ' + data.message)
+                                .removeClass('text-success').addClass('text-danger');
+                            slugIcon.removeClass('fa-lock fa-check-circle text-success text-secondary')
+                                .addClass('fa-times-circle text-danger');
+                        }
+                    });
+                }
+
+                function debouncedCheck(slug) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(function () {
+                        checkSlugAvailability(slug);
+                    }, 500);
+                }
+
+                titleInput.on('input', function () {
+                    if (!isManual) {
+                        const slug = slugify($(this).val());
+                        slugInput.val(slug);
+                        debouncedCheck(slug);
+                    }
+                });
+
+                slugToggle.on('change', function () {
+                    isManual = $(this).is(':checked');
+                    if (isManual) {
+                        slugInput.prop('readonly', false).focus();
+                        slugIcon.removeClass('fa-lock fa-check-circle fa-times-circle text-success text-danger text-secondary')
+                            .addClass('fa-pencil-alt text-primary');
+                    } else {
+                        slugInput.prop('readonly', true);
+                        const slug = slugify(titleInput.val());
+                        slugInput.val(slug);
+                        slugIcon.removeClass('fa-pencil-alt fa-check-circle fa-times-circle text-primary text-success text-danger')
+                            .addClass('fa-lock text-secondary');
+                        slugFeedback.hide();
+                        if (slug) debouncedCheck(slug);
+                    }
+                });
+
+                slugInput.on('input', function () {
+                    if (isManual) {
+                        let val = $(this).val().toLowerCase()
+                            .replace(/[^a-z0-9\-]/g, '')
+                            .replace(/-+/g, '-');
+                        if (val.length > 30) val = val.substring(0, 30);
+                        $(this).val(val);
+                        debouncedCheck(val);
+                    }
+                });
+            }
+
+            // Init Slug Handling
+            setupSlugHandling('Company', '@Url.Action("CheckSlug", "Company", new { area = "Admin" })');
+            setupSlugHandling('Store', '@Url.Action("CheckSlug", "Store", new { area = "Admin" })');
+
+            // --- Helper to slide to next step ---
+            function nextStep() {
+                currentStep++;
+                wizard.css('transform', `translateX(-${currentStep * 33.3333}%)`);
+            }
+            
+            // --- Helper for Error Handling ---
+            function handleError(xhr, titleContext) {
+                console.group(titleContext + ' Debug Info');
+                console.log('Status:', xhr.status, xhr.statusText);
+                console.log('Response JSON:', xhr.responseJSON);
+                console.log('Response Text:', xhr.responseText);
+                console.groupEnd();
+                
+                let errorMsg = 'Bilinmeyen bir hata oluştu.';
+                let errorDetails = '';
+
+                if (xhr.responseJSON) {
+                    // Case 1: Standard ApiError with Message
+                    if (xhr.responseJSON.Message) {
+                        errorMsg = xhr.responseJSON.Message;
+                    } 
+                    else if (xhr.responseJSON.Title) {
+                         // Case 2: Validation ProblemDetails (default ASP.NET)
+                        errorMsg = xhr.responseJSON.Title;
+                    }
+
+                    // Case 3: Validation Errors Dictionary
+                    if (xhr.responseJSON.Errors) {
+                        const errors = xhr.responseJSON.Errors;
+                        // Flatten errors
+                        if (typeof errors === 'object') {
+                            errorDetails = '<ul class="text-start mt-2 mb-0 list-unstyled">';
+                            for (const key in errors) {
+                                if (Array.isArray(errors[key])) {
+                                    errors[key].forEach(m => errorDetails += `<li>• ${m}</li>`);
+                                } else {
+                                    errorDetails += `<li>• ${errors[key]}</li>`;
+                                }
+                            }
+                            errorDetails += '</ul>';
+                        }
+                    }
+                } else if (xhr.responseText) {
+                    // Try to extract title if HTML
+                    const match = xhr.responseText.match(/<title>(.*?)<\/title>/);
+                    if (match && match[1]) {
+                        errorMsg = 'Sunucu Hatası: ' + match[1];
+                    }
+                }
+
+                // Use Toast as requested
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: errorMsg,
+                    html: errorDetails,
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            }
+
+            // --- Step 1: Create Company ---
+            $('#form-company').on('submit', function(e) {
+                e.preventDefault();
+                // Basic validation: Check if slug has error
+                if ($('#CompanySlugFeedback').hasClass('text-danger')) {
+                     Swal.fire({ icon: 'warning', title: 'Hatalı Slug', text: 'Lütfen geçerli bir şirket linki (slug) giriniz.' });
+                     return;
+                }
+
+                const btn = $(this).find('button[type="submit"]');
+                const originalText = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kaydediliyor...');
+
+                const formData = {
+                    Title: $('#CompanyTitle').val(),
+                    Slug: $('#CompanySlug').val()
+                };
+
+                $.ajax({
+                    url: '/admin/Onboarding/company',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: { 
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        // Response should be CompanyDTO
+                        $('#StoreCompanyId').val(response.id);
+                        btn.prop('disabled', false).html(originalText);
+                        nextStep();
+                    },
+                    error: function(xhr) {
+                        btn.prop('disabled', false).html(originalText);
+                        handleError(xhr, 'Company Create');
+                    }
+                });
+            });
+
+            // --- Step 2: Create Store ---
+            $('#form-store').on('submit', function(e) {
+                e.preventDefault();
+                if ($('#StoreSlugFeedback').hasClass('text-danger')) {
+                     Swal.fire({ icon: 'warning', title: 'Hatalı Slug', text: 'Lütfen geçerli bir şube linki (slug) giriniz.' });
+                     return;
+                }
+
+                const btn = $(this).find('button[type="submit"]');
+                const originalText = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kaydediliyor...');
+
+                const formData = {
+                    CompanyId: $('#StoreCompanyId').val(),
+                    Title: $('#StoreTitle').val(),
+                    PhoneNumber: $('#StorePhone').val(),
+                    Slug: $('#StoreSlug').val()
+                };
+
+                $.ajax({
+                    url: '/admin/Onboarding/store',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: { 
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        // Response should be StoreDTO
+                        $('#MenuStoreId').val(response.id);
+                        btn.prop('disabled', false).html(originalText);
+                        nextStep();
+                    },
+                    error: function(xhr) {
+                        btn.prop('disabled', false).html(originalText);
+                         handleError(xhr, 'Store Create');
+                    }
+                });
+            });
+
+            // --- Step 3: Create Menu ---
+            $('#form-menu').on('submit', function(e) {
+                e.preventDefault();
+                const btn = $(this).find('button[type="submit"]');
+                const originalText = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kaydediliyor...');
+
+                const formData = {
+                    StoreId: $('#MenuStoreId').val(),
+                    Title: $('#MenuTitle').val(),
+                    Status: $('#MenuStatus').is(':checked') ? 1 : 0 
+                };
+
+                $.ajax({
+                    url: '/admin/Onboarding/menu',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: { 
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        // Complete! Redirect to Dashboard or the new Menu
+                        window.location.href = '/admin/Menu/' + response.id;
+                    },
+                    error: function(xhr) {
+                        btn.prop('disabled', false).html(originalText);
+                        handleError(xhr, 'Menu Create');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Stores.Commands;
 
@@ -11,7 +12,8 @@ public sealed record DeleteStoreCommand
 
 
 public class DeleteStoreCommandHandler(
-    IRepository<Store> repoStore
+    IRepository<Store> repoStore,
+    IRepository<Menu> repoMenu
 ) : IRequestHandler<DeleteStoreCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteStoreCommand req, CancellationToken ct)
@@ -20,6 +22,16 @@ public class DeleteStoreCommandHandler(
         if(store != null)
         {
             repoStore.SoftDelete(store);
+            
+            // Soft delete menus associated with this store
+            var menus = await repoMenu.Query()
+                .Where(m => m.StoreId == store.Id)
+                .ToListAsync(ct);
+                
+            foreach (var menu in menus)
+            {
+                repoMenu.SoftDelete(menu);
+            }
         }
         return Unit.Value;
     }
