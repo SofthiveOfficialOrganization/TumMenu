@@ -65,16 +65,14 @@
                                         </span>
                                     </td>
                                     <td class="text-end pe-3">
-                                        <div class="btn-group">
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success" title="Düzenle">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?');">
-                                                <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu kategoriyi silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             }

@@ -72,17 +72,6 @@
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-
-                                        <a asp-controller="Category" asp-action="Create" asp-route-menuId="@item.Id" class="btn btn-sm btn-light text-warning me-2" title="Kategori Ekle">
-                                            <i class="fas fa-tags"></i>
-                                        </a>
-                                        
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu menüyü silmek istediğinize emin misiniz?');">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                             }

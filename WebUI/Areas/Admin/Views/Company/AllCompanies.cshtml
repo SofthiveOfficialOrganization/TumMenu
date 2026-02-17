@@ -30,10 +30,7 @@
                             <th class="ps-3">Şirket Adı</th>
                             <th>Slug</th>
                             <th>Şirket Sahibi</th>
-                            <th>Şirket Sahibi ID</th>
                             <th>Oluşturulma Tarihi</th>
-                            <th>Değiştirilme Tarihi</th>
-                            <th>Silinme Tarihi</th>
                             <th class="text-end pe-3">Eylemler</th>
                         </tr>
                     </thead>
@@ -54,34 +51,12 @@
                                     <td class="text-secondary">@item.Slug</td>
                                     <td class="text-secondary small">
                                         <span class="badge bg-light text-dark fw-normal">
-                                            <i class="fas fa-key me-1"></i>
+                                            <i class="fas fa-user me-1"></i>
                                             @item.OwnerName
                                         </span>
-                                    </td>                                    <td class="text-secondary small">
-                                        <span class="badge bg-light text-dark fw-normal">
-                                            <i class="fas fa-key me-1"></i>
-                                            @item.OwnerId
-                                        </span>
-                                    </td>
-                                    <td class="text-secondary small">
-                                        <span class="badge bg-light text-dark fw-normal">
-                                            <i class="fas fa-key me-1"></i>
-                                            @item.CreatedAt
-                                        </span>
-                                    </td>
-                                    <td class="text-secondary small">
-                                        <span class="badge bg-light text-dark fw-normal">
-                                            <i class="fas fa-key me-1"></i>
-                                            @item.ModifiedAt
-                                        </span>
-                                    </td>
-                                    <td class="text-secondary small">
-                                        <span class="badge bg-light text-dark fw-normal">
-                                            <i class="fas fa-key me-1"></i>
-                                            @item.DeletedAt
-                                        </span>
-                                    </td>
-                                    <td class="text-end pe-3">
+                                    </td>                                   
+                                    <td class="text-secondary small">@item.CreatedAt?.ToString("d")</td>
+                                    <td class="text-end pe-3 text-nowrap">
                                         <a asp-controller="Store" asp-action="Index" asp-route-companyId="@item.Id" class="btn btn-sm btn-light text-info me-2" title="Dükkanlar">
                                             <i class="fas fa-store"></i>
                                         </a>

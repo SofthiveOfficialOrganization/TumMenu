@@ -33,10 +33,9 @@
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
-                            <th>Durum</th>
-                            <th>İlişkili</th>
-                            <th>Şablon ID</th>
-                            <th>Oluşturulma Tarihi</th>
+                            <th class="text-nowrap">Durum</th>
+                            <th class="text-nowrap">İlişkili</th>
+                            <th class="text-nowrap">Oluşturulma Tarihi</th>
                             <th class="text-end pe-3">İşlemler</th>
                         </tr>
                     </thead>
@@ -54,7 +53,7 @@
                                             <span class="fw-bold text-dark">@item.Title</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         @if (item.Status == Domain.Entities.MenuStatus.Active)
                                         {
                                             <span class="badge bg-success">AKTİF</span>
@@ -64,31 +63,37 @@
                                             <span class="badge bg-light text-secondary">PASİF</span>
                                         }
                                     </td>
-                                    <td class="text-secondary">
+                                    <td class="text-secondary text-nowrap">
                                         @if(item.CompanyId.HasValue)
                                         {
-                                            <span class="badge bg-primary bg-opacity-10 text-primary">Şirket: @item.CompanyId</span>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary" title="@item.CompanyId">
+                                                <i class="fas fa-building me-1"></i> Şirket
+                                            </span>
                                         }
                                         else if(item.StoreId.HasValue)
                                         {
-                                            <span class="badge bg-info bg-opacity-10 text-info">Dükkan: @item.StoreId</span>
+                                            <span class="badge bg-info bg-opacity-10 text-info" title="@item.StoreId">
+                                                <i class="fas fa-store me-1"></i> Dükkan
+                                            </span>
                                         }
                                         else
                                         {
                                             <span class="badge bg-secondary bg-opacity-10 text-secondary">Atanmamış</span>
                                         }
                                     </td>
-                                    <td class="text-secondary small">@item.MenuTemplateId</td>
-                                    <td class="text-secondary small">@item.CreatedAt?.ToString("g")</td>
-                                    <td class="text-end pe-3">
+                                    <td class="text-secondary small text-nowrap">@item.CreatedAt?.ToString("d")</td>
+                                    <td class="text-end pe-3 text-nowrap">
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
 
+                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                         
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu menüyü silmek istediğinize emin misiniz?');">
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>

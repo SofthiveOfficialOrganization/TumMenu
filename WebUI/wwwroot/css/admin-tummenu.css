@@ -20,14 +20,16 @@ body.dark-mode {
     --horizon-primary-hover: #5E3DFF;
 }
 
+html,
 body.horizon-admin {
     background-color: var(--horizon-bg);
     color: var(--horizon-text-primary);
     font-family: 'DM Sans', sans-serif;
     margin: 0;
     padding: 0;
-    padding: 0;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -89,6 +91,7 @@ body.horizon-admin {
     font-size: 16px;
     transition: all 0.2s;
     position: relative;
+    white-space: nowrap;
 }
 
 .horizon-menu-link:hover,
@@ -1216,4 +1219,25 @@ html.dark-mode .swal2-toast,
 body.dark-mode .swal2-toast {
     background-color: var(--horizon-card-bg) !important;
     box-shadow: 0 0 20px rgba(0,0,0,0.5) !important;
+}
+
+/* ======================================
+   RESPONSIVE: MOBILE SPECIFIC
+   ====================================== */
+@media (max-width: 768px) {
+    .horizon-main {
+        padding: 15px; /* Reduce padding on mobile to prevent squashing/overflow */
+        width: 100%;
+        overflow-x: hidden; /* Ensure content doesn't overflow main container */
+    }
+    
+    .horizon-content > .row {
+        margin-left: -7.5px;
+        margin-right: -7.5px;
+    }
+    
+    .horizon-content > .row > [class*="col-"] {
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
 }

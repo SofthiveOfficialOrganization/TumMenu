@@ -50,9 +50,9 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         
-                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?');">
+                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-light text-danger" title="Sil">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu kategoriyi silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
