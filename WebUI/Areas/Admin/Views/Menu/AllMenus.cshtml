@@ -66,14 +66,14 @@
                                     <td class="text-secondary text-nowrap">
                                         @if(item.CompanyId.HasValue)
                                         {
-                                            <span class="badge bg-primary bg-opacity-10 text-primary" title="@item.CompanyId">
-                                                <i class="fas fa-building me-1"></i> Şirket
+                                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                <i class="fas fa-building me-1"></i> @(!string.IsNullOrEmpty(item.CompanyName) ? item.CompanyName : "Şirket")
                                             </span>
                                         }
                                         else if(item.StoreId.HasValue)
                                         {
-                                            <span class="badge bg-info bg-opacity-10 text-info" title="@item.StoreId">
-                                                <i class="fas fa-store me-1"></i> Dükkan
+                                            <span class="badge bg-info bg-opacity-10 text-info">
+                                                <i class="fas fa-store me-1"></i> @(!string.IsNullOrEmpty(item.StoreName) ? item.StoreName : "Dükkan")
                                             </span>
                                         }
                                         else
@@ -85,10 +85,6 @@
                                     <td class="text-end pe-3 text-nowrap">
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
-                                            <i class="fas fa-edit"></i>
                                         </a>
                                         
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">

@@ -28,7 +28,13 @@
         <div class="horizon-sidebar-overlay" id="sidebarOverlay"></div>
         
         <!-- Sidebar -->
-        <aside class="horizon-sidebar">
+        @{
+            var isOnboarding = ViewContext.RouteData.Values["Controller"]?.ToString() == "Onboarding";
+        }
+        @if (!isOnboarding)
+        {
+            <div class="horizon-sidebar-overlay" id="sidebarOverlay"></div>
+            <aside class="horizon-sidebar">
             <div class="horizon-logo">
                 TUM <span>MENU</span>
             </div>
@@ -80,16 +86,26 @@
                         </a>
                     </li>
                 }
+                     @if (User.IsInRole("Admin"))
+                    {
+                        <li class="horizon-menu-item">
+                            <a href="@Url.Action("Index", "CategoryLibraryItem", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CategoryLibraryItem" ? "active" : "")">
+                                <div class="horizon-menu-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 6.00008V4.2844C16 3.51587 16 3.13161 15.8387 2.88321C15.6976 2.66587 15.4776 2.5118 15.2252 2.45345C14.9366 2.38677 14.5755 2.51809 13.8532 2.78073L6.57982 5.4256C6.01064 5.63257 5.72605 5.73606 5.51615 5.91845C5.33073 6.07956 5.18772 6.28374 5.09968 6.51304C5 6.77264 5 7.07546 5 7.6811V12.0001M9 17.0001H15M9 13.5001H15M9 10.0001H15M8.2 21.0001H15.8C16.9201 21.0001 17.4802 21.0001 17.908 20.7821C18.2843 20.5903 18.5903 20.2844 18.782 19.9081C19 19.4802 19 18.9202 19 17.8001V9.20008C19 8.07997 19 7.51992 18.782 7.0921C18.5903 6.71577 18.2843 6.40981 17.908 6.21807C17.4802 6.00008 16.9201 6.00008 15.8 6.00008H8.2C7.0799 6.00008 6.51984 6.00008 6.09202 6.21807C5.71569 6.40981 5.40973 6.71577 5.21799 7.0921C5 7.51992 5 8.07997 5 9.20008V17.8001C5 18.9202 5 19.4802 5.21799 19.9081C5.40973 20.2844 5.71569 20.5903 6.09202 20.7821C6.51984 21.0001 7.07989 21.0001 8.2 21.0001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <span>Kategori Kütüphanesi</span>
+                            </a>
+                        </li>
+                    }
+
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="horizon-menu-item">
-                        <a href="@Url.Action("Index", "CategoryLibraryItem", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CategoryLibraryItem" ? "active" : "")">
-                            <div class="horizon-menu-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 6.00008V4.2844C16 3.51587 16 3.13161 15.8387 2.88321C15.6976 2.66587 15.4776 2.5118 15.2252 2.45345C14.9366 2.38677 14.5755 2.51809 13.8532 2.78073L6.57982 5.4256C6.01064 5.63257 5.72605 5.73606 5.51615 5.91845C5.33073 6.07956 5.18772 6.28374 5.09968 6.51304C5 6.77264 5 7.07546 5 7.6811V12.0001M9 17.0001H15M9 13.5001H15M9 10.0001H15M8.2 21.0001H15.8C16.9201 21.0001 17.4802 21.0001 17.908 20.7821C18.2843 20.5903 18.5903 20.2844 18.782 19.9081C19 19.4802 19 18.9202 19 17.8001V9.20008C19 8.07997 19 7.51992 18.782 7.0921C18.5903 6.71577 18.2843 6.40981 17.908 6.21807C17.4802 6.00008 16.9201 6.00008 15.8 6.00008H8.2C7.0799 6.00008 6.51984 6.00008 6.09202 6.21807C5.71569 6.40981 5.40973 6.71577 5.21799 7.0921C5 7.51992 5 8.07997 5 9.20008V17.8001C5 18.9202 5 19.4802 5.21799 19.9081C5.40973 20.2844 5.71569 20.5903 6.09202 20.7821C6.51984 21.0001 7.07989 21.0001 8.2 21.0001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <span>Kategori Kütüphanesi</span>
+                        <a href="@Url.Action("Index", "CategorySuggestion", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CategorySuggestion" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-lightbulb"></i></div>
+                            <span>Kategori Önerileri</span>
                         </a>
                     </li>
                 }
@@ -148,11 +164,14 @@
                 </li>
             </ul>
         </aside>
+        }
 
         <!-- Main Content -->
-        <div class="horizon-main">
-            <!-- Navbar -->
-            <nav class="horizon-navbar">
+        <div class="horizon-main" style="@(isOnboarding ? "margin-left: 0; width: 100%; padding: 0;" : "")">
+            @if (!isOnboarding)
+            {
+                <!-- Navbar -->
+                <nav class="horizon-navbar">
                 <div class="d-flex align-items-center">
                     <button class="horizon-hamburger" id="sidebarToggle" aria-label="Menüyü aç">
                         <i class="fas fa-bars"></i>
@@ -193,6 +212,7 @@
                     </div>
                 </div>
             </nav>
+            }
 
             <!-- Skeleton Loading Screen -->
             <div class="skeleton-screen" id="skeletonScreen">

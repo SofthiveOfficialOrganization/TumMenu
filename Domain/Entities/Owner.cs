@@ -8,5 +8,6 @@ namespace Domain.Entities
 		public ApplicationUser ApplicationUser { get; set; } = null!;
 		public Company? Company { get; set; }
 		public List<Invoice> Invoices { get; set; } = [];
+		public bool WizardCompleted { get; set; }
 	}
 }

@@ -37,6 +37,7 @@ namespace Infrastructure.Persistence
 		public DbSet<Menu> Menus => Set<Menu>();
 		public DbSet<Category> Categories => Set<Category>();
 		public DbSet<CategoryLibraryItem> CategoryLibraryItems => Set<CategoryLibraryItem>();
+		public DbSet<CategorySuggestion> CategorySuggestions => Set<CategorySuggestion>();
 		public DbSet<Product> Products => Set<Product>();
 		public DbSet<ProductPrice> ProductPrices => Set<ProductPrice>();
 		public DbSet<Tag> Tags => Set<Tag>();
@@ -292,6 +293,13 @@ namespace Infrastructure.Persistence
 				.HasIndex(x => new { x.CategoryId, x.Slug })
 				.IsUnique()
 				.HasFilter("[IsDeleted] = 0");
+
+			// CategorySuggestion -> Company (optional FK)
+			builder.Entity<CategorySuggestion>()
+				.HasOne(s => s.Company)
+				.WithMany()
+				.HasForeignKey(s => s.CompanyId)
+				.OnDelete(DeleteBehavior.SetNull);
 		}
 
 		#endregion
@@ -506,6 +514,10 @@ namespace Infrastructure.Persistence
 				.HasConversion<int>();
 
 			builder.Entity<Subscription>()
+				.Property(s => s.Status)
+				.HasConversion<int>();
+
+			builder.Entity<CategorySuggestion>()
 				.Property(s => s.Status)
 				.HasConversion<int>();
 

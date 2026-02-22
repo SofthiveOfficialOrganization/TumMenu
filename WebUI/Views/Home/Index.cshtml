@@ -117,73 +117,80 @@
             <h2 id="new-heading" class="section__title">🆕 Yeni restoranlar</h2>
             <p class="section__subtitle">Platformumuza yeni katılan mekanları keşfet.</p>
         </div>
-        <div class="home-store-grid">
-            @if (homepageStores?.NewStores != null)
-            {
-                @foreach (var store in homepageStores.NewStores)
+        
+        <div class="home-store-grid-wrapper">
+            <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button">❮</button>
+            
+            <div class="home-store-grid">
+                @if (homepageStores?.NewStores != null)
                 {
-                    <a class="home-store-card" href="/Store/Details/@store.Id">
-                        <div class="home-store-card__img-wrap">
-                            @if (!string.IsNullOrEmpty(store.ImageUrl))
-                            {
-                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
-                            }
-                            else
-                            {
-                                <div class="home-store-card__no-img">🍽️</div>
-                            }
-                        </div>
-                        <div class="home-store-card__body">
-                            <h3 class="home-store-card__name">@store.Title</h3>
-                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
-                            {
-                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
-                            }
-                        </div>
-                    </a>
+                    @foreach (var store in homepageStores.NewStores)
+                    {
+                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                            <div class="home-store-card__img-wrap">
+                                @if (!string.IsNullOrEmpty(store.ImageUrl))
+                                {
+                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="home-store-card__no-img">🍽️</div>
+                                }
+                            </div>
+                            <div class="home-store-card__body">
+                                <h3 class="home-store-card__name">@store.Title</h3>
+                                @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                                {
+                                    <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                                }
+                            </div>
+                        </a>
+                    }
                 }
-            }
-            <!-- Örnek kartlar (4 adet) -->
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍽️</div>
-                    <span class="home-store-card__badge">Yeni</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Lezzet Durağı</h3>
-                    <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🥗</div>
-                    <span class="home-store-card__badge">Yeni</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Yeşil Bahçe</h3>
-                    <p class="home-store-card__location">📍 Moda, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🥩</div>
-                    <span class="home-store-card__badge">Yeni</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Et Evi</h3>
-                    <p class="home-store-card__location">📍 Bostancı, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">☕</div>
-                    <span class="home-store-card__badge">Yeni</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Kahve Molası</h3>
-                    <p class="home-store-card__location">📍 Caddebostan, İstanbul</p>
-                </div>
-            </a>
+                <!-- Örnek kartlar (4 adet) -->
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍽️</div>
+                        <span class="home-store-card__badge">Yeni</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Lezzet Durağı</h3>
+                        <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🥗</div>
+                        <span class="home-store-card__badge">Yeni</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Yeşil Bahçe</h3>
+                        <p class="home-store-card__location">📍 Moda, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🥩</div>
+                        <span class="home-store-card__badge">Yeni</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Et Evi</h3>
+                        <p class="home-store-card__location">📍 Bostancı, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">☕</div>
+                        <span class="home-store-card__badge">Yeni</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Kahve Molası</h3>
+                        <p class="home-store-card__location">📍 Caddebostan, İstanbul</p>
+                    </div>
+                </a>
+            </div>
+
+            <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button">❯</button>
         </div>
     </div>
 </section>
@@ -195,73 +202,80 @@
             <h2 id="popular-heading" class="section__title">🔥 Popüler restoranlar</h2>
             <p class="section__subtitle">Topluluğumuzun en çok tercih ettiği mekanlar.</p>
         </div>
-        <div class="home-store-grid">
-            @if (homepageStores?.PopularStores != null)
-            {
-                @foreach (var store in homepageStores.PopularStores)
+        
+        <div class="home-store-grid-wrapper">
+            <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button">❮</button>
+
+            <div class="home-store-grid">
+                @if (homepageStores?.PopularStores != null)
                 {
-                    <a class="home-store-card" href="/Store/Details/@store.Id">
-                        <div class="home-store-card__img-wrap">
-                            @if (!string.IsNullOrEmpty(store.ImageUrl))
-                            {
-                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
-                            }
-                            else
-                            {
-                                <div class="home-store-card__no-img">🍽️</div>
-                            }
-                        </div>
-                        <div class="home-store-card__body">
-                            <h3 class="home-store-card__name">@store.Title</h3>
-                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
-                            {
-                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
-                            }
-                        </div>
-                    </a>
+                    @foreach (var store in homepageStores.PopularStores)
+                    {
+                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                            <div class="home-store-card__img-wrap">
+                                @if (!string.IsNullOrEmpty(store.ImageUrl))
+                                {
+                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="home-store-card__no-img">🍽️</div>
+                                }
+                            </div>
+                            <div class="home-store-card__body">
+                                <h3 class="home-store-card__name">@store.Title</h3>
+                                @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                                {
+                                    <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                                }
+                            </div>
+                        </a>
+                    }
                 }
-            }
-            <!-- Örnek kartlar (4 adet) -->
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍔</div>
-                    <span class="home-store-card__badge">Popüler</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Burger House</h3>
-                    <p class="home-store-card__location">📍 Beşiktaş, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍕</div>
-                    <span class="home-store-card__badge">Popüler</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Pizza Roma</h3>
-                    <p class="home-store-card__location">📍 Şişli, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🌭</div>
-                    <span class="home-store-card__badge">Popüler</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Sosisçi Baba</h3>
-                    <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🌮</div>
-                    <span class="home-store-card__badge">Popüler</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Taco Meksika</h3>
-                    <p class="home-store-card__location">📍 Beyoğlu, İstanbul</p>
-                </div>
-            </a>
+                <!-- Örnek kartlar (4 adet) -->
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍔</div>
+                        <span class="home-store-card__badge">Popüler</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Burger House</h3>
+                        <p class="home-store-card__location">📍 Beşiktaş, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍕</div>
+                        <span class="home-store-card__badge">Popüler</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Pizza Roma</h3>
+                        <p class="home-store-card__location">📍 Şişli, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🌭</div>
+                        <span class="home-store-card__badge">Popüler</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Sosisçi Baba</h3>
+                        <p class="home-store-card__location">📍 Kadıköy, İstanbul</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🌮</div>
+                        <span class="home-store-card__badge">Popüler</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Taco Meksika</h3>
+                        <p class="home-store-card__location">📍 Beyoğlu, İstanbul</p>
+                    </div>
+                </a>
+            </div>
+
+            <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button">❯</button>
         </div>
     </div>
 </section>
@@ -273,73 +287,80 @@
             <h2 id="daily-heading" class="section__title">⭐ Günün restoranları</h2>
             <p class="section__subtitle">Bugün için önerilen mekanlar.</p>
         </div>
-        <div class="home-store-grid">
-            @if (homepageStores?.DailyStores != null)
-            {
-                @foreach (var store in homepageStores.DailyStores)
+        
+        <div class="home-store-grid-wrapper">
+            <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button">❮</button>
+
+            <div class="home-store-grid">
+                @if (homepageStores?.DailyStores != null)
                 {
-                    <a class="home-store-card" href="/Store/Details/@store.Id">
-                        <div class="home-store-card__img-wrap">
-                            @if (!string.IsNullOrEmpty(store.ImageUrl))
-                            {
-                                <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
-                            }
-                            else
-                            {
-                                <div class="home-store-card__no-img">🍽️</div>
-                            }
-                        </div>
-                        <div class="home-store-card__body">
-                            <h3 class="home-store-card__name">@store.Title</h3>
-                            @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
-                            {
-                                <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
-                            }
-                        </div>
-                    </a>
+                    @foreach (var store in homepageStores.DailyStores)
+                    {
+                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                            <div class="home-store-card__img-wrap">
+                                @if (!string.IsNullOrEmpty(store.ImageUrl))
+                                {
+                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="home-store-card__no-img">🍽️</div>
+                                }
+                            </div>
+                            <div class="home-store-card__body">
+                                <h3 class="home-store-card__name">@store.Title</h3>
+                                @if (!string.IsNullOrEmpty(store.City) || !string.IsNullOrEmpty(store.District))
+                                {
+                                    <p class="home-store-card__location">📍 @(store.District ?? "") @(store.City ?? "")</p>
+                                }
+                            </div>
+                        </a>
+                    }
                 }
-            }
-            <!-- Örnek kartlar (4 adet) -->
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍣</div>
-                    <span class="home-store-card__badge">Günün seçimi</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Sakura Sushi</h3>
-                    <p class="home-store-card__location">📍 Çankaya, Ankara</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍲</div>
-                    <span class="home-store-card__badge">Günün seçimi</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Anadolu Sofrası</h3>
-                    <p class="home-store-card__location">📍 Ulus, Ankara</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍜</div>
-                    <span class="home-store-card__badge">Günün seçimi</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Asya Wok</h3>
-                    <p class="home-store-card__location">📍 Çayyolu, Ankara</p>
-                </div>
-            </a>
-            <a class="home-store-card" href="#">
-                <div class="home-store-card__img-wrap">
-                    <div class="home-store-card__no-img">🍝</div>
-                    <span class="home-store-card__badge">Günün seçimi</span>
-                </div>
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">İtalyan İşi</h3>
-                    <p class="home-store-card__location">📍 Bahçelievler, Ankara</p>
-                </div>
-            </a>
+                <!-- Örnek kartlar (4 adet) -->
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍣</div>
+                        <span class="home-store-card__badge">Günün seçimi</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Sakura Sushi</h3>
+                        <p class="home-store-card__location">📍 Çankaya, Ankara</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍲</div>
+                        <span class="home-store-card__badge">Günün seçimi</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Anadolu Sofrası</h3>
+                        <p class="home-store-card__location">📍 Ulus, Ankara</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍜</div>
+                        <span class="home-store-card__badge">Günün seçimi</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">Asya Wok</h3>
+                        <p class="home-store-card__location">📍 Çayyolu, Ankara</p>
+                    </div>
+                </a>
+                <a class="home-store-card" href="#">
+                    <div class="home-store-card__img-wrap">
+                        <div class="home-store-card__no-img">🍝</div>
+                        <span class="home-store-card__badge">Günün seçimi</span>
+                    </div>
+                    <div class="home-store-card__body">
+                        <h3 class="home-store-card__name">İtalyan İşi</h3>
+                        <p class="home-store-card__location">📍 Bahçelievler, Ankara</p>
+                    </div>
+                </a>
+            </div>
+
+            <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button">❯</button>
         </div>
     </div>
 </section>
@@ -415,6 +436,27 @@
             chip.addEventListener('click', function() {
               var text = chip.textContent.trim();
               window.location.href = '/Home/Restaurants?search=' + encodeURIComponent(text);
+            });
+          });
+
+          // Carousel Arrows Logic
+          var wrappers = document.querySelectorAll('.home-store-grid-wrapper');
+          wrappers.forEach(function(wrapper) {
+            var grid = wrapper.querySelector('.home-store-grid');
+            var leftBtn = wrapper.querySelector('.scroll-arrow--left');
+            var rightBtn = wrapper.querySelector('.scroll-arrow--right');
+
+            if (!grid || !leftBtn || !rightBtn) return;
+
+            // Scroll amount (approx card width + gap)
+            var scrollAmount = 240; 
+
+            leftBtn.addEventListener('click', function() {
+              grid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+
+            rightBtn.addEventListener('click', function() {
+              grid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             });
           });
         });

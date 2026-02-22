@@ -121,3 +121,33 @@
     color: var(--color-muted);
     font-size: 13px;
 }
+
+/* Password Toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--color-muted, #6c757d);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.password-toggle:focus {
+    outline: none;
+    color: var(--color-primary);
+}
+
+.password-wrapper .form-input {
+    padding-right: 48px;
+}

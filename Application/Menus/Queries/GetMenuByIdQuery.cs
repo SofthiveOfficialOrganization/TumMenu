@@ -24,11 +24,16 @@ public class GetMenuByIdHandler(
 		var menu = await repoMenu.Query()
 			.Include(x => x.Categories)
 			.ThenInclude(x => x.CategoryLibraryItem)
+			.Include(x => x.Store)
 			.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
 			
 		_ = menu ?? throw new NotFoundAppException("Menü bulunamadı.");
 		
 		var menuDTO = mapper.Map<MenuDTO>(menu);
+		if (menu.Store != null)
+		{
+			menuDTO.StoreName = menu.Store.Title;
+		}
 		return menuDTO;
 	}
 }

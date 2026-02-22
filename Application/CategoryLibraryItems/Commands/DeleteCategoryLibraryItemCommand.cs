@@ -17,7 +17,7 @@ public class DeleteCategoryLibraryItemCommandHandler(
 {
 	public async Task<Unit> Handle(DeleteCategoryLibraryItemCommand req, CancellationToken ct)
 	{
-		var category = repoCategoryLibItem.Query().FirstOrDefault(c => c.Id == req.Id).EnsureFound("Kategori bulunamadı");
+		var category = repoCategoryLibItem.Query(tracked: true).FirstOrDefault(c => c.Id == req.Id).EnsureFound("Kategori bulunamadı");
 		repoCategoryLibItem.SoftDelete(category);
 		return Unit.Value;
 	}

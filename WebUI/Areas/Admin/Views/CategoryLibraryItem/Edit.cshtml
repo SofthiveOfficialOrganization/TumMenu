@@ -5,41 +5,78 @@
     ViewData["Title"] = "Kategoriyi Düzenle";
 }
 
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="horizon-card">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning"
+                         style="width:48px; height:48px; font-size:20px; flex-shrink:0;">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">Kategoriyi Düzenle</h4>
+                        <p class="text-secondary small mb-0">Kategori bilgilerini güncelleyin.</p>
+                    </div>
+                </div>
+                <a asp-action="Index" class="btn btn-light text-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Kategoriyi Düzenle</h4>
-            
             <form asp-action="Edit" method="post">
                 <input type="hidden" asp-for="Id" />
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                         <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Başlık</label>
-                         <input asp-for="Title" class="form-control" placeholder="Kategori Başlığı" />
-                         <span asp-validation-for="Title" class="text-danger"></span>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">
+                            <i class="fas fa-tag me-1 opacity-50"></i>Başlık <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Title" class="form-control" placeholder="Kategori Başlığı" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
                     </div>
-                     <div class="col-md-6 mb-3">
-                         <label asp-for="Slug" class="form-label text-secondary small text-uppercase fw-bold">Slug</label>
-                         <input asp-for="Slug" class="form-control" placeholder="kategori-slug" />
-                         <span asp-validation-for="Slug" class="text-danger"></span>
+                    <div class="col-md-6">
+                        <label asp-for="Slug" class="form-label text-secondary small text-uppercase fw-bold">
+                            <i class="fas fa-link me-1 opacity-50"></i>Slug
+                        </label>
+                        <input asp-for="Slug" class="form-control font-monospace" placeholder="kategori-slug" />
+                        <span asp-validation-for="Slug" class="text-danger small"></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Description" class="form-label text-secondary small text-uppercase fw-bold">Açıklama</label>
+                    <label asp-for="Description" class="form-label text-secondary small text-uppercase fw-bold">
+                        <i class="fas fa-align-left me-1 opacity-50"></i>Açıklama
+                    </label>
                     <textarea asp-for="Description" class="form-control" rows="3" placeholder="Açıklama..."></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-4">
-                    <label asp-for="IconKey" class="form-label text-secondary small text-uppercase fw-bold">İkon Anahtarı</label>
-                    <input asp-for="IconKey" class="form-control" placeholder="örn. fa-solid fa-utensils" />
-                    <span asp-validation-for="IconKey" class="text-danger"></span>
+                    <label class="form-label text-secondary small text-uppercase fw-bold">
+                        <i class="fas fa-icons me-1 opacity-50"></i>İkon Önizleme
+                    </label>
+                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 border">
+                        <div id="iconPreview" class="rounded-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
+                             style="width:52px; height:52px; font-size:22px; flex-shrink:0; transition: all 0.2s;">
+                            <i class="fas fa-tag opacity-25"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <input id="iconKeyInput" class="form-control font-monospace" placeholder="fas fa-utensils" />
+                            <div class="form-text">Font Awesome ikon sınıfı. Örn: <code>fas fa-utensils</code></div>
+                        </div>
+                    </div>
+                    <input asp-for="IconKey" type="hidden" id="iconKeyHidden" />
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-light text-secondary">
                         <i class="fas fa-times me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">
@@ -53,4 +90,29 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const input = document.getElementById('iconKeyInput');
+            const hidden = document.getElementById('iconKeyHidden');
+            const preview = document.getElementById('iconPreview');
+
+            function updatePreview() {
+                const val = input.value.trim();
+                hidden.value = val;
+                if (val) {
+                    preview.innerHTML = `<i class="${val}"></i>`;
+                } else {
+                    preview.innerHTML = `<i class="fas fa-tag opacity-25"></i>`;
+                }
+            }
+
+            // init with existing value
+            if (hidden.value) {
+                input.value = hidden.value;
+                updatePreview();
+            }
+
+            input.addEventListener('input', updatePreview);
+        })();
+    </script>
 }

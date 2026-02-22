@@ -3,47 +3,111 @@
 
 @{
     ViewData["Title"] = "Kategori Detayları";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var backUrl = !string.IsNullOrEmpty(returnUrl) ? returnUrl : Url.Action("Index")!;
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
+<div class="row mb-3">
+    <div class="col-12">
         <div class="horizon-card">
-            <div class="d-flex justify-content-between align-items-start mb-4">
-                 <div>
-                    <h5 class="fw-bold mb-1">Kategori Detayları</h5>
-                    <p class="text-secondary small">@Model.Slug</p>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
+                         style="width:56px; height:56px; font-size:24px; flex-shrink:0;">
+                        @if (!string.IsNullOrEmpty(Model.IconKey))
+                        {
+                            <i class="@Model.IconKey"></i>
+                        }
+                        else
+                        {
+                            <span class="fw-bold fs-4">@Model.Title.Substring(0, 1).ToUpper()</span>
+                        }
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-0">@Model.Title</h4>
+                        <span class="badge bg-light border text-secondary font-monospace fw-normal">@Model.Slug</span>
+                    </div>
                 </div>
-                <div class="horizon-avatar bg-light text-warning">
-                    <i class="fas fa-tags"></i>
+                <div class="d-flex gap-2">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-pencil-alt me-2"></i>Düzenle
+                        </a>
+                    }
+                    <a href="@backUrl" class="btn btn-light text-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">İsim</label>
-                <p class="fw-bold text-dark fs-5">@Model.Title</p>
+<div class="row">
+    <div class="col-md-7 mb-3">
+        <div class="horizon-card h-100">
+            <h6 class="fw-bold text-primary mb-3">
+                <i class="fas fa-info-circle me-2"></i>Kategori Bilgileri
+            </h6>
+            <div class="d-flex flex-column gap-3">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
+                    <span class="text-secondary fw-semibold small text-uppercase">Başlık</span>
+                    <span class="fw-bold text-dark">@Model.Title</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
+                    <span class="text-secondary fw-semibold small text-uppercase">Slug</span>
+                    <span class="badge bg-light border text-dark font-monospace fw-normal px-2">@Model.Slug</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-start border-bottom pb-3">
+                    <span class="text-secondary fw-semibold small text-uppercase">Açıklama</span>
+                    <span class="text-dark text-end ms-3" style="max-width:280px;">
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            @Model.Description
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">Açıklama yok</span>
+                        }
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-secondary fw-semibold small text-uppercase">İkon Anahtarı</span>
+                    @if (!string.IsNullOrEmpty(Model.IconKey))
+                    {
+                        <span class="font-monospace small text-dark">
+                            <i class="@Model.IconKey me-2 text-primary"></i>@Model.IconKey
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-muted fst-italic small">İkon tanımsız</span>
+                    }
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Slug</label>
-                <p class="text-dark">@Model.Slug</p>
+    <div class="col-md-5 mb-3">
+        <div class="horizon-card h-100 d-flex flex-column align-items-center justify-content-center text-center py-5">
+            <div class="rounded-4 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary mb-4"
+                 style="width:80px; height:80px; font-size:36px;">
+                @if (!string.IsNullOrEmpty(Model.IconKey))
+                {
+                    <i class="@Model.IconKey"></i>
+                }
+                else
+                {
+                    <span class="fw-bold">@Model.Title.Substring(0, 1).ToUpper()</span>
+                }
             </div>
-
-            <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Açıklama</label>
-                <p class="text-dark">@(!string.IsNullOrEmpty(Model.Description) ? Model.Description : "Açıklama yok")</p>
-            </div>
-            
-             <div class="mb-3">
-                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">İkon Anahtarı</label>
-                <p class="text-dark">@(!string.IsNullOrEmpty(Model.IconKey) ? Model.IconKey : "İkon yok")</p>
-            </div>
-
-            <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
-                <a asp-action="Index" class="btn btn-light text-secondary">Listeye Dön</a>
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
-                    <i class="fas fa-edit me-2"></i> Kategoriyi Düzenle
-                </a>
-            </div>
+            <h5 class="fw-bold mb-1">@Model.Title</h5>
+            <span class="badge bg-light border text-muted font-monospace fw-normal">@Model.Slug</span>
+            @if (!string.IsNullOrEmpty(Model.IconKey))
+            {
+                <p class="text-muted small font-monospace mt-2 mb-0">@Model.IconKey</p>
+            }
         </div>
     </div>
 </div>

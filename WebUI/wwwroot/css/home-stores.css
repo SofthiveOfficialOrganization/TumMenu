@@ -141,3 +141,68 @@
         font-size: 11px;
     }
 }
+
+/* ── Carousel Arrows ── */
+.home-store-grid-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 18px;
+    color: #333;
+    transition: all 0.2s ease;
+    opacity: 0; 
+    /* Show on hover of wrapper (optional) or always visible? 
+       User said "yarı transparent ok tuşları ekle". 
+       Let's make them always visible but semi-transparent, and more opaque on hover.
+    */
+    opacity: 0.6;
+}
+
+.scroll-arrow:hover {
+    background-color: #fff;
+    opacity: 1;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-arrow--left {
+    left: -20px;
+}
+
+.scroll-arrow--right {
+    right: -20px;
+}
+
+/* Hide arrows on touch devices where swipe is natural, to avoid clutter */
+@media (hover: none) and (pointer: coarse) {
+    .scroll-arrow {
+        display: none;
+    }
+}
+
+/* Adjust wrapper on small screens if arrows need space */
+@media (max-width: 768px) {
+    .scroll-arrow--left {
+        left: 0;
+    }
+    .scroll-arrow--right {
+        right: 0;
+    }
+}

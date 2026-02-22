@@ -24,7 +24,7 @@ public class DeleteStoreCommandHandler(
             repoStore.SoftDelete(store);
             
             // Soft delete menus associated with this store
-            var menus = await repoMenu.Query()
+            var menus = await repoMenu.Query(tracked: true)
                 .Where(m => m.StoreId == store.Id)
                 .ToListAsync(ct);
                 

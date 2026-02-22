@@ -44,6 +44,7 @@ builder.Services
         options.Filters.Add<AppExceptionFilter>();
         options.Filters.Add<ValidationLoggingFilter>();
         options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+        options.Filters.Add<EnsureCompanyExistsFilter>();
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 

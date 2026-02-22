@@ -29,7 +29,7 @@ public class DeleteCompanyCommandHandler(
 		repoCompany.SoftDelete(company);
 
 		// Soft delete associated stores to release slugs
-		var stores = await repoStore.Query()
+		var stores = await repoStore.Query(tracked: true)
 			.Where(s => s.CompanyId == company.Id)
 			.ToListAsync(ct);
 			
@@ -39,7 +39,7 @@ public class DeleteCompanyCommandHandler(
 		}
 
 		// Soft delete associated menus (BaseMenu + Store Menus)
-		var menus = await repoMenu.Query()
+		var menus = await repoMenu.Query(tracked: true)
 			.Where(m => m.CompanyId == company.Id)
 			.ToListAsync(ct);
 

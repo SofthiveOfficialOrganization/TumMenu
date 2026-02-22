@@ -181,6 +181,6 @@ public class StoreController(IMediator mediator) : Controller
 	public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
 	{
 		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
-		return Json(result);
+		return Json(new { available = result.Available, message = result.Message });
 	}
 }

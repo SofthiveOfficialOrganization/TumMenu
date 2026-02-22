@@ -22,12 +22,20 @@ public class GetAllMenusPagedHandler(
 	{
 		var menu = await repoMenu.GetPageListAsync(
 			request: req,
-			include: m => m.Include(m => m.Categories).Include(m => m.Medias),
+			include: m => m.Include(m => m.Categories).Include(m => m.Medias)
+				.Include(m => m.Store).Include(m => m.Company),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
 			ct: ct
 		);
 
 		var menuDTO = mapper.Map<PaginatedListDTO<MenuDTO>>(menu);
+
+		foreach (var (dto, entity) in menuDTO.Items.Zip(menu.Items))
+		{
+			dto.StoreName = entity.Store?.Title;
+			dto.CompanyName = entity.Company?.Title;
+		}
+
 		return menuDTO;
 	}
 }

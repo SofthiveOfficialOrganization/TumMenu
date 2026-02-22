@@ -13,4 +13,6 @@ public sealed class MenuDTO : BaseDTO
 	public ICollection<Media> Medias { get; set; } = [];
 	public ICollection<CategoryDTO> Categories { get; set; } = [];
 	public MenuStatus Status { get; set; }
+	public string? StoreName { get; set; }
+	public string? CompanyName { get; set; }
 }

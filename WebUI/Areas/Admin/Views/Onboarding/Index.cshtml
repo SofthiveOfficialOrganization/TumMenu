@@ -5,112 +5,178 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; 
 }
 
-<div class="row min-vh-100 align-items-center justify-content-center">
-    <div class="col-lg-8">
-        <div class="card shadow-lg border-0 overflow-hidden">
-            <div class="card-body p-0">
-                <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.5s ease-in-out; width: 300%;">
-                    
-                    <!-- Step 1: Create Company -->
-                    <div class="wizard-step w-100 p-5" id="step-company">
-                        <div class="text-center mb-4">
-                            <h2 class="h3 fw-bold text-primary">Hoşgeldiniz!</h2>
-                            <p class="text-muted">Başlamak için şirketinizi oluşturalım.</p>
-                        </div>
-                        <form id="form-company">
-                            <div class="mb-3">
-                                <label for="CompanyTitle" class="form-label">Şirket Adı</label>
-                                <input type="text" class="form-control form-control-lg" id="CompanyTitle" name="Title" required placeholder="Örn: Güzel Yemekler A.Ş.">
+<div class="container-fluid p-0 overflow-hidden position-relative">
+
+    <div class="row min-vh-100 align-items-center justify-content-center bg-light">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+            <div class="card shadow-xl border-0 overflow-hidden rounded-4">
+                <div class="card-body p-0">
+                    <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); width: 400%;">
+                        
+                        <!-- Step 1: Create Company -->
+                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-company">
+                            <div class="text-center mb-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-building fa-4x text-primary animate-bounce"></i>
+                                </div>
+                                <h2 class="display-5 fw-bold text-primary mb-3">Hoşgeldiniz!</h2>
+                                <p class="lead text-muted">Hemen başlayalım. Şirketinizin adı nedir?</p>
                             </div>
-                            
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <label for="CompanySlug" class="form-label mb-0">Şirket Linki (Opsiyonel)</label>
-                                    <div class="form-check form-switch mb-0">
-                                        <input class="form-check-input" type="checkbox" id="CompanySlugToggle">
-                                        <label class="form-check-label small text-secondary" for="CompanySlugToggle">El ile düzenle</label>
+                            <form id="form-company" class="onboarding-form">
+                                <div class="mb-4">
+                                    <label for="CompanyTitle" class="form-label h4 text-dark">Şirket Adı</label>
+                                    <input type="text" class="form-control form-control-xl shadow-sm" id="CompanyTitle" name="Title" required placeholder="Örn: Güzel Yemekler A.Ş.">
+                                </div>
+                                
+                                <div class="mb-5">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label for="CompanySlug" class="form-label h5 text-muted mb-0">Şirket Linki (Opsiyonel)</label>
+                                        <div class="form-check form-switch mb-0">
+                                            <input class="form-check-input scale-125" type="checkbox" id="CompanySlugToggle">
+                                            <label class="form-check-label ms-2" for="CompanySlugToggle">El ile düzenle</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-white text-muted">tummenu.com/</span>
+                                        <input type="text" class="form-control" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
+                                        <span class="input-group-text border-start-0 bg-white" id="CompanySlugStatus">
+                                            <i class="fas fa-lock text-secondary" id="CompanySlugIcon"></i>
+                                        </span>
+                                    </div>
+                                    <div id="CompanySlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-xl shadow-lg hover-scale">
+                                        Şirketi Oluştur ve Devam Et <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 2: Create Store -->
+                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-store">
+                            <div class="text-center mb-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-store-alt fa-4x text-success animate-pulse"></i>
+                                </div>
+                                <h2 class="display-5 fw-bold text-success mb-3">Harika Gidiyoruz!</h2>
+                                <p class="lead text-muted">Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!</p>
+                            </div>
+                            <form id="form-store" class="onboarding-form">
+                                <input type="hidden" id="StoreCompanyId" name="CompanyId">
+                                <div class="mb-4">
+                                    <label for="StoreTitle" class="form-label h4 text-dark">Şube Adı</label>
+                                    <input type="text" class="form-control form-control-xl shadow-sm" id="StoreTitle" name="Title" required placeholder="Örn: Merkez Şube">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="StorePhone" class="form-label h4 text-dark">Telefon Numarası</label>
+                                    <input type="tel" class="form-control form-control-xl shadow-sm" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
+                                </div>
+                                 <div class="mb-5">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label for="StoreSlug" class="form-label h5 text-muted mb-0">Şube Linki (Opsiyonel)</label>
+                                        <div class="form-check form-switch mb-0">
+                                            <input class="form-check-input scale-125" type="checkbox" id="StoreSlugToggle">
+                                            <label class="form-check-label ms-2" for="StoreSlugToggle">El ile düzenle</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-white text-muted">tummenu.com/sirket/</span>
+                                        <input type="text" class="form-control" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
+                                        <span class="input-group-text border-start-0 bg-white" id="StoreSlugStatus">
+                                            <i class="fas fa-lock text-secondary" id="StoreSlugIcon"></i>
+                                        </span>
+                                    </div>
+                                    <div id="StoreSlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-xl shadow-lg hover-scale">
+                                        Şubeyi Kaydet ve Devam Et <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 3: Create Menu -->
+                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-menu">
+                            <div class="text-center mb-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-utensils fa-4x text-info animate-shake"></i>
+                                </div>
+                                <h2 class="display-5 fw-bold text-info mb-3">Neredeyse Bitti!</h2>
+                                <p class="lead text-muted">Menünü oluştur ve sipariş almaya başla.</p>
+                            </div>
+                            <form id="form-menu" class="onboarding-form">
+                                <input type="hidden" id="MenuStoreId" name="StoreId">
+                                <div class="mb-4">
+                                    <label for="MenuTitle" class="form-label h4 text-dark">Menü Adı</label>
+                                    <input type="text" class="form-control form-control-xl shadow-sm" id="MenuTitle" name="Title" required placeholder="Örn: Ana Menü">
+                                </div>
+                                <div class="form-check mb-5 ps-5">
+                                    <input class="form-check-input scale-150" type="checkbox" id="MenuStatus" name="Status" value="1" checked>
+                                    <label class="form-check-label h5 ms-2 pt-1" for="MenuStatus">
+                                        Bu menüyü hemen aktif yap
+                                    </label>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-info btn-xl text-white shadow-lg hover-scale">
+                                        Kategori Ekle <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 4: Select Categories -->
+                        <div class="wizard-step w-100 p-4 fade-in-up" id="step-category">
+                            <input type="hidden" id="CategoryMenuId" name="MenuId">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-tags fa-4x text-warning animate-bounce mb-3"></i>
+                                <h2 class="display-5 fw-bold text-warning mb-1">İlk Kategorilerin!</h2>
+                                <p class="lead text-muted">Kütüphaneden kategorileri seç ve menüne ekle. Dilediğin zaman tamamla.</p>
+                            </div>
+
+                            <div class="row g-3" style="min-height: 340px;">
+                                <!-- Left: Library Search -->
+                                <div class="col-6">
+                                    <div class="border rounded-3 h-100 p-3 bg-white shadow-sm d-flex flex-column">
+                                        <h5 class="fw-bold text-muted text-uppercase mb-3">
+                                            <i class="fas fa-book-open me-2"></i> Kategori Bul
+                                        </h5>
+                                        <input type="text" id="categorySearch" class="form-control form-control-lg mb-3" placeholder="Ara..." style="font-size:1.05rem;">
+                                        <div id="categoryLibraryList" class="flex-grow-1 overflow-auto" style="max-height: 280px;">
+                                            <div class="text-center text-muted py-5" id="libraryPlaceholder">
+                                                <i class="fas fa-search fa-2x d-block mb-3 opacity-50"></i>
+                                                <span class="fs-6">Aramak için yazmaya başlayın</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="input-group">
-                                    <span class="input-group-text">tummenu.com/</span>
-                                    <input type="text" class="form-control" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
-                                    <span class="input-group-text border-start-0 bg-white" id="CompanySlugStatus">
-                                        <i class="fas fa-lock text-secondary" id="CompanySlugIcon"></i>
-                                    </span>
-                                </div>
-                                <div id="CompanySlugFeedback" class="small mt-1" style="display:none;"></div>
-                                <small class="text-muted">Boş bırakırsanız otomatik oluşturulur.</small>
-                            </div>
 
-                            <div class="d-grid gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg">Şirketi Oluştur ve Devam Et <i class="bi bi-arrow-right"></i></button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Step 2: Create Store -->
-                    <div class="wizard-step w-100 p-5" id="step-store">
-                        <div class="text-center mb-4">
-                            <h2 class="h3 fw-bold text-success">Harika! Şimdi İlk Şubeni Ekle</h2>
-                            <p class="text-muted">Müşterilerinizin sizi bulması için bir şube ekleyin.</p>
-                        </div>
-                        <form id="form-store">
-                            <input type="hidden" id="StoreCompanyId" name="CompanyId">
-                            <div class="mb-3">
-                                <label for="StoreTitle" class="form-label">Şube Adı</label>
-                                <input type="text" class="form-control form-control-lg" id="StoreTitle" name="Title" required placeholder="Örn: Merkez Şube">
-                            </div>
-                            <div class="mb-3">
-                                <label for="StorePhone" class="form-label">Telefon Numarası</label>
-                                <input type="tel" class="form-control" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
-                            </div>
-                             <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <label for="StoreSlug" class="form-label mb-0">Şube Linki (Opsiyonel)</label>
-                                    <div class="form-check form-switch mb-0">
-                                        <input class="form-check-input" type="checkbox" id="StoreSlugToggle">
-                                        <label class="form-check-label small text-secondary" for="StoreSlugToggle">El ile düzenle</label>
+                                <!-- Right: Added Categories (Sortable 2-col grid) -->
+                                <div class="col-6">
+                                    <div class="border rounded-3 h-100 p-3 bg-white shadow-sm d-flex flex-column">
+                                        <h5 class="fw-bold text-muted text-uppercase mb-3">
+                                            <i class="fas fa-list me-2"></i> Menüm
+                                        </h5>
+                                        <div id="addedCategoryList" class="flex-grow-1 overflow-auto row g-2 align-content-start" style="min-height: 280px; max-height: 280px;">
+                                            <div class="col-12 text-center text-muted py-5" id="addedPlaceholder">
+                                                <i class="fas fa-inbox fa-2x d-block mb-3 opacity-50"></i>
+                                                <span class="fs-6">Henüz kategori eklenmedi</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="input-group">
-                                    <span class="input-group-text">tummenu.com/sirket/</span>
-                                    <input type="text" class="form-control" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
-                                    <span class="input-group-text border-start-0 bg-white" id="StoreSlugStatus">
-                                        <i class="fas fa-lock text-secondary" id="StoreSlugIcon"></i>
-                                    </span>
-                                </div>
-                                <div id="StoreSlugFeedback" class="small mt-1" style="display:none;"></div>
                             </div>
-                            <div class="d-grid gap-2 mt-4">
-                                <button type="submit" class="btn btn-success btn-lg">Şubeyi Kaydet ve Menüye Geç <i class="bi bi-arrow-right"></i></button>
-                            </div>
-                        </form>
-                    </div>
 
-                    <!-- Step 3: Create Menu -->
-                    <div class="wizard-step w-100 p-5" id="step-menu">
-                        <div class="text-center mb-4">
-                            <h2 class="h3 fw-bold text-info">Son Adım: Menünü Oluştur</h2>
-                            <p class="text-muted">Hemen sipariş almaya başlamak için bir menü oluştur.</p>
+                            <div class="d-grid mt-4">
+                                <button type="button" id="btnCompleteOnboarding" class="btn btn-warning text-dark shadow-lg hover-scale py-4 fs-4 fw-bold">
+                                    Kurulumu Tamamla <i class="fas fa-check-circle ms-2"></i>
+                                </button>
+                            </div>
                         </div>
-                        <form id="form-menu">
-                            <input type="hidden" id="MenuStoreId" name="StoreId">
-                            <div class="mb-3">
-                                <label for="MenuTitle" class="form-label">Menü Adı</label>
-                                <input type="text" class="form-control form-control-lg" id="MenuTitle" name="Title" required placeholder="Örn: Ana Menü">
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="MenuStatus" name="Status" value="1" checked>
-                                <label class="form-check-label" for="MenuStatus">
-                                    Bu menüyü aktif yap
-                                </label>
-                            </div>
-                            <div class="d-grid gap-2 mt-4">
-                                <button type="submit" class="btn btn-info btn-lg text-white">Kurulumu Tamamla <i class="bi bi-check-lg"></i></button>
-                            </div>
-                        </form>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,13 +186,105 @@
 <style>
     /* Disable global scrolling for the wizard page layout specifically if needed */
     /* .content-wrapper { overflow: hidden; } */ 
+    
+    .form-control-xl {
+        font-size: 1.25rem;
+        padding: 0.8rem 1rem;
+        border-radius: 0.8rem;
+    }
+    
+    .btn-xl {
+        font-size: 1.25rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.8rem;
+    }
+
+    .scale-125 { transform: scale(1.25); }
+    .scale-150 { transform: scale(1.5); }
+
+    .hover-scale {
+        transition: transform 0.2s;
+    }
+    .hover-scale:hover {
+        transform: translateY(-3px);
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    @@keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-20px);}
+        60% {transform: translateY(-10px);}
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {transform: scale(1);}
+        50% {transform: scale(1.1);}
+        100% {transform: scale(1);}
+    }
+
+    .animate-shake {
+        animation: shake 3s infinite;
+    }
+
+    @@keyframes shake {
+        0%, 100% {transform: rotate(0deg);}
+        10%, 30%, 50%, 70%, 90% {transform: rotate(-10deg);}
+        20%, 40%, 60%, 80% {transform: rotate(10deg);}
+    }
 </style>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         $(document).ready(function() {
-            let currentStep = 0;
+
+            let currentStep = @(ViewBag.InitialStep ?? 0);
             const wizard = $('#onboarding-wizard');
+
+            // Pre-fill hidden fields if resuming
+            const existingCompanyId = '@ViewBag.CompanyId';
+            if (existingCompanyId) {
+                $('#StoreCompanyId').val(existingCompanyId);
+            }
+            
+            const existingStoreId = '@ViewBag.StoreId';
+            if (existingStoreId) {
+                $('#MenuStoreId').val(existingStoreId);
+            }
+
+            const existingMenuId = '@ViewBag.MenuId';
+            if (existingMenuId) {
+                $('#CategoryMenuId').val(existingMenuId);
+            }
+
+            // Immediately show correct step
+            if (currentStep > 0) {
+                 wizard.css('transform', `translateX(-${currentStep * 25}%)`);
+            }
+            // If resuming directly on step 4, init the category step
+            if (currentStep === 3) {
+                setTimeout(() => initCategoryStep(), 300);
+            }
             
             // --- Shared Slug Logic ---
             function slugify(text) {
@@ -162,6 +320,7 @@
                         return;
                     }
                     $.get(checkUrl, { slug: slug }, function (data) {
+                        console.log('Slug Check Response (' + prefix + '):', data); // Debugging
                         slugFeedback.show();
                         if (data.available) {
                             slugFeedback.html('<i class="fas fa-check-circle text-success me-1"></i> ' + data.message)
@@ -228,7 +387,11 @@
             // --- Helper to slide to next step ---
             function nextStep() {
                 currentStep++;
-                wizard.css('transform', `translateX(-${currentStep * 33.3333}%)`);
+                wizard.css('transform', `translateX(-${currentStep * 25}%)`);
+                // Auto-init category step when reaching step 4
+                if (currentStep === 3) {
+                    setTimeout(() => initCategoryStep(), 300);
+                }
             }
             
             // --- Helper for Error Handling ---
@@ -397,8 +560,9 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        // Complete! Redirect to Dashboard or the new Menu
-                        window.location.href = '/admin/Menu/' + response.id;
+                        $('#CategoryMenuId').val(response.id);
+                        btn.prop('disabled', false).html(originalText);
+                        nextStep();
                     },
                     error: function(xhr) {
                         btn.prop('disabled', false).html(originalText);
@@ -406,6 +570,305 @@
                     }
                 });
             });
+
+            // --- Step 4: Category Library Search + Add + Sort ---
+            let categorySearchTimer = null;
+            const categorySearchUrl  = '/admin/Onboarding/category-library';
+            const menuCategoriesUrl  = '/admin/Onboarding/menu-categories';
+            const addCategoryUrl     = '/admin/Onboarding/add-category';
+            const sortUrl            = '/admin/Category/UpdateSortOrder';
+
+            // Called on step 4 entry: load existing menu categories into right panel,
+            // then load the library (which excludes already-added ones).
+            function initCategoryStep() {
+                const menuId = $('#CategoryMenuId').val();
+                if (!menuId) { loadCategoryLibrary(''); return; }
+
+                $.get(menuCategoriesUrl, { menuId: menuId }, function(existingItems) {
+                    if (existingItems && existingItems.length > 0) {
+                        $('#addedPlaceholder').hide();
+                        existingItems.forEach(function(item) {
+                            appendAddedCategoryCard(item.id, item.title);
+                        });
+                        if (existingItems.length >= 1) initAddedCategoriesSortable();
+                    }
+                }).always(function() {
+                    loadCategoryLibrary('');
+                });
+            }
+
+            // Load library on step 4 entry — called after menu step completes
+            function loadCategoryLibrary(search) {
+                const menuId = $('#CategoryMenuId').val();
+                if (!menuId) return;
+
+                $('#libraryPlaceholder').hide();
+                $('#categoryLibraryList').html('<div class="text-center py-3"><span class="spinner-border spinner-border-sm text-warning"></span></div>');
+
+                $.get(categorySearchUrl, { search: search || '', menuId: menuId }, function(items) {
+                    $('#categoryLibraryList').empty();
+                    if (!items || items.length === 0) {
+                        $('#categoryLibraryList').html('<div class="text-center text-muted py-3 small">Sonuç bulunamadı.</div>');
+                        return;
+                    }
+                    items.forEach(function(item) {
+                        const row = $('<div>')
+                            .addClass('d-flex align-items-center justify-content-between p-3 rounded mb-2 library-item border')
+                            .css({ cursor: 'pointer', transition: 'background .15s' })
+                            .attr('data-id', item.id)
+                            .attr('data-title', item.title)
+                            .html(`
+                                <span class="text-dark fw-semibold fs-6">${item.title}</span>
+                                <button type="button" class="btn btn-warning btn-add-category px-3" title="Ekle">
+                                    <i class="fas fa-plus me-1"></i> Ekle
+                                </button>`);
+                        row.find('.btn-add-category').on('click', function() {
+                            addCategoryToMenu(item.id, item.title, row);
+                        });
+                        row.hover(
+                            function() { $(this).addClass('bg-warning bg-opacity-10'); },
+                            function() { $(this).removeClass('bg-warning bg-opacity-10'); }
+                        );
+                        $('#categoryLibraryList').append(row);
+                    });
+                }).fail(function() {
+                    $('#categoryLibraryList').html('<div class="text-center text-danger py-3 small">Yükleme hatası.</div>');
+                });
+            }
+
+            // Debounced search input
+            $('#categorySearch').on('input', function() {
+                clearTimeout(categorySearchTimer);
+                categorySearchTimer = setTimeout(function() {
+                    loadCategoryLibrary($('#categorySearch').val());
+                }, 400);
+            });
+
+            function addCategoryToMenu(libraryItemId, title, libraryRow) {
+                const menuId = $('#CategoryMenuId').val();
+                const sortOrder = $('#addedCategoryList .added-category-item').length;
+
+                $.ajax({
+                    url: addCategoryUrl,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ MenuId: menuId, CategoryLibraryItemId: libraryItemId, SortOrder: sortOrder }),
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(res) {
+                        // Remove item from library list (already added)
+                        libraryRow.fadeOut(200, function() { $(this).remove(); });
+                        // Append to right panel
+                        appendAddedCategoryCard(res.id, title);
+                        if ($('#addedCategoryList .added-category-item').length === 1) {
+                            initAddedCategoriesSortable();
+                        }
+                    },
+                    error: function(xhr) { handleError(xhr, 'AddCategory'); }
+                });
+            }
+
+            // Shared helper: build and append a category card to the right panel
+            function appendAddedCategoryCard(categoryId, title) {
+                $('#addedPlaceholder').hide();
+                const colDiv = $('<div>').addClass('col-6 added-category-item').attr('data-id', categoryId);
+                const card = $('<div>')
+                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2')
+                    .css({ background: '#fffbea', border: '2px solid #ffc107' })
+                    .html(`
+                        <i class="fas fa-grip-vertical text-secondary handle fs-5 flex-shrink-0" style="cursor:grab"></i>
+                        <span class="text-dark fw-bold flex-grow-1 fs-6">${title}</span>
+                        <button type="button" class="btn btn-danger btn-remove-category flex-shrink-0 d-flex align-items-center justify-content-center"
+                            style="width:34px;height:34px;padding:0;" title="Kaldır">
+                            <i class="fas fa-times text-white"></i>
+                        </button>`);
+                card.find('.btn-remove-category').on('click', function() {
+                    $.post('/admin/Onboarding/remove-category/' + categoryId, function() {
+                        colDiv.remove();
+                        if ($('#addedCategoryList .added-category-item').length === 0) {
+                            $('#addedPlaceholder').show();
+                        }
+                        loadCategoryLibrary($('#categorySearch').val());
+                    }).fail(function() {
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Kaldırma işlemi başarısız.', showConfirmButton: false, timer: 3000 });
+                    });
+                });
+                colDiv.append(card);
+                $('#addedCategoryList').append(colDiv);
+            }
+
+            function initAddedCategoriesSortable() {
+                const el = document.getElementById('addedCategoryList');
+                if (el._sortable) return;
+                el._sortable = new Sortable(el, {
+                    animation: 150,
+                    handle: '.handle',
+                    ghostClass: 'bg-warning',
+                    onEnd: function() {
+                        const items = Array.from(el.querySelectorAll('.added-category-item')).map((item, i) => ({
+                            id: item.getAttribute('data-id'),
+                            sortOrder: i
+                        }));
+                        fetch(sortUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ items: items })
+                        });
+                    }
+                });
+            }
+
+            // Complete wizard button
+            $('#btnCompleteOnboarding').on('click', function() {
+                const btn = $(this);
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Tamamlanıyor...');
+                const menuId = $('#CategoryMenuId').val();
+
+                $.ajax({
+                    url: '/admin/Onboarding/complete',
+                    type: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function() {
+                        window.location.href = menuId ? '/admin/Menu/' + menuId : '/admin/Dashboard';
+                    },
+                    error: function() {
+                        btn.prop('disabled', false).html('Kurulumu Tamamla <i class="fas fa-check-circle ms-2"></i>');
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Hata oluştu', showConfirmButton: false, timer: 3000 });
+                    }
+                });
+            });
+
+
+            (function ($) {
+  const selector = 'input[type="tel"], input[name*="Phone"]';
+
+  const onlyDigits = (s) => String(s ?? '').replace(/\D/g, '');
+
+  const countDigitsToPos = (str, pos) => onlyDigits(str.slice(0, pos)).length;
+
+  const setCaret = (el, pos) => {
+    try {
+      el.setSelectionRange(pos, pos);
+    } catch (_) {}
+  };
+
+  const caretPosFromDigitIndex = (formatted, digitIndex) => {
+    if (digitIndex <= 0) return 0;
+
+    let seen = 0;
+    for (let i = 0; i < formatted.length; i++) {
+      if (/\d/.test(formatted[i])) {
+        seen++;
+        if (seen === digitIndex) return i + 1;
+      }
+    }
+    return formatted.length;
+  };
+
+  // Returns { digits, removedPrefix, addedPrefix }
+  const normalizeTR = (rawDigits) => {
+    let d = String(rawDigits ?? '');
+    let removedPrefix = 0;
+    let addedPrefix = 0;
+
+    // Country code handling: 0090..., 90...
+    if (d.startsWith('0090')) {
+      removedPrefix = 4;
+      d = d.slice(4);
+    } else if (d.startsWith('90') && d.length >= 12) {
+      removedPrefix = 2;
+      d = d.slice(2);
+    }
+
+    // Ensure leading 0
+    if (d.length > 0 && d[0] !== '0') {
+      addedPrefix = 1;
+      d = '0' + d;
+    }
+
+    // 11 digits max (0 + 10)
+    d = d.slice(0, 11);
+
+    return { digits: d, removedPrefix, addedPrefix };
+  };
+
+  const formatTR = (d) => {
+    if (!d) return '';
+
+    const p0 = d.slice(0, 1); // 0
+    const p1 = d.slice(1, 4); // XXX
+    const p2 = d.slice(4, 7); // XXX
+    const p3 = d.slice(7, 9); // XX
+    const p4 = d.slice(9, 11); // XX
+
+    let out = p0;
+
+    if (d.length > 1) out += ' (' + p1;
+    if (d.length >= 4) out += ')';
+    if (d.length > 4) out += ' ' + p2;
+    if (d.length > 7) out += ' ' + p3;
+    if (d.length > 9) out += ' ' + p4;
+
+    return out;
+  };
+
+  const handleKeydown = (e) => {
+    const el = e.target;
+    const value = el.value || '';
+    const start = el.selectionStart ?? 0;
+    const end = el.selectionEnd ?? 0;
+
+    if (start !== end) return; // selection varsa karışma
+
+    if (e.key === 'Backspace') {
+      let i = start - 1;
+      while (i >= 0 && !/\d/.test(value[i])) i--;
+      if (i !== start - 1) {
+        e.preventDefault();
+        setCaret(el, i + 1);
+      }
+    }
+
+    if (e.key === 'Delete') {
+      let i = start;
+      while (i < value.length && !/\d/.test(value[i])) i++;
+      if (i !== start) {
+        e.preventDefault();
+        setCaret(el, i);
+      }
+    }
+  };
+
+  const handleInput = (e) => {
+    const el = e.target;
+    const prev = el.value || '';
+    const caret = el.selectionStart ?? prev.length;
+
+    // caret'i digit index olarak yakala (format chars dahil değil)
+    let digitIndex = countDigitsToPos(prev, caret);
+
+    const rawDigits = onlyDigits(prev);
+    const norm = normalizeTR(rawDigits);
+
+    // digitIndex'i normalize dönüşümüne göre düzelt
+    digitIndex = Math.max(0, digitIndex - norm.removedPrefix);
+    if (norm.addedPrefix && digitIndex > 0) digitIndex += norm.addedPrefix;
+    digitIndex = Math.min(digitIndex, norm.digits.length);
+
+    const formatted = formatTR(norm.digits);
+
+    if (formatted !== prev) {
+      el.value = formatted;
+      const newCaret = caretPosFromDigitIndex(formatted, digitIndex);
+      setCaret(el, newCaret);
+    }
+  };
+
+  // delegated (dinamik inputlar için sağlam)
+  $(document).on('keydown', selector, handleKeydown);
+  $(document).on('input', selector, handleInput);
+})(jQuery);
+
+
         });
     </script>
 }

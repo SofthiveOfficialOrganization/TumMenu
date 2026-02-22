@@ -1,5 +1,6 @@
 ﻿using Application.Categories.Commands;
 using Application.Categories.Queries;
+using Application.CategorySuggestions.Commands;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,28 +23,38 @@ public class CategoryLibraryItemController(IMediator mediator, IMapper mapper) :
 
 	[Authorize(Roles = "Admin")]
 	[HttpGet("[action]")]
-	public IActionResult Create()
+	public IActionResult Create(string? suggestedTitle, Guid? suggestionId)
 	{
-		return View(new CreateCategoryLibraryItemCommand());
+		var cmd = new CreateCategoryLibraryItemCommand();
+		if (!string.IsNullOrWhiteSpace(suggestedTitle))
+			cmd.Title = suggestedTitle;
+		ViewBag.SuggestionId = suggestionId;
+		return View(cmd);
 	}
 
 	[Authorize(Roles = "Admin")]
 	[HttpPost("[action]")]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Create([FromForm] CreateCategoryLibraryItemCommand cmd, CancellationToken ct)
+	public async Task<IActionResult> Create([FromForm] CreateCategoryLibraryItemCommand cmd, Guid? suggestionId, CancellationToken ct)
 	{
 		if(!ModelState.IsValid)
 			return View(cmd);
 
 		await mediator.Send(cmd, ct);
+
+		// Öneri var ise onayla
+		if (suggestionId.HasValue)
+			await mediator.Send(new ApproveCategorySuggestionCommand { Id = suggestionId.Value }, ct);
+
 		return RedirectToAction(nameof(Index));
 	}
 
 	[Authorize(Roles = "Admin,Owner")]
 	[HttpGet("{slug}")]
-	public async Task<IActionResult> Details(string slug, CancellationToken ct)
+	public async Task<IActionResult> Details(string slug, string? returnUrl, CancellationToken ct)
 	{
 		var categories = await mediator.Send(new GetCategoryLibraryItemBySlugQuery { Slug = slug }, ct);
+		ViewData["ReturnUrl"] = returnUrl;
 		return View(categories);
 	}
 
