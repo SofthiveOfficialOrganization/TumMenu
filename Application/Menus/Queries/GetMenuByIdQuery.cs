@@ -25,6 +25,7 @@ public class GetMenuByIdHandler(
 			.Include(x => x.Categories)
 			.ThenInclude(x => x.CategoryLibraryItem)
 			.Include(x => x.Store)
+			.ThenInclude(s => s!.Company)
 			.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
 			
 		_ = menu ?? throw new NotFoundAppException("Menü bulunamadı.");
@@ -33,6 +34,8 @@ public class GetMenuByIdHandler(
 		if (menu.Store != null)
 		{
 			menuDTO.StoreName = menu.Store.Title;
+			menuDTO.StoreSlug = menu.Store.Slug;
+			menuDTO.CompanySlug = menu.Store.Company?.Slug;
 		}
 		return menuDTO;
 	}

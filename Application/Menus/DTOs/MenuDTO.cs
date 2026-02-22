@@ -15,4 +15,6 @@ public sealed class MenuDTO : BaseDTO
 	public MenuStatus Status { get; set; }
 	public string? StoreName { get; set; }
 	public string? CompanyName { get; set; }
+	public string? StoreSlug { get; set; }
+	public string? CompanySlug { get; set; }
 }

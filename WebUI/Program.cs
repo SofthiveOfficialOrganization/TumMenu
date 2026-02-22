@@ -86,9 +86,15 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
+    name: "publicMenu",
+    pattern: "{companySlug}/{storeSlug}/menu",
+    defaults: new { controller = "Menu", action = "Index" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
 
 await app.SeedAdminAsync();
 await app.RunAsync();

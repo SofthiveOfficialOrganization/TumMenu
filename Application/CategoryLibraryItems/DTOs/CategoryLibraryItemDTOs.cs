@@ -1,4 +1,6 @@
 ﻿using Application.Common.Base.DTOs;
+using Application.Products.DTOs;
+
 namespace Application.Categories.DTOs;
 
 public sealed class CategoryLibraryItemDTO : BaseDTO
@@ -17,4 +19,5 @@ public sealed class CategoryDTO : BaseDTO
 	public CategoryLibraryItemDTO CategoryLibraryItem { get; set; } = null!;
 	public int SortOrder { get; set; }
 	public bool IsActive { get; set; }
+	public ICollection<ProductDTO> Products { get; set; } = [];
 }
