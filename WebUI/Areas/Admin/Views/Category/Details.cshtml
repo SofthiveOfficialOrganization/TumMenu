@@ -1,0 +1,158 @@
+@using Application.Categories.DTOs
+@model CategoryDTO
+
+@{
+    ViewData["Title"] = "Kategori Detayları";
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="horizon-card">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
+                         style="width:56px; height:56px; font-size:24px; flex-shrink:0;">
+                        @if (!string.IsNullOrEmpty(Model.CategoryLibraryItem.IconKey))
+                        {
+                            <i class="@Model.CategoryLibraryItem.IconKey"></i>
+                        }
+                        else
+                        {
+                            <span class="fw-bold fs-4">@Model.CategoryLibraryItem.Title.Substring(0, 1).ToUpper()</span>
+                        }
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark mb-0">@Model.CategoryLibraryItem.Title</h4>
+                        <span class="badge bg-light border text-secondary font-monospace fw-normal">Sıra: @Model.SortOrder</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-light text-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Menüye Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Products Card -->
+    <div class="col-md-12 mb-4">
+        <div class="horizon-card h-100">
+             <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="fw-bold mb-1">Ürünler</h5>
+                    <p class="text-secondary small mb-0">Bu kategorideki ürünleri yönetin.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <!-- Ürün Ekle -->
+                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
+                    </a>
+                </div>
+            </div>
+            
+            <div id="product-grid" class="row">
+                @if (Model.Products != null && Model.Products.Any())
+                {
+                    foreach (var product in Model.Products.OrderBy(c => c.SortOrder))
+                    {
+                        <div class="col-md-6 mb-3 product-item" data-id="@product.Id">
+                            <div class="card h-100 shadow-sm border-0 cursor-move">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="me-3 text-secondary handle">
+                                        <i class="fas fa-grip-vertical fa-lg"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h6 class="fw-bold text-dark mb-1">@product.Title</h6>
+                                            @if(!product.IsActive)
+                                            {
+                                                <span class="badge bg-secondary" style="font-size: 0.65em;">PASİF</span>
+                                            }
+                                        </div>
+                                        <p class="text-muted small mb-0 d-flex gap-3 mt-1">
+                                            <span class="fw-bold text-success">@product.BasePrice.ToString("C")</span>
+                                            @if(product.IsVegan == true) { <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-leaf me-1"></i>Vegan</span> }
+                                            @if(product.IsVegetarian == true) { <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-seedling me-1"></i>Vejetaryen</span> }
+                                        </p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-light text-primary" title="Düzenle">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
+                                            <button type="button" class="btn btn-sm btn-light text-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="text-center py-5 text-secondary border rounded bg-light">
+                            <i class="fas fa-hamburger fa-2x mb-3 d-block opacity-50"></i>
+                            <p class="mb-0">Bu kategoride henüz ürün yok. Yukarıdan ekleyebilirsiniz.</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var grid = document.getElementById('product-grid');
+            if (grid && grid.querySelectorAll('.product-item').length > 0) {
+                new Sortable(grid, {
+                    animation: 150,
+                    handle: '.handle',
+                    ghostClass: 'bg-light',
+                    onEnd: function (evt) {
+                        var items = Array.from(grid.querySelectorAll('.product-item'));
+                        var sortData = items.map(function (item, index) {
+                            return {
+                                id: item.getAttribute('data-id'),
+                                sortOrder: index
+                            };
+                        });
+
+                        // Get CSRF token
+                        var token = document.querySelector('input[name="__RequestVerificationToken"]');
+                        var headers = {
+                            'Content-Type': 'application/json'
+                        };
+                        if (token) {
+                            headers['RequestVerificationToken'] = token.value;
+                        }
+
+                        // Send to backend (TODO: Create Product SortOrder update)
+                        /*
+                        fetch('/admin/Product/UpdateSortOrder', {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({ items: sortData })
+                        }).then(response => {
+                            if (!response.ok) {
+                                Swal.fire('Hata', 'Sıralama kaydedilemedi.', 'error');
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Hata', 'Bir hata oluştu.', 'error');
+                        });
+                        */
+                    }
+                });
+            }
+        });
+    </script>
+}

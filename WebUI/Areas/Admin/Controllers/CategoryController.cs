@@ -109,4 +109,31 @@ public class CategoryController(IMediator mediator) : Controller
         await mediator.Send(cmd, ct);
         return Ok();
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+    {
+        var category = await mediator.Send(new GetCategoryByIdQuery(id), ct);
+        
+        // Security Check
+        var menu = await mediator.Send(new GetMenuByIdQuery { Id = category.MenuId }, ct);
+        if (User.IsInRole("Owner"))
+        {
+             var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+             bool isOwner = false;
+             if (ownerCompany != null)
+             {
+                 if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+                 else if (menu.StoreId.HasValue)
+                 {
+                     var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(menu.StoreId.Value), ct);
+                     if (store.CompanyId == ownerCompany.Id) isOwner = true;
+                 }
+             }
+             if (!isOwner) return Forbid();
+        }
+
+        return View(category);
+    }
 }
