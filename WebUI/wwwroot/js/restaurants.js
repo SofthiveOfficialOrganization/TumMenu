@@ -43,10 +43,8 @@
         bindEvents();
         requestUserLocation();
 
-        // Auto-search if params from homepage
-        if (state.searchTerm || state.categoryIds.length || state.city || state.district) {
-            doSearch(false);
-        }
+        // Sayfa açıldığında her zaman arama yap (parametre olsun veya olmasın)
+        doSearch(false);
     }
 
     function readURLParams() {
@@ -244,19 +242,17 @@
                 state.loading = false;
                 loadingEl.hidden = true;
 
-                // Always hide empty state because we will show a demo card
-                emptyEl.hidden = true;
+                if (data.items.length === 0 && !append) {
+                    emptyEl.hidden = false;
+                } else {
+                    emptyEl.hidden = true;
+                }
 
                 resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu';
 
                 data.items.forEach(function (store) {
                     resultGrid.appendChild(createStoreCard(store));
                 });
-
-                // Always append 4 demo cards
-                for (var i = 0; i < 4; i++) {
-                    resultGrid.appendChild(createDemoCard(i));
-                }
 
                 state.hasNext = data.hasNext;
                 loadMoreWrap.hidden = !data.hasNext;
@@ -266,76 +262,14 @@
                 state.loading = false;
                 loadingEl.hidden = true;
 
-                // On error, also show 4 demo cards
-                resultGrid.innerHTML = '';
-                for (var j = 0; j < 4; j++) {
-                    resultGrid.appendChild(createDemoCard(j));
+                if (!append) {
+                    emptyEl.hidden = false;
+                    resultGrid.innerHTML = '';
                 }
             });
     }
 
-    // ── Demo Card ──
-    function createDemoCard(index) {
-        var wrapper = document.createElement('div');
-        wrapper.className = 'store-card-wrapper';
 
-        var card = document.createElement('a');
-        card.className = 'store-card';
-        card.href = '#'; // Demo link
-
-        // Demo content data
-        var demos = [
-            { icon: '🍕', name: 'Pizza Roma (Örnek)', loc: 'Şişli, İstanbul' },
-            { icon: '🍔', name: 'Burger House (Örnek)', loc: 'Beşiktaş, İstanbul' },
-            { icon: '🍣', name: 'Sakura Sushi (Örnek)', loc: 'Çankaya, Ankara' },
-            { icon: '☕', name: 'Kahve Molası (Örnek)', loc: 'Kadıköy, İstanbul' }
-        ];
-        var data = demos[index % demos.length];
-
-        // Image
-        var imgWrap = document.createElement('div');
-        imgWrap.className = 'store-card__img-wrap';
-
-        // Demo Badge
-        var badge = document.createElement('span');
-        badge.className = 'store-card__badge';
-        badge.textContent = 'Örnek';
-        badge.style.position = 'absolute';
-        badge.style.top = '10px';
-        badge.style.left = '10px';
-        badge.style.background = '#fff';
-        badge.style.padding = '4px 8px';
-        badge.style.borderRadius = '4px';
-        badge.style.fontSize = '12px';
-        badge.style.fontWeight = 'bold';
-        badge.style.zIndex = '2';
-        imgWrap.appendChild(badge);
-
-        var noImg = document.createElement('div');
-        noImg.className = 'store-card__no-img';
-        noImg.textContent = data.icon;
-        imgWrap.appendChild(noImg);
-
-        card.appendChild(imgWrap);
-
-        // Body
-        var body = document.createElement('div');
-        body.className = 'store-card__body';
-
-        var name = document.createElement('h3');
-        name.className = 'store-card__name';
-        name.textContent = data.name;
-        body.appendChild(name);
-
-        var locP = document.createElement('p');
-        locP.className = 'store-card__location';
-        locP.innerHTML = '📍 ' + data.loc;
-        body.appendChild(locP);
-
-        card.appendChild(body);
-        wrapper.appendChild(card);
-        return wrapper;
-    }
 
     // ── Card Builder ──
     function createStoreCard(store) {
