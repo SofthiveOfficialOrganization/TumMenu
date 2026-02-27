@@ -178,6 +178,12 @@ public sealed class AppExceptionFilter(
 		else
 			_logger.LogWarning(ex, "Handled exception. TraceId: {TraceId}", traceId);
 
+		// In development mode, allow unhandled exceptions or DB exceptions to bubble up to the Developer Exception Page
+		if (_env.IsDevelopment() && !wantsJson && (status >= 500 || ex is DbUpdateException))
+		{
+			return Task.CompletedTask;
+		}
+
 		httpContext.Response.StatusCode = status;
 
 		if(wantsJson)

@@ -133,19 +133,62 @@
             doSearch(false);
         });
 
-        // City/District inputs (debounced)
-        var locationTimer;
-        function onLocationInput() {
-            clearTimeout(locationTimer);
-            locationTimer = setTimeout(function () {
-                state.city = cityInput.value.trim();
-                state.district = districtInput.value.trim();
-                state.page = 0;
-                doSearch(false);
-            }, 600);
+        // Load Provinces
+        fetch('/api/location/provinces')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(p => {
+                    var opt = document.createElement('option');
+                    opt.value = p.name; // We send the name to the backend as requested by SearchStoresQuery
+                    opt.textContent = p.name;
+                    opt.dataset.id = p.id;
+                    if(state.city === p.name) opt.selected = true;
+                    cityInput.appendChild(opt);
+                });
+                if(state.city) {
+                    var selectedOpt = cityInput.options[cityInput.selectedIndex];
+                    if(selectedOpt && selectedOpt.dataset.id) {
+                        loadDistricts(selectedOpt.dataset.id, state.district);
+                    }
+                }
+            });
+
+        function loadDistricts(provinceId, selectedDistrictName = '') {
+            districtInput.innerHTML = '<option value="">İlçe Seçiniz</option>';
+            districtInput.disabled = false;
+            fetch('/api/location/districts/' + provinceId)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(d => {
+                        var opt = document.createElement('option');
+                        opt.value = d.name; // Send name
+                        opt.textContent = d.name;
+                        if(selectedDistrictName === d.name) opt.selected = true;
+                        districtInput.appendChild(opt);
+                    });
+                });
         }
-        cityInput.addEventListener('input', onLocationInput);
-        districtInput.addEventListener('input', onLocationInput);
+
+        cityInput.addEventListener('change', function() {
+            var selectedOpt = cityInput.options[cityInput.selectedIndex];
+            state.city = selectedOpt.value;
+            state.district = '';
+            
+            if(selectedOpt.value && selectedOpt.dataset.id) {
+                loadDistricts(selectedOpt.dataset.id);
+            } else {
+                districtInput.disabled = true;
+                districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
+            }
+            state.page = 0;
+            doSearch(false);
+        });
+
+        districtInput.addEventListener('change', function() {
+            state.district = districtInput.value;
+            state.page = 0;
+            doSearch(false);
+        });
 
         // Use my location
         useMyLocBtn.addEventListener('click', function () {

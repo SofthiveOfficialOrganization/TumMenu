@@ -24,7 +24,7 @@
                             </div>
                             <form id="form-company" class="onboarding-form">
                                 <div class="mb-4">
-                                    <label for="CompanyTitle" class="form-label h4 text-dark">Şirket Adı</label>
+                                    <label for="CompanyTitle" class="form-label h4 text-body">Şirket Adı</label>
                                     <input type="text" class="form-control form-control-xl shadow-sm" id="CompanyTitle" name="Title" required placeholder="Örn: Güzel Yemekler A.Ş.">
                                 </div>
                                 
@@ -37,9 +37,9 @@
                                         </div>
                                     </div>
                                     <div class="input-group input-group-lg shadow-sm">
-                                        <span class="input-group-text bg-white text-muted">tummenu.com/</span>
+                                        <span class="input-group-text bg-transparent text-muted">tummenu.com/</span>
                                         <input type="text" class="form-control" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
-                                        <span class="input-group-text border-start-0 bg-white" id="CompanySlugStatus">
+                                        <span class="input-group-text border-start-0 bg-transparent" id="CompanySlugStatus">
                                             <i class="fas fa-lock text-secondary" id="CompanySlugIcon"></i>
                                         </span>
                                     </div>
@@ -66,11 +66,11 @@
                             <form id="form-store" class="onboarding-form">
                                 <input type="hidden" id="StoreCompanyId" name="CompanyId">
                                 <div class="mb-4">
-                                    <label for="StoreTitle" class="form-label h4 text-dark">Şube Adı</label>
+                                    <label for="StoreTitle" class="form-label h4 text-body">Şube Adı</label>
                                     <input type="text" class="form-control form-control-xl shadow-sm" id="StoreTitle" name="Title" required placeholder="Örn: Merkez Şube">
                                 </div>
                                 <div class="mb-4">
-                                    <label for="StorePhone" class="form-label h4 text-dark">Telefon Numarası</label>
+                                    <label for="StorePhone" class="form-label h4 text-body">Telefon Numarası</label>
                                     <input type="tel" class="form-control form-control-xl shadow-sm" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
                                 </div>
                                  <div class="mb-5">
@@ -82,9 +82,9 @@
                                         </div>
                                     </div>
                                     <div class="input-group input-group-lg shadow-sm">
-                                        <span class="input-group-text bg-white text-muted">tummenu.com/sirket/</span>
+                                        <span class="input-group-text bg-transparent text-muted">tummenu.com/sirket/</span>
                                         <input type="text" class="form-control" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
-                                        <span class="input-group-text border-start-0 bg-white" id="StoreSlugStatus">
+                                        <span class="input-group-text border-start-0 bg-transparent" id="StoreSlugStatus">
                                             <i class="fas fa-lock text-secondary" id="StoreSlugIcon"></i>
                                         </span>
                                     </div>
@@ -110,7 +110,7 @@
                             <form id="form-menu" class="onboarding-form">
                                 <input type="hidden" id="MenuStoreId" name="StoreId">
                                 <div class="mb-4">
-                                    <label for="MenuTitle" class="form-label h4 text-dark">Menü Adı</label>
+                                    <label for="MenuTitle" class="form-label h4 text-body">Menü Adı</label>
                                     <input type="text" class="form-control form-control-xl shadow-sm" id="MenuTitle" name="Title" required placeholder="Örn: Ana Menü">
                                 </div>
                                 <div class="form-check mb-5 ps-5">
@@ -139,7 +139,7 @@
                             <div class="row g-3" style="min-height: 340px;">
                                 <!-- Left: Library Search -->
                                 <div class="col-6">
-                                    <div class="border rounded-3 h-100 p-3 bg-white shadow-sm d-flex flex-column">
+                                    <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-book-open me-2"></i> Kategori Bul
                                         </h5>
@@ -155,7 +155,7 @@
 
                                 <!-- Right: Added Categories (Sortable 2-col grid) -->
                                 <div class="col-6">
-                                    <div class="border rounded-3 h-100 p-3 bg-white shadow-sm d-flex flex-column">
+                                    <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-list me-2"></i> Menüm
                                         </h5>
@@ -618,7 +618,7 @@
                             .attr('data-id', item.id)
                             .attr('data-title', item.title)
                             .html(`
-                                <span class="text-dark fw-semibold fs-6">${item.title}</span>
+                                <span class="text-body fw-semibold fs-6">${item.title}</span>
                                 <button type="button" class="btn btn-warning btn-add-category px-3" title="Ekle">
                                     <i class="fas fa-plus me-1"></i> Ekle
                                 </button>`);
@@ -672,11 +672,10 @@
                 $('#addedPlaceholder').hide();
                 const colDiv = $('<div>').addClass('col-6 added-category-item').attr('data-id', categoryId);
                 const card = $('<div>')
-                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2')
-                    .css({ background: '#fffbea', border: '2px solid #ffc107' })
+                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2 bg-warning bg-opacity-10 border border-warning border-2')
                     .html(`
                         <i class="fas fa-grip-vertical text-secondary handle fs-5 flex-shrink-0" style="cursor:grab"></i>
-                        <span class="text-dark fw-bold flex-grow-1 fs-6">${title}</span>
+                        <span class="text-body fw-bold flex-grow-1 fs-6">${title}</span>
                         <button type="button" class="btn btn-danger btn-remove-category flex-shrink-0 d-flex align-items-center justify-content-center"
                             style="width:34px;height:34px;padding:0;" title="Kaldır">
                             <i class="fas fa-times text-white"></i>

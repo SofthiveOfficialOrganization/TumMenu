@@ -67,6 +67,35 @@
                     <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Address.CityId" class="form-label fw-bold text-secondary small text-uppercase">İl</label>
+                        <select asp-for="Address.CityId" class="form-select" id="citySelect">
+                            <option value="">İl Seçiniz</option>
+                        </select>
+                        <input type="hidden" asp-for="Address.CityName" id="cityNameInput" />
+                        <input type="hidden" asp-for="Address.Latitude" id="cityLatInput" />
+                        <input type="hidden" asp-for="Address.Longitude" id="cityLngInput" />
+                        <span asp-validation-for="Address.CityId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Address.DistrictId" class="form-label fw-bold text-secondary small text-uppercase">İlçe</label>
+                        <select asp-for="Address.DistrictId" class="form-select" id="districtSelect" disabled>
+                            <option value="">Önce İl Seçiniz</option>
+                        </select>
+                        <input type="hidden" asp-for="Address.DistrictName" id="districtNameInput" />
+                        <input type="hidden" asp-for="Address.Neighborhood" id="neighborhoodInput" />
+                        <span asp-validation-for="Address.DistrictId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Address.FullAddress" class="form-label fw-bold text-secondary small text-uppercase">Açık Adres</label>
+                    <textarea asp-for="Address.FullAddress" class="form-control" rows="3" placeholder="Sokak, bina no, kat vb. açık adres bilgilerinizi giriniz"></textarea>
+                    <span asp-validation-for="Address.FullAddress" class="text-danger small"></span>
+                </div>
+
                 <div class="d-flex justify-content-end gap-2 mt-5">
                     <a asp-action="Index" class="btn btn-outline-secondary">
                         <i class="fas fa-times me-2"></i>İptal
@@ -208,6 +237,80 @@
                     confirmButtonText: 'Tamam'
                 });
             }
+        });
+
+        // Location Logic
+        const citySelect = $('#citySelect');
+        const districtSelect = $('#districtSelect');
+        const cityNameInput = $('#cityNameInput');
+        const districtNameInput = $('#districtNameInput');
+        const cityLatInput = $('#cityLatInput');
+        const cityLngInput = $('#cityLngInput');
+        let selectedProvinceId = null;
+
+        // Initialize Select2
+        citySelect.select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+
+        districtSelect.select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+
+        // Load Provinces
+        $.get('/api/location/provinces', function(data) {
+            data.forEach(p => {
+                citySelect.append($('<option>', {
+                    value: p.id,
+                    text: p.name,
+                    'data-lat': p.latitude,
+                    'data-lng': p.longitude
+                }));
+            });
+            citySelect.trigger('change');
+        });
+
+        citySelect.on('change', function() {
+            const selectedOption = $(this).find('option:selected');
+            selectedProvinceId = $(this).val();
+            
+            districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
+            
+            if (selectedProvinceId) {
+                cityNameInput.val(selectedOption.text());
+                cityLatInput.val(selectedOption.data('lat'));
+                cityLngInput.val(selectedOption.data('lng'));
+                
+                districtSelect.prop('disabled', false);
+                
+                $.get(`/api/location/districts/${selectedProvinceId}`, function(data) {
+                    data.forEach(d => {
+                        districtSelect.append($('<option>', {
+                            value: d.id,
+                            text: d.name
+                        }));
+                    });
+                    districtSelect.trigger('change');
+                });
+            } else {
+                cityNameInput.val('');
+                cityLatInput.val('');
+                cityLngInput.val('');
+                districtSelect.prop('disabled', true);
+                districtSelect.empty().append('<option value="">Önce İl Seçiniz</option>').trigger('change');
+                districtNameInput.val('');
+            }
+        });
+
+        districtSelect.on('change', function() {
+             const selectedOption = $(this).find('option:selected');
+             if($(this).val()){
+                 districtNameInput.val(selectedOption.text());
+             } else {
+                 districtNameInput.val('');
+             }
         });
     });
     </script>

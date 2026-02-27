@@ -1,36 +1,12 @@
   Geri yüklenecek projeler belirleniyor...
   Geri yükleme için tüm projeler güncel.
-  Domain -> D:\SoftHive\Projects\2025\TumMenu\Domain\bin\Debug\net8.0\Domain.dll
-D:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Queries\GetWizardStatusQuery.cs(20,48): error CS0246: 'GetCurrentOwnerIdQuery' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(19,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Commands\MarkWizardCompletedCommand.cs(20,48): error CS0246: 'GetCurrentOwnerIdQuery' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Commands\MarkWizardCompletedCommand.cs(28,14): error CS1061: 'IRepository<Owner>' bir 'UpdateAsync' tanımı içermiyor ve 'IRepository<Owner>' türünde bir ilk bağımsız değişken kabul eden hiçbir erişilebilir 'UpdateAsync' genişletme yöntemi bulunamadı (bir kullanma yönergeniz veya derleme başvurunuz eksik olabilir mi?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\DeleteMenuCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+  Domain -> d:\SoftHive\Projects\2025\TumMenu\Domain\bin\Debug\net8.0\Domain.dll
+d:\SoftHive\Projects\2025\TumMenu\Application\Microservices\Location\LocationMicroservice.cs(3,7): error CS0246: 'Newtonsoft' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
 
 Oluşturma BAŞARISIZ OLDU.
 
-D:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(19,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' içindeki 'entity' parametresi için olası null başvuru bağımsız değişkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olası bir null başvurunun başvurma işlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\DeleteMenuCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmamış. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Queries\GetWizardStatusQuery.cs(20,48): error CS0246: 'GetCurrentOwnerIdQuery' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Commands\MarkWizardCompletedCommand.cs(20,48): error CS0246: 'GetCurrentOwnerIdQuery' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Owners\Commands\MarkWizardCompletedCommand.cs(28,14): error CS1061: 'IRepository<Owner>' bir 'UpdateAsync' tanımı içermiyor ve 'IRepository<Owner>' türünde bir ilk bağımsız değişken kabul eden hiçbir erişilebilir 'UpdateAsync' genişletme yöntemi bulunamadı (bir kullanma yönergeniz veya derleme başvurunuz eksik olabilir mi?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-    10 Uyarı
-    3 Hata
+d:\SoftHive\Projects\2025\TumMenu\Application\Microservices\Location\LocationMicroservice.cs(3,7): error CS0246: 'Newtonsoft' türü veya ad alanı adı bulunamadı (bir using yönergeniz veya derleme başvurunuz mu eksik?) [d:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+    0 Uyarı
+    1 Hata
 
-Geçen Süre 00:00:02.91
+Geçen Süre 00:00:00.97

@@ -22,6 +22,11 @@ namespace WebUI.Extensions
 
 			});
 
+			services.Configure<Application.Microservices.Location.LocationMicroserviceOptions>(
+				configuration.GetSection("LocationMicroservice"));
+
+			services.AddHttpClient<Application.Microservices.Location.ILocationMicroservice, Application.Microservices.Location.LocationMicroservice>();
+
 			services
 				.AddApplication()
 				.AddInfrastructure(configuration);

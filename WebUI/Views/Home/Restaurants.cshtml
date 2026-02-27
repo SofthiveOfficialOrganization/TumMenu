@@ -89,9 +89,13 @@
             <!-- İl / İlçe -->
             <div class="rest-filters__group">
                 <h3 class="rest-filters__group-title">Konum</h3>
-                <div class="rest-filters__location">
-                    <input id="cityInput" type="text" placeholder="İl" class="rest-input" />
-                    <input id="districtInput" type="text" placeholder="İlçe" class="rest-input" />
+                <div class="rest-filters__location" style="display:flex; flex-direction:column; gap:8px;">
+                    <select id="cityInput" class="rest-input" style="width:100%;">
+                        <option value="">İl Seçiniz</option>
+                    </select>
+                    <select id="districtInput" class="rest-input" disabled style="width:100%;">
+                        <option value="">Önce İl Seçiniz</option>
+                    </select>
                 </div>
                 <button id="useMyLocation" type="button" class="rest-filters__loc-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">

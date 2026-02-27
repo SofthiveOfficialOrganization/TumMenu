@@ -28,6 +28,7 @@ public class CreateStoreCommandHandler(
 		bool companyExists = await repoCompany.ExistsAsync(c => c.Id == req.CompanyId, ct);
 		if(!companyExists)
 			throw new UnprocessableAppException("Dükkanın ekleneceği şirket bulunamadı.");
+
 		var store = mapper.Map<Store>(req);
 		await repoStore.AddAsync(store, ct);
 		var storeDTO = mapper.Map<StoreDTO>(store);

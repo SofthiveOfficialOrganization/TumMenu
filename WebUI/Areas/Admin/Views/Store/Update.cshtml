@@ -32,6 +32,35 @@
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Address.CityId" class="form-label">İl</label>
+                    <select asp-for="Address.CityId" class="form-select" id="citySelect">
+                        <option value="">İl Seçiniz</option>
+                    </select>
+                    <input type="hidden" asp-for="Address.CityName" id="cityNameInput" />
+                    <input type="hidden" asp-for="Address.Latitude" id="cityLatInput" />
+                    <input type="hidden" asp-for="Address.Longitude" id="cityLngInput" />
+                    <span asp-validation-for="Address.CityId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Address.DistrictId" class="form-label">İlçe</label>
+                    <select asp-for="Address.DistrictId" class="form-select" id="districtSelect" disabled>
+                        <option value="">Önce İl Seçiniz</option>
+                    </select>
+                    <input type="hidden" asp-for="Address.DistrictName" id="districtNameInput" />
+                    <input type="hidden" asp-for="Address.Neighborhood" id="neighborhoodInput" />
+                    <span asp-validation-for="Address.DistrictId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address.FullAddress" class="form-label">Açık Adres</label>
+                <textarea asp-for="Address.FullAddress" class="form-control" rows="3" placeholder="Sokak, bina no, kat vb. açık adres bilgilerinizi giriniz"></textarea>
+                <span asp-validation-for="Address.FullAddress" class="text-danger"></span>
+            </div>
+
             <!-- Company usually shouldn't be changed after creation easily, or requires admin. 
                  For now display it as readonly or just text. 
                  If we want to allow changing, we need to populate ViewBag.Companies again in Update GET. -->
@@ -47,3 +76,96 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+    $(document).ready(function () {
+        const citySelect = $('#citySelect');
+        const districtSelect = $('#districtSelect');
+        const cityNameInput = $('#cityNameInput');
+        const districtNameInput = $('#districtNameInput');
+        const cityLatInput = $('#cityLatInput');
+        const cityLngInput = $('#cityLngInput');
+        
+        // Initialize Select2
+        citySelect.select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+
+        districtSelect.select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+
+        const initialCityId = '@(Model.Address?.CityId?.ToString() ?? "")';
+        const initialDistrictId = '@(Model.Address?.DistrictId?.ToString() ?? "")';
+
+        // Load Provinces
+        $.get('/api/location/provinces', function(data) {
+            data.forEach(p => {
+                citySelect.append($('<option>', {
+                    value: p.id,
+                    text: p.name,
+                    'data-lat': p.latitude,
+                    'data-lng': p.longitude,
+                    selected: initialCityId === p.id
+                }));
+            });
+            citySelect.trigger('change');
+            
+            if (initialCityId) {
+                loadDistricts(initialCityId, initialDistrictId);
+            }
+        });
+
+        function loadDistricts(provinceId, selectedDistrictId = null) {
+            districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
+            districtSelect.prop('disabled', false);
+            
+            $.get(`/api/location/districts/${provinceId}`, function(data) {
+                data.forEach(d => {
+                    districtSelect.append($('<option>', {
+                        value: d.id,
+                        text: d.name,
+                        selected: selectedDistrictId === d.id
+                    }));
+                });
+                districtSelect.trigger('change');
+            });
+        }
+
+        citySelect.on('change', function() {
+            const selectedOption = $(this).find('option:selected');
+            const selectedProvinceId = $(this).val();
+            
+            districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
+            
+            if (selectedProvinceId) {
+                cityNameInput.val(selectedOption.text());
+                cityLatInput.val(selectedOption.data('lat'));
+                cityLngInput.val(selectedOption.data('lng'));
+                
+                loadDistricts(selectedProvinceId);
+            } else {
+                cityNameInput.val('');
+                cityLatInput.val('');
+                cityLngInput.val('');
+                districtSelect.prop('disabled', true);
+                districtSelect.empty().append('<option value="">Önce İl Seçiniz</option>').trigger('change');
+                districtNameInput.val('');
+            }
+        });
+
+        districtSelect.on('change', function() {
+             const selectedOption = $(this).find('option:selected');
+             if($(this).val()){
+                 districtNameInput.val(selectedOption.text());
+             } else {
+                 districtNameInput.val('');
+             }
+        });
+    });
+    </script>
+}

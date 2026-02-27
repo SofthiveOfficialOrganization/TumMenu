@@ -136,8 +136,8 @@ public class StoreController(IMediator mediator) : Controller
 		return View(store);
 	}
 
-	[HttpPost("[action]")]
-	public async Task<IActionResult> Update(UpdateStoreCommand req, CancellationToken ct)
+	[HttpPost("[action]/{id}")]
+	public async Task<IActionResult> Update(Guid id, UpdateStoreCommand req, CancellationToken ct)
 	{
 		if (User.IsInRole("Owner"))
 		{
