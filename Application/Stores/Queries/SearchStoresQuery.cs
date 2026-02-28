@@ -15,8 +15,6 @@ public sealed class SearchStoresQuery : PageRequest, IRequest<StoreSearchResultL
 	public double? UserLatitude { get; set; }
 	public double? UserLongitude { get; set; }
 	public double? MaxDistanceKm { get; set; }
-	public string? City { get; set; }
-	public string? District { get; set; }
 }
 
 public class SearchStoresQueryHandler(
@@ -81,26 +79,6 @@ public class SearchStoresQueryHandler(
 			);
 		}
 
-		// City/District filter via FullAddress
-		if (!string.IsNullOrEmpty(req.City))
-		{
-			var cityLower = req.City.Trim().ToLower();
-			query = query.Where(s =>
-				s.Address != null &&
-				s.Address.FullAddress != null &&
-				s.Address.FullAddress.ToLower().Contains(cityLower)
-			);
-		}
-		if (!string.IsNullOrEmpty(req.District))
-		{
-			var districtLower = req.District.Trim().ToLower();
-			query = query.Where(s =>
-				s.Address != null &&
-				s.Address.FullAddress != null &&
-				s.Address.FullAddress.ToLower().Contains(districtLower)
-			);
-		}
-
 		// Materialize before distance calculation (Haversine can't translate to SQL easily)
 		var allStores = await query.ToListAsync(ct);
 
@@ -114,18 +92,38 @@ public class SearchStoresQueryHandler(
 
 			if (hasUserLocation && store.Address?.Latitude != null && store.Address?.Longitude != null)
 			{
+				var storeLat = store.Address.Latitude!.Value;
+				var storeLng = store.Address.Longitude!.Value;
+
+				// Guard: skip stores with obviously corrupted coordinates (valid range: lat -90..90, lng -180..180)
+				bool coordsValid = storeLat >= -90 && storeLat <= 90 && storeLng >= -180 && storeLng <= 180;
+
+				Console.WriteLine($"[HAVERSINE] Mağaza: {store.Title}");
+				Console.WriteLine($"  Konumum      : lat={req.UserLatitude!.Value}, lng={req.UserLongitude!.Value}");
+				Console.WriteLine($"  Mağaza Konum : lat={storeLat}, lng={storeLng} | Geçerli: {coordsValid}");
+
+				if (!coordsValid)
+				{
+					Console.WriteLine($"  -> Koordinatlar geçersiz aralıkta, atlanıyor.");
+					continue;
+				}
+
 				distance = CalculateHaversineDistance(
 					req.UserLatitude!.Value, req.UserLongitude!.Value,
-					store.Address.Latitude!.Value, store.Address.Longitude!.Value
+					storeLat, storeLng
 				);
 
+				Console.WriteLine($"  Hesaplanan Mesafe: {Math.Round((double)distance, 2)} km");
+
 				if (req.MaxDistanceKm.HasValue && distance > req.MaxDistanceKm.Value)
+				{
+					Console.WriteLine($"  -> Filtrelendi (max: {req.MaxDistanceKm.Value} km)");
 					continue;
+				}
 			}
-			else if (req.MaxDistanceKm.HasValue)
+			else if (hasUserLocation)
 			{
-				// If distance filter is set but no coordinates available, skip
-				continue;
+				Console.WriteLine($"[HAVERSINE] Mağaza: {store.Title} -> Koordinat YOK (Latitude/Longitude null)");
 			}
 
 			// Find matched product if search was by product name

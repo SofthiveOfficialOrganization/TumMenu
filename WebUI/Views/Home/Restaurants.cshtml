@@ -7,6 +7,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/restaurants.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 }
 
 <!-- HERO MINI -->
@@ -97,13 +98,20 @@
                         <option value="">Önce İl Seçiniz</option>
                     </select>
                 </div>
-                <button id="useMyLocation" type="button" class="rest-filters__loc-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
-                    </svg>
-                    Konumumu Kullan
-                </button>
-            </div>
+                    <button id="useMyLocation" type="button" class="rest-filters__loc-btn mb-3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                        </svg>
+                        Konumumu Kullan
+                    </button>
+                    
+                    <div id="mapSection" style="position: relative; margin-top: 1rem;">
+                        <div id="mapOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; background: rgba(248,249,250,0.9); z-index: 10; display: flex; align-items: center; justify-content: center; border: 1px dashed #ced4da; border-radius: 0.5rem; text-align: center; padding: 1rem;">
+                            <span class="text-muted fw-bold" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-2 mb-2 d-block"></i>Haritayı görüntülemek için lütfen İl ve İlçe seçiniz...</span>
+                        </div>
+                        <div id="restMap" style="height: 250px; width: 100%; border-radius: 0.5rem; border: 1px solid #e2e8f0; z-index: 1;"></div>
+                    </div>
+                </div>
         </aside>
 
         <!-- FILTER TOGGLE (MOBILE) -->
@@ -152,5 +160,6 @@
 </section>
 
 @section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="~/js/restaurants.js" asp-append-version="true"></script>
 }

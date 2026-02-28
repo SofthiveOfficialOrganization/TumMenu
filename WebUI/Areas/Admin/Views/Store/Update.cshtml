@@ -50,15 +50,32 @@
                         <option value="">Önce İl Seçiniz</option>
                     </select>
                     <input type="hidden" asp-for="Address.DistrictName" id="districtNameInput" />
-                    <input type="hidden" asp-for="Address.Neighborhood" id="neighborhoodInput" />
+
                     <span asp-validation-for="Address.DistrictId" class="text-danger"></span>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address.Neighborhood" class="form-label">Mahalle</label>
+                <input asp-for="Address.Neighborhood" class="form-control" placeholder="örn. Cumhuriyet Mah." />
+                <span asp-validation-for="Address.Neighborhood" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Address.FullAddress" class="form-label">Açık Adres</label>
                 <textarea asp-for="Address.FullAddress" class="form-control" rows="3" placeholder="Sokak, bina no, kat vb. açık adres bilgilerinizi giriniz"></textarea>
                 <span asp-validation-for="Address.FullAddress" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4" id="mapSection" style="position: relative;">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Harita Üzerinde Konum (İsteğe Bağlı)</label>
+                <div class="form-text text-muted small mb-2">Harita üzerinde fareniz ile iğneyi dükkanınızın tam konumu üzerine sürükleyebilirsiniz.</div>
+
+                <div id="mapOverlay" style="position: absolute; top: 60px; left: 0; width: 100%; height: 350px; background: rgba(248,249,250,0.9); z-index: 10; display: flex; align-items: center; justify-content: center; border: 1px dashed #ced4da; border-radius: 0.5rem;">
+                    <span class="text-muted fw-bold"><i class="fas fa-map-marker-alt me-2"></i>Haritayı görüntülemek için lütfen İl ve İlçe seçiniz...</span>
+                </div>
+
+                <div id="map" style="height: 350px; width: 100%; border-radius: 0.5rem; border: 1px solid #ced4da; z-index: 1;"></div>
             </div>
 
             <!-- Company usually shouldn't be changed after creation easily, or requires admin. 
@@ -79,6 +96,8 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
     $(document).ready(function () {
         const citySelect = $('#citySelect');
@@ -87,6 +106,46 @@
         const districtNameInput = $('#districtNameInput');
         const cityLatInput = $('#cityLatInput');
         const cityLngInput = $('#cityLngInput');
+
+        let map = null;
+        let marker = null;
+
+        function initMap(lat, lng, zoom = 15) {
+            console.log("initMap called with:", {lat, lng, zoom, mapExists: !!map});
+            
+            if (isNaN(lat) || isNaN(lng)) {
+                console.error("Invalid coordinates provided to initMap:", lat, lng);
+                lat = 39.0;
+                lng = 35.0;
+                zoom = 5;
+            }
+
+            if(!map) {
+                map = L.map('map').setView([lat, lng], zoom);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                marker = L.marker([lat, lng], {draggable: true}).addTo(map);
+
+                marker.on('dragend', function (e) {
+                    const pos = marker.getLatLng();
+                    cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
+                    cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
+                });
+                
+                setTimeout(function () {
+                    map.invalidateSize();
+                }, 250);
+            } else {
+                map.setView([lat, lng], zoom);
+                marker.setLatLng([lat, lng]);
+                setTimeout(function () {
+                    map.invalidateSize();
+                }, 250);
+            }
+        }
         
         // Initialize Select2
         citySelect.select2({
@@ -101,6 +160,10 @@
 
         const initialCityId = '@(Model.Address?.CityId?.ToString() ?? "")';
         const initialDistrictId = '@(Model.Address?.DistrictId?.ToString() ?? "")';
+        const initialLat = @(Model.Address?.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
+        const initialLng = @(Model.Address?.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
+        // Flag: stop city/district change handlers from overwriting coords on first load
+        let initialCoordsLoaded = false;
 
         // Load Provinces
         $.get('/api/location/provinces', function(data) {
@@ -113,6 +176,14 @@
                     selected: initialCityId === p.id
                 }));
             });
+
+            // If we have saved coords, initialize the map to them immediately
+            if (initialLat && initialLng && initialLat >= -90 && initialLat <= 90) {
+                $('#mapOverlay').hide();
+                initMap(initialLat, initialLng, 15);
+                initialCoordsLoaded = true;
+            }
+
             citySelect.trigger('change');
             
             if (initialCityId) {
@@ -132,7 +203,20 @@
                         selected: selectedDistrictId === d.id
                     }));
                 });
-                districtSelect.trigger('change');
+                 districtSelect.trigger('change');
+                
+                // Show map overlay if empty
+                if (!$('#districtSelect').val()) {
+                    $('#mapOverlay').show();
+                } else {
+                    $('#mapOverlay').hide();
+                }
+                
+                if(map) {
+                    setTimeout(function () {
+                        map.invalidateSize();
+                    }, 250);
+                }
             });
         }
 
@@ -143,9 +227,54 @@
             districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
             
             if (selectedProvinceId) {
+                const rawLat = selectedOption.data('lat');
+                const rawLng = selectedOption.data('lng');
+                console.log("Selected Province Data:", {id: selectedProvinceId, rawLat, rawLng});
+
+                const lat = parseFloat(rawLat) || 39.0;
+                const lng = parseFloat(rawLng) || 35.0;
+
                 cityNameInput.val(selectedOption.text());
-                cityLatInput.val(selectedOption.data('lat'));
-                cityLngInput.val(selectedOption.data('lng'));
+                
+                const existingLat = parseFloat(cityLatInput.val());
+                const existingLng = parseFloat(cityLngInput.val());
+
+                console.log("Existing inputs:", {existingLat, existingLng});
+                
+                $('#mapOverlay').hide();
+
+                // Nominatim API ile il merkezini bul
+                const cityName = selectedOption.text();
+                if (cityName) {
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
+                    $.get(url, function(data) {
+                        if (data && data.length > 0) {
+                            console.log("Nominatim response:", data);
+                            const newLat = parseFloat(data[0].lat);
+                            const newLng = parseFloat(data[0].lon);
+                            console.log("Nominatim il merkezi:", {newLat, newLng});
+
+                            // Only update inputs & map if we don't have saved coords
+                            if (!initialCoordsLoaded) {
+                                cityLatInput.val(newLat.toFixed(6).replace('.', ','));
+                                cityLngInput.val(newLng.toFixed(6).replace('.', ','));
+                                console.log("cityLatInput set to:", cityLatInput.val());
+                                
+                                if (!map) {
+                                    initMap(newLat, newLng, 10);
+                                } else {
+                                    map.setView([newLat, newLng], 10);
+                                    if (marker) marker.setLatLng([newLat, newLng]);
+                                }
+                            }
+                        } else {
+                            // Fallback
+                            if (!map && !initialCoordsLoaded) initMap(lat, lng, 10);
+                        }
+                    });
+                } else {
+                    if (!map && !initialCoordsLoaded) initMap(lat, lng, 10);
+                }
                 
                 loadDistricts(selectedProvinceId);
             } else {
@@ -155,16 +284,63 @@
                 districtSelect.prop('disabled', true);
                 districtSelect.empty().append('<option value="">Önce İl Seçiniz</option>').trigger('change');
                 districtNameInput.val('');
+                $('#mapOverlay').show();
             }
         });
 
         districtSelect.on('change', function() {
              const selectedOption = $(this).find('option:selected');
              if($(this).val()){
-                 districtNameInput.val(selectedOption.text());
+                 const districtName = selectedOption.text();
+                 districtNameInput.val(districtName);
+                 const cityName = cityNameInput.val();
+                 
+                 // Nominatim (OpenStreetMap) API ile ilçe koordinatını bul
+                 if (cityName && districtName) {
+                    let url = '';
+                    if (districtName.toLowerCase() === 'merkez') {
+                        url = `https://nominatim.openstreetmap.org/search?format=json&city=${encodeURIComponent(cityName)}&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
+                    } else {
+                        url = `https://nominatim.openstreetmap.org/search?format=json&county=${encodeURIComponent(districtName)}&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
+                    }
+                    
+                    $.get(url, function(data) {
+                        if (data && data.length > 0) {
+                            const lat = parseFloat(data[0].lat);
+                            const lng = parseFloat(data[0].lon);
+                            // Only reposition to district if no saved coords (first load)
+                            if (!initialCoordsLoaded) {
+                                cityLatInput.val(lat.toFixed(6).replace('.', ','));
+                                cityLngInput.val(lng.toFixed(6).replace('.', ','));
+                                $('#mapOverlay').hide();
+                                if (map) {
+                                    map.setView([lat, lng], 13);
+                                    if (marker) marker.setLatLng([lat, lng]);
+                                } else {
+                                    initMap(lat, lng, 13);
+                                }
+                            } else {
+                                // Coords already loaded from DB — just show the map overlay off
+                                $('#mapOverlay').hide();
+                                // After initial load, mark flag as done so user changes work normally
+                                initialCoordsLoaded = false;
+                            }
+                        }
+                    });
+                 }
+                 
              } else {
                  districtNameInput.val('');
              }
+        });
+
+        // Form submit log
+        $('form').on('submit', function() {
+            console.log('=== FORM GÖNDERİLİYOR ===')
+            console.log('Latitude:', cityLatInput.val());
+            console.log('Longitude:', cityLngInput.val());
+            console.log('CityId:', citySelect.val());
+            console.log('DistrictId:', districtSelect.val());
         });
     });
     </script>

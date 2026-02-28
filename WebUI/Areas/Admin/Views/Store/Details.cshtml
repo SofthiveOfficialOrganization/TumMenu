@@ -67,20 +67,49 @@
              <h4 class="fw-bold text-primary mb-3">Adres Bilgisi</h4>
             @if (Model.Address != null)
             {
-                <div class="p-3 bg-light rounded-3 border">
-                     <div class="d-flex align-items-start">
-                        <i class="fas fa-map-marker-alt text-danger me-2 mt-1"></i>
-                        <div>
-                             <span class="fw-bold text-dark d-block mb-1">Teslimat Adresi</span>
-                             <p class="mb-0 text-secondary small">@Model.Address.FullAddress</p>
+                <div class="d-flex flex-column gap-3">
+                    @if (!string.IsNullOrEmpty(Model.Address.CityName))
+                    {
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-secondary fw-bold small text-uppercase">İl</span>
+                            <span class="text-dark fw-bold">@Model.Address.CityName</span>
                         </div>
-                    </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Address.DistrictName))
+                    {
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-secondary fw-bold small text-uppercase">İlçe</span>
+                            <span class="text-dark fw-bold">@Model.Address.DistrictName</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Address.Neighborhood))
+                    {
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-secondary fw-bold small text-uppercase">Mahalle</span>
+                            <span class="text-dark fw-bold">@Model.Address.Neighborhood</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Address.FullAddress))
+                    {
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-secondary fw-bold small text-uppercase">Tam Adres</span>
+                            <span class="text-dark text-end" style="max-width:60%;">@Model.Address.FullAddress</span>
+                        </div>
+                    }
                     @if (Model.Address.Latitude.HasValue && Model.Address.Longitude.HasValue)
                     {
-                        <div class="mt-3 pt-2 border-top">
+                        <div class="d-flex justify-content-between pb-2">
+                            <span class="text-secondary fw-bold small text-uppercase">Koordinat</span>
                             <small class="text-secondary font-monospace">
-                                <i class="fas fa-crosshairs me-1"></i> @Model.Address.Latitude, @Model.Address.Longitude
+                                <i class="fas fa-crosshairs me-1"></i>@Model.Address.Latitude, @Model.Address.Longitude
                             </small>
+                        </div>
+                    }
+                    @if (!Model.Address.Latitude.HasValue && string.IsNullOrEmpty(Model.Address.FullAddress) && string.IsNullOrEmpty(Model.Address.CityName))
+                    {
+                        <div class="text-center py-4 text-secondary">
+                            <i class="fas fa-map-marked-alt fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0">Adres bilgisi girilmemiş.</p>
                         </div>
                     }
                 </div>
@@ -93,6 +122,7 @@
                 </div>
             }
         </div>
+
     </div>
 
     <div class="col-12">

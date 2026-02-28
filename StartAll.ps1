@@ -5,4 +5,4 @@ Start-Process dotnet "run --project Microservices/Location/WebAPI/WebAPI.csproj 
 
 Write-Host "Starting Main Application..."
 # Starts the main app and keeps the terminal open to see logs
-dotnet run --project WebUI/WebUI.csproj
+dotnet watch --project WebUI/WebUI.csproj

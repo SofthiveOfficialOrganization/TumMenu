@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace WebUI.Areas.Admin.Controllers;
 
@@ -40,14 +41,8 @@ public class CategoryController(IMediator mediator) : Controller
         // 2. Extract CategoryLibraryItemIds that are already in the menu
         var existingLibraryItemIds = menu.Categories.Select(c => c.CategoryLibraryItemId).ToList();
 
-        // 3. Fetch Library Items, excluding the existing ones
-        var categoryLibraryItems = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery 
-        { 
-            PageSize = 1000,
-            ExcludeIds = existingLibraryItemIds
-        }, ct);
-        
-        ViewBag.CategoryLibraryItems = new SelectList(categoryLibraryItems.Items, "Id", "Title");
+        // Pass exclude IDs as comma-separated string for AJAX calls
+        ViewBag.ExcludeIds = string.Join(",", existingLibraryItemIds);
         
         return View(new AddCategoryToMenuCommand { MenuId = menuId });
     }
@@ -77,20 +72,48 @@ public class CategoryController(IMediator mediator) : Controller
 
         if (!ModelState.IsValid)
         {
-             // Re-fetch existing items to exclude them again
              var existingLibraryItemIds = menu.Categories.Select(c => c.CategoryLibraryItemId).ToList();
-
-             var categoryLibraryItems = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery 
-             { 
-                 PageSize = 1000,
-                 ExcludeIds = existingLibraryItemIds
-             }, ct);
-             ViewBag.CategoryLibraryItems = new SelectList(categoryLibraryItems.Items, "Id", "Title");
+             ViewBag.ExcludeIds = string.Join(",", existingLibraryItemIds);
              return View(cmd);
         }
 
         await mediator.Send(cmd, ct);
-        return RedirectToAction("Details", "Menu", new { id = cmd.MenuId });
+        TempData["Success"] = "Kategori başarıyla eklendi.";
+        return RedirectToAction("Create", "Category", new { menuId = cmd.MenuId });
+    }
+
+    /// <summary>
+    /// AJAX endpoint for Select2: returns category library items matching search, excluding given IDs.
+    /// </summary>
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetCategoryLibraryItems(
+        string? search,
+        string? excludeIds,
+        int page = 1,
+        int pageSize = 15,
+        CancellationToken ct = default)
+    {
+        var excludeList = string.IsNullOrWhiteSpace(excludeIds)
+            ? new List<Guid>()
+            : excludeIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(id => Guid.TryParse(id.Trim(), out var g) ? g : (Guid?)null)
+                        .Where(g => g.HasValue)
+                        .Select(g => g!.Value)
+                        .ToList();
+
+        var result = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery
+        {
+            Search = search,
+            ExcludeIds = excludeList,
+            Page = page - 1,
+            PageSize = pageSize
+        }, ct);
+
+        var items = result.Items.Select(i => new { id = i.Id, text = i.Title });
+        var hasMore = result.HasNext;
+
+        return Json(new { results = items, pagination = new { more = hasMore } });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]

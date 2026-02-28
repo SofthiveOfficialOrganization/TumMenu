@@ -31,9 +31,9 @@
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
                             <th>Durum</th>
-                            <th>Kategoriler</th>
-                             <th>Oluşturulma Tarihi</th>
-                            <th class="text-end pe-3">İşlemler</th>
+                            <th class="d-none d-md-table-cell">Kategoriler</th>
+                            <th class="d-none d-lg-table-cell">Oluşturulma Tarihi</th>
+                            <th class="text-center">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,14 +62,14 @@
                                             <span class="badge bg-light text-secondary">PASİF</span>
                                         }
                                     </td>
-                                    <td class="text-secondary">
+                                    <td class="text-secondary d-none d-md-table-cell">
                                         <span class="badge bg-light text-dark fw-normal">
                                             @item.Categories.Count Kategori
                                         </span>
                                     </td>
-                                    <td class="text-secondary">@item.CreatedAt?.ToString("d")</td>
-                                    <td class="text-end pe-3">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
+                                    <td class="text-secondary d-none d-lg-table-cell">@item.CreatedAt?.ToString("d")</td>
+                                    <td class="text-center">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

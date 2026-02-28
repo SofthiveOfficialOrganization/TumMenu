@@ -60,8 +60,39 @@ public class CreateProductCommandMappingProfile(
 		if(!categoryExists)
 			throw new UnprocessableAppException($"Ürünün ekleneceği kategori bulunamadı.");
 
+		// Auto-generate slug from Title if not provided
+		var slug = string.IsNullOrWhiteSpace(req.Slug)
+			? GenerateSlug(req.Title)
+			: req.Slug;
+
 		var product = mapper.Map<Product>(req);
+		product.Slug = slug;
 		await repoProduct.AddAsync(product, ct);
 		return mapper.Map<ProductDTO>(product);
+	}
+
+	private static string GenerateSlug(string title)
+	{
+		var map = new Dictionary<char, string>
+		{
+			{'ğ',"g"},{'ü',"u"},{'ş',"s"},{'ı',"i"},{'ö',"o"},{'ç',"c"},
+			{'Ğ',"g"},{'Ü',"u"},{'Ş',"s"},{'İ',"i"},{'I',"i"},{'Ö',"o"},{'Ç',"c"}
+		};
+
+		var sb = new System.Text.StringBuilder();
+		foreach (var c in title.ToLower())
+			sb.Append(map.TryGetValue(c, out var r) ? r : c.ToString());
+
+		var result = sb.ToString()
+			.Normalize(System.Text.NormalizationForm.FormD);
+		result = System.Text.RegularExpressions.Regex.Replace(result, @"[^\u0000-\u007F]", "");
+		result = System.Text.RegularExpressions.Regex.Replace(result, @"[^a-z0-9\s\-]", "");
+		result = System.Text.RegularExpressions.Regex.Replace(result, @"\s+", "-");
+		result = System.Text.RegularExpressions.Regex.Replace(result, @"-+", "-").Trim('-');
+
+		if (result.Length > 30)
+			result = result.Substring(0, 30).TrimEnd('-');
+
+		return result;
 	}
 }
