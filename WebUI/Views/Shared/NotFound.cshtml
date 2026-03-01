@@ -1,10 +1,108 @@
 ﻿@{
     Layout = "_Layout";
-    var message = ViewData["Message"] as string ?? "Sayfa bulunamadı.";
+    ViewData["Title"] = "Sayfa Bulunamadı";
 }
 
-<h1>Sayfa bulunamadı</h1>
-<p>@message</p>
-<a asp-controller="Home" asp-action="Index" class="btn btn-primary">
-    Ana sayfaya dön
-</a>
+@section Head {
+    <style>
+        .not-found-wrapper {
+            max-width: 1000px; /* Görsel ve kolonlar için makul bir genişlik */
+            margin: 0 auto;
+            padding: 60px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .not-found-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .not-found-header-left {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary); /* Ya da temanızdaki başka bir renk */
+            flex: 1;
+            text-align: left;
+        }
+
+        .not-found-header-right {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            flex: 1;
+            text-align: right;
+        }
+
+        .not-found-image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .not-found-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Tepsiyi tutan buton */
+        .not-found-btn {
+            position: absolute;
+            /* Bu değerleri görselinizdeki tepsinin tam konumuna göre biraz artırıp azaltabilirsiniz */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 18px 40px !important;
+            font-size: 20px !important;
+            border-radius: 50px !important;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: none !important; /* Animasyonu iptal et */
+        }
+        
+        .not-found-btn:hover {
+            transform: translate(-50%, -50%) !important; /* Hover durumunda da pozisyonu sabit tut */
+            background-color: var(--color-primary) !important; /* Renginin değişmesini engelle */
+        }
+
+        @@media (max-width: 768px) {
+            .not-found-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            .not-found-header-left, .not-found-header-right {
+                text-align: center;
+                font-size: 22px;
+            }
+            .not-found-btn {
+                font-size: 16px !important;
+                padding: 12px 24px !important;
+            }
+        }
+    </style>
+}
+
+<div class="not-found-wrapper">
+    <div class="not-found-header">
+        <div class="not-found-header-left">
+            Aradığınız sayfa bulunamamıştır.
+        </div>
+        <div class="not-found-header-right">
+            Sizi ana sayfaya götürelim.
+        </div>
+    </div>
+    
+    <div class="not-found-image-container">
+        <!-- İlettiğiniz resmi 404.png olarak baz alıyoruz -->
+        <img src="~/images/404.png" alt="Sayfa Bulunamadı" class="not-found-image" />
+        
+        <a asp-controller="Home" asp-action="Index" class="btn btn--primary not-found-btn">
+            Ana Sayfaya Git
+        </a>
+    </div>
+</div>

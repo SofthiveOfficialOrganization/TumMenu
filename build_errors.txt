@@ -1,29 +1,8 @@
-D:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\CategorySuggestions\Queries\GetCategorySuggestionsQuery.cs(26,33): error CS1061: 'IQueryable<CategorySuggestion>' bir 'Include' tan─▒m─▒ i├ğermiyor ve 'IQueryable<CategorySuggestion>' t├╝r├╝nde bir ilk ba─ş─▒ms─▒z de─şi┼şken kabul eden hi├ğbir eri┼şilebilir 'Include' geni┼şletme y├Ântemi bulunamad─▒ (bir kullanma y├Ânergeniz veya derleme ba┼şvurunuz eksik olabilir mi?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(19,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' i├ğindeki 'entity' parametresi i├ğin olas─▒ null ba┼şvuru ba─ş─▒ms─▒z de─şi┼şkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' i├ğindeki 'entity' parametresi i├ğin olas─▒ null ba┼şvuru ba─ş─▒ms─▒z de─şi┼şkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\DeleteMenuCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
+C:\Program Files\dotnet\sdk\10.0.103\Microsoft.Common.CurrentVersion.targets(5381,5): error MSB3027: "D:\SoftHive\Projects\2025\TumMenu\WebUI\obj\Debug\net8.0\apphost.exe", "bin\Debug\net8.0\WebUI.exe" üzerine kopyalanamadı. 10 yeniden deneme sayısı aşıldı. Başarısız oldu. Dosya şunun tarafından kilitlendi: "WebUI (6228)" [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
+C:\Program Files\dotnet\sdk\10.0.103\Microsoft.Common.CurrentVersion.targets(5381,5): error MSB3021: "D:\SoftHive\Projects\2025\TumMenu\WebUI\obj\Debug\net8.0\apphost.exe" dosyası "bin\Debug\net8.0\WebUI.exe" üzerine kopyalanamıyor. The process cannot access the file 'D:\SoftHive\Projects\2025\TumMenu\WebUI\bin\Debug\net8.0\WebUI.exe' because it is being used by another process. [D:\SoftHive\Projects\2025\TumMenu\WebUI\WebUI.csproj]
 
-Olu┼şturma BA┼ŞARISIZ OLDU.
+Oluşturma BAŞARISIZ OLDU.
+    12 Uyarı
+    2 Hata
 
-D:\SoftHive\Projects\2025\TumMenu\Application\Auths\Queries\GetSessionByCurrentUserQuery.cs(14,24): warning CS9113: 'repoStore' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Categories\Queries\GetCategoriesPagedByCurrentOwnerQuery.cs(26,9): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Companies\Commands\DeleteCompanyCommand.cs(19,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\UpdateMediaCommand.cs(39,26): warning CS8604: 'void IRepository<Media>.Update(Media entity)' i├ğindeki 'entity' parametresi i├ğin olas─▒ null ba┼şvuru ba─ş─▒ms─▒z de─şi┼şkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\UpdateMenuCommand.cs(20,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Medias\Commands\DeleteMediaCommad.cs(24,30): warning CS8604: 'void IRepository<Media>.SoftDelete(Media entity)' i├ğindeki 'entity' parametresi i├ğin olas─▒ null ba┼şvuru ba─ş─▒ms─▒z de─şi┼şkeni. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Queries\GetMenusPagedByCurrentUser.cs(27,21): warning CS8602: Olas─▒ bir null ba┼şvurunun ba┼şvurma i┼şlemi. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\Menus\Commands\DeleteMenuCommand.cs(16,10): warning CS9113: 'mapper' parametresi okunmam─▒┼ş. [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-D:\SoftHive\Projects\2025\TumMenu\Application\CategorySuggestions\Queries\GetCategorySuggestionsQuery.cs(26,33): error CS1061: 'IQueryable<CategorySuggestion>' bir 'Include' tan─▒m─▒ i├ğermiyor ve 'IQueryable<CategorySuggestion>' t├╝r├╝nde bir ilk ba─ş─▒ms─▒z de─şi┼şken kabul eden hi├ğbir eri┼şilebilir 'Include' geni┼şletme y├Ântemi bulunamad─▒ (bir kullanma y├Ânergeniz veya derleme ba┼şvurunuz eksik olabilir mi?) [D:\SoftHive\Projects\2025\TumMenu\Application\Application.csproj]
-    10 Uyar─▒
-    1 Hata
-
-Ge├ğen S├╝re 00:00:01.41
+Geçen Süre 00:00:15.05

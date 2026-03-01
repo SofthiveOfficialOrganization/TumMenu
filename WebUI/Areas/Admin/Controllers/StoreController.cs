@@ -183,4 +183,14 @@ public class StoreController(IMediator mediator) : Controller
 		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
 		return Json(new { available = result.Available, message = result.Message });
 	}
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetStoresForSelect2(Guid? companyId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
+    {
+        var query = new GetStoresPagedQuery { CompanyId = companyId, Search = search, Page = page - 1, PageSize = pageSize };
+        var result = await mediator.Send(query, ct);
+        var items = result.Items.Select(s => new { id = s.Id, text = s.Title });
+        return Json(new { results = items, pagination = new { more = result.HasNext } });
+    }
 }

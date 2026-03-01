@@ -234,20 +234,7 @@ public sealed class AppExceptionFilter(
 		}
 		if(isNotFound)
 		{
-			var viewData = new ViewDataDictionary(
-				new EmptyModelMetadataProvider(),
-				context.ModelState
-			)
-			{
-				["Message"] = ex.Message
-			};
-
-			context.Result = new ViewResult
-			{
-				ViewName = "NotFound",
-				ViewData = viewData
-			};
-
+			context.Result = new EmptyResult();
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;
 		}

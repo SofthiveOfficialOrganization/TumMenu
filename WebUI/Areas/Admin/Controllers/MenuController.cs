@@ -299,4 +299,22 @@ public sealed class MenuController(IMediator mediator) : Controller
         int result = 1 / zero;
         return View();
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetMenusForSelect2(Guid? companyId, Guid? storeId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
+    {
+        // Owner lists menus
+        var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Page = 0, PageSize = 1000 }, ct); // Get all owned menus, filtering manually since query lacks Search param
+        
+        var filteredMenus = menus.Items.AsEnumerable();
+        if (companyId.HasValue) filteredMenus = filteredMenus.Where(m => m.CompanyId == companyId.Value);
+        if (storeId.HasValue) filteredMenus = filteredMenus.Where(m => m.StoreId == storeId.Value);
+        if (!string.IsNullOrEmpty(search)) filteredMenus = filteredMenus.Where(m => m.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+
+        var pagedMenus = filteredMenus.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        var items = pagedMenus.Select(m => new { id = m.Id, text = m.Title });
+        
+        return Json(new { results = items, pagination = new { more = pagedMenus.Count == pageSize } });
+    }
 }

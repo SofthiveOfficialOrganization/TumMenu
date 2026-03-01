@@ -159,4 +159,29 @@ public class CategoryController(IMediator mediator) : Controller
 
         return View(category);
     }
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> MyCategories([FromQuery] GetCategoriesPagedByCurrentOwnerQuery req, CancellationToken ct)
+    {
+        var result = await mediator.Send(req, ct);
+        return View(result);
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetCategoriesForSelect2(Guid? companyId, Guid? storeId, Guid? menuId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
+    {
+        var query = new GetCategoriesPagedByCurrentOwnerQuery
+        {
+            CompanyId = companyId,
+            StoreId = storeId,
+            MenuId = menuId,
+            Search = search,
+            Page = page - 1,
+            PageSize = pageSize
+        };
+        var result = await mediator.Send(query, ct);
+        var items = result.Items.Select(c => new { id = c.Id, text = c.Title });
+        return Json(new { results = items, pagination = new { more = result.HasNext } });
+    }
 }

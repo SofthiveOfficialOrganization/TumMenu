@@ -84,4 +84,11 @@ public class ProductController(IMediator mediator) : Controller
         TempData["Success"] = "Ürün başarıyla silindi.";
         return RedirectToAction("Details", "Category", new { id = categoryId });
     }
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> MyProducts([FromQuery] GetProductsPagedByCurrentOwnerQuery req, CancellationToken ct)
+    {
+        var result = await mediator.Send(req, ct);
+        return View(result);
+    }
 }

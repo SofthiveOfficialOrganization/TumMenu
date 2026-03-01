@@ -177,4 +177,14 @@ public sealed class CompanyController(IMediator mediator) : Controller
         var result = await mediator.Send(new CheckCompanySlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
         return Json(new { available = result.Available, message = result.Message });
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetCompaniesForSelect2(string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
+    {
+        var query = new GetCompanyListForSearchQuery { SearchTerm = search, Page = page - 1, PageSize = pageSize };
+        var result = await mediator.Send(query, ct);
+        var items = result.Items.Select(c => new { id = c.Id, text = c.Title });
+        return Json(new { results = items, pagination = new { more = result.HasNext } });
+    }
 }
