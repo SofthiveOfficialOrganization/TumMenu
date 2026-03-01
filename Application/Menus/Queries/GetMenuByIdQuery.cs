@@ -23,9 +23,11 @@ public class GetMenuByIdHandler(
 	{
 		var menu = await repoMenu.Query()
 			.Include(x => x.Categories)
-			.ThenInclude(x => x.CategoryLibraryItem)
+				.ThenInclude(x => x.CategoryLibraryItem)
+			.Include(x => x.Categories)
+				.ThenInclude(x => x.Products)
 			.Include(x => x.Store)
-			.ThenInclude(s => s!.Company)
+				.ThenInclude(s => s!.Company)
 			.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
 			
 		_ = menu ?? throw new NotFoundAppException("Menü bulunamadı.");

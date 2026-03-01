@@ -69,11 +69,9 @@ public class ProductController(IMediator mediator) : Controller
         if (!ModelState.IsValid)
             return View(req);
 
-        // Update doesn't naturally have CategoryId in request if we didn't include it. 
-        // We'll redirect to the Product's details page for now, or fetch the product to find categoryId.
-        var product = await mediator.Send(new GetProductByIdQuery(req.Id), ct);
         await mediator.Send(req, ct);
-        
+        // Fetch after update to get the categoryId for redirect (avoids EF tracking conflict)
+        var product = await mediator.Send(new GetProductByIdQuery(req.Id), ct);
         return RedirectToAction("Details", "Category", new { id = product.CategoryId });
     }
 
@@ -83,6 +81,7 @@ public class ProductController(IMediator mediator) : Controller
     public async Task<IActionResult> Delete(Guid id, Guid categoryId, CancellationToken ct)
     {
         await mediator.Send(new DeleteProductCommand(id), ct);
+        TempData["Success"] = "Ürün başarıyla silindi.";
         return RedirectToAction("Details", "Category", new { id = categoryId });
     }
 }

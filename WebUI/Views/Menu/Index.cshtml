@@ -5,7 +5,9 @@
     var storeName = Model.StoreName ?? Model.Title;
     var companyName = Model.CompanyName ?? "";
     var categories = Model.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).ToList();
-    
+    var companySlug = ViewContext.RouteData.Values["companySlug"]?.ToString() ?? "";
+    var storeSlug = ViewContext.RouteData.Values["storeSlug"]?.ToString() ?? "";
+
     ViewData["Title"] = $"{storeName} Menüsü";
     ViewData["Description"] = $"{storeName} dijital menüsü – kategoriler, ürünler ve fiyatlar.";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,9 +18,8 @@
 }
 
 <div class="pm-wrapper">
-    <!-- ANA İÇERİK -->
     <main class="pm-main">
-        
+
         <!-- HERO HEADER -->
         <header class="pm-header">
             <div class="pm-header-bg"></div>
@@ -30,11 +31,11 @@
         </header>
 
         <div class="pm-content-area">
-            
-            <!-- VIEW: CATEGORIES GRID (ANA GÖRÜNÜM) -->
-            <div id="view-categories" class="pm-view active">
+
+            <!-- KATEGORİLER -->
+            <div class="pm-view active">
                 <h2 class="pm-view-title">Kategoriler</h2>
-                
+
                 @if (categories.Count == 0)
                 {
                     <div class="pm-empty">
@@ -48,7 +49,8 @@
                         @foreach (var cat in categories)
                         {
                             var productCount = cat.Products.Count(p => p.IsActive);
-                            <button type="button" class="pm-cat-card" data-target="cat-@cat.Id">
+                            var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
+                            <a href="@categoryUrl" class="pm-cat-card pm-cat-card--link">
                                 <div class="pm-cat-card-photo">
                                     <div class="pm-cat-card-photo-placeholder">
                                         @(string.IsNullOrEmpty(cat.CategoryLibraryItem.IconKey) ? "🍽️" : cat.CategoryLibraryItem.IconKey)
@@ -58,93 +60,12 @@
                                     <h3 class="pm-cat-card-title">@cat.CategoryLibraryItem.Title</h3>
                                     <span class="pm-cat-card-count">@productCount ürün</span>
                                 </div>
-                            </button>
+                            </a>
                         }
                     </div>
                 }
             </div>
 
-            <!-- VIEW: CATEGORY PRODUCTS (DETAY GÖRÜNÜMÜ) -->
-            @foreach (var cat in categories)
-            {
-                var products = cat.Products.Where(p => p.IsActive).OrderBy(p => p.SortOrder).ToList();
-
-                <div id="cat-@cat.Id" class="pm-view pm-products-view" style="display: none;">
-                    <div class="pm-view-header">
-                        <button type="button" class="pm-btn-back" onclick="showCategories()">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                            </svg>
-                            Geri
-                        </button>
-                        <h2 class="pm-view-title mb-0">@cat.CategoryLibraryItem.Title</h2>
-                    </div>
-                    
-                    @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.Description))
-                    {
-                        <p class="pm-cat-desc">@cat.CategoryLibraryItem.Description</p>
-                    }
-
-                    <div class="pm-product-list">
-                        @if (products.Count == 0)
-                        {
-                            <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
-                        }
-                        else
-                        {
-                            @foreach (var product in products)
-                            {
-                                <div class="pm-product-card">
-                                    <div class="pm-product-content">
-                                        <div class="pm-product-header">
-                                            <h3 class="pm-product-title">@product.Title</h3>
-                                            <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
-                                        </div>
-                                        @if (!string.IsNullOrEmpty(product.Description))
-                                        {
-                                            <p class="pm-product-desc">@product.Description</p>
-                                        }
-                                        <div class="pm-product-badges">
-                                            @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
-                                            @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
-                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time">⏱ @product.EstimatedPreparationTimeInMinutes dk</span> }
-                                            @if (!string.IsNullOrEmpty(product.Allergens)) { <span class="pm-badge pm-badge-allergen" title="@product.Allergens">⚠️ Alerjen</span> }
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-            }
-
         </div>
     </main>
 </div>
-
-@section Scripts {
-<script>
-    function showCategories() {
-        document.querySelectorAll('.pm-view').forEach(el => el.style.display = 'none');
-        document.getElementById('view-categories').style.display = 'block';
-        
-        // Scroll slightly below the header for better UX on mobile
-        var headerOffset = document.querySelector('.site-header')?.offsetHeight || 60;
-        var mainOffset = document.querySelector('.pm-main').offsetTop;
-        window.scrollTo({ top: mainOffset - headerOffset - 10, behavior: 'smooth' });
-    }
-
-    document.querySelectorAll('.pm-cat-card').forEach(btn => {
-        btn.addEventListener('click', function() {
-            var targetId = this.getAttribute('data-target');
-            document.querySelectorAll('.pm-view').forEach(el => el.style.display = 'none');
-            document.getElementById(targetId).style.display = 'block';
-            
-            // Scroll to top of content area
-            var headerOffset = document.querySelector('.site-header')?.offsetHeight || 60;
-            var contentOffset = document.querySelector('.pm-content-area').getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({ top: contentOffset - headerOffset - 10, behavior: 'smooth' });
-        });
-    });
-</script>
-}

@@ -83,7 +83,8 @@
                         <label class="form-label fw-bold text-secondary small text-uppercase d-block mb-3">Vegan</label>
                         <div class="form-check form-switch custom-switch-lg ps-0">
                             <div class="d-flex align-items-center">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" asp-for="IsVegan" id="IsVeganSwitch">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" name="IsVegan" id="IsVeganSwitch" value="true" @(Model.IsVegan == true ? "checked" : "")>
+                                <input type="hidden" name="IsVegan" value="false" />
                                 <label class="form-check-label text-dark" for="IsVeganSwitch">
                                     Vegan
                                 </label>
@@ -95,7 +96,8 @@
                         <label class="form-label fw-bold text-secondary small text-uppercase d-block mb-3">Vejetaryen</label>
                         <div class="form-check form-switch custom-switch-lg ps-0">
                             <div class="d-flex align-items-center">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" asp-for="IsVegetarian" id="IsVegetarianSwitch">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" name="IsVegetarian" id="IsVegetarianSwitch" value="true" @(Model.IsVegetarian == true ? "checked" : "")>
+                                <input type="hidden" name="IsVegetarian" value="false" />
                                 <label class="form-check-label text-dark" for="IsVegetarianSwitch">
                                     Vejetaryen
                                 </label>

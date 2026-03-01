@@ -1,0 +1,85 @@
+@model Application.Menus.Queries.ProductPageDTO
+
+@{
+    ViewData["Title"] = $"{Model.ProductTitle} – {Model.StoreName}";
+    ViewData["Description"] = $"{Model.StoreName} – {Model.ProductTitle}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var backUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+}
+
+<div class="pm-wrapper">
+    <main class="pm-main">
+
+        <!-- HERO HEADER -->
+        <header class="pm-header">
+            <div class="pm-header-bg"></div>
+            <div class="pm-header-content">
+                <p class="pm-company">@Model.CompanyName</p>
+                <h1 class="pm-store">@Model.StoreName</h1>
+                <p class="pm-subtitle">@Model.CategoryTitle</p>
+            </div>
+        </header>
+
+        <div class="pm-content-area">
+
+            <div class="pm-view active">
+                <div class="pm-view-header">
+                    <a href="@backUrl" class="pm-btn-back">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        @Model.CategoryTitle'e Dön
+                    </a>
+                    <h2 class="pm-view-title mb-0">@Model.ProductTitle</h2>
+                </div>
+
+                <!-- Ürün Görselleri -->
+                @if (Model.ImageUrls.Count > 0)
+                {
+                    <div class="pm-product-detail-gallery">
+                        @foreach (var imgUrl in Model.ImageUrls)
+                        {
+                            <img src="@imgUrl" alt="@Model.ProductTitle" class="pm-product-detail-img" loading="lazy" />
+                        }
+                    </div>
+                }
+
+                <!-- Ürün Bilgileri -->
+                <div class="pm-product-detail-body">
+                    <div class="pm-product-detail-header">
+                        <h3 class="pm-product-detail-title">@Model.ProductTitle</h3>
+                        <span class="pm-product-price pm-product-price--lg">@Model.BasePrice.ToString("N2") ₺</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ProductDescription))
+                    {
+                        <p class="pm-product-detail-desc">@Model.ProductDescription</p>
+                    }
+
+                    <div class="pm-product-badges">
+                        @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
+                        @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
+                        @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                        {
+                            <span class="pm-badge pm-badge-time">⏱ @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Allergens))
+                    {
+                        <div class="pm-allergen-box">
+                            <span class="pm-badge pm-badge-allergen">⚠️ Alerjen Bilgisi</span>
+                            <p class="pm-allergen-text">@Model.Allergens</p>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>

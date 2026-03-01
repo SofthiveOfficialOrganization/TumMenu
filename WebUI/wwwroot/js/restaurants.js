@@ -488,7 +488,7 @@
 
         var card = document.createElement('a');
         card.className = 'store-card';
-        card.href = '/Store/Details/' + store.id;
+        card.href = '/' + store.companySlug + '/' + store.slug;
 
         // Image
         var imgWrap = document.createElement('div');

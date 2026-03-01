@@ -14,7 +14,7 @@ namespace Application.Products.Commands;
 
 public sealed record DeleteProductCommand(
 	Guid ProductId
-) : IRequest<Unit>;
+) : IRequest<Unit>, ITransactionalRequest;
 
 public class DeleteProductCommandHandler(
 	IRepository<Product> repoProduct

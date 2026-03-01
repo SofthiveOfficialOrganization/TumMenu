@@ -1,0 +1,86 @@
+@model Application.Menus.Queries.CategoryPageDTO
+
+@{
+    ViewData["Title"] = $"{Model.CategoryTitle} – {Model.StoreName}";
+    ViewData["Description"] = $"{Model.StoreName} – {Model.CategoryTitle} kategorisindeki ürünler.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var backUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+}
+
+<div class="pm-wrapper">
+    <main class="pm-main">
+
+        <!-- HERO HEADER -->
+        <header class="pm-header">
+            <div class="pm-header-bg"></div>
+            <div class="pm-header-content">
+                <p class="pm-company">@Model.CompanyName</p>
+                <h1 class="pm-store">@Model.StoreName</h1>
+                <p class="pm-subtitle">@Model.CategoryTitle</p>
+            </div>
+        </header>
+
+        <div class="pm-content-area">
+
+            <div class="pm-view active">
+                <div class="pm-view-header">
+                    <a href="@backUrl" class="pm-btn-back">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        Menüye Dön
+                    </a>
+                    <h2 class="pm-view-title mb-0">@Model.CategoryTitle</h2>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.CategoryDescription))
+                {
+                    <p class="pm-cat-desc">@Model.CategoryDescription</p>
+                }
+
+                <div class="pm-product-list">
+                    @if (Model.Products.Count == 0)
+                    {
+                        <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
+                    }
+                    else
+                    {
+                        @foreach (var product in Model.Products)
+                        {
+                            var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
+                            <a href="@productUrl" class="pm-product-card pm-product-card--link">
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <div class="pm-product-img-wrap">
+                                        <img src="@product.ImageUrl" alt="@product.Title" class="pm-product-img" loading="lazy" />
+                                    </div>
+                                }
+                                <div class="pm-product-content">
+                                    <div class="pm-product-header">
+                                        <h3 class="pm-product-title">@product.Title</h3>
+                                        <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(product.Description))
+                                    {
+                                        <p class="pm-product-desc">@product.Description</p>
+                                    }
+                                    <div class="pm-product-badges">
+                                        @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
+                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
+                                        @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time">⏱ @product.EstimatedPreparationTimeInMinutes dk</span> }
+                                        @if (!string.IsNullOrEmpty(product.Allergens)) { <span class="pm-badge pm-badge-allergen" title="@product.Allergens">⚠️ Alerjen</span> }
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

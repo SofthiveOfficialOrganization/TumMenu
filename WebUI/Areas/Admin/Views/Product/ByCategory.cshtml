@@ -95,6 +95,7 @@
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
                                                     @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="categoryId" value="@Context.Request.Query["CategoryId"]" />
                                                     <button type="submit" class="btn btn-danger">Evet, Sil</button>
                                                 </form>
                                             </div>

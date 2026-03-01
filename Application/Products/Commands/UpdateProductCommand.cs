@@ -42,7 +42,7 @@ public class UpdateProductCommandHandler(
 			.FirstOrDefaultAsync(p => p.Id == req.Id, ct)
 			.EnsureFound("Ürün bulunamadı."); mapper.Map(req, product);
 
-		var newTags = req.TagIds.Distinct().ToHashSet();
+		var newTags = (req.TagIds ?? []).Distinct().ToHashSet();
 		var existingTags = product!.ProductTags.Select(pt => pt.TagId).ToHashSet();
 
 		var tagsToAdd = newTags.Except(existingTags).ToList();

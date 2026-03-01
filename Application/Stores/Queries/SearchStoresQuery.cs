@@ -26,6 +26,7 @@ public class SearchStoresQueryHandler(
 	public async Task<StoreSearchResultListDTO> Handle(SearchStoresQuery req, CancellationToken ct)
 	{
 		var query = repoStore.Query()
+			.Include(s => s.Company)
 			.Include(s => s.Address)
 			.Include(s => s.Medias)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
@@ -198,6 +199,7 @@ public class SearchStoresQueryHandler(
 			Id = store.Id,
 			Title = store.Title,
 			Slug = store.Slug,
+			CompanySlug = store.Company.Slug,
 			ImageUrl = storeImage?.MediaUrl,
 			City = city,
 			District = district,
