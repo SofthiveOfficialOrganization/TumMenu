@@ -10,6 +10,8 @@ public sealed class StoreSearchResultDTO
 	public string? City { get; set; }
 	public string? District { get; set; }
 	public double? DistanceKm { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
 	public MatchedProductDTO? MatchedProduct { get; set; }
 }
 

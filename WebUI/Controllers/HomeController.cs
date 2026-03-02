@@ -92,6 +92,22 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return Json(result);
     }
 
+    [HttpGet("api/categories/search")]
+    public async Task<IActionResult> SearchCategories(string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
+    {
+        var result = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery
+        {
+            Search = search,
+            Page = page - 1,
+            PageSize = pageSize
+        }, ct);
+
+        var items = result.Items.Select(i => new { id = i.Id, text = i.Title });
+        var hasMore = result.HasNext;
+
+        return Json(new { results = items, pagination = new { more = hasMore } });
+    }
+
     [HttpGet]
     public IActionResult Legal()
     {

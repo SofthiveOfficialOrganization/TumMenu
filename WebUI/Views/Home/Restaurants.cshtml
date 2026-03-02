@@ -8,6 +8,8 @@
 @section Head {
     <link rel="stylesheet" href="~/css/restaurants.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 }
 
 <!-- HERO MINI -->
@@ -33,11 +35,11 @@
 
 <!-- MAIN CONTENT -->
 <section class="rest-content">
-    <div class="container">
+    <div class="container container--wide">
         <!-- MAP ROW -->
         <div class="rest-map-row">
             <!-- MAP SECTION HERO -->
-            <div id="mapSection" style="position: relative; width: 100%; height: 350px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); overflow: hidden; border: 4px solid #fff; z-index: 1;">
+            <div id="mapSection" style="position: relative; width: 100%; height:100%; min-height: 350px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); overflow: hidden; border: 4px solid #fff; z-index: 1;">
                 
                 <!-- Map Helper Text Overlay (Top Right) -->
                 <div style="position: absolute; top: 12px; right: 12px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; pointer-events: none;">
@@ -64,11 +66,18 @@
                 <!-- Mesafe -->
                 <div class="rest-filters__group">
                     <h3 class="rest-filters__group-title">Uzaklık</h3>
-                    <div id="distanceFilters" class="rest-filters__distance-btns">
+                    <div id="distanceFilters" class="rest-filters__distance-btns mb-2">
+                        <button type="button" class="rest-dist-btn" data-distance="0.5">500 m</button>
+                        <button type="button" class="rest-dist-btn" data-distance="1">1 km</button>
+                        <button type="button" class="rest-dist-btn" data-distance="2">2 km</button>
                         <button type="button" class="rest-dist-btn" data-distance="10">10 km</button>
-                        <button type="button" class="rest-dist-btn" data-distance="20">20 km</button>
-                        <button type="button" class="rest-dist-btn" data-distance="30">30 km</button>
-                        <button type="button" class="rest-dist-btn" data-distance="50">50 km</button>
+                    </div>
+                    <div class="rest-filters__custom-distance">
+                        <div class="rest-custom-dist">
+                            <input type="number" id="customDistanceInput" placeholder="Mesafe" step="0.1" min="0">
+                            <span class="rest-custom-dist__unit">km</span>
+                            <button type="button" id="applyCustomDistance" class="rest-custom-dist__btn">Uygula</button>
+                        </div>
                     </div>
                 </div>
 
@@ -113,17 +122,14 @@
             <!-- Kategori -->
             <div class="rest-filters__group">
                 <h3 class="rest-filters__group-title">Kategoriler</h3>
-                <div id="categoryFilters" class="rest-filters__chips">
-                    @foreach (var cat in categories)
-                    {
-                        <button type="button" class="rest-chip" data-category-id="@cat.Id">
-                            @if (!string.IsNullOrEmpty(cat.IconKey))
-                            {
-                                <span class="rest-chip__icon">@cat.IconKey</span>
-                            }
-                            @cat.Title
-                        </button>
-                    }
+                <div class="rest-filters__category-select">
+                    <select id="categoryInput" class="form-select" multiple="multiple" style="width: 100%;">
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat.Id">@cat.Title</option>
+                        }
+                    </select>
+                    <div id="selectedCategories" class="rest-selected-list mt-2"></div>
                 </div>
             </div>
 
@@ -197,5 +203,7 @@
 
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="~/js/restaurants.js" asp-append-version="true"></script>
 }

@@ -204,6 +204,8 @@ public class SearchStoresQueryHandler(
 			City = city,
 			District = district,
 			DistanceKm = distance.HasValue ? Math.Round(distance.Value, 2) : null,
+			Latitude = store.Address?.Latitude,
+			Longitude = store.Address?.Longitude
 		};
 
 		if (matchedProduct != null)

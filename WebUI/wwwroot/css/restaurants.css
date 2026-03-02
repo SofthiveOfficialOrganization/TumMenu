@@ -4,19 +4,16 @@
 
 /* ── HERO ── */
 .rest-hero {
-    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 60%, var(--color-primary-light) 100%);
-    padding: 56px 0 48px;
+    background: #fdfaf7; /* back to a subtle warm/light background */
+    padding: 32px 0 24px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    border-bottom: 1px solid rgba(104, 135, 69, 0.08);
 }
 
 .rest-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, .08) 0%, transparent 60%);
-    pointer-events: none;
+    display: none;
 }
 
 .rest-hero__inner {
@@ -27,14 +24,14 @@
 .rest-hero__title {
     font-size: 32px;
     font-weight: 800;
-    color: #fff;
+    color: var(--color-secondary-dark);
     margin: 0 0 8px;
     letter-spacing: -.3px;
 }
 
 .rest-hero__subtitle {
     font-size: 15px;
-    color: rgba(255, 255, 255, .82);
+    color: var(--color-muted);
     margin: 0 0 28px;
 }
 
@@ -42,7 +39,7 @@
 .rest-search {
     display: flex;
     gap: 10px;
-    max-width: 580px;
+    max-width: 440px; /* narrowed down further from 480px */
     margin: 0 auto;
 }
 
@@ -80,10 +77,14 @@
 }
 
 .rest-search__btn {
-    padding: 12px 28px;
+    height: 48px;
+    padding: 0 28px;
     border-radius: 14px !important;
     font-size: 15px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ── LAYOUT ── */
@@ -96,6 +97,83 @@
     grid-template-columns: 280px 1fr;
     gap: 32px;
     align-items: start;
+}
+
+.container--wide {
+    max-width: 1320px !important; /* wider than standard container (1160px) */
+    padding: 0 12px !important; /* halved from standard 24px per side */
+    margin: 0 auto;
+}
+
+.rest-filters__custom-distance {
+    margin-top: 12px;
+}
+
+.rest-custom-dist {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(104, 135, 69, 0.2);
+    border-radius: 12px;
+    padding: 3px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.rest-custom-dist:focus-within {
+    border-color: var(--color-primary);
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(104, 135, 69, 0.12);
+}
+
+.rest-custom-dist input {
+    flex: 1;
+    min-width: 0;
+    border: none !important;
+    background: transparent !important;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    outline: none !important;
+    appearance: textfield; /* Remove arrows for a cleaner look */
+}
+
+/* Hide spin buttons for Chrome/Safari/Edge */
+.rest-custom-dist input::-webkit-outer-spin-button,
+.rest-custom-dist input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.rest-custom-dist__unit {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-muted);
+    margin-right: 10px;
+}
+
+.rest-custom-dist__btn {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(104, 135, 69, 0.2);
+}
+
+.rest-custom-dist__btn:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(104, 135, 69, 0.3);
+}
+
+.rest-custom-dist__btn:active {
+    transform: translateY(0);
 }
 
 /* ── MAP ROW ── */
@@ -269,6 +347,10 @@
 .rest-toggle__label {
     font-size: 14px;
     font-weight: 500;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    height: 24px; /* match slider height */
 }
 
 /* Distance buttons */
@@ -593,6 +675,116 @@
 .rest-results__load-btn:hover {
     background: var(--color-primary);
     color: #fff;
+}
+
+/* ── SELECT2 OVERRIDES ── */
+.select2-container--bootstrap-5 .select2-selection {
+    border-color: rgba(104, 135, 69, 0.2) !important;
+    border-radius: 12px !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.2s ease !important;
+    height: 44px !important;
+    padding: 0 4px !important;
+}
+
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(104, 135, 69, 0.12) !important;
+    background-color: #fff !important;
+    outline: none !important;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown {
+    border: 1px solid rgba(104, 135, 69, 0.15) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    margin-top: 4px !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    display: none !important; /* Hide internal chips to use external list */
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+    color: var(--color-primary-dark) !important;
+    margin-right: 6px !important;
+}
+
+.select2-container--bootstrap-5 .select2-search__field {
+    border-radius: 8px !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+    line-height: 38px !important;
+    margin: 3px 0 !important;
+    height: 38px !important;
+    background: transparent !important;
+    width: 100% !important; /* Force full width to prevent wrapping */
+    box-sizing: border-box !important;
+}
+
+/* External Selected Categories Styles */
+.rest-selected-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rest-selected-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--color-primary-light);
+    background: linear-gradient(135deg, rgba(175, 199, 148, .2) 0%, rgba(104, 135, 69, .1) 100%);
+    border: 1px solid rgba(104, 135, 69, .15);
+    border-radius: 12px;
+    color: var(--color-primary-dark);
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.rest-selected-item:hover {
+    border-color: var(--color-primary);
+    background: rgba(175, 199, 148, .3);
+}
+
+.rest-selected-item__remove {
+    background: none;
+    border: none;
+    color: var(--color-primary-dark);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.rest-selected-item__remove:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}
+
+/* Fix for Select2 results search box matching our theme */
+.select2-container--bootstrap-5 .select2-dropdown .select2-search__field:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(104, 135, 69, 0.1) !important;
 }
 
 /* ── RESPONSIVE ── */

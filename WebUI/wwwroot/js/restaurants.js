@@ -24,14 +24,15 @@
 
     // ── Map State ──
     let restMap = null;
-    let restMarker = null;
+    let restMarker = null; // User position marker
+    let storeLayerGroup = null; // Layer for restaurant markers
 
     // ── State ──
     let state = {
         searchTerm: '',
         categoryIds: [],
         isVegan: false,
-        maxDistanceKm: null,
+        maxDistanceKm: 1, // Default 1km
         cityId: '',
         cityName: '',
         districtId: '',
@@ -46,10 +47,11 @@
 
     // ── Init ──
     function init() {
+        initCategorySelect2();
         readURLParams();
         bindEvents();
 
-        if (state.cityId || state.districtId || state.userLat || state.maxDistanceKm) {
+        if (state.cityId || state.districtId || state.userLat) {
             doSearch(false);
         } else {
             initRestMap(39.0, 35.0, 5, false);
@@ -57,14 +59,88 @@
         }
     }
 
+    function initCategorySelect2() {
+        if ($('#categoryInput').length) {
+            $('#categoryInput').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Kategori Ara...',
+                allowClear: true,
+                ajax: {
+                    url: '/api/categories/search',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term || '',
+                            page: params.page || 1,
+                            pageSize: 15
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                language: {
+                    noResults: function () { return 'Sonuç bulunamadı'; },
+                    searching: function () { return 'Aranıyor...'; },
+                    loadingMore: function () { return 'Daha fazla yükleniyor...'; }
+                }
+            }).on('change', function() {
+                renderSelectedCategories();
+            });
+
+            // Initial render
+            renderSelectedCategories();
+        }
+    }
+
+    function renderSelectedCategories() {
+        const $select = $('#categoryInput');
+        const $container = $('#selectedCategories');
+        if (!$container.length) return;
+
+        $container.empty();
+        const selectedData = $select.select2('data');
+
+        selectedData.forEach(item => {
+            const $chip = $(`
+                <div class="rest-selected-item" data-id="${item.id}">
+                    <span>${item.text}</span>
+                    <button type="button" class="rest-selected-item__remove" aria-label="Kaldır">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <path d="M18 6 6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `);
+
+            $chip.find('.rest-selected-item__remove').on('click', function() {
+                const id = $(this).parent().data('id');
+                const currentVals = $select.val() || [];
+                const newVals = currentVals.filter(v => v !== String(id));
+                $select.val(newVals).trigger('change');
+            });
+
+            $container.append($chip);
+        });
+    }
+
     // ── Map Init ──
     function initRestMap(lat, lng, zoom = 10, addMarker = true) {
         if (!restMap) {
-            restMap = L.map('restMap').setView([lat, lng], zoom);
+            restMap = L.map('restMap', { attributionControl: false }).setView([lat, lng], zoom);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
+                maxZoom: 19
             }).addTo(restMap);
+
+            storeLayerGroup = L.layerGroup().addTo(restMap);
 
             if (addMarker) {
                 restMarker = L.marker([lat, lng], { draggable: true }).addTo(restMap);
@@ -153,16 +229,24 @@
         if (state.districtId) districtInput.value = state.districtId;
         if (state.isVegan) veganToggle.checked = true;
 
-        // Highlight active category chips
-        state.categoryIds.forEach(function (id) {
-            var chip = document.querySelector('[data-category-id="' + id + '"]');
-            if (chip) chip.classList.add('is-active');
-        });
+        // Set active category Select2
+        if (state.categoryIds.length > 0) {
+            $('#categoryInput').val(state.categoryIds).trigger('change.select2');
+        }
 
         // Highlight active distance
         if (state.maxDistanceKm) {
             var distBtn = document.querySelector('[data-distance="' + state.maxDistanceKm + '"]');
-            if (distBtn) distBtn.classList.add('is-active');
+            if (distBtn) {
+                distBtn.classList.add('is-active');
+            } else {
+                // If no button matches, it might be a custom value
+                var customInput = document.getElementById('customDistanceInput');
+                if (customInput) customInput.value = state.maxDistanceKm;
+            }
+        } else {
+            // Ensure no button is active if distance is null
+            document.querySelectorAll('.rest-dist-btn').forEach(function (b) { b.classList.remove('is-active'); });
         }
     }
 
@@ -176,17 +260,10 @@
             doSearch(false);
         });
 
-        // Category chips
-        document.getElementById('categoryFilters').addEventListener('click', function (e) {
-            var chip = e.target.closest('.rest-chip');
-            if (!chip) return;
-            var id = chip.dataset.categoryId;
-            chip.classList.toggle('is-active');
-
-            var idx = state.categoryIds.indexOf(id);
-            if (idx > -1) state.categoryIds.splice(idx, 1);
-            else state.categoryIds.push(id);
-
+        // Category Select2
+        $('#categoryInput').on('change', function () {
+            var selected = $(this).val() || [];
+            state.categoryIds = selected;
             state.page = 0;
             doSearch(false);
         });
@@ -202,12 +279,16 @@
         document.getElementById('distanceFilters').addEventListener('click', function (e) {
             var btn = e.target.closest('.rest-dist-btn');
             if (!btn) return;
-            var dist = parseInt(btn.dataset.distance);
+            var dist = parseFloat(btn.dataset.distance);
 
             // toggle
             var allDist = document.querySelectorAll('.rest-dist-btn');
             var wasActive = btn.classList.contains('is-active');
             allDist.forEach(function (b) { b.classList.remove('is-active'); });
+            
+            // Clear custom input when using presets
+            var customInput = document.getElementById('customDistanceInput');
+            if (customInput) customInput.value = '';
 
             if (wasActive) {
                 state.maxDistanceKm = null;
@@ -219,6 +300,37 @@
             state.page = 0;
             doSearch(false);
         });
+
+        // Custom Distance Apply
+        var applyDistBtn = document.getElementById('applyCustomDistance');
+        var customDistInput = document.getElementById('customDistanceInput');
+        if (applyDistBtn && customDistInput) {
+            applyDistBtn.addEventListener('click', function () {
+                var val = parseFloat(customDistInput.value);
+                
+                // Remove active class from preset buttons
+                document.querySelectorAll('.rest-dist-btn').forEach(function (b) { 
+                    b.classList.remove('is-active'); 
+                });
+
+                if (isNaN(val) || val <= 0) {
+                    state.maxDistanceKm = null;
+                    customDistInput.value = '';
+                } else {
+                    state.maxDistanceKm = val;
+                }
+
+                state.page = 0;
+                doSearch(false);
+            });
+
+            // Also search on 'Enter'
+            customDistInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    applyDistBtn.click();
+                }
+            });
+        }
 
         // Load Provinces
         fetch('/api/location/provinces')
@@ -390,8 +502,10 @@
             cityInput.value = '';
             districtInput.value = '';
             veganToggle.checked = false;
-            document.querySelectorAll('.rest-chip.is-active').forEach(function (c) { c.classList.remove('is-active'); });
+            $('#categoryInput').val(null).trigger('change.select2');
             document.querySelectorAll('.rest-dist-btn.is-active').forEach(function (b) { b.classList.remove('is-active'); });
+            var customDistInput = document.getElementById('customDistanceInput');
+            if (customDistInput) customDistInput.value = '';
 
             state.searchTerm = '';
             state.categoryIds = [];
@@ -548,6 +662,8 @@
 
                 resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu';
 
+                updateMapMarkers(data.items);
+
                 data.items.forEach(function (store) {
                     resultGrid.appendChild(createStoreCard(store));
                 });
@@ -565,6 +681,37 @@
                     resultGrid.innerHTML = '';
                 }
             });
+    }
+
+    // ── Map Markers ──
+    function updateMapMarkers(stores) {
+        if (!storeLayerGroup) return;
+        storeLayerGroup.clearLayers();
+
+        const customIcon = L.icon({
+            iconUrl: '/images/pin-exact.png',
+            iconSize: [32, 50], // Adjusted for 539x841 aspect ratio
+            iconAnchor: [16, 50] // Bottom center
+        });
+
+        stores.forEach(store => {
+            if (store.latitude && store.longitude) {
+                const marker = L.marker([store.latitude, store.longitude], { icon: customIcon })
+                    .addTo(storeLayerGroup);
+
+                // Hover tooltip
+                marker.bindTooltip(store.title, {
+                    permanent: false,
+                    direction: 'top',
+                    offset: [0, -50]
+                });
+
+                // Click to navigate
+                marker.on('click', function() {
+                    window.location.href = '/' + store.companySlug + '/' + store.slug;
+                });
+            }
+        });
     }
 
 
