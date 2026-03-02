@@ -203,7 +203,7 @@ public class SearchStoresQueryHandler(
 			ImageUrl = storeImage?.MediaUrl,
 			City = city,
 			District = district,
-			DistanceKm = distance.HasValue ? Math.Round(distance.Value, 1) : null,
+			DistanceKm = distance.HasValue ? Math.Round(distance.Value, 2) : null,
 		};
 
 		if (matchedProduct != null)

@@ -98,6 +98,29 @@
     align-items: start;
 }
 
+/* ── MAP ROW ── */
+.rest-map-row {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.rest-map-filters {
+    background: rgba(255, 255, 255, .7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(104, 135, 69, .12);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.rest-map-filters .rest-filters__group {
+    margin-bottom: 0;
+}
+
 /* ── FILTER SIDEBAR ── */
 .rest-filters {
     background: rgba(255, 255, 255, .7);
@@ -575,6 +598,10 @@
 /* ── RESPONSIVE ── */
 @media (max-width: 860px) {
     .rest-content__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .rest-map-row {
         grid-template-columns: 1fr;
     }
 

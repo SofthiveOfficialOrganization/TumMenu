@@ -20,7 +20,7 @@
     const useMyLocBtn = document.getElementById('useMyLocation');
     const filterPanel = document.getElementById('filterPanel');
     const filterToggle = document.getElementById('filterToggle');
-    const mapOverlay = document.getElementById('mapOverlay');
+    const locReqEl = document.getElementById('locationRequiredState');
 
     // ── Map State ──
     let restMap = null;
@@ -48,14 +48,17 @@
     function init() {
         readURLParams();
         bindEvents();
-        requestUserLocation();
 
-        // Sayfa açıldığında her zaman arama yap (parametre olsun veya olmasın)
-        doSearch(false);
+        if (state.cityId || state.districtId || state.userLat || state.maxDistanceKm) {
+            doSearch(false);
+        } else {
+            initRestMap(39.0, 35.0, 5, false);
+            requestUserLocation(false);
+        }
     }
 
     // ── Map Init ──
-    function initRestMap(lat, lng, zoom = 10) {
+    function initRestMap(lat, lng, zoom = 10, addMarker = true) {
         if (!restMap) {
             restMap = L.map('restMap').setView([lat, lng], zoom);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -63,37 +66,70 @@
                 attribution: '© OpenStreetMap'
             }).addTo(restMap);
 
-            restMarker = L.marker([lat, lng], { draggable: true }).addTo(restMap);
+            if (addMarker) {
+                restMarker = L.marker([lat, lng], { draggable: true }).addTo(restMap);
+                bindMarkerDrag();
+            }
 
-            restMarker.on('dragend', function (e) {
-                const pos = restMarker.getLatLng();
-                state.userLat = pos.lat;
-                state.userLng = pos.lng;
-                
-                // Remove city/district if user dragged marker away manually
-                cityInput.value = '';
-                districtInput.value = '';
-                state.cityId = '';
-                state.cityName = '';
-                state.districtId = '';
-                state.districtName = '';
-                districtInput.disabled = true;
-                districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
-
-                state.page = 0;
-                doSearch(false);
+            restMap.on('click', function(e) {
+                const pos = e.latlng;
+                if (!restMarker) {
+                    restMarker = L.marker([pos.lat, pos.lng], { draggable: true }).addTo(restMap);
+                    bindMarkerDrag();
+                } else {
+                    restMarker.setLatLng(pos);
+                }
+                updateLocationFromMarker(pos.lat, pos.lng);
             });
-            
+
             setTimeout(function() {
                 restMap.invalidateSize();
             }, 250);
         } else {
             restMap.setView([lat, lng], zoom);
-            restMarker.setLatLng([lat, lng]);
+            if (addMarker) {
+                if (!restMarker) {
+                    restMarker = L.marker([lat, lng], { draggable: true }).addTo(restMap);
+                    bindMarkerDrag();
+                } else {
+                    restMarker.setLatLng([lat, lng]);
+                }
+            } else {
+                if (restMarker) {
+                    restMap.removeLayer(restMarker);
+                    restMarker = null;
+                }
+            }
             setTimeout(function() {
                 restMap.invalidateSize();
             }, 250);
         }
+    }
+
+    function bindMarkerDrag() {
+        if (!restMarker) return;
+        restMarker.off('dragend');
+        restMarker.on('dragend', function (e) {
+            const pos = restMarker.getLatLng();
+            updateLocationFromMarker(pos.lat, pos.lng);
+        });
+    }
+
+    function updateLocationFromMarker(lat, lng) {
+        state.userLat = lat;
+        state.userLng = lng;
+        
+        cityInput.value = '';
+        districtInput.value = '';
+        state.cityId = '';
+        state.cityName = '';
+        state.districtId = '';
+        state.districtName = '';
+        districtInput.disabled = true;
+        districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
+
+        state.page = 0;
+        doSearch(false);
     }
 
     function readURLParams() {
@@ -235,7 +271,6 @@
             
             if(state.cityId) {
                 loadDistricts(state.cityId);
-                if (mapOverlay) mapOverlay.style.display = 'none';
 
                 // Locate Province Center via Nominatim
                 var url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
@@ -252,9 +287,16 @@
             } else {
                 districtInput.disabled = true;
                 districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
-                if (mapOverlay) mapOverlay.style.display = 'flex';
                 state.page = 0;
-                doSearch(false);
+                
+                if (restMap) {
+                    restMap.setView([39.0, 35.0], 5);
+                    if (restMarker) {
+                        restMap.removeLayer(restMarker);
+                        restMarker = null;
+                    }
+                }
+                showLocationRequiredState();
             }
         });
 
@@ -267,7 +309,6 @@
             console.log('Sectiginiz İlçe:', state.districtName, 'ID:', state.districtId);
 
             if (state.cityId && state.districtId) {
-                if (mapOverlay) mapOverlay.style.display = 'none';
                 var url = '';
                 if (state.districtName.toLowerCase() === 'merkez') {
                     url = `https://nominatim.openstreetmap.org/search?format=json&city=${encodeURIComponent(state.cityName)}&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
@@ -311,7 +352,14 @@
                     });
                  } else {
                     state.page = 0;
-                    doSearch(false);
+                    if (restMap) {
+                        restMap.setView([39.0, 35.0], 5);
+                        if (restMarker) {
+                            restMap.removeLayer(restMarker);
+                            restMarker = null;
+                        }
+                    }
+                    showLocationRequiredState();
                  }
             }
         });
@@ -320,6 +368,21 @@
         useMyLocBtn.addEventListener('click', function () {
             requestUserLocation(true);
         });
+
+        // Use my location (Map overlay button)
+        var useMapLocBtn = document.getElementById('useMapLocationBtn');
+        if (useMapLocBtn) {
+            useMapLocBtn.addEventListener('click', function () {
+                // Konum izni isterken butonun içeriğini değiştir
+                var originalHtml = useMapLocBtn.innerHTML;
+                useMapLocBtn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block; border-top-color: var(--color-primary);"></span><span>Konum Bulunuyor...</span>';
+                
+                // Başarılı veya başarısız olduğunda butonu eski haline getirmek için küçük bir callback mantığı
+                requestUserLocation(true, function() {
+                    useMapLocBtn.innerHTML = originalHtml;
+                });
+            });
+        }
 
         // Clear all
         clearBtn.addEventListener('click', function () {
@@ -342,17 +405,19 @@
             state.userLng = null;
             state.page = 0;
             
-            if (mapOverlay) mapOverlay.style.display = 'flex';
             if (restMap) {
                restMap.setView([39.0, 35.0], 5); // back to whole country
-               if(restMarker) restMap.removeLayer(restMarker); // Hide marker until picked
-               restMarker = null;
+               if(restMarker) {
+                   restMap.removeLayer(restMarker); // Hide marker until picked
+                   restMarker = null;
+               }
             }
 
             resultGrid.innerHTML = '';
             resultCount.textContent = '';
             loadMoreWrap.hidden = true;
             emptyEl.hidden = true;
+            showLocationRequiredState();
         });
 
         // Load more
@@ -367,9 +432,22 @@
         });
     }
 
+    function showLocationRequiredState() {
+        loadingEl.hidden = true;
+        emptyEl.hidden = true;
+        resultGrid.innerHTML = '';
+        resultCount.innerHTML = '';
+        loadMoreWrap.hidden = true;
+        if (locReqEl) locReqEl.hidden = false;
+    }
+
     // ── Geolocation ──
-    function requestUserLocation(forcePrompt) {
-        if (!navigator.geolocation) return;
+    function requestUserLocation(forcePrompt, callback) {
+        if (!navigator.geolocation) {
+             if (!forcePrompt && !state.cityId && !state.userLat) showLocationRequiredState();
+             if (callback) callback();
+             return;
+        }
 
         // Try to get location silently if no city/district set
         if (forcePrompt || (!state.cityId && !state.districtId)) {
@@ -392,36 +470,46 @@
                         state.districtName = '';
                         districtInput.disabled = true;
                         districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
-                        if (mapOverlay) mapOverlay.style.display = 'flex';
-                        if (restMap && restMarker) {
-                            restMap.removeLayer(restMarker); // Hide marker
-                            restMarker = null;
-                        }
                         
+                        initRestMap(state.userLat, state.userLng, 13);
                         state.page = 0;
                         doSearch(false);
                     } else if (state.page === 0) {
                         // Silent check finished and we are still on first page, search again to sort by distance
+                        initRestMap(state.userLat, state.userLng, 13);
                         doSearch(false);
                     }
+                    if (callback) callback();
                 },
                 function () { 
                     if (forcePrompt) {
                         useMyLocBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg> Konum İzni Reddedildi';
                     }
+                    if (!forcePrompt && !state.cityId && !state.userLat) {
+                        showLocationRequiredState();
+                    }
+                    if (callback) callback();
                  },
                 { timeout: 5000, maximumAge: 300000 }
             );
+        } else {
+             if (callback) callback();
         }
     }
 
     // ── API Call ──
     function doSearch(append) {
+        if (!state.userLat && !state.cityId) {
+            showLocationRequiredState();
+            return;
+        }
+
         if (state.loading) return;
         state.loading = true;
 
         loadingEl.hidden = false;
         emptyEl.hidden = true;
+        if (locReqEl) locReqEl.hidden = true;
         if (!append) {
             resultGrid.innerHTML = '';
             loadMoreWrap.hidden = true;
@@ -514,7 +602,10 @@
             distBadge.className = 'store-card__distance';
             var distLabel;
             if (store.distanceKm < 1) {
-                distLabel = Math.round(store.distanceKm * 1000) + ' m';
+                // Katları 10 olan, 10m precision ile göstermek (örn. 0, 10, 100, 110 vb)
+                var meters = store.distanceKm * 1000;
+                var roundedMeters = Math.round(meters / 10) * 10;
+                distLabel = roundedMeters + ' m';
             } else {
                 distLabel = store.distanceKm + ' km';
             }
