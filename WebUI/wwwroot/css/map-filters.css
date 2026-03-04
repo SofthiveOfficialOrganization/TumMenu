@@ -1,0 +1,113 @@
+/* ============================================================
+   map-filters.css – Shared styles for Map Categories & Filters
+   ============================================================ */
+
+/* ── SELECT2 BOOTSTRAP-5 OVERRIDES ── */
+.select2-container--bootstrap-5 .select2-selection {
+    border-color: rgba(104, 135, 69, 0.2) !important;
+    border-radius: 12px !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.2s ease !important;
+    height: 44px !important;
+    padding: 0 4px !important;
+}
+
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(104, 135, 69, 0.12) !important;
+    background-color: #fff !important;
+    outline: none !important;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown {
+    border: 1px solid rgba(104, 135, 69, 0.15) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    margin-top: 4px !important;
+    z-index: 9999 !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    display: none !important; /* Hide internal chips to use external list */
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+    color: var(--color-primary-dark) !important;
+    margin-right: 6px !important;
+}
+
+.select2-container--bootstrap-5 .select2-search__field {
+    border-radius: 8px !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+    line-height: 38px !important;
+    margin: 3px 0 !important;
+    height: 38px !important;
+    background: transparent !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Fix for Select2 results search box matching our theme */
+.select2-container--bootstrap-5 .select2-dropdown .select2-search__field:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(104, 135, 69, 0.1) !important;
+}
+
+/* ── EXTERNAL SELECTED CATEGORIES (CHIPS) ── */
+.rest-selected-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rest-selected-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, rgba(175, 199, 148, .2) 0%, rgba(104, 135, 69, .1) 100%);
+    border: 1px solid rgba(104, 135, 69, .15);
+    border-radius: 12px;
+    color: var(--color-primary-dark);
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.rest-selected-item:hover {
+    border-color: var(--color-primary);
+    background: rgba(175, 199, 148, .3);
+}
+
+.rest-selected-item__remove {
+    background: none;
+    border: none;
+    color: var(--color-primary-dark);
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.rest-selected-item__remove:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}

@@ -7,6 +7,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/restaurants.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/map-filters.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
@@ -62,7 +63,15 @@
             </div>
             
             <!-- MAP SIDE FILTERS -->
-            <div class="rest-map-filters">
+            <button id="mapFilterToggle" type="button" class="rest-filter-toggle" aria-controls="mapFilterPanel" aria-expanded="false" style="margin-top: 16px;">
+                <span style="display:flex;align-items:center;gap:6px;font-size:15px;">📍 Konum &amp; Mesafe</span>
+                <span class="rest-filter-toggle__chevron">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </span>
+            </button>
+            <aside id="mapFilterPanel" class="rest-map-filters">
                 <!-- Mesafe -->
                 <div class="rest-filters__group">
                     <h3 class="rest-filters__group-title">Uzaklık</h3>
@@ -99,11 +108,26 @@
                         Konumumu Kullan
                     </button>
                 </div>
-            </div>
+            </aside>
             
         </div>
         
         <div class="rest-content__layout">
+
+        <!-- FILTER TOGGLE (MOBILE) -->
+        <button id="filterToggle" type="button" class="rest-filter-toggle" aria-controls="filterPanel" aria-expanded="false" style="margin-bottom: 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/>
+                <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
+                <circle cx="10" cy="18" r="2"/><circle cx="6" cy="6" r="2"/>
+            </svg>
+            Filtreler
+            <span class="rest-filter-toggle__chevron">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </span>
+        </button>
 
         <!-- FILTER SIDEBAR -->
         <aside id="filterPanel" class="rest-filters" aria-label="Filtreler">
@@ -114,9 +138,12 @@
                         <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
                         <circle cx="10" cy="18" r="2"/><circle cx="6" cy="6" r="2"/>
                     </svg>
-                    Filtreler
+                    <span class="desktop-only-title">Filtreler</span>
                 </h2>
-                <button id="clearFilters" type="button" class="rest-filters__clear">Temizle</button>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button id="clearFilters" type="button" class="rest-filters__clear">Temizle</button>
+                    <!-- Close button removed, no longer needed since it's a dropdown and we click toggle to close -->
+                </div>
             </div>
 
             <!-- Kategori -->
@@ -144,16 +171,6 @@
             </div>
 
         </aside>
-
-        <!-- FILTER TOGGLE (MOBILE) -->
-        <button id="filterToggle" type="button" class="rest-filter-toggle" aria-controls="filterPanel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/>
-                <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
-                <circle cx="10" cy="18" r="2"/><circle cx="6" cy="6" r="2"/>
-            </svg>
-            Filtreler
-        </button>
 
         <!-- RESULTS -->
         <div class="rest-results">

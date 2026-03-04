@@ -51,12 +51,23 @@
         readURLParams();
         bindEvents();
 
-        if (state.cityId || state.districtId || state.userLat) {
+        if (state.cityId || state.districtId || (state.userLat && state.userLng)) {
             doSearch(false);
         } else {
             initRestMap(39.0, 35.0, 5, false);
             requestUserLocation(false);
         }
+
+        // Handle browser back-forward cache issues
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                if (restMap) {
+                    setTimeout(() => restMap.invalidateSize(), 300);
+                } else {
+                    init();
+                }
+            }
+        });
     }
 
     function initCategorySelect2() {
@@ -542,8 +553,51 @@
 
         // Mobile filter toggle
         filterToggle.addEventListener('click', function () {
-            filterPanel.classList.toggle('is-open');
+            const isOpen = filterPanel.classList.contains('is-open');
+            if (isOpen) {
+                // Play close animation then hide
+                filterPanel.classList.add('is-closing');
+                filterPanel.addEventListener('animationend', function handler() {
+                    filterPanel.classList.remove('is-open', 'is-closing');
+                    filterPanel.removeEventListener('animationend', handler);
+                });
+            } else {
+                filterPanel.classList.add('is-open');
+            }
+            filterToggle.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
         });
+
+        // Close button inside panel
+        const filterClose = document.getElementById('filterClose');
+        if (filterClose) {
+            filterClose.addEventListener('click', function () {
+                filterPanel.classList.add('is-closing');
+                filterPanel.addEventListener('animationend', function handler() {
+                    filterPanel.classList.remove('is-open', 'is-closing');
+                    filterPanel.removeEventListener('animationend', handler);
+                });
+                filterToggle.setAttribute('aria-expanded', 'false');
+            });
+        }
+        // Map Mobile filter toggle
+        const mapFilterToggle = document.getElementById('mapFilterToggle');
+        const mapFilterPanel = document.getElementById('mapFilterPanel');
+
+        if (mapFilterToggle && mapFilterPanel) {
+            mapFilterToggle.addEventListener('click', function () {
+                const isOpen = mapFilterPanel.classList.contains('is-open');
+                if (isOpen) {
+                    mapFilterPanel.classList.add('is-closing');
+                    mapFilterPanel.addEventListener('animationend', function handler() {
+                        mapFilterPanel.classList.remove('is-open', 'is-closing');
+                        mapFilterPanel.removeEventListener('animationend', handler);
+                    });
+                } else {
+                    mapFilterPanel.classList.add('is-open');
+                }
+                mapFilterToggle.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
+            });
+        }
     }
 
     function showLocationRequiredState() {
@@ -555,6 +609,8 @@
         if (locReqEl) locReqEl.hidden = false;
     }
 
+    let isLocating = false;
+
     // ── Geolocation ──
     function requestUserLocation(forcePrompt, callback) {
         if (!navigator.geolocation) {
@@ -563,19 +619,31 @@
              return;
         }
 
-        // Try to get location silently if no city/district set
-        if (forcePrompt || (!state.cityId && !state.districtId)) {
+        if (isLocating) {
+            if (callback) callback();
+            return;
+        }
+
+        // Try to get location
+        if (forcePrompt || (!state.cityId && !state.districtId && !state.userLat)) {
             
-            if (forcePrompt) {
-                useMyLocBtn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block;"></span> Konum Bulunuyor...';
+            const btn = forcePrompt ? (document.getElementById('useMapLocationBtn') || useMyLocBtn) : null;
+            const originalHtml = btn ? btn.innerHTML : '';
+
+            if (btn) {
+                btn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block; border-top-color: var(--color-primary);"></span><span>Bulunuyor...</span>';
             }
+
+            isLocating = true;
 
             navigator.geolocation.getCurrentPosition(
                 function (pos) {
+                    isLocating = false;
+                    if (btn) btn.innerHTML = originalHtml;
                     state.userLat = pos.coords.latitude;
                     state.userLng = pos.coords.longitude;
+                    
                     if (forcePrompt) {
-                        useMyLocBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg> Konum Bulundu';
                         cityInput.value = '';
                         districtInput.value = '';
                         state.cityId = '';
@@ -584,27 +652,42 @@
                         state.districtName = '';
                         districtInput.disabled = true;
                         districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
-                        
-                        initRestMap(state.userLat, state.userLng, 13);
-                        state.page = 0;
-                        doSearch(false);
-                    } else if (state.page === 0) {
-                        // Silent check finished and we are still on first page, search again to sort by distance
-                        initRestMap(state.userLat, state.userLng, 13);
-                        doSearch(false);
                     }
+                    
+                    initRestMap(state.userLat, state.userLng, 13);
+                    state.page = 0;
+                    doSearch(false);
+
                     if (callback) callback();
                 },
-                function () { 
+                function (err) { 
+                    isLocating = false;
+                    console.warn('Geolocation error:', { code: err.code, message: err.message });
+                    if (btn) btn.innerHTML = originalHtml;
+                    
                     if (forcePrompt) {
-                        useMyLocBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg> Konum İzni Reddedildi';
+                        let text = 'Konum yetkisi kapalı olabilir veya cihaz konumu bulamadı.';
+                        if (err.code === 3) text = 'Konum bulma işlemi zaman aşımına uğradı. Cihazınızın konum servisini kontrol edin.';
+                        else if (err.code === 1) text = 'Konum erişim izni reddedildi. Tarayıcı ayarlarından izin vermeniz gerekmektedir.';
+
+                        // Sadece elimizde hiç konum yoksa hatayı göster:
+                        if (!state.userLat) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Konum Alınamadı',
+                                text: text,
+                                timer: 4000,
+                                showConfirmButton: false
+                            });
+                        }
                     }
-                    if (!forcePrompt && !state.cityId && !state.userLat) {
+
+                    if (!state.cityId && !state.userLat) {
                         showLocationRequiredState();
                     }
                     if (callback) callback();
                  },
-                { timeout: 5000, maximumAge: 300000 }
+                { timeout: 10000, maximumAge: 60000 }
             );
         } else {
              if (callback) callback();

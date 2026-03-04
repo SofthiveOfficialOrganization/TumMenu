@@ -14,6 +14,12 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     {
         var homepageStores = await mediator.Send(new GetHomepageStoresQuery(), ct);
         ViewBag.HomepageStores = homepageStores;
+
+        // Load category library items for map filter
+        var categories = await mediator.Send(
+            new GetAllCategoryLibraryItemsPagedQuery { Page = 0, PageSize = 100 }, ct);
+        ViewBag.Categories = categories.Items.ToList();
+
         return View();
     }
 
