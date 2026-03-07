@@ -25,16 +25,19 @@ public sealed class EfRepository<T>(ApplicationDbContext ctx) : IRepository<T> w
 	public async Task<IPaginate<T>> GetPageListAsync(
 		PageRequest request,
 		Expression<Func<T, bool>>? expression = null,
-		Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+		Func<IQueryable<T>, IIncludableQueryable<T, object?>>? include = null,
 		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 		bool enableTracking = true,
+		bool splitQuery = false,
 		CancellationToken ct = default)
 	{
 		IQueryable<T> query = enableTracking
 			? ctx.Set<T>()
 			: ctx.Set<T>().AsNoTracking();
 
-		if(expression is not null)
+		if (splitQuery)
+			query = query.AsSplitQuery();
+		if (expression is not null)
 			query = query.Where(expression);
 		if(include is not null)
 			query = include(query);

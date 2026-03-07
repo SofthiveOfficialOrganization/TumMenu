@@ -28,7 +28,7 @@ public class GetAllUsersWithRolesHandler(
 
         int count = await query.CountAsync(ct);
         var items = await query
-            .Skip(req.From)
+            .Skip((req.Page - req.From) * req.PageSize)
             .Take(req.PageSize)
             .ToListAsync(ct);
 
@@ -52,8 +52,11 @@ public class GetAllUsersWithRolesHandler(
             Items = userDtos,
             Index = req.Page,
             Size = req.PageSize,
+            From = req.From,
             Count = count,
-            Pages = (int)Math.Ceiling(count / (double)req.PageSize)
+            Pages = (int)Math.Ceiling(count / (double)req.PageSize),
+            HasPrevious = req.Page > req.From,
+            HasNext = req.Page < (int)Math.Ceiling(count / (double)req.PageSize) + req.From - 1
         };
     }
 }

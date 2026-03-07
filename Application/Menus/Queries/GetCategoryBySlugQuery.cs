@@ -22,6 +22,15 @@ public sealed class CategoryPageDTO
 	public string CategoryTitle { get; set; } = null!;
 	public string? CategoryDescription { get; set; }
 	public List<CategoryProductItemDTO> Products { get; set; } = [];
+	public List<CategorySubCategoryItemDTO> SubCategories { get; set; } = [];
+}
+
+public sealed class CategorySubCategoryItemDTO
+{
+	public string Title { get; set; } = null!;
+	public string Slug { get; set; } = null!;
+	public string? IconKey { get; set; }
+	public int ProductCount { get; set; }
 }
 
 public sealed class CategoryProductItemDTO
@@ -53,6 +62,14 @@ public class GetCategoryBySlugHandler(
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.Products.Where(p => p.IsActive))
 				.ThenInclude(p => p.Medias)
+			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active)) // Include SubCategories
+				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
+				.ThenInclude(c => c.SubCategories.Where(sc => sc.IsActive))
+				.ThenInclude(sc => sc.CategoryLibraryItem)
+			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active)) // Include Products of SubCategories for count
+				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
+				.ThenInclude(c => c.SubCategories.Where(sc => sc.IsActive))
+				.ThenInclude(sc => sc.Products.Where(p => p.IsActive))
 			.FirstOrDefaultAsync(
 				s => s.Slug == req.StoreSlug && s.Company.Slug == req.CompanySlug,
 				ct
@@ -99,6 +116,17 @@ public class GetCategoryBySlugHandler(
 						.OrderBy(m => m.SortOrder)
 						.Select(m => m.MediaUrl)
 						.FirstOrDefault()
+				})
+				.ToList(),
+			SubCategories = category.SubCategories
+				.Where(sc => sc.IsActive)
+				.OrderBy(sc => sc.SortOrder)
+				.Select(sc => new CategorySubCategoryItemDTO
+				{
+					Title = sc.CategoryLibraryItem.Title,
+					Slug = sc.CategoryLibraryItem.Slug,
+					IconKey = sc.CategoryLibraryItem.IconKey,
+					ProductCount = sc.Products.Count(p => p.IsActive)
 				})
 				.ToList()
 		};

@@ -33,6 +33,9 @@ public class GetStoresPagedHandler(
 				.Include(s => s.Menus)
 				.Include(s => s.Company)
 				.Include(s => s.Address),
+			orderBy: q => q.OrderBy(s => s.Title),
+			enableTracking: false,
+			splitQuery: true,
 			ct: ct);
 
 		var storeDTO = mapper.Map<PaginatedListDTO<StoreDTO>>(stores);

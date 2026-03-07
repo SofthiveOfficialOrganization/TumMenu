@@ -16,7 +16,7 @@ public class CategoryController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]")]
-    public async Task<IActionResult> Create(Guid menuId, CancellationToken ct)
+    public async Task<IActionResult> Create(Guid menuId, Guid? parentId, CancellationToken ct)
     {
         // 1. Get the menu and its existing categories
         var menu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
@@ -44,7 +44,18 @@ public class CategoryController(IMediator mediator) : Controller
         // Pass exclude IDs as comma-separated string for AJAX calls
         ViewBag.ExcludeIds = string.Join(",", existingLibraryItemIds);
         
-        return View(new AddCategoryToMenuCommand { MenuId = menuId });
+        string? parentName = null;
+        if (parentId.HasValue)
+        {
+            var parentCat = menu.Categories.FirstOrDefault(c => c.Id == parentId.Value);
+            if (parentCat != null)
+            {
+                parentName = parentCat.CategoryLibraryItem.Title;
+            }
+        }
+        ViewBag.ParentName = parentName;
+
+        return View(new AddCategoryToMenuCommand { MenuId = menuId, ParentId = parentId });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -106,7 +117,7 @@ public class CategoryController(IMediator mediator) : Controller
         {
             Search = search,
             ExcludeIds = excludeList,
-            Page = page - 1,
+            Page = page,
             PageSize = pageSize
         }, ct);
 
@@ -177,7 +188,7 @@ public class CategoryController(IMediator mediator) : Controller
             StoreId = storeId,
             MenuId = menuId,
             Search = search,
-            Page = page - 1,
+            Page = page,
             PageSize = pageSize
         };
         var result = await mediator.Send(query, ct);

@@ -25,7 +25,9 @@ public class GetMenusPagedByCurrentOwnerHandler(
 			expression: m =>
 				(m.CompanyId != null && m.Company!.Owner!.ApplicationUserId == applicationUserId) ||
 				(m.StoreId != null && m.Store!.Company.Owner!.ApplicationUserId == applicationUserId),
-			include: m => m.Include(x => x.Categories),
+			include: m => m.Include(x => x.Categories)
+				.Include(x => x.Store).ThenInclude(x => x!.Company)
+				.Include(x => x.Company),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
 			ct: ct
 		);

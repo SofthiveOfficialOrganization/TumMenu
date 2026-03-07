@@ -45,7 +45,7 @@ public class GetCompanyListForSearchHandler(
 
         var items = await query
             .OrderBy(c => c.Title)
-            .Skip(request.Page * request.PageSize)
+            .Skip((request.Page - request.From) * request.PageSize)
             .Take(request.PageSize)
             .Select(c => new CompanyFilterDTO(c.Id, c.Title))
             .ToListAsync(cancellationToken);
@@ -55,10 +55,11 @@ public class GetCompanyListForSearchHandler(
             Items = items,
             Index = request.Page,
             Size = request.PageSize,
+            From = request.From,
             Count = totalCount,
             Pages = (int)Math.Ceiling(totalCount / (double)request.PageSize),
-            HasPrevious = request.Page > 0,
-            HasNext = request.Page < (int)Math.Ceiling(totalCount / (double)request.PageSize) - 1
+            HasPrevious = request.Page > request.From,
+            HasNext = request.Page < (int)Math.Ceiling(totalCount / (double)request.PageSize) + request.From - 1
         };
     }
 }

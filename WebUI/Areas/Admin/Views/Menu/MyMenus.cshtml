@@ -30,6 +30,7 @@
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
+                            <th>Bağlı Olduğu Şirket / Dükkan</th>
                             <th>Durum</th>
                             <th class="d-none d-md-table-cell">Kategoriler</th>
                             <th class="d-none d-lg-table-cell">Oluşturulma Tarihi</th>
@@ -51,6 +52,26 @@
                                                 <span class="fw-bold text-dark d-block">@item.Title</span>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.StoreName))
+                                        {
+                                            <div class="d-inline-flex align-items-center p-1 px-2 border rounded bg-light">
+                                                <span class="badge bg-info bg-opacity-10 text-info me-2"><i class="fas fa-store"></i> Dükkan</span>
+                                                <small class="text-dark fw-medium">@item.StoreName</small>
+                                            </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(item.CompanyName))
+                                        {
+                                            <div class="d-inline-flex align-items-center p-1 px-2 border rounded bg-light">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary me-2"><i class="fas fa-building"></i> Şirket</span>
+                                                <small class="text-dark fw-medium">@item.CompanyName</small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">-</span>
+                                        }
                                     </td>
                                     <td>
                                         @if (item.Status == Domain.Entities.MenuStatus.Active)
@@ -101,16 +122,16 @@
                     <nav aria-label="Sayfa navigasyonu">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="MyMenus" asp-route-Index="@(Model.Index - 1)">Önceki</a>
+                                <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@(Model.Index - 1)">Önceki</a>
                             </li>
                              @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="MyMenus" asp-route-Index="@i">@i</a>
+                                    <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@i">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="MyMenus" asp-route-Index="@(Model.Index + 1)">Sonraki</a>
+                                <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@(Model.Index + 1)">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

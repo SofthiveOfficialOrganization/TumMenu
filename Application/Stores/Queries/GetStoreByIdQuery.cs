@@ -23,7 +23,7 @@ public class GetStoreByIdQueryHandler(
 {
 	public async Task<StoreDTO> Handle(GetStoreByIdQuery req, CancellationToken ct)
 	{
-		var store = (await repoStore.Query()
+		var store = (await repoStore.Query(tracked: false)
 			.Include(s => s.Company)
 			.Include(s => s.Address)
 			.Include(s => s.Staffs)
@@ -48,11 +48,14 @@ public class GetStoreByIdQueryHandler(
 
 				await Task.WhenAll(provinceTask, districtsTask);
 
-				storeDTO.Address.CityName = provinceTask.Result?.Name;
+				var province = await provinceTask;
+				var districts = await districtsTask;
+
+				storeDTO.Address.CityName = province?.Name;
 
 				if (districtId.HasValue)
 				{
-					storeDTO.Address.DistrictName = districtsTask.Result
+					storeDTO.Address.DistrictName = districts
 						.FirstOrDefault(d => d.Id == districtId.Value)?.Name;
 				}
 			}

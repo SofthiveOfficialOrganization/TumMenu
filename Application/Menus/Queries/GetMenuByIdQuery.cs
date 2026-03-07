@@ -33,12 +33,6 @@ public class GetMenuByIdHandler(
 		_ = menu ?? throw new NotFoundAppException("Menü bulunamadı.");
 		
 		var menuDTO = mapper.Map<MenuDTO>(menu);
-		if (menu.Store != null)
-		{
-			menuDTO.StoreName = menu.Store.Title;
-			menuDTO.StoreSlug = menu.Store.Slug;
-			menuDTO.CompanySlug = menu.Store.Company?.Slug;
-		}
 		return menuDTO;
 	}
 }

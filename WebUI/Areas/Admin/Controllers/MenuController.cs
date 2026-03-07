@@ -133,9 +133,9 @@ public sealed class MenuController(IMediator mediator) : Controller
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet("[action]")]
-	public async Task<IActionResult> MyMenus(CancellationToken ct)
+	public async Task<IActionResult> MyMenus([FromQuery] GetMenusPagedByCurrentOwnerQuery req, CancellationToken ct)
 	{
-		var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery(), ct);
+		var menus = await mediator.Send(req, ct);
 		return View(menus);
 	}
 
@@ -256,7 +256,7 @@ public sealed class MenuController(IMediator mediator) : Controller
             var result = await mediator.Send(new GetAllCompaniesPagedQuery 
             { 
                 Search = search, 
-                Page = page - 1, 
+                Page = page, 
                 PageSize = pageSize 
             }, ct);
             items = result.Items;
@@ -267,7 +267,7 @@ public sealed class MenuController(IMediator mediator) : Controller
             var result = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery 
             { 
                 Search = search, 
-                Page = page - 1, 
+                Page = page, 
                 PageSize = pageSize 
             }, ct);
             items = result.Items;
@@ -285,7 +285,7 @@ public sealed class MenuController(IMediator mediator) : Controller
         { 
             Search = search, 
             CompanyId = companyId,
-            Page = page - 1, 
+            Page = page, 
             PageSize = pageSize 
         }, ct);
 

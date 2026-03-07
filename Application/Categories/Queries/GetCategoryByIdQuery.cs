@@ -23,8 +23,13 @@ public sealed class GetCategoryByIdQueryHandler(
 		var category = await repo.Query()
 			.Include(c => c.Menu)
 			.Include(c => c.CategoryLibraryItem)
+			.Include(c => c.Parent)
+				.ThenInclude(p => p.CategoryLibraryItem)
+			.Include(c => c.SubCategories)
+				.ThenInclude(sc => sc.CategoryLibraryItem)
 			.Include(c => c.Products) // fetch products
 				.ThenInclude(p => p.Prices) // prices can be useful later
+			.AsSplitQuery()
 			.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
 		if (category == null)

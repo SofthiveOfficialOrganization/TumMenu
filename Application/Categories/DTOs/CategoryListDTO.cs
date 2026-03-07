@@ -21,5 +21,8 @@ public sealed class CategoryListDTO : BaseDTO
     public int SortOrder { get; set; }
     public bool IsActive { get; set; }
     
+    public Guid? ParentId { get; set; }
+    public string? ParentName { get; set; }
+    
     public int ProductCount { get; set; }
 }

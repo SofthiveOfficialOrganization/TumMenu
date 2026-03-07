@@ -42,13 +42,32 @@
                     <p class="pm-cat-desc">@Model.CategoryDescription</p>
                 }
 
-                <div class="pm-product-list">
-                    @if (Model.Products.Count == 0)
-                    {
-                        <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
-                    }
-                    else
-                    {
+                @if (Model.SubCategories != null && Model.SubCategories.Count > 0)
+                {
+                    <div class="pm-category-grid mb-5">
+                        <h4 class="pm-section-title mb-3 w-100">Alt Kategoriler</h4>
+                        @foreach (var subCat in Model.SubCategories)
+                        {
+                            var subCategoryUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{subCat.Slug}";
+                            <a href="@subCategoryUrl" class="pm-cat-card pm-cat-card--link">
+                                <div class="pm-cat-card-photo">
+                                    <div class="pm-cat-card-photo-placeholder">
+                                        @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
+                                    </div>
+                                </div>
+                                <div class="pm-cat-card-info">
+                                    <h3 class="pm-cat-card-title">@subCat.Title</h3>
+                                    <span class="pm-cat-card-count">@subCat.ProductCount ürün</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+
+                @if (Model.Products != null && Model.Products.Count > 0)
+                {
+                    <h4 class="pm-section-title mb-3">Ürünler</h4>
+                    <div class="pm-product-list">
                         @foreach (var product in Model.Products)
                         {
                             var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
@@ -77,8 +96,12 @@
                                 </div>
                             </a>
                         }
-                    }
-                </div>
+                    </div>
+                }
+                else if (Model.SubCategories == null || Model.SubCategories.Count == 0)
+                {
+                    <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
+                }
             </div>
 
         </div>

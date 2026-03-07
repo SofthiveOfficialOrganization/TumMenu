@@ -58,6 +58,20 @@
                     <span asp-validation-for="Description" class="text-danger small"></span>
                 </div>
 
+                <div class="mb-3">
+                    <label asp-for="ParentId" class="form-label text-secondary small text-uppercase fw-bold">
+                        <i class="fas fa-level-up-alt fa-rotate-90 me-1 opacity-50"></i>Üst Kategori Şablonu (Opsiyonel)
+                    </label>
+                    <select asp-for="ParentId" class="form-select" id="parentCategoryLibrarySelect">
+                        @if (Model.ParentId.HasValue && !string.IsNullOrEmpty((string?)ViewBag.ParentName))
+                        {
+                            <option value="@Model.ParentId" selected="selected">@ViewBag.ParentName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ParentId" class="text-danger small"></span>
+                    <div class="form-text small"><i class="fas fa-info-circle me-1 opacity-50"></i>Bu şablonu bir başka şablonun altına (altategori okarak) eklemek isterseniz seçin.</div>
+                </div>
+
                 <div class="mb-4">
                     <label class="form-label text-secondary small text-uppercase fw-bold">
                         <i class="fas fa-icons me-1 opacity-50"></i>İkon Önizleme
@@ -113,6 +127,42 @@
             }
 
             input.addEventListener('input', updatePreview);
+
+            const parentCategoryAjaxUrl = '@Url.Action("GetCategoryLibraryItems", "Category", new { area = "Admin" })';
+            $('#parentCategoryLibrarySelect').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: '-- Üst Kategori Şablonu Yok --',
+                allowClear: true,
+                ajax: {
+                    url: parentCategoryAjaxUrl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term || '',
+                            excludeIds: '@Model.Id', // Exclude self
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                language: {
+                    inputTooShort: function () { return ''; },
+                    noResults: function () { return 'Sonuç bulunamadı'; },
+                    searching: function () { return 'Aranıyor...'; },
+                    loadingMore: function () { return 'Daha fazla yükleniyor...'; }
+                }
+            });
         })();
     </script>
 }

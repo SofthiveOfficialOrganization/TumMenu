@@ -30,12 +30,6 @@ public class GetAllMenusPagedHandler(
 
 		var menuDTO = mapper.Map<PaginatedListDTO<MenuDTO>>(menu);
 
-		foreach (var (dto, entity) in menuDTO.Items.Zip(menu.Items))
-		{
-			dto.StoreName = entity.Store?.Title;
-			dto.CompanyName = entity.Company?.Title;
-		}
-
 		return menuDTO;
 	}
 }

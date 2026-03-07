@@ -49,12 +49,14 @@ public class GetActiveMenuBySlugHandler(
 			StoreName = store.Title,
 			CompanyName = store.Company.Title,
 			Categories = menu.Categories
+				.Where(c => c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)
 				.Select(c => new Application.Categories.DTOs.CategoryDTO
 				{
 					Id = c.Id,
 					MenuId = c.MenuId,
 					CategoryLibraryItemId = c.CategoryLibraryItemId,
+					ParentId = c.ParentId,
 					SortOrder = c.SortOrder,
 					IsActive = c.IsActive,
 					CategoryLibraryItem = new Application.Categories.DTOs.CategoryLibraryItemDTO

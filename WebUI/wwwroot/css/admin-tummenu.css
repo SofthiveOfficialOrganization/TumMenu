@@ -962,6 +962,25 @@ body.dark-mode .nav-link {
     .btn {
         font-size: 14px;
     }
+
+    /* Mobile Filter Layout Fixes */
+    .input-group {
+        flex-wrap: nowrap !important;
+    }
+
+    .input-group .form-control {
+        width: auto !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+    }
+
+    .select2-container--bootstrap-5 {
+        width: 100% !important;
+    }
+
+    .horizon-card form .d-flex.gap-2.w-100.w-lg-auto {
+        margin-top: 5px;
+    }
 }
 
 /* ======================================

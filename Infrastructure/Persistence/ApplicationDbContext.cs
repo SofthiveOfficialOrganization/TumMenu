@@ -234,6 +234,13 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(ca => ca.MenuId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// Category Self-Referencing (Parent/Children)
+			builder.Entity<Category>()
+				.HasOne(c => c.Parent)
+				.WithMany(c => c.SubCategories)
+				.HasForeignKey(c => c.ParentId)
+				.OnDelete(DeleteBehavior.NoAction);
+
 			// CategoryLibraryItem(1) -> Category(n)
 			builder.Entity<Category>()
 				.HasOne(c => c.CategoryLibraryItem)

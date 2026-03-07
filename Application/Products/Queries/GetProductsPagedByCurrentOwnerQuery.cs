@@ -42,6 +42,7 @@ public class GetProductsPagedByCurrentOwnerHandler(
                 .Include(p => p.Category).ThenInclude(c => c.CategoryLibraryItem)
                 .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Company)
                 .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Store),
+            enableTracking: false,
             ct: ct
         );
         

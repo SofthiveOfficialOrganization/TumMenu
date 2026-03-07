@@ -40,6 +40,22 @@
                     <div class="form-text text-muted small">Kütüphaneden bir kategori şablonu seçin. Aramak için yazmaya başlayın.</div>
                 </div>
 
+                <div class="mb-4">
+                    <label asp-for="ParentId" class="form-label fw-bold text-secondary small text-uppercase">Üst Kategori (Opsiyonel)</label>
+                    <select asp-for="ParentId" class="form-select" id="parentCategorySelect">
+                        @if (Model.ParentId.HasValue && !string.IsNullOrEmpty((string?)ViewBag.ParentName))
+                        {
+                            <option value="@Model.ParentId" selected="selected">@ViewBag.ParentName</option>
+                        }
+                        else
+                        {
+                            <option value="">-- Üst Kategori Yok --</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ParentId" class="text-danger small"></span>
+                    <div class="form-text text-muted small">Bu kategoriyi başka bir kategorinin altına eklemek isterseniz seçin.</div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label asp-for="SortOrder" class="form-label fw-bold text-secondary small text-uppercase">Sıralama</label>
@@ -114,6 +130,38 @@
                 noResults: function () { return 'Sonuç bulunamadı'; },
                 searching: function () { return 'Aranıyor...'; },
                 loadingMore: function () { return 'Daha fazla yükleniyor...'; }
+            }
+        });
+
+        const menuId = '@Model.MenuId';
+        const parentCategoryAjaxUrl = '@Url.Action("GetCategoriesForSelect2", "Category", new { area = "Admin" })';
+        
+        $('#parentCategorySelect').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            placeholder: '-- Üst Kategori Yok --',
+            allowClear: true,
+            ajax: {
+                url: parentCategoryAjaxUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term || '',
+                        menuId: menuId,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
             }
         });
     });

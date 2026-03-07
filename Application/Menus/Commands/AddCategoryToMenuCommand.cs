@@ -13,6 +13,7 @@ public class AddCategoryToMenuCommand : IRequest<CategoryDTO>, ITransactionalReq
 {
 	public Guid MenuId { get; set; }
 	public Guid CategoryLibraryItemId { get; set; }
+	public Guid? ParentId { get; set; }
 	public int SortOrder { get; set; }
 	public bool IsActive { get; set; } = true;
 }
@@ -49,10 +50,20 @@ public class AddCategoryToMenuHandler(
 		if (linkExists)
 			throw new AlreadyExistsAppException("Bu kategori zaten menüde ekli.");
 
+		// Validate ParentId
+		if (req.ParentId.HasValue)
+		{
+			var parentExists = await repoCategory.Query()
+				.AnyAsync(x => x.Id == req.ParentId.Value && x.MenuId == req.MenuId, ct);
+			if (!parentExists)
+				throw new NotFoundAppException("Üst kategori bulunamadı veya bu menüye ait değil.");
+		}
+
 		var category = new Category
 		{
 			MenuId = req.MenuId,
 			CategoryLibraryItemId = req.CategoryLibraryItemId,
+			ParentId = req.ParentId,
 			SortOrder = req.SortOrder,
 			IsActive = req.IsActive
 		};

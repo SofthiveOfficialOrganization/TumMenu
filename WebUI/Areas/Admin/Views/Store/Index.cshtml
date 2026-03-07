@@ -162,17 +162,17 @@
                    <div class="d-flex justify-content-center mt-4">
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item @(Model.Index == 0 ? "disabled" : "")">
-                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Index - 1)" asp-route-companyId="@currentCompanyId">Önceki</a>
+                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index - 1)" asp-route-companyId="@currentCompanyId">Önceki</a>
                             </li>
-                             @for (int i = 0; i < Model.Pages; i++)
+                             @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-companyId="@currentCompanyId">@(i + 1)</a>
+                                    <a class="page-link" asp-action="Index" asp-route-PageIndex="@i" asp-route-companyId="@currentCompanyId">@i</a>
                                 </li>
                             }
-                            <li class="page-item @(Model.Index == Model.Pages - 1 ? "disabled" : "")">
-                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Index + 1)" asp-route-companyId="@currentCompanyId">Sonraki</a>
+                            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index + 1)" asp-route-companyId="@currentCompanyId">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

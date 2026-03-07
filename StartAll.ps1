@@ -11,7 +11,7 @@
 # Start-All.ps1
 
 $webUiUrls = "https://0.0.0.0:7019;http://0.0.0.0:5000"
-$locationApiUrls = "http://0.0.0.0:5002"
+$locationApiUrls = "http://localhost:5197"
 
 Write-Host "Starting Location API silently..."
 Start-Process -FilePath "dotnet" `

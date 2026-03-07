@@ -42,23 +42,23 @@
             <div class="mb-4">
                 <form method="get" class="bg-light p-3 rounded border shadow-sm">
                     <!-- Temel Arama Satırı -->
-                    <div class="row g-3 align-items-center m-0">
-                        <div class="col">
+                    <div class="row g-2 g-md-3 align-items-center m-0">
+                        <div class="col-12 col-md">
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-secondary border-end-0"><i class="fas fa-search"></i></span>
                                 <input type="text" name="Search" class="form-control border-start-0 shadow-none" placeholder="Ürün adı, açıklama vb. ara..." value="@Context.Request.Query["Search"]">
                             </div>
                         </div>
-                        <div class="col-auto">
+                        <div class="col-12 col-md-auto">
                             <div class="d-flex gap-2">
                                 @{
                                     var isAdvancedFilterOpen = hasCompany || hasStore || hasMenu || hasCategory;
                                     var collapseClass = isAdvancedFilterOpen ? "collapse show" : "collapse";
                                 }
-                                <button type="button" class="btn btn-outline-secondary px-3" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="@(isAdvancedFilterOpen ? "true" : "false")" aria-controls="advancedFilters">
+                                <button type="button" class="btn btn-outline-secondary px-3 flex-grow-1 flex-md-grow-0" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="@(isAdvancedFilterOpen ? "true" : "false")" aria-controls="advancedFilters">
                                     <i class="fas fa-sliders-h me-1"></i> Detaylı Filtre
                                 </button>
-                                <button type="submit" class="btn btn-primary px-3 shadow-sm"><i class="fas fa-search"></i></button>
+                                <button type="submit" class="btn btn-primary px-3 shadow-sm flex-grow-0"><i class="fas fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -114,9 +114,9 @@
                                         @if (!string.IsNullOrEmpty(Context.Request.Query["CategoryId"])) { <option value="@Context.Request.Query["CategoryId"]" selected>Seçili Filtre</option> }
                                     </select>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <a href="@Url.Action("MyProducts")" class="btn btn-light" title="Filtreleri Temizle"><i class="fas fa-times me-1"></i></a>
-                                    <button type="submit" class="btn btn-primary px-3 shadow-sm"><i class="fas fa-filter me-1"></i> Uygula</button>
+                                <div class="d-flex gap-2 w-100 w-lg-auto">
+                                    <a href="@Url.Action("MyProducts")" class="btn btn-light h-100 px-3" title="Filtreleri Temizle"><i class="fas fa-times"></i></a>
+                                    <button type="submit" class="btn btn-primary px-3 shadow-sm flex-grow-1"><i class="fas fa-filter me-1"></i> Uygula</button>
                                 </div>
                             </div>
                         </div>
@@ -289,6 +289,7 @@
                     theme: 'bootstrap-5',
                     placeholder: placeholder,
                     allowClear: true,
+                    width: '100%',
                     ajax: {
                         url: url,
                         dataType: 'json',

@@ -25,7 +25,9 @@ public class SearchStoresQueryHandler(
 
 	public async Task<StoreSearchResultListDTO> Handle(SearchStoresQuery req, CancellationToken ct)
 	{
-		var query = repoStore.Query()
+		var query = repoStore.Query(tracked: false)
+			.AsSplitQuery()
+			.OrderBy(s => s.Title)
 			.Include(s => s.Company)
 			.Include(s => s.Address)
 			.Include(s => s.Medias)
@@ -152,9 +154,10 @@ public class SearchStoresQueryHandler(
 		var totalCount = results.Count;
 		var page = req.Page;
 		var pageSize = req.PageSize > 0 ? req.PageSize : 12;
+		var from = req.From;
 
 		var pagedResults = results
-			.Skip(page * pageSize)
+			.Skip((page - from) * pageSize)
 			.Take(pageSize)
 			.ToList();
 
@@ -166,7 +169,7 @@ public class SearchStoresQueryHandler(
 			TotalCount = totalCount,
 			Page = page,
 			PageSize = pageSize,
-			HasNext = (page + 1) * pageSize < totalCount
+			HasNext = (page - from + 1) * pageSize < totalCount
 		};
 	}
 

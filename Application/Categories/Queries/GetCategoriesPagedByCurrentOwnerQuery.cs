@@ -3,9 +3,10 @@ using Application.Categories.DTOs;
 using Application.Common.Base.DTOs;
 using Application.Common.Base.Page.RequestBase;
 using Domain.Entities;
+using Mapster;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Application.Common.Base.Page;
 
 namespace Application.Categories.Queries;
 
@@ -26,25 +27,55 @@ public class GetCategoriesByCurrentOwnerHandler(
     public async Task<PaginatedListDTO<CategoryListDTO>> Handle(GetCategoriesPagedByCurrentOwnerQuery req, CancellationToken ct)
     {
         var userId = userContext.UserId;
-        var categoryList = await repoCategory.GetPageListAsync(
-            req,
-             c => ((c.Menu.CompanyId != null && c.Menu.Company!.Owner!.ApplicationUserId == userId) || 
-                  (c.Menu.StoreId != null && c.Menu.Store!.Company.Owner!.ApplicationUserId == userId)) &&
-                 (string.IsNullOrEmpty(req.Search) || c.CategoryLibraryItem.Title.Contains(req.Search)) &&
-                 (!req.CompanyId.HasValue || c.Menu.CompanyId == req.CompanyId.Value) &&
-                 (!req.StoreId.HasValue || c.Menu.StoreId == req.StoreId.Value) &&
-                 (!req.MenuId.HasValue || c.MenuId == req.MenuId.Value),
-            orderBy: query => query.OrderByDescending(c => c.CreatedAt),
-            include: query => query
-                .Include(c => c.CategoryLibraryItem)
-                .Include(c => c.Menu)
-                    .ThenInclude(m => m.Company)
-                .Include(c => c.Menu)
-                    .ThenInclude(m => m.Store)
-                .Include(c => c.Products),
-            ct: ct
-        );
-        var categoryListDTO = mapper.Map<PaginatedListDTO<CategoryListDTO>>(categoryList);
-        return categoryListDTO;
+        var query = repoCategory.Query(tracked: false);
+
+        // 1. Authorization Optimization
+        if (!userContext.Roles.Contains("Admin"))
+        {
+            // Prefer using CompanyId from claims to avoid joining Owner/ApplicationUser tables
+            if (Guid.TryParse(userContext.CompanyId, out var companyId))
+            {
+                query = query.Where(c => c.Menu.CompanyId == companyId || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == companyId));
+            }
+            else
+            {
+                // Fallback authorization (still optimized by Projection later)
+                query = query.Where(c => (c.Menu.CompanyId != null && c.Menu.Company!.Owner!.ApplicationUserId == userId) ||
+                                         (c.Menu.StoreId != null && c.Menu.Store!.Company.Owner!.ApplicationUserId == userId));
+            }
+        }
+
+        // 2. Filters
+        if (!string.IsNullOrEmpty(req.Search))
+            query = query.Where(c => c.CategoryLibraryItem.Title.Contains(req.Search));
+
+        if (req.CompanyId.HasValue)
+            query = query.Where(c => c.Menu.CompanyId == req.CompanyId.Value || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == req.CompanyId.Value));
+
+        if (req.StoreId.HasValue)
+            query = query.Where(c => c.Menu.StoreId == req.StoreId.Value);
+
+        if (req.MenuId.HasValue)
+            query = query.Where(c => c.MenuId == req.MenuId.Value);
+
+        // 3. Sorting
+        query = query.OrderByDescending(c => c.CreatedAt);
+
+        // 4. Projection & Pagination (Mapster ProjectToType replaces Include/ThenInclude)
+        var paginate = await query
+            .ProjectToType<CategoryListDTO>(mapper.Config)
+            .ToPaginateAsync(ct, req.Page, req.PageSize, req.From);
+
+        return new PaginatedListDTO<CategoryListDTO>
+        {
+            Items = paginate.Items,
+            Index = paginate.Index,
+            Size = paginate.Size,
+            Count = paginate.Count,
+            From = paginate.From,
+            Pages = paginate.Pages,
+            HasPrevious = paginate.HasPrevious,
+            HasNext = paginate.HasNext
+        };
     }
 }
