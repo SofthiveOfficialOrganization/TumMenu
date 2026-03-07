@@ -146,9 +146,10 @@ public class CategoryController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+    public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
     {
         var category = await mediator.Send(new GetCategoryByIdQuery(id), ct);
+        ViewData["ReturnUrl"] = returnUrl;
         
         // Security Check
         var menu = await mediator.Send(new GetMenuByIdQuery { Id = category.MenuId }, ct);

@@ -26,12 +26,12 @@
                         <span class="badge bg-light border text-secondary font-monospace fw-normal">Sıra: @Model.SortOrder</span>
                     </div>
                 </div>
-                <div class="d-flex gap-2 text-nowrap">
-                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-success">
-                        <i class="fas fa-plus me-2"></i>Alt Kategori Ekle
+                <div class="d-flex gap-2 flex-shrink-0 text-nowrap">
+                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm bg-white text-success border border-success shadow-sm px-3" title="Alt Kategori Ekle" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-plus"></i> <span class="d-none d-md-inline ms-2">Alt Kategori Ekle</span>
                     </a>
-                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-light text-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Menüye Dön
+                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </div>
             </div>
@@ -63,11 +63,6 @@
                     <h5 class="fw-bold mb-1">Alt Kategoriler</h5>
                     <p class="text-secondary small mb-0">Bu kategorinin altındaki kategorileri yönetin.</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus me-1"></i> Yeni Alt Kategori Ekle
-                    </a>
-                </div>
             </div>
             
             <div id="subcategory-grid" class="row">
@@ -91,7 +86,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-sm btn-light text-primary" title="Detaylar">
+                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-sm bg-white text-secondary border border-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -123,7 +118,7 @@
                 </div>
                 <div class="d-flex gap-2">
                     <!-- Ürün Ekle -->
-                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-primary">
+                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-success border border-success">
                         <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
                     </a>
                 </div>
@@ -155,11 +150,11 @@
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-light text-primary" title="Düzenle">
+                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm bg-white text-primary border border-primary" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
-                                            <button type="button" class="btn btn-sm btn-light text-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
+                                            <button type="button" class="btn btn-sm bg-white text-danger border border-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -195,13 +190,29 @@
                     ghostClass: 'bg-light',
                     onEnd: function (evt) {
                         var items = Array.from(grid.querySelectorAll('.product-item'));
-                        var sortData = items.map(function (item, index) {
+                        var itemsData = items.map(function (item, index) {
                             return {
                                 id: item.getAttribute('data-id'),
                                 sortOrder: index
                             };
                         });
-                        // TODO: Implement Product Sorting fetch if needed
+
+                        var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                        fetch('/admin/Product/UpdateSortOrder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': token
+                            },
+                            body: JSON.stringify({ items: itemsData })
+                        }).then(response => {
+                            if (!response.ok) {
+                                console.error('Product sort order update failed');
+                            }
+                        }).catch(error => {
+                            console.error('Error:', error);
+                        });
                     }
                 });
             }

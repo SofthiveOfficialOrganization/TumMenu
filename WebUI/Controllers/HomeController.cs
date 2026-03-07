@@ -17,7 +17,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
 
         // Load category library items for map filter
         var categories = await mediator.Send(
-            new GetAllCategoryLibraryItemsPagedQuery { Page = 0, PageSize = 100 }, ct);
+            new GetAllCategoryLibraryItemsPagedQuery { Page = 1, PageSize = 100 }, ct);
         ViewBag.Categories = categories.Items.ToList();
 
         return View();
@@ -86,7 +86,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     {
         // Load category library items for filter chips
         var categories = await mediator.Send(
-            new GetAllCategoryLibraryItemsPagedQuery { Page = 0, PageSize = 100 }, ct);
+            new GetAllCategoryLibraryItemsPagedQuery { Page = 1, PageSize = 100 }, ct);
         ViewBag.Categories = categories.Items.ToList();
         return View();
     }
@@ -104,7 +104,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         var result = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery
         {
             Search = search,
-            Page = page - 1,
+            Page = page,
             PageSize = pageSize
         }, ct);
 

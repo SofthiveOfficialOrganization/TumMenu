@@ -24,6 +24,7 @@ public class GetStoreByIdQueryHandler(
 	public async Task<StoreDTO> Handle(GetStoreByIdQuery req, CancellationToken ct)
 	{
 		var store = (await repoStore.Query(tracked: false)
+			.AsSplitQuery()
 			.Include(s => s.Company)
 			.Include(s => s.Address)
 			.Include(s => s.Staffs)

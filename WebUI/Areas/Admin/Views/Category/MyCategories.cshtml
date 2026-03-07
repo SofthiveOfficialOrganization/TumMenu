@@ -81,7 +81,7 @@
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Şirket Filtresi</label>
                                 <div class="w-100">
                                     <select name="CompanyId" id="companySelect" class="form-select select2-ajax w-100" data-url="/admin/Company/GetCompaniesForSelect2" data-placeholder="Şirket Seçin...">
-                                        @if (!string.IsNullOrEmpty(Context.Request.Query["CompanyId"])) { <option value="@Context.Request.Query["CompanyId"]" selected>Seçili Filtre</option> }
+                                        @if (!string.IsNullOrEmpty(Context.Request.Query["CompanyId"])) { <option value="@Context.Request.Query["CompanyId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["CompanyId"].ToString()!, out var companyName) ? companyName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Dükkan Filtresi</label>
                                 <div class="w-100">
                                     <select name="StoreId" id="storeSelect" class="form-select select2-ajax w-100" data-url="/admin/Store/GetStoresForSelect2" data-placeholder="Dükkan Seçin...">
-                                        @if (!string.IsNullOrEmpty(Context.Request.Query["StoreId"])) { <option value="@Context.Request.Query["StoreId"]" selected>Seçili Filtre</option> }
+                                        @if (!string.IsNullOrEmpty(Context.Request.Query["StoreId"])) { <option value="@Context.Request.Query["StoreId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["StoreId"].ToString()!, out var storeName) ? storeName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Menü</label>
                                 <div class="w-100">
                                     <select name="MenuId" id="menuSelect" class="form-select select2-ajax w-100" data-url="/admin/Menu/GetMenusForSelect2" data-placeholder="Menü Seçin...">
-                                        @if (!string.IsNullOrEmpty(Context.Request.Query["MenuId"])) { <option value="@Context.Request.Query["MenuId"]" selected>Seçili Filtre</option> }
+                                        @if (!string.IsNullOrEmpty(Context.Request.Query["MenuId"])) { <option value="@Context.Request.Query["MenuId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["MenuId"].ToString()!, out var menuName) ? menuName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
                             </div>
@@ -199,10 +199,10 @@
                                         }
                                     </td>
                                     <td class="text-center text-nowrap">
-                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm btn-light text-success me-1" title="Alt Kategori Ekle">
+                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm bg-white text-success border border-success me-1" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm bg-white text-secondary border border-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

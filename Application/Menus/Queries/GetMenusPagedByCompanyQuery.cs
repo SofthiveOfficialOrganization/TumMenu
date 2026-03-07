@@ -25,6 +25,7 @@ public class GetMenusPagedByCompanyHandler(
 			expression: m => m.Id == req.CompanyId,
 			include: m => m.Include(m => m.Categories).Include(m => m.Medias),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
+			splitQuery: true,
 			ct: ct
 		);
 

@@ -20,6 +20,9 @@ public class GetCategoriesPagedByCurrentOwnerQuery : PageRequest, IRequest<Pagin
 
 public class GetCategoriesByCurrentOwnerHandler(
     IRepository<Category> repoCategory,
+    IRepository<Company> repoCompany,
+    IRepository<Store> repoStore,
+    IRepository<Menu> repoMenu,
     IMapper mapper,
     IUserContext userContext
 ) : IRequestHandler<GetCategoriesPagedByCurrentOwnerQuery, PaginatedListDTO<CategoryListDTO>>
@@ -66,7 +69,7 @@ public class GetCategoriesByCurrentOwnerHandler(
             .ProjectToType<CategoryListDTO>(mapper.Config)
             .ToPaginateAsync(ct, req.Page, req.PageSize, req.From);
 
-        return new PaginatedListDTO<CategoryListDTO>
+        var response = new PaginatedListDTO<CategoryListDTO>
         {
             Items = paginate.Items,
             Index = paginate.Index,
@@ -77,5 +80,24 @@ public class GetCategoriesByCurrentOwnerHandler(
             HasPrevious = paginate.HasPrevious,
             HasNext = paginate.HasNext
         };
+
+        // Populate FilterNames for Select2 placeholders
+        if (req.CompanyId.HasValue)
+        {
+            var company = await repoCompany.GetByIdAsync(req.CompanyId.Value, ct);
+            if (company != null) response.FilterNames[req.CompanyId.ToString()!] = company.Title;
+        }
+        if (req.StoreId.HasValue)
+        {
+            var store = await repoStore.GetByIdAsync(req.StoreId.Value, ct);
+            if (store != null) response.FilterNames[req.StoreId.ToString()!] = store.Title;
+        }
+        if (req.MenuId.HasValue)
+        {
+            var menu = await repoMenu.GetByIdAsync(req.MenuId.Value, ct);
+            if (menu != null) response.FilterNames[req.MenuId.ToString()!] = menu.Title;
+        }
+
+        return response;
     }
 }

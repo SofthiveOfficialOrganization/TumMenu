@@ -26,9 +26,10 @@ public class ProductController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]/{id}")]
-    public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+    public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
     {
         ProductDTO? product = await mediator.Send(new GetProductByIdQuery(id), ct);
+        ViewData["ReturnUrl"] = returnUrl;
         return View(product);
     }
 
@@ -90,5 +91,13 @@ public class ProductController(IMediator mediator) : Controller
     {
         var result = await mediator.Send(req, ct);
         return View(result);
+    }
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost("[action]")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateSortOrder([FromBody] UpdateProductSortOrderCommand cmd, CancellationToken ct)
+    {
+        await mediator.Send(cmd, ct);
+        return Ok();
     }
 }

@@ -22,6 +22,7 @@ public class GetMenuByIdHandler(
 	public async Task<MenuDTO> Handle(GetMenuByIdQuery req, CancellationToken ct)
 	{
 		var menu = await repoMenu.Query()
+			.AsSplitQuery()
 			.Include(x => x.Categories)
 				.ThenInclude(x => x.CategoryLibraryItem)
 			.Include(x => x.Categories)

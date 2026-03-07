@@ -57,9 +57,10 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
 	[HttpGet("[action]/{id}")]
-	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
+		ViewData["ReturnUrl"] = returnUrl;
 		
 		if (User.IsInRole("Owner"))
 		{

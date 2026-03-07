@@ -27,6 +27,7 @@ public class GetMenusPagedByCurrentUserHandler(
 			expression: m => m.Company.Owner.ApplicationUserId == applicationUserId,
 			include: m => m.Include(m => m.Categories).Include(m => m.Medias),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
+			splitQuery: true,
 			ct: ct
 		);
 

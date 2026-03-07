@@ -54,6 +54,7 @@ public class GetCategoryBySlugHandler(
 	public async Task<CategoryPageDTO> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
 	{
 		var store = await repoStore.Query()
+			.AsSplitQuery()
 			.Include(s => s.Company)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))

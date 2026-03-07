@@ -91,9 +91,10 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		ViewData["ReturnUrl"] = returnUrl;
 		
 		if (User.IsInRole("Owner"))
 		{
@@ -304,17 +305,17 @@ public sealed class MenuController(IMediator mediator) : Controller
     [HttpGet("[action]")]
     public async Task<IActionResult> GetMenusForSelect2(Guid? companyId, Guid? storeId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
-        // Owner lists menus
-        var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Page = 0, PageSize = 1000 }, ct); // Get all owned menus, filtering manually since query lacks Search param
+        var result = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery 
+        { 
+            Page = page, 
+            PageSize = pageSize,
+            Search = search,
+            CompanyId = companyId,
+            StoreId = storeId
+        }, ct);
         
-        var filteredMenus = menus.Items.AsEnumerable();
-        if (companyId.HasValue) filteredMenus = filteredMenus.Where(m => m.CompanyId == companyId.Value);
-        if (storeId.HasValue) filteredMenus = filteredMenus.Where(m => m.StoreId == storeId.Value);
-        if (!string.IsNullOrEmpty(search)) filteredMenus = filteredMenus.Where(m => m.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
-
-        var pagedMenus = filteredMenus.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-        var items = pagedMenus.Select(m => new { id = m.Id, text = m.Title });
+        var items = result.Items.Select(m => new { id = m.Id, text = m.Title });
         
-        return Json(new { results = items, pagination = new { more = pagedMenus.Count == pageSize } });
+        return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }

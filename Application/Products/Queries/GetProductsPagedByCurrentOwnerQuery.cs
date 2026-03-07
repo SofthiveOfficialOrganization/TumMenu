@@ -20,6 +20,10 @@ public sealed class GetProductsPagedByCurrentOwnerQuery : PageRequest, IRequest<
 
 public class GetProductsPagedByCurrentOwnerHandler(
     IRepository<Product> repoProduct,
+    IRepository<Company> repoCompany,
+    IRepository<Store> repoStore,
+    IRepository<Menu> repoMenu,
+    IRepository<Category> repoCategory,
     IMapper mapper,
     IUserContext userContext
 ) : IRequestHandler<GetProductsPagedByCurrentOwnerQuery, PaginatedListDTO<ProductListDTO>>
@@ -47,6 +51,31 @@ public class GetProductsPagedByCurrentOwnerHandler(
         );
         
         var productListDTO = mapper.Map<PaginatedListDTO<ProductListDTO>>(productList);
+
+        // Populate FilterNames for Select2 placeholders
+        if (req.CompanyId.HasValue)
+        {
+            var company = await repoCompany.GetByIdAsync(req.CompanyId.Value, ct);
+            if (company != null) productListDTO.FilterNames[req.CompanyId.ToString()!] = company.Title;
+        }
+        if (req.StoreId.HasValue)
+        {
+            var store = await repoStore.GetByIdAsync(req.StoreId.Value, ct);
+            if (store != null) productListDTO.FilterNames[req.StoreId.ToString()!] = store.Title;
+        }
+        if (req.MenuId.HasValue)
+        {
+            var menu = await repoMenu.GetByIdAsync(req.MenuId.Value, ct);
+            if (menu != null) productListDTO.FilterNames[req.MenuId.ToString()!] = menu.Title;
+        }
+        if (req.CategoryId.HasValue)
+        {
+            var category = await repoCategory.Query(tracked: false)
+                .Include(c => c.CategoryLibraryItem)
+                .FirstOrDefaultAsync(c => c.Id == req.CategoryId.Value, ct);
+            if (category != null) productListDTO.FilterNames[req.CategoryId.ToString()!] = category.CategoryLibraryItem.Title;
+        }
+
         return productListDTO;
     }
 }

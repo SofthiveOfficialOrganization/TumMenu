@@ -9,4 +9,5 @@ public class PaginatedListDTOBase
     public int Pages { get; set; }
     public bool HasPrevious { get; set; }
     public bool HasNext { get; set; }
+    public IDictionary<string, string> FilterNames { get; set; } = new Dictionary<string, string>();
 }

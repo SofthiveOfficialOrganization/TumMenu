@@ -9,7 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Queries;
 
-public class GetMenusPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>> { }
+public class GetMenusPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>> 
+{
+    public string? Search { get; set; }
+    public Guid? CompanyId { get; set; }
+    public Guid? StoreId { get; set; }
+}
 
 public class GetMenusPagedByCurrentOwnerHandler(
 	IRepository<Menu> repoMenu,
@@ -23,12 +28,16 @@ public class GetMenusPagedByCurrentOwnerHandler(
 		var menu = await repoMenu.GetPageListAsync(
 			request: req,
 			expression: m =>
-				(m.CompanyId != null && m.Company!.Owner!.ApplicationUserId == applicationUserId) ||
-				(m.StoreId != null && m.Store!.Company.Owner!.ApplicationUserId == applicationUserId),
+				((m.CompanyId != null && m.Company!.Owner!.ApplicationUserId == applicationUserId) ||
+				(m.StoreId != null && m.Store!.Company.Owner!.ApplicationUserId == applicationUserId)) &&
+                (string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search)) &&
+                (!req.CompanyId.HasValue || m.CompanyId == req.CompanyId.Value) &&
+                (!req.StoreId.HasValue || m.StoreId == req.StoreId.Value),
 			include: m => m.Include(x => x.Categories)
 				.Include(x => x.Store).ThenInclude(x => x!.Company)
 				.Include(x => x.Company),
 			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
+			splitQuery: true,
 			ct: ct
 		);
 

@@ -28,11 +28,14 @@
                     }
                 </div>
                 
-                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Bu menüyü silmek istediğinize emin misiniz?');">
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" id="deleteMenuForm-@Model.Id" class="d-flex gap-2 flex-shrink-0">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-sm btn-light text-danger" title="Menüyü Sil">
-                        <i class="fas fa-trash"></i>
+                    <button type="button" class="btn btn-sm bg-white text-danger border border-danger shadow-sm" title="Menüyü Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteMenuForm-@Model.Id').submit(); })" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-trash-alt"></i>
                     </button>
+                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("AllMenus"))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
+                    </a>
                 </form>
             </div>
 
@@ -97,7 +100,7 @@
                 <div class="d-flex gap-2">
                     @if (!string.IsNullOrEmpty(Model.StoreSlug) && !string.IsNullOrEmpty(Model.CompanySlug))
                     {
-                        <a href="/@Model.CompanySlug/@Model.StoreSlug/menu"
+                        <a href="/@Model.CompanySlug/@Model.StoreSlug"
                            target="_blank"
                            class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-eye me-1"></i> Önizleme
@@ -109,7 +112,7 @@
                             <i class="fas fa-eye me-1"></i> Önizleme
                         </button>
                     }
-                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" class="btn btn-sm btn-primary">
+                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" class="btn btn-sm btn-success border border-success">
                         <i class="fas fa-plus me-1"></i> Kategori Ekle
                     </a>
                 </div>
@@ -139,14 +142,14 @@
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2 text-nowrap">
-                                         <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" asp-route-parentId="@category.Id" class="btn btn-sm btn-light text-success" title="Alt Kategori Ekle">
+                                         <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" asp-route-parentId="@category.Id" class="btn btn-sm bg-white text-success border border-success" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id" class="btn btn-sm btn-light text-secondary" title="Ürünler ve Detaylar">
+                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id" class="btn btn-sm bg-white text-secondary border border-secondary" title="Ürünler ve Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" id="deleteCategory-@category.Id">
-                                            <button type="button" class="btn btn-sm btn-light text-danger" onclick="TumMenuAlerts.confirm('Bu kategoriyi kaldırmak istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Kaldır!').then(res => { if(res) document.getElementById('deleteCategory-@category.Id').submit(); })">
+                                            <button type="button" class="btn btn-sm bg-white text-danger border border-danger" onclick="TumMenuAlerts.confirm('Bu kategoriyi kaldırmak istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Kaldır!').then(res => { if(res) document.getElementById('deleteCategory-@category.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>

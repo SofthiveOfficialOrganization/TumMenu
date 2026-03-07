@@ -1,4 +1,4 @@
-﻿@using Application.Common.Base.DTOs
+@using Application.Common.Base.DTOs
 @using Application.Companies.DTOs
 @model PaginatedListDTO<CompanyDTO>
 
@@ -17,7 +17,7 @@
                         <input type="text" name="Search" class="form-control me-2" placeholder="Şirket ara..." value="@Context.Request.Query["Search"]">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </form>
-                    <a asp-action="Create" class="btn btn-primary">
+                    <a asp-action="Create" class="btn btn-success border border-success">
                         <i class="fas fa-plus me-2"></i> Şirket Ekle
                     </a>
                 </div>
@@ -60,16 +60,16 @@
                                         <a asp-controller="Store" asp-action="Index" asp-route-companyId="@item.Id" class="btn btn-sm btn-light text-info me-2" title="Dükkanlar">
                                             <i class="fas fa-store"></i>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm bg-white text-secondary border border-secondary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light text-success me-2" title="Düzenle">
+                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm bg-white text-primary border border-primary me-2" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
                                             @Html.AntiForgeryToken()
-                                            <button type="button" class="btn btn-sm btn-light text-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu Şirketi Silmek İstediğinize Emin Misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
+                                            <button type="button" class="btn btn-sm bg-white text-danger border border-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu Şirketi Silmek İstediğinize Emin Misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
