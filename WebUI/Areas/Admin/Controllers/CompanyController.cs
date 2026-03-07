@@ -159,7 +159,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet("[action]")]
-    public async Task<IActionResult> Search(string? term, int page = 0, int pageSize = 10, CancellationToken ct = default)
+    public async Task<IActionResult> Search(string? term, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = new GetCompanyListForSearchQuery
         {

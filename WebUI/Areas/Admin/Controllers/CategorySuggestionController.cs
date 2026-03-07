@@ -12,7 +12,7 @@ public class CategorySuggestionController(IMediator mediator) : Controller
 {
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> Index(int? status, int page = 0, int pageSize = 12, CancellationToken ct = default)
+    public async Task<IActionResult> Index(int? status, int page = 1, int pageSize = 12, CancellationToken ct = default)
     {
         // Tüm Pending önerileri Viewed yap
         await mediator.Send(new MarkSuggestionsViewedCommand(), ct);
