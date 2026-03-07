@@ -109,6 +109,12 @@
                             <span>Ürünlerim</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("MyQR", "QRManagement", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "QRManagement" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-qrcode"></i></div>
+                            <span>Qr'larım</span>
+                        </a>
+                    </li>
 
                 }
                 @if (User.IsInRole("Admin"))
@@ -173,6 +179,15 @@
                         </button>
                     </form>
                 </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "QRManagement", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "QRManagement" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-qrcode"></i></div>
+                            <span>QR Yönetimi</span>
+                        </a>
+                    </li>
+                }
             </ul>
         </aside>
         }

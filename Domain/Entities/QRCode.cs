@@ -13,6 +13,7 @@ namespace Domain.Entities
 
         public QRResolveMode ResolveMode { get; set; } = QRResolveMode.LatestActive;
         [MaxLength(2048)] public string? TargetUrl { get; set; } // if static url
+        [MaxLength(255)] public string? BaseDomain { get; set; } // Custom domain for QR
         public Guid? MenuId { get; set; } // if static menu
 
         public bool IsActive { get; set; } = true;

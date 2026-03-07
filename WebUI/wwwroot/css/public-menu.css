@@ -304,3 +304,51 @@
   display: block;
   margin-bottom: 12px;
 }
+
+/* ── AD SLOTS ── */
+.pm-ad-slot {
+  margin: 24px 0;
+  padding: 16px;
+  background: #fff;
+  border: 1px dashed var(--pm-border);
+  border-radius: var(--pm-radius);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pm-ad-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--pm-border);
+  color: var(--pm-muted);
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-bottom-left-radius: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pm-ad-placeholder {
+  color: var(--pm-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.pm-ad-slot--qr {
+  border: 1px solid var(--pm-brand);
+  background: #fdfdfd;
+}
+
+@media (max-width: 600px) {
+  .pm-ad-slot {
+    margin: 16px 0;
+    min-height: 80px;
+  }
+}

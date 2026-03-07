@@ -28,7 +28,7 @@
 
             <div class="pm-view active">
                 <div class="pm-view-header">
-                    <a href="@backUrl" class="pm-btn-back">
+                    <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
@@ -36,6 +36,17 @@
                     </a>
                     <h2 class="pm-view-title mb-0">@Model.CategoryTitle</h2>
                 </div>
+
+                @if (ViewBag.IsQrSource == true)
+                {
+                    <div class="pm-ad-slot pm-ad-slot--qr">
+                        <span class="pm-ad-label">Sponsorlu</span>
+                        <div class="pm-ad-placeholder">
+                            <p>Reklam Alanı</p>
+                            <small>QR menü destekçimiz olun.</small>
+                        </div>
+                    </div>
+                }
 
                 @if (!string.IsNullOrEmpty(Model.CategoryDescription))
                 {
@@ -49,6 +60,7 @@
                         @foreach (var subCat in Model.SubCategories)
                         {
                             var subCategoryUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{subCat.Slug}";
+                            if (ViewBag.IsQrSource == true) subCategoryUrl += "?isQr=true";
                             <a href="@subCategoryUrl" class="pm-cat-card pm-cat-card--link">
                                 <div class="pm-cat-card-photo">
                                     <div class="pm-cat-card-photo-placeholder">
@@ -71,6 +83,7 @@
                         @foreach (var product in Model.Products)
                         {
                             var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
+                            if (ViewBag.IsQrSource == true) productUrl += "?isQr=true";
                             <a href="@productUrl" class="pm-product-card pm-product-card--link">
                                 @if (!string.IsNullOrEmpty(product.ImageUrl))
                                 {

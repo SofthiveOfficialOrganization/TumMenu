@@ -28,7 +28,7 @@
 
             <div class="pm-view active">
                 <div class="pm-view-header">
-                    <a href="@backUrl" class="pm-btn-back">
+                    <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
@@ -36,6 +36,17 @@
                     </a>
                     <h2 class="pm-view-title mb-0">@Model.ProductTitle</h2>
                 </div>
+
+                @if (ViewBag.IsQrSource == true)
+                {
+                    <div class="pm-ad-slot pm-ad-slot--qr">
+                        <span class="pm-ad-label">Sponsorlu</span>
+                        <div class="pm-ad-placeholder">
+                            <p>Reklam Alanı</p>
+                            <small>QR menü destekçimiz olun.</small>
+                        </div>
+                    </div>
+                }
 
                 <!-- Ürün Görselleri -->
                 @if (Model.ImageUrls.Count > 0)

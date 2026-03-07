@@ -55,4 +55,6 @@ public sealed class EfRepository<T>(ApplicationDbContext ctx) : IRepository<T> w
 		expression is null
 			? Query().AnyAsync(ct)
 			: Query().AnyAsync(expression, ct);
+
+	public Task<int> SaveChangesAsync(CancellationToken ct = default) => ctx.SaveChangesAsync(ct);
 }

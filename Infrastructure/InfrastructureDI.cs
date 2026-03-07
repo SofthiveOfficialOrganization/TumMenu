@@ -15,6 +15,7 @@ namespace Infrastructure
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddHttpContextAccessor();
+			services.AddMemoryCache();
 
 			services.AddScoped<IUserContext, HttpUserContext>();
 			services.AddScoped<AuditInterceptor>();

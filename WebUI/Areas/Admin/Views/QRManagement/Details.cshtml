@@ -1,0 +1,116 @@
+@model Application.QRs.Queries.MyQRDTO
+@{
+    ViewData["Title"] = $"{Model.StoreTitle} - QR Kod";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a href="@Url.Action("MyQR", "QRManagement", new { area = "Admin" })" class="btn btn-light rounded-circle me-3" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div>
+        <h2 class="horizon-text-primary fw-bold mb-0">@Model.StoreTitle</h2>
+        <p class="text-secondary mb-0">@Model.CompanyTitle</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- QR Kod Sol Taraf -->
+    <div class="col-md-6">
+        <div class="horizon-card h-100 d-flex flex-column align-items-center justify-content-center text-center p-md-5 p-4">
+            <h3 class="horizon-text-primary mb-4 fw-bold">Dijital QR Menünüz</h3>
+            
+            <div class="qr-box p-4 bg-white rounded-4 shadow-sm mb-4" style="border: 1px solid #E0E5F2;">
+                @{
+                    // Use BaseDomain if set, otherwise use current request host
+                    var baseUrl = string.IsNullOrWhiteSpace(Model.BaseDomain) 
+                        ? $"{Context.Request.Scheme}://{Context.Request.Host}" 
+                        : Model.BaseDomain.TrimEnd('/');
+                    var fullUrl = $"{baseUrl}{Model.PublicUrl}";
+                }
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=@Uri.EscapeDataString(fullUrl)" 
+                     alt="QR Code" class="img-fluid" style="width: 250px; height: 250px;" />
+            </div>
+
+            <p class="text-secondary mb-4 px-lg-4">
+                Müşterileriniz bu kodu taratarak menünüze anında ulaşabilir.
+            </p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-3 w-100">
+                <button class="btn btn-primary px-4 py-3 shadow-none" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i> Yazdır / İndir
+                </button>
+                <a href="@fullUrl" target="_blank" class="btn btn-light px-4 py-3 shadow-none border-1">
+                    <i class="fas fa-external-link-alt me-2"></i> Menüyü Gör
+                </a>
+            </div>
+            
+            <div class="mt-4">
+                <small class="text-muted">Yönlendirme: @fullUrl</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Tasarım Sağ Taraf -->
+    <div class="col-md-6">
+        <div class="horizon-card h-100 position-relative overflow-hidden p-md-5 p-4 d-flex flex-column align-items-center justify-content-center text-center border-0">
+            
+            <div class="ai-content-wrapper">
+                 <div class="mb-4">
+                    <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="fas fa-magic fa-2x"></i>
+                    </span>
+                </div>
+                <h3 class="horizon-text-primary mb-3 fw-bold">Özel Yapay Zeka QR Tasarımı</h3>
+                
+                <div class="my-5 position-relative" style="z-index: 10;">
+                    <div class="ai-badge py-3 px-4 d-inline-block rounded-pill shadow-lg text-white fw-bold h3 mb-0" style="background: var(--horizon-primary); transform: rotate(-5deg); box-shadow: 0 15px 35px rgba(67, 24, 255, 0.3) !important;">
+                        Çok Yakında!
+                    </div>
+                </div>
+
+                <p class="text-secondary px-lg-5 mt-4">
+                    İşletmenizin ruhunu yansıtan, logonuzla uyumlu ve sanatsal QR kod tasarımları çok yakında burada olacak.
+                </p>
+                
+                <div class="mt-5 w-100">
+                     <div class="row g-3">
+                        <div class="col-4"><div class="rounded-4" style="height: 80px; background: rgba(0,0,0,0.05);"></div></div>
+                        <div class="col-4"><div class="rounded-4" style="height: 80px; background: rgba(0,0,0,0.05);"></div></div>
+                        <div class="col-4"><div class="rounded-4" style="height: 80px; background: rgba(0,0,0,0.05);"></div></div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Coming Soon Overlay (Blur only) -->
+            <div class="ai-overlay d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100" style="background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(1px); z-index: 5; pointer-events: none;">
+                <!-- Badge moved into static content for better overlap control -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .horizon-sidebar, .horizon-navbar, .horizon-footer, .horizon-hamburger, .col-md-6:last-child, .btn, .mt-4, h2.horizon-text-primary, .btn-light.rounded-circle {
+            display: none !important;
+        }
+        .horizon-main {
+            margin-left: 0 !important;
+            padding: 0 !important;
+        }
+        .col-md-6 {
+            width: 100% !important;
+        }
+        .horizon-card {
+            box-shadow: none !important;
+            border: none !important;
+        }
+        body {
+            background: white !important;
+        }
+    }
+    
+    html.dark-mode .ai-overlay {
+        background: rgba(17, 28, 68, 0.5) !important;
+    }
+</style>

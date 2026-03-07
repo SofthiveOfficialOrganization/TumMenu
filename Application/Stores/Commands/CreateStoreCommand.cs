@@ -20,7 +20,8 @@ public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest
 public class CreateStoreCommandHandler(
 	IRepository<Store> repoStore,
 	IMapper mapper,
-	IRepository<Company> repoCompany
+	IRepository<Company> repoCompany,
+    IMediator mediator
 ) : IRequestHandler<CreateStoreCommand, StoreDTO>
 {
 	public async Task<StoreDTO> Handle(CreateStoreCommand req, CancellationToken ct)
@@ -31,7 +32,11 @@ public class CreateStoreCommandHandler(
 
 		var store = mapper.Map<Store>(req);
 		await repoStore.AddAsync(store, ct);
-		var storeDTO = mapper.Map<StoreDTO>(store);
+
+        // Generate QR Code automatically
+        await mediator.Send(new Application.QRs.Commands.GenerateQRCodeCommand(store.Id), ct);
+        
+        var storeDTO = mapper.Map<StoreDTO>(store);
 		return storeDTO;
 	}
 }

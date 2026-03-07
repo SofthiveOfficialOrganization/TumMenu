@@ -14,4 +14,5 @@ public interface IRepository<T> where T : class
 	void SoftDelete(T entity);
 	Task<IPaginate<T>> GetPageListAsync(PageRequest request, Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object?>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = true, bool splitQuery = false, CancellationToken ct = default);
 	Task<bool> ExistsAsync(Expression<Func<T, bool>>? expression = null, CancellationToken ct = default);
+	Task<int> SaveChangesAsync(CancellationToken ct = default);
 }
