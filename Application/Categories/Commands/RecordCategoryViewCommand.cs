@@ -5,69 +5,67 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Application.QRs.Commands;
+namespace Application.Categories.Commands;
 
-public record RecordQRScanCommand(
-    Guid QRCodeId,
+public record RecordCategoryViewCommand(
+    Guid CategoryId,
     string UserAgent,
-    string IpAddress,
-    string? Referrer
+    string IpAddress
 ) : IRequest;
 
-public class RecordQRScanCommandHandler(
-    IRepository<QRScanEvent> repoScan,
-    IRepository<QRDailyStats> repoStats,
+public class RecordCategoryViewCommandHandler(
+    IRepository<CategoryViewEvent> repoEvent,
+    IRepository<CategoryDailyStats> repoStats,
     IUnitOfWork uow
-) : IRequestHandler<RecordQRScanCommand>
+) : IRequestHandler<RecordCategoryViewCommand>
 {
-    public async Task Handle(RecordQRScanCommand req, CancellationToken ct)
+    public async Task Handle(RecordCategoryViewCommand req, CancellationToken ct)
     {
         var now = DateTime.UtcNow.AddHours(3); // Turkey Time
         var today = DateOnly.FromDateTime(now);
         var ipAddress = string.IsNullOrWhiteSpace(req.IpAddress) ? "unknown" : req.IpAddress;
         var ipHash = HashIP(ipAddress);
 
-        // 1. Create Scan Event
-        var scanEvent = new QRScanEvent
+        // 1. Create View Event
+        var viewEvent = new CategoryViewEvent
         {
-            QRCodeId = req.QRCodeId,
-            ScannedAt = now,
+            CategoryId = req.CategoryId,
+            ViewedAt = now,
             UserAgent = req.UserAgent ?? "unknown",
             IpHash = ipHash,
-            Referrer = req.Referrer,
             DeviceType = DetectDeviceType(req.UserAgent ?? "")
         };
 
-        await repoScan.AddAsync(scanEvent, ct);
+        await repoEvent.AddAsync(viewEvent, ct);
 
-        // 2. Update Daily Stats (Simple increment or unique check)
+        // 2. Update Daily Stats
         var stats = await repoStats.Query(tracked: true)
-            .FirstOrDefaultAsync(s => s.QRCodeId == req.QRCodeId && s.Day == today, ct);
+            .FirstOrDefaultAsync(s => s.CategoryId == req.CategoryId && s.Day == today, ct);
 
         if (stats == null)
         {
-            stats = new QRDailyStats
+            stats = new CategoryDailyStats
             {
-                QRCodeId = req.QRCodeId,
+                CategoryId = req.CategoryId,
                 Day = today,
-                Scans = 1,
+                Views = 1,
                 UniqueIps = 1
             };
             await repoStats.AddAsync(stats, ct);
         }
         else
         {
-            stats.Scans++;
+            stats.Views++;
             
-            // Check if this IP has scanned today for this QR
+            // Check if this IP has viewed this category today
             var startOfToday = today.ToDateTime(TimeOnly.MinValue); // This is TR date start
-            var alreadyScannedToday = await repoScan.Query(tracked: false)
-                .AnyAsync(s => s.QRCodeId == req.QRCodeId 
-                            && s.IpHash == ipHash 
-                            && s.ScannedAt >= startOfToday
-                            && s.Id != scanEvent.Id, ct);
+            var alreadyViewedToday = await repoEvent.Query(tracked: false)
+                .AnyAsync(v => v.CategoryId == req.CategoryId 
+                            && v.IpHash == ipHash 
+                            && v.ViewedAt >= startOfToday
+                            && v.Id != viewEvent.Id, ct);
 
-            if (!alreadyScannedToday)
+            if (!alreadyViewedToday)
             {
                 stats.UniqueIps++;
             }

@@ -166,6 +166,12 @@
                 }
 
                 <li class="horizon-menu-item">
+                    <a href="@Url.Action("Index", "Analysis", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Analysis" ? "active" : "")">
+                        <div class="horizon-menu-icon"><i class="fas fa-chart-line"></i></div>
+                        <span>Analizler</span>
+                    </a>
+                </li>
+                <li class="horizon-menu-item">
                     <a asp-area="Identity" asp-page="/Account/Manage/Index" class="horizon-menu-link @(ViewContext.RouteData.Values["Area"]?.ToString() == "Identity" && ViewContext.RouteData.Values["Page"]?.ToString()?.StartsWith("/Account/Manage") == true ? "active" : "")">
                         <div class="horizon-menu-icon"><i class="fas fa-user"></i></div>
                         <span>Profil</span>

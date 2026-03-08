@@ -86,10 +86,6 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
     name: "publicProduct",
     pattern: "{companySlug}/{storeSlug}/{categorySlug}/{productSlug}",
     defaults: new { controller = "Menu", action = "Product" });
@@ -103,6 +99,10 @@ app.MapControllerRoute(
     name: "publicStore",
     pattern: "{companySlug}/{storeSlug}",
     defaults: new { controller = "Menu", action = "Index" });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

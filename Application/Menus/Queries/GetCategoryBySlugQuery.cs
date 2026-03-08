@@ -20,7 +20,9 @@ public sealed class CategoryPageDTO
 	public string CompanyName { get; set; } = null!;
 	public string CategorySlug { get; set; } = null!;
 	public string CategoryTitle { get; set; } = null!;
+	public Guid CategoryId { get; set; }
 	public string? CategoryDescription { get; set; }
+	public string? ParentCategorySlug { get; set; }
 	public List<CategoryProductItemDTO> Products { get; set; } = [];
 	public List<CategorySubCategoryItemDTO> SubCategories { get; set; } = [];
 }
@@ -61,6 +63,10 @@ public class GetCategoryBySlugHandler(
 				.ThenInclude(c => c.CategoryLibraryItem)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
+				.ThenInclude(c => c.Parent)
+					.ThenInclude(p => p != null ? p.CategoryLibraryItem : null)
+			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
+				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.Products.Where(p => p.IsActive))
 				.ThenInclude(p => p.Medias)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active)) // Include SubCategories
@@ -97,7 +103,9 @@ public class GetCategoryBySlugHandler(
 			CompanyName = store.Company.Title,
 			CategorySlug = category.CategoryLibraryItem.Slug,
 			CategoryTitle = category.CategoryLibraryItem.Title,
+			CategoryId = category.Id,
 			CategoryDescription = category.CategoryLibraryItem.Description,
+			ParentCategorySlug = category.Parent?.CategoryLibraryItem.Slug,
 			Products = category.Products
 				.Where(p => p.IsActive)
 				.OrderBy(p => p.SortOrder)

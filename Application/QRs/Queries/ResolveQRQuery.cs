@@ -37,29 +37,34 @@ public class ResolveQRQueryHandler(
             throw new Application.Common.Exceptions.NotFoundAppException("QR kod bulunamadı veya pasif.");
         }
 
-        string targetUrl;
-
+        string path = "";
         switch (qr.ResolveMode)
         {
             case QRResolveMode.StaticUrl:
-                targetUrl = qr.TargetUrl ?? "/";
+                path = qr.TargetUrl ?? "/";
                 break;
 
             case QRResolveMode.StaticMenu:
-                targetUrl = BuildStoreUrl(qr.Store);
-                if (qr.MenuId.HasValue) targetUrl += $"?menuId={qr.MenuId}";
+                path = BuildStoreUrl(qr.Store);
+                if (qr.MenuId.HasValue) path += $"?menuId={qr.MenuId}";
                 break;
 
             case QRResolveMode.LatestActive:
             default:
-                targetUrl = BuildStoreUrl(qr.Store);
+                path = BuildStoreUrl(qr.Store);
                 break;
         }
 
-        if (targetUrl.Contains("?"))
-            targetUrl += "&isQr=true";
+        if (path.Contains("?"))
+            path += "&isQr=true";
         else
-            targetUrl += "?isQr=true";
+            path += "?isQr=true";
+
+        string targetUrl = path;
+        if (!string.IsNullOrWhiteSpace(qr.BaseDomain))
+        {
+            targetUrl = $"{qr.BaseDomain.TrimEnd('/')}{path}";
+        }
 
         var result = new QRRedirectResult(targetUrl, qr.Id);
 

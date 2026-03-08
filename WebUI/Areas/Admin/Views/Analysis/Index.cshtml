@@ -1,0 +1,382 @@
+@using Application.QRs.Queries
+@{
+    ViewData["Title"] = "Analizler";
+    var stores = ViewBag.Stores as List<MyQRDTO> ?? new List<MyQRDTO>();
+}
+
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <div class="dropdown">
+            <h2 class="fw-bold d-inline-block cursor-pointer dropdown-toggle" id="analysisTypeDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--horizon-primary);">
+                QR Analizi
+            </h2>
+            <ul class="dropdown-menu border-0 shadow-lg p-3" aria-labelledby="analysisTypeDropdown" style="border-radius: 15px;">
+                <li><a class="dropdown-item py-2 fw-medium rounded-3 active" href="#" onclick="changeAnalysisType('QR', 'QR Analizi', this)">QR Analizi</a></li>
+                <li><a class="dropdown-item py-2 fw-medium rounded-3" href="#" onclick="changeAnalysisType('Category', 'Kategori Analizi', this)">Kategori Analizi</a></li>
+                <li><a class="dropdown-item py-2 fw-medium rounded-3" href="#" onclick="changeAnalysisType('Product', 'Ürün Analizi', this)">Ürün Analizi</a></li>
+                <li><a class="dropdown-item py-2 fw-medium rounded-3 text-muted" href="#" onclick="TumMenuAlerts.toast('info', 'Müşteri analizi yakında eklenecek!')">Müşteri Analizi</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <div class="d-inline-block text-start">
+             <label class="small text-secondary fw-bold mb-1">Dükkan Filtresi</label>
+             <select id="storeFilter" class="form-select border-0 shadow-sm" onchange="changeStore()" style="border-radius: 12px; min-width: 200px; background-color: var(--horizon-card-bg);">
+                 <option value="">Tüm Dükkanlar</option>
+                 @foreach (var store in stores)
+                 {
+                     <option value="@store.StoreId">@store.StoreTitle</option>
+                 }
+             </select>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h4 class="fw-bold mb-0" id="chartTitle">Okutma İstatistikleri</h4>
+                
+                <div class="btn-group horizon-filter-group" role="group">
+                    <button type="button" class="btn btn-sm btn-light" onclick="changeGranularity('Hourly', this)">Saatlik</button>
+                    <button type="button" class="btn btn-sm btn-light" onclick="changeGranularity('Daily', this)">Günlük</button>
+                    <button type="button" class="btn btn-sm btn-light" onclick="changeGranularity('Weekly', this)">Haftalık</button>
+                    <button type="button" class="btn btn-sm btn-light active" onclick="changeGranularity('Monthly', this)">Aylık</button>
+                    <button type="button" class="btn btn-sm btn-light" onclick="changeGranularity('Yearly', this)">Yıllık</button>
+                </div>
+            </div>
+            
+            <div style="height: 400px; position: relative;">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="topItemsSection" style="display: none;">
+    <div class="col-12">
+        <div class="horizon-card">
+            <h4 class="fw-bold mb-4" id="topItemsTitle">En Çok Görüntülenenler</h4>
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <div style="height: 350px;">
+                        <canvas id="rankingChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle">
+                            <thead>
+                                <tr class="text-secondary small text-uppercase">
+                                    <th>Başlık</th>
+                                    <th class="text-end">Görüntüleme</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topItemsBody">
+                                <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4" id="storeBreakdownSection">
+    <div class="col-md-12">
+        <div class="horizon-card">
+            <h4 class="fw-bold mb-4">Dükkan Bazlı Dağılım (Genel)</h4>
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <div style="height: 350px;">
+                        <canvas id="storeChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle">
+                            <thead>
+                                <tr class="text-secondary small text-uppercase">
+                                    <th>Dükkan İsmi</th>
+                                    <th class="text-end">Toplam Okutma</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storeBreakdownBody">
+                                <tr>
+                                    <td colspan="2" class="text-center py-4 text-secondary">Yükleniyor...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let mainChart = null;
+        let rankingChart = null;
+        let storeChart = null;
+        let currentAnalysisType = 'QR';
+        let currentGranularity = 'Monthly';
+        let currentStoreId = '';
+
+        $(document).ready(function() {
+            loadStats();
+            loadStoreBreakdown();
+        });
+
+        function changeAnalysisType(type, title, el) {
+            currentAnalysisType = type;
+            $('#analysisTypeDropdown').text(title);
+            $('.dropdown-item').removeClass('active');
+            $(el).addClass('active');
+
+            // Update UI based on type
+            if (type === 'QR') {
+                $('#chartTitle').text('Okutma İstatistikleri');
+                $('#topItemsSection').hide();
+                $('#storeBreakdownSection').show();
+            } else {
+                $('#chartTitle').text(type === 'Product' ? 'Ürün Görüntüleme İstatistikleri' : 'Kategori Görüntüleme İstatistikleri');
+                $('#topItemsTitle').text(type === 'Product' ? 'En Çok Görüntülenen 10 Ürün' : 'En Çok Görüntülenen 10 Kategori');
+                $('#topItemsSection').show();
+                $('#storeBreakdownSection').hide();
+            }
+
+            loadStats();
+        }
+
+        function changeStore() {
+            currentStoreId = $('#storeFilter').val();
+            loadStats();
+        }
+
+        function changeGranularity(granularity, btn) {
+            currentGranularity = granularity;
+            $('.horizon-filter-group .btn').removeClass('active');
+            $(btn).addClass('active');
+            loadStats();
+        }
+
+        function loadStats() {
+            let url = '';
+            if (currentAnalysisType === 'QR') {
+                url = '@Url.Action("GetQRStats", "Analysis", new { area = "Admin" })';
+            } else if (currentAnalysisType === 'Product') {
+                url = '@Url.Action("GetProductStats", "Analysis", new { area = "Admin" })';
+            } else if (currentAnalysisType === 'Category') {
+                url = '@Url.Action("GetCategoryStats", "Analysis", new { area = "Admin" })';
+            }
+
+            $.get(url, { 
+                granularity: currentGranularity,
+                storeId: currentStoreId 
+            }, function(response) {
+                if (currentAnalysisType === 'QR') {
+                    renderChart(response, 'Okutma Sayısı');
+                } else {
+                    renderChart(response.chartData, 'Görüntüleme Sayısı');
+                    renderTopItems(response);
+                }
+            });
+        }
+
+        function renderTopItems(response) {
+            let items = currentAnalysisType === 'Product' ? response.topProducts : response.topCategories;
+            
+            // 1. Render Table
+            let html = '';
+            if (!items || items.length === 0) {
+                html = '<tr><td colspan="2" class="text-center py-4 text-secondary">Veri bulunamadı.</td></tr>';
+            } else {
+                items.forEach(item => {
+                    html += `
+                        <tr>
+                            <td class="fw-bold">${item.title}</td>
+                            <td class="text-end fw-bold">${item.views.toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+            }
+            $('#topItemsBody').html(html);
+
+            // 2. Render Bar Chart
+            renderRankingChart(items);
+        }
+
+        function loadStoreBreakdown() {
+            $.get('@Url.Action("GetStoreBreakdown", "Analysis", new { area = "Admin" })', function(data) {
+                // 1. Render Table
+                let html = '';
+                if (data.length === 0) {
+                    html = '<tr><td colspan="2" class="text-center py-4 text-secondary">Dükkan bulunamadı.</td></tr>';
+                } else {
+                    data.forEach(item => {
+                        html += `
+                            <tr>
+                                <td class="fw-bold">${item.storeTitle}</td>
+                                <td class="text-end fw-bold">${item.totalScans.toLocaleString()}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                $('#storeBreakdownBody').html(html);
+
+                // 2. Render Bar Chart
+                renderStoreChart(data);
+            });
+        }
+
+        function renderRankingChart(items) {
+            const ctx = document.getElementById('rankingChart').getContext('2d');
+            const labels = items.map(i => i.title);
+            const values = items.map(i => i.views);
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--horizon-primary').trim() || '#4318FF';
+
+            if (rankingChart) rankingChart.destroy();
+
+            rankingChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Görüntüleme Sayısı',
+                        data: values,
+                        backgroundColor: primaryColor + 'cc',
+                        borderRadius: 8,
+                        barThickness: 25
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { precision: 0 } },
+                        y: { grid: { display: false }, ticks: { color: '#A3AED0', font: { weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        function renderStoreChart(data) {
+            const ctx = document.getElementById('storeChart').getContext('2d');
+            const labels = data.map(i => i.storeTitle);
+            const values = data.map(i => i.totalScans);
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--horizon-primary').trim() || '#4318FF';
+
+            if (storeChart) storeChart.destroy();
+
+            storeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Toplam Okutma',
+                        data: values,
+                        backgroundColor: '#01B574cc', // Nice green for store breakdown
+                        borderRadius: 8,
+                        barThickness: 25
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { precision: 0 } },
+                        y: { grid: { display: false }, ticks: { color: '#A3AED0', font: { weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        function renderChart(data, label) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            const labels = data.map(item => item.label);
+            const values = data.map(item => item.value);
+
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--horizon-primary').trim() || '#4318FF';
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, primaryColor + '66');
+            gradient.addColorStop(1, primaryColor + '00');
+
+            if (mainChart) {
+                mainChart.destroy();
+            }
+
+            mainChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: values,
+                        borderColor: primaryColor,
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: primaryColor,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1B254B',
+                            titleColor: '#fff',
+                            padding: 12,
+                            cornerRadius: 10,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(163, 174, 208, 0.1)', drawBorder: false },
+                            ticks: { color: '#A3AED0', font: { size: 12 }, precision: 0 }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#A3AED0', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        $('#theme-toggle').on('click', function() {
+            setTimeout(loadStats, 100);
+        });
+    </script>
+}
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .dropdown-toggle::after { vertical-align: middle; margin-left: 10px; }
+    #analysisTypeDropdown { transition: opacity 0.2s; }
+    #analysisTypeDropdown:hover { opacity: 0.8; }
+    .dropdown-item.active { background-color: rgba(67, 24, 255, 0.1); color: var(--horizon-primary) !important; }
+    .dropdown-item:hover:not(.active) { background-color: #f4f7fe; }
+    .horizon-filter-group { background-color: var(--horizon-bg); padding: 5px; border-radius: 12px; }
+    .horizon-filter-group .btn { border: none !important; border-radius: 10px !important; background: transparent !important; color: var(--horizon-text-secondary); font-weight: 600; padding: 6px 12px; font-size: 13px; }
+    .horizon-filter-group .btn.active { background-color: var(--horizon-card-bg) !important; color: var(--horizon-primary) !important; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); }
+    #storeFilter:focus { box-shadow: 0 0 0 2px var(--horizon-primary) !important; }
+</style>

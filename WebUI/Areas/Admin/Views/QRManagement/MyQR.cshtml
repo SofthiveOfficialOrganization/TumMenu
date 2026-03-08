@@ -1,64 +1,100 @@
 @model List<Application.QRs.Queries.MyQRDTO>
 @{
-    ViewData["Title"] = "Qr Tasarımlarım";
+    ViewData["Title"] = "QR Tasarımlarım";
 }
 
 <div class="horizon-card mb-4">
-    <div class="mb-4">
-        <h2 class="horizon-text-primary fw-bold mb-1">Qr Tasarımlarım</h2>
-        <p class="text-secondary mb-0">Tüm dükkanlarınıza ait özel QR kodlarını buradan yönetebilirsiniz.</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1 border-bottom-0">Dükkan QR Yönetimi</h4>
+            <p class="text-secondary small mb-0">Tüm dükkanlarınıza ait QR kodlarını ve yönlendirme adreslerini buradan takip edebilirsiniz.</p>
+        </div>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table table-borderless align-middle table-hover">
             <thead>
-                <tr>
-                    <th>Dükkan / Şirket</th>
+                <tr class="text-secondary small text-uppercase border-bottom">
+                    <th class="ps-3">Şirket / Dükkan</th>
                     <th>QR Anahtarı</th>
-                    <th>Yönlendirme URL</th>
-                    <th>Domain</th>
-                    <th class="text-end">İşlemler</th>
+                    <th class="d-none d-lg-table-cell">Yönlendirme URL</th>
+                    <th class="d-none d-md-table-cell">Domain</th>
+                    <th class="text-center">İşlemler</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null && Model.Any())
                 {
-                    <tr>
-                        <td>
-                            <div class="fw-bold">@item.StoreTitle</div>
-                            <div class="small text-secondary">@item.CompanyTitle</div>
-                        </td>
-                        <td>
-                            <code class="bg-light px-2 py-1 rounded">@item.QRKey</code>
-                        </td>
-                        <td>
-                            @{
-                                var baseUrl = string.IsNullOrWhiteSpace(item.BaseDomain) 
-                                    ? $"{Context.Request.Scheme}://{Context.Request.Host}" 
-                                    : item.BaseDomain.TrimEnd('/');
-                                var fullUrl = $"{baseUrl}{item.PublicUrl}";
-                            }
-                            <div class="text-truncate" style="max-width: 250px;" title="@fullUrl">
-                                @fullUrl
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge @(string.IsNullOrEmpty(item.BaseDomain) ? "bg-secondary" : "bg-info text-dark")">
-                                @(item.BaseDomain ?? "Default")
-                            </span>
-                        </td>
-                        <td class="text-end">
-                            <a href="@Url.Action("StoreDetails", "QRManagement", new { area = "Admin", storeId = item.StoreId })" class="btn btn-primary btn-sm rounded-pill px-3 shadow-none">
-                                <i class="fas fa-eye me-1"></i> Detayı Gör
-                            </a>
-                        </td>
-                    </tr>
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="horizon-avatar bg-light text-primary me-3">
+                                        @if (!string.IsNullOrEmpty(item.StoreTitle))
+                                        {
+                                            @item.StoreTitle.Substring(0, 1).ToUpper()
+                                        }
+                                        else
+                                        {
+                                            <span>?</span>
+                                        }
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">@item.StoreTitle</div>
+                                        <small class="text-muted"><i class="fas fa-building me-1 small"></i> @item.CompanyTitle</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <code class="bg-light text-primary px-2 py-1 rounded small border">@item.QRKey</code>
+                            </td>
+                            <td class="d-none d-lg-table-cell">
+                                @{
+                                    var baseUrl = string.IsNullOrWhiteSpace(item.BaseDomain) 
+                                        ? $"{Context.Request.Scheme}://{Context.Request.Host}" 
+                                        : item.BaseDomain.TrimEnd('/');
+                                    var fullUrl = $"{baseUrl}{item.PublicUrl}";
+                                }
+                                <div class="text-truncate text-secondary small" style="max-width: 200px;" title="@fullUrl">
+                                    @fullUrl
+                                </div>
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                @if (string.IsNullOrEmpty(item.BaseDomain))
+                                {
+                                    <span class="badge bg-light text-secondary border">Varsayılan</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-info border">@item.BaseDomain</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a href="@fullUrl" target="_blank" class="btn btn-sm bg-white text-secondary border border-secondary" title="Menüyü Gör" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                    <a href="@Url.Action("StoreDetails", "QRManagement", new { area = "Admin", storeId = item.StoreId })" class="btn btn-sm bg-white text-primary border border-primary px-3" title="Detay & Tasarım" style="height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-magic me-1"></i> <span class="d-none d-md-inline">Detay</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 }
-                @if (!Model.Any())
+                else
                 {
                     <tr>
                         <td colspan="5" class="text-center py-5 text-secondary">
-                            Henüz bir dükkan veya QR kodu bulunmuyor.
+                            <div class="mb-3">
+                                <span class="fa-stack fa-2x">
+                                    <i class="fas fa-circle fa-stack-2x text-light"></i>
+                                    <i class="fas fa-qrcode fa-stack-1x text-secondary opacity-50"></i>
+                                </span>
+                            </div>
+                            <h5>Henüz QR kodu bulunmuyor</h5>
+                            <p class="small text-muted">Yönetilecek bir dükkan veya QR kodu bulunamadı.</p>
                         </td>
                     </tr>
                 }

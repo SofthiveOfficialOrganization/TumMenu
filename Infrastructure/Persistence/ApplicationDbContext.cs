@@ -45,6 +45,10 @@ namespace Infrastructure.Persistence
 		public DbSet<QRCode> QRCodes => Set<QRCode>();
 		public DbSet<QRScanEvent> QRScanEvents => Set<QRScanEvent>();
 		public DbSet<QRDailyStats> QRDailyStats => Set<QRDailyStats>();
+		public DbSet<ProductViewEvent> ProductViewEvents => Set<ProductViewEvent>();
+		public DbSet<ProductDailyStats> ProductDailyStats => Set<ProductDailyStats>();
+		public DbSet<CategoryViewEvent> CategoryViewEvents => Set<CategoryViewEvent>();
+		public DbSet<CategoryDailyStats> CategoryDailyStats => Set<CategoryDailyStats>();
 
 		// Billing / subscriptions
 		public DbSet<Plan> Plans => Set<Plan>();
@@ -466,6 +470,34 @@ namespace Infrastructure.Persistence
 			// AuditLog
 			builder.Entity<AuditLog>()
 				.HasIndex(a => a.CreatedAt);
+
+			// Product Analytics
+			builder.Entity<ProductViewEvent>(e =>
+			{
+				e.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
+				e.HasIndex(x => x.ViewedAt);
+				e.HasIndex(x => x.ProductId);
+			});
+
+			builder.Entity<ProductDailyStats>(e =>
+			{
+				e.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Cascade);
+				e.HasIndex(x => new { x.ProductId, x.Day }).IsUnique();
+			});
+
+			// Category Analytics
+			builder.Entity<CategoryViewEvent>(e =>
+			{
+				e.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Cascade);
+				e.HasIndex(x => x.ViewedAt);
+				e.HasIndex(x => x.CategoryId);
+			});
+
+			builder.Entity<CategoryDailyStats>(e =>
+			{
+				e.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Cascade);
+				e.HasIndex(x => new { x.CategoryId, x.Day }).IsUnique();
+			});
 		}
 
 		#endregion
