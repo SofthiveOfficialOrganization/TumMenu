@@ -47,65 +47,61 @@
 
         .nf-tray-wrapper {
             position: relative;
-            animation: nf-float 6s ease-in-out infinite;
-            max-width: 600px;
-            width: 100%;
+            width: min(100%, 900px);
+            margin: 0 auto;
         }
 
         .nf-image {
+            display: block;
             width: 100%;
             height: auto;
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
         }
 
-        .nf-btn-anchor {
+        .btn-overlay {
             position: absolute;
-            top: 48%; /* El-tepsi görselindeki tepsi seviyesine göre ayarlandı */
-            left: 50%;
+            left: 62%; /* Daha da sağa kaydırıldı */
+            top: 48%; /* Yukarıya çekildi */
             transform: translate(-50%, -50%);
-            width: fit-content;
-        }
+            z-index: 100;
 
-        .btn-premium {
-            background: var(--nf-primary);
-            color: #fff !important;
-            padding: 16px 42px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: clamp(280px, 35vw, 420px); /* Daha uzun bir alanı kaplaması sağlandı */
+            height: clamp(60px, 7vw, 120px);
+
             text-decoration: none;
-            box-shadow: 0 10px 30px rgba(104, 135, 69, 0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
-            border: none;
+            background: transparent;
+            border: 0;
+            border-radius: 999px;
             cursor: pointer;
-            letter-spacing: 0.5px;
+            transition: background 0.2s ease;
         }
 
-        .btn-premium:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(104, 135, 69, 0.4);
-            background: #7a9c53;
+        .btn-overlay:hover {
+            background: rgba(255, 255, 255, 0.08); /* Hover belirginliği hafif artırıldı */
         }
 
         .nf-message {
             margin-top: 40px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--nf-text);
             font-weight: 500;
-            opacity: 0.8;
-            max-width: 400px;
-        }
-
-        @@keyframes nf-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            opacity: 0.7;
+            max-width: 450px;
         }
 
         @@media (max-width: 768px) {
             .nf-bg-text { font-size: 40vw; }
-            .btn-premium { padding: 12px 32px; font-size: 16px; }
             .nf-tray-wrapper { max-width: 90%; }
+            .btn-overlay { 
+                left: 62%;
+                top: 47%; /* Mobilde de hizalama korundu */
+                width: clamp(200px, 50vw, 320px);
+                height: clamp(40px, 12vw, 70px);
+            }
         }
     </style>
 }
@@ -113,19 +109,15 @@
 <div class="nf-container">
     <div class="nf-bg-text">404</div>
     
-    <div class="nf-content">
-        <div class="nf-tray-wrapper">
-            <img src="~/images/404.png" alt="Sayfa Bulunamadı" class="nf-image" />
-            
-            <div class="nf-btn-anchor">
-                <a asp-controller="Home" asp-action="Index" class="btn-premium">
-                    Ana Sayfaya Git
-                </a>
+        <div class="nf-content">
+            <div class="nf-tray-wrapper">
+                <img src="~/images/404.png" alt="Sayfa Bulunamadı" class="nf-image" />
+                
+                <a asp-controller="Home" asp-action="Index" class="btn-overlay" aria-label="Ana Sayfaya Git"></a>
             </div>
-        </div>
         
-        <p class="nf-message">
-            Aradığınız lezzeti burada bulamadık ama mutfağımızda sizi bekleyen çok şey var.
-        </p>
-    </div>
+            <p class="nf-message">
+                Aradığınız lezzeti burada bulamadık ama mutfağımızda sizi bekleyen çok şey var.
+            </p>
+        </div>
 </div>
