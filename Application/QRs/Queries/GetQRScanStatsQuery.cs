@@ -8,7 +8,11 @@ namespace Application.QRs.Queries;
 
 public enum QRStatsGranularity { Hourly, Daily, Weekly, Monthly, Yearly }
 
-public record GetQRScanStatsQuery(QRStatsGranularity Granularity = QRStatsGranularity.Monthly, Guid? StoreId = null) : IRequest<List<QRStatsDTO>>;
+public record GetQRScanStatsQuery(
+    QRStatsGranularity Granularity = QRStatsGranularity.Monthly, 
+    Guid? StoreId = null,
+    Guid? CompanyId = null
+) : IRequest<List<QRStatsDTO>>;
 
 public class QRStatsDTO
 {
@@ -28,12 +32,24 @@ public class GetQRScanStatsQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new List<QRStatsDTO>();
 
-        // Find all QR IDs belonging to this owner, filtered by StoreId if provided
-        var qrIdsQuery = repoStore.Query(tracked: false)
-            .Include(s => s.Company)
-                .ThenInclude(c => c.Owner)
+        var isAdmin = userContext.Roles.Contains("Admin");
+        
+        // Find all QR IDs
+        IQueryable<Store> qrIdsQuery = repoStore.Query(tracked: false)
             .Include(s => s.QRCode)
-            .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId && s.QRCode != null);
+            .Where(s => s.QRCode != null);
+
+        if (!isAdmin)
+        {
+            qrIdsQuery = qrIdsQuery
+                .Include(s => s.Company)
+                    .ThenInclude(c => c.Owner)
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId);
+        }
+        else if (req.CompanyId.HasValue)
+        {
+            qrIdsQuery = qrIdsQuery.Where(s => s.CompanyId == req.CompanyId.Value);
+        }
 
         if (req.StoreId.HasValue)
         {

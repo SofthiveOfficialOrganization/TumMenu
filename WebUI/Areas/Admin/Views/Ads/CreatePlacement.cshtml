@@ -1,0 +1,79 @@
+@using Application.Ads.Commands
+@using Application.Ads.DTOs
+@model CreateAdPlacementCommand
+@{
+    ViewData["Title"] = "Yeni Reklam Yerleşimi";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-4">
+                <h4 class="fw-bold mb-1">Yeni Reklam Yerleşimi</h4>
+                <p class="text-secondary small">Hangi reklamın nerede ve ne zaman gösterileceğini belirleyin.</p>
+            </div>
+
+            <form asp-action="CreatePlacement" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AdSlotId" class="form-label small fw-bold">Reklam Alanı (Slot)</label>
+                        <select asp-for="AdSlotId" class="form-select" required>
+                            <option value="">Seçiniz...</option>
+                            @foreach (var slot in (ViewBag.Slots as List<AdSlotDTO>))
+                            {
+                                <option value="@slot.Id">@slot.Key (@slot.Description)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AdSlotId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AdCreativeId" class="form-label small fw-bold">Reklam İçeriği</label>
+                        <select asp-for="AdCreativeId" class="form-select" required>
+                            <option value="">Seçiniz...</option>
+                            @foreach (var creative in (ViewBag.Creatives as List<AdCreativeDTO>))
+                            {
+                                <option value="@creative.Id">@creative.Type - @(creative.Content.Length > 30 ? creative.Content.Substring(0, 30) + "..." : creative.Content)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AdCreativeId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="StartAt" class="form-label small fw-bold">Başlangıç Tarihi</label>
+                        <input asp-for="StartAt" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="StartAt" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="EndAt" class="form-label small fw-bold">Bitiş Tarihi</label>
+                        <input asp-for="EndAt" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="EndAt" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DailyCap" class="form-label small fw-bold">Günlük Gösterim Sınırı (Opsiyonel)</label>
+                        <input asp-for="DailyCap" type="number" class="form-control" placeholder="Örn: 1000" />
+                        <span asp-validation-for="DailyCap" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4 align-self-end">
+                        <div class="form-check form-switch pb-2">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" id="isActive" checked>
+                            <label class="form-check-label small fw-bold" for="isActive">Aktif</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end border-top pt-4">
+                    <a asp-action="Placements" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
+                    <button type="submit" class="btn btn-success btn-sm px-4">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

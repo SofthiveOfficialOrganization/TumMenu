@@ -35,16 +35,7 @@
             <!-- KATEGORİLER -->
             <div class="pm-view active">
                 
-                @if (ViewBag.IsQrSource == true)
-                {
-                    <div class="pm-ad-slot pm-ad-slot--qr">
-                        <span class="pm-ad-label">Sponsorlu</span>
-                        <div class="pm-ad-placeholder">
-                            <p>Reklam Alanı</p>
-                            <small>QR menü destekçimiz olun.</small>
-                        </div>
-                    </div>
-                }
+                @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
 
                 <h2 class="pm-view-title">Kategoriler</h2>
 

@@ -148,3 +148,65 @@ body.no-scroll {
         padding: 40px 0;
     }
 }
+
+/* Global Ad Placements */
+.sticky-ad-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+    padding: 5px;
+}
+
+.interstitial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 2000;
+    display: none; /* Controlled by JS */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.interstitial-modal.is-active {
+    display: flex;
+}
+
+.interstitial-content {
+    background: #fff;
+    position: relative;
+    max-width: 350px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.interstitial-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+    line-height: 1;
+}
+
+body.has-sticky-ad {
+    padding-bottom: 60px; /* Space for sticky footer */
+}

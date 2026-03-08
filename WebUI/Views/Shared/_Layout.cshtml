@@ -212,6 +212,55 @@
     </script>
 
     @RenderSection("Scripts", required: false)
+    
+    <!-- Sticky Footer Ad -->
+    <div id="stickyAd" class="sticky-ad-footer" style="display:none;">
+        <div style="position:relative; width:100%; display:flex; justify-content:center;">
+            @await Component.InvokeAsync("Ad", new { slotKey = "sticky_footer" })
+            <button type="button" onclick="document.getElementById('stickyAd').style.display='none'; document.body.classList.remove('has-sticky-ad');" 
+                    style="position:absolute;top:-25px;right:10px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;box-shadow:0 -2px 5px rgba(0,0,0,0.1);">
+                Kapat &times;
+            </button>
+        </div>
+    </div>
+
+    <!-- Interstitial Ad Modal -->
+    <div id="interstitialAd" class="interstitial-modal">
+        <div class="interstitial-content">
+            <button type="button" class="interstitial-close" onclick="closeInterstitial()">&times; Reklamı Kapat</button>
+            @await Component.InvokeAsync("Ad", new { slotKey = "interstitial_popup" })
+        </div>
+    </div>
+
+    <script>
+        function closeInterstitial() {
+            document.getElementById('interstitialAd').classList.remove('is-active');
+            document.body.classList.remove('no-scroll');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interstitial Logic (Show once per session)
+            if (!sessionStorage.getItem('interstitialShown')) {
+                const interstitial = document.getElementById('interstitialAd');
+                // Check if the component actually rendered an ad container
+                if (interstitial && interstitial.querySelector('.ad-container')) {
+                     setTimeout(() => {
+                        interstitial.classList.add('is-active');
+                        document.body.classList.add('no-scroll');
+                        sessionStorage.setItem('interstitialShown', 'true');
+                     }, 1500); // 1.5s delay for better UX
+                }
+            }
+
+            // Sticky Footer Logic
+            const stickyAd = document.getElementById('stickyAd');
+            if (stickyAd && stickyAd.querySelector('.ad-container')) {
+                stickyAd.style.display = 'flex';
+                document.body.classList.add('has-sticky-ad');
+            }
+        });
+    </script>
+
     <script>
         (function () {
           const btn = document.querySelector(".site-header__burger");

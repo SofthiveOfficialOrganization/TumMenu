@@ -306,6 +306,11 @@
 }
 
 /* ── AD SLOTS ── */
+.ad-container {
+  margin: 32px 0;
+  width: 100%;
+}
+
 .pm-ad-slot {
   margin: 24px 0;
   padding: 16px;
@@ -322,6 +327,23 @@
   justify-content: center;
 }
 
+.ad-link img {
+    transition: transform 0.3s ease;
+}
+
+.ad-link:hover img {
+    transform: scale(1.02);
+}
+
+.ad-html-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--pm-border);
+    display: inline-block;
+    min-width: 300px;
+}
+
 .pm-ad-label {
   position: absolute;
   top: 0;
@@ -333,6 +355,7 @@
   border-bottom-left-radius: 8px;
   font-weight: 700;
   text-transform: uppercase;
+  z-index: 2;
 }
 
 .pm-ad-placeholder {
@@ -350,5 +373,9 @@
   .pm-ad-slot {
     margin: 16px 0;
     min-height: 80px;
+  }
+  .ad-html-content {
+      min-width: 100%;
+      padding: 8px;
   }
 }

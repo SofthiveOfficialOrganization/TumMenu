@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Analizler";
     var stores = ViewBag.Stores as List<MyQRDTO> ?? new List<MyQRDTO>();
+    var companies = ViewBag.Companies as List<AdminCompanyDTO> ?? new List<AdminCompanyDTO>();
+    bool isAdmin = ViewBag.IsAdmin == true;
 }
 
 <div class="row mb-4 align-items-center">
@@ -19,15 +21,30 @@
         </div>
     </div>
     <div class="col-md-6 text-md-end">
-        <div class="d-inline-block text-start">
-             <label class="small text-secondary fw-bold mb-1">Dükkan Filtresi</label>
-             <select id="storeFilter" class="form-select border-0 shadow-sm" onchange="changeStore()" style="border-radius: 12px; min-width: 200px; background-color: var(--horizon-card-bg);">
-                 <option value="">Tüm Dükkanlar</option>
-                 @foreach (var store in stores)
-                 {
-                     <option value="@store.StoreId">@store.StoreTitle</option>
-                 }
-             </select>
+        <div class="d-flex flex-wrap gap-3 justify-content-md-end">
+            @if (isAdmin)
+            {
+                <div class="text-start">
+                    <label class="small text-secondary fw-bold mb-1">Şirket Filtresi</label>
+                    <select id="companyFilter" class="form-select border-0 shadow-sm" onchange="changeCompany()" style="border-radius: 12px; min-width: 200px; background-color: var(--horizon-card-bg);">
+                        <option value="">Tüm Şirketler</option>
+                        @foreach (var company in companies)
+                        {
+                            <option value="@company.Id">@company.Title</option>
+                        }
+                    </select>
+                </div>
+            }
+            <div class="text-start">
+                <label class="small text-secondary fw-bold mb-1">Dükkan Filtresi</label>
+                <select id="storeFilter" class="form-select border-0 shadow-sm" onchange="changeStore()" style="border-radius: 12px; min-width: 200px; background-color: var(--horizon-card-bg);">
+                    <option value="">Tüm Dükkanlar</option>
+                    @foreach (var store in stores)
+                    {
+                        <option value="@store.StoreId">@store.StoreTitle</option>
+                    }
+                </select>
+            </div>
         </div>
     </div>
 </div>
@@ -125,6 +142,7 @@
         let currentAnalysisType = 'QR';
         let currentGranularity = 'Monthly';
         let currentStoreId = '';
+        let currentCompanyId = '';
 
         $(document).ready(function() {
             loadStats();
@@ -152,6 +170,30 @@
             loadStats();
         }
 
+        function changeCompany() {
+            currentCompanyId = $('#companyFilter').val();
+            currentStoreId = '';
+            $('#storeFilter').val('');
+            
+            if (currentCompanyId) {
+                // Load stores for this company
+                $.get('@Url.Action("GetStoresByCompany", "Analysis", new { area = "Admin" })', { companyId: currentCompanyId }, function(response) {
+                    let html = '<option value="">Tüm Dükkanlar</option>';
+                    response.forEach(store => {
+                        html += `<option value="${store.storeId}">${store.storeTitle}</option>`;
+                    });
+                    $('#storeFilter').html(html);
+                });
+            } else {
+                // Options were already empty for admin unless company selected? 
+                // Let's reset to full list if possible or just empty
+                $('#storeFilter').html('<option value="">Tüm Dükkanlar</option>');
+            }
+
+            loadStats();
+            loadStoreBreakdown();
+        }
+
         function changeStore() {
             currentStoreId = $('#storeFilter').val();
             loadStats();
@@ -176,7 +218,8 @@
 
             $.get(url, { 
                 granularity: currentGranularity,
-                storeId: currentStoreId 
+                storeId: currentStoreId,
+                companyId: currentCompanyId
             }, function(response) {
                 if (currentAnalysisType === 'QR') {
                     renderChart(response, 'Okutma Sayısı');
@@ -211,7 +254,7 @@
         }
 
         function loadStoreBreakdown() {
-            $.get('@Url.Action("GetStoreBreakdown", "Analysis", new { area = "Admin" })', function(data) {
+            $.get('@Url.Action("GetStoreBreakdown", "Analysis", new { area = "Admin" })', { companyId: currentCompanyId }, function(data) {
                 // 1. Render Table
                 let html = '';
                 if (data.length === 0) {

@@ -1,0 +1,52 @@
+@using Application.Ads.Commands
+@model UpdateAdCreativeCommand
+@{
+    ViewData["Title"] = "Reklam İçeriği Düzenle";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Reklam İçeriği Düzenle</h4>
+                    <p class="text-secondary small">Reklam içeriğini güncelleyin.</p>
+                </div>
+                <form asp-action="DeleteCreative" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Bu içeriği silmek istediğinize emin misiniz?');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash-alt me-1"></i> Sil
+                    </button>
+                </form>
+            </div>
+
+            <form asp-action="EditCreative" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label small fw-bold">İçerik Türü</label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="image">Görsel (Image)</option>
+                        <option value="html">HTML / Google AdSense</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label small fw-bold">İçerik (URL veya Kod)</label>
+                    <textarea asp-for="Content" class="form-control" rows="5" required></textarea>
+                    <span asp-validation-for="Content" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ClickUrl" class="form-label small fw-bold">Tıklama Linki (Opsiyonel)</label>
+                    <input asp-for="ClickUrl" class="form-control" />
+                    <span asp-validation-for="ClickUrl" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end border-top pt-4">
+                    <a asp-action="Creatives" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
+                    <button type="submit" class="btn btn-primary btn-sm px-4">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -15,7 +15,11 @@ public class TopProductDTO
     public int Views { get; set; }
 }
 
-public record GetProductAnalysisQuery(QRStatsGranularity Granularity = QRStatsGranularity.Monthly, Guid? StoreId = null) : IRequest<ProductAnalysisResult>;
+public record GetProductAnalysisQuery(
+    QRStatsGranularity Granularity = QRStatsGranularity.Monthly, 
+    Guid? StoreId = null,
+    Guid? CompanyId = null
+) : IRequest<ProductAnalysisResult>;
 
 public class GetProductAnalysisQueryHandler(
     IRepository<ProductDailyStats> repoStats,
@@ -29,22 +33,31 @@ public class GetProductAnalysisQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new ProductAnalysisResult([], []);
 
-        // Find all Product IDs belonging to this owner, filtered by StoreId
-        var productIdsQuery = repoStore.Query(tracked: false)
-            .Include(s => s.Company)
-                .ThenInclude(c => c.Owner)
-            .Include(s => s.Menus)
-                .ThenInclude(m => m.Categories)
-                    .ThenInclude(c => c.Products)
-            .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId);
+        var isAdmin = userContext.Roles.Contains("Admin");
+        
+        IQueryable<Store> storesQuery = repoStore.Query(tracked: false);
+        
+        if (!isAdmin)
+        {
+            storesQuery = storesQuery
+                .Include(s => s.Company)
+                    .ThenInclude(c => c.Owner)
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId);
+        }
+        else if (req.CompanyId.HasValue)
+        {
+            storesQuery = storesQuery.Where(s => s.CompanyId == req.CompanyId.Value);
+        }
 
         if (req.StoreId.HasValue)
         {
-            productIdsQuery = productIdsQuery.Where(s => s.Id == req.StoreId.Value);
+            storesQuery = storesQuery.Where(s => s.Id == req.StoreId.Value);
         }
 
-        var productIds = await productIdsQuery
-            .SelectMany(s => s.Menus.SelectMany(m => m.Categories.SelectMany(c => c.Products)))
+        var productIds = await storesQuery
+            .SelectMany(s => s.Menus.Where(m => m.Status == MenuStatus.Active)
+                .SelectMany(m => m.Categories.Where(c => c.IsActive)
+                    .SelectMany(c => c.Products.Where(p => p.IsActive))))
             .Select(p => p.Id)
             .Distinct()
             .ToListAsync(ct);

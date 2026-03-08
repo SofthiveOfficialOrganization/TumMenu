@@ -37,16 +37,7 @@
                     <h2 class="pm-view-title mb-0">@Model.ProductTitle</h2>
                 </div>
 
-                @if (ViewBag.IsQrSource == true)
-                {
-                    <div class="pm-ad-slot pm-ad-slot--qr">
-                        <span class="pm-ad-label">Sponsorlu</span>
-                        <div class="pm-ad-placeholder">
-                            <p>Reklam Alanı</p>
-                            <small>QR menü destekçimiz olun.</small>
-                        </div>
-                    </div>
-                }
+                @await Component.InvokeAsync("Ad", new { slotKey = "product_top" })
 
                 <!-- Ürün Görselleri -->
                 @if (Model.ImageUrls.Count > 0)

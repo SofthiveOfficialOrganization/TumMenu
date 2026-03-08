@@ -1,0 +1,88 @@
+@using Application.Ads.DTOs
+@model List<AdSlotDTO>
+@{
+    ViewData["Title"] = "Reklam Slotları";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                   <h4 class="fw-bold mb-1">Reklam Slotları</h4>
+                   <p class="text-secondary small mb-0">Sitedeki reklam alanlarını yönetin.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-action="Revenue" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-coins me-1"></i> Kazançlar
+                    </a>
+                    <a asp-action="Creatives" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-paint-brush me-1"></i> İçerikler
+                    </a>
+                    <a asp-action="Placements" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-layer-group me-1"></i> Yerleşimler
+                    </a>
+                    <a asp-action="CreateSlot" class="btn btn-success border border-success btn-sm">
+                        <i class="fas fa-plus me-1"></i> Yeni Slot
+                    </a>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle table-hover">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase border-bottom">
+                            <th class="ps-3">Slot Anahtarı (Key)</th>
+                            <th>Açıklama</th>
+                            <th class="text-center">Durum</th>
+                            <th class="text-center">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-bold">@item.Key</td>
+                                    <td>@item.Description</td>
+                                    <td class="text-center">
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success-soft text-success">Aktif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger-soft text-danger">Pasif</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <a asp-action="EditSlot" asp-route-id="@item.Id" class="btn btn-sm bg-white text-primary border border-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form asp-action="DeleteSlot" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bu slotu silmek istediğinize emin misiniz?');">
+                                                <button type="submit" class="btn btn-sm bg-white text-danger border border-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-secondary">
+                                    <h5>Henüz reklam slotu tanımlanmamış</h5>
+                                    <p class="small">Sitede reklam gösterimi için önce slot tanımlayın (örn: store_header).</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

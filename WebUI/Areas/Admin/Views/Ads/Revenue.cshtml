@@ -1,0 +1,55 @@
+@using Application.Ads.Queries
+@model AdRevenueSummaryDTO
+@{
+    ViewData["Title"] = "Reklam Gelirleri";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="horizon-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                   <h4 class="fw-bold mb-1">Reklam Gelirleri</h4>
+                   <p class="text-secondary small mb-0">Google Adsense ve diğer ağlardan elde edilen kazançlar.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Yönetime Dön
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-primary-soft border border-primary-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Toplam Kazanç</p>
+                        <h2 class="fw-bold mb-0">@Model.TotalRevenue.ToString("N2") <small class="text-secondary">@Model.Currency</small></h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-success-soft border border-success-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Bu Ay</p>
+                        <h2 class="fw-bold mb-0">@Model.ThisMonthRevenue.ToString("N2") <small class="text-secondary">@Model.Currency</small></h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-info-soft border border-info-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Geçen Ay</p>
+                        <h2 class="fw-bold mb-0">@Model.LastMonthRevenue.ToString("N2") <small class="text-secondary">@Model.Currency</small></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">Gelir Verisi İçe Aktar</h5>
+            <p class="text-secondary small mb-4">AdSense raporlarınızı (CSV) buraya yükleyerek kazançlarınızı güncelleyebilirsiniz.</p>
+            
+            <div class="p-5 border-2 border-dashed rounded-4 text-center bg-light">
+                <i class="fas fa-cloud-upload-alt fa-3x text-secondary mb-3"></i>
+                <h6>CSV Dosyasını Sürükleyin veya Seçin</h6>
+                <button class="btn btn-primary btn-sm mt-3" onclick="TumMenuAlerts.toast('info', 'Bu özellik yakında aktif olacaktır.')">Dosya Seç</button>
+            </div>
+        </div>
+    </div>
+</div>

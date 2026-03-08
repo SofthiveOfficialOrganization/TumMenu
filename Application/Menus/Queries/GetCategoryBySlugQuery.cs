@@ -64,7 +64,7 @@ public class GetCategoryBySlugHandler(
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.Parent)
-					.ThenInclude(p => p != null ? p.CategoryLibraryItem : null)
+					.ThenInclude(p => p.CategoryLibraryItem)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.Products.Where(p => p.IsActive))

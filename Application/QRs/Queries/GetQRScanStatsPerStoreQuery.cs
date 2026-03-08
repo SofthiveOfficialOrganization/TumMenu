@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.QRs.Queries;
 
-public record GetQRScanStatsPerStoreQuery : IRequest<List<QRStoreStatsDTO>>;
+public record GetQRScanStatsPerStoreQuery(Guid? CompanyId = null) : IRequest<List<QRStoreStatsDTO>>;
 
 public class QRStoreStatsDTO
 {
@@ -25,12 +25,31 @@ public class GetQRScanStatsPerStoreQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new List<QRStoreStatsDTO>();
 
-        var stores = await repoStore.Query(tracked: false)
-            .Include(s => s.Company)
-                .ThenInclude(c => c.Owner)
-            .Include(s => s.QRCode)
-            .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId && s.QRCode != null)
-            .ToListAsync(ct);
+        var isAdmin = userContext.Roles.Contains("Admin");
+        
+        IQueryable<Store> storesQuery = repoStore.Query(tracked: false)
+            .Include(s => s.QRCode);
+
+        if (!isAdmin)
+        {
+            storesQuery = storesQuery
+                .Include(s => s.Company)
+                    .ThenInclude(c => c.Owner)
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId && s.QRCode != null);
+        }
+        else
+        {
+            if (req.CompanyId.HasValue)
+            {
+                storesQuery = storesQuery.Where(s => s.CompanyId == req.CompanyId.Value && s.QRCode != null);
+            }
+            else
+            {
+                storesQuery = storesQuery.Where(s => s.QRCode != null);
+            }
+        }
+
+        var stores = await storesQuery.ToListAsync(ct);
 
         if (stores.Count == 0) return new List<QRStoreStatsDTO>();
 

@@ -1,0 +1,45 @@
+@using Application.Ads.Commands
+@model CreateAdCreativeCommand
+@{
+    ViewData["Title"] = "Yeni Reklam İçeriği";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-4">
+                <h4 class="fw-bold mb-1">Yeni Reklam İçeriği</h4>
+                <p class="text-secondary small">Google Adsense kodu veya görsel URL'si ekleyin.</p>
+            </div>
+
+            <form asp-action="CreateCreative" method="post">
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label small fw-bold">İçerik Türü</label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="image">Görsel (Image)</option>
+                        <option value="html">HTML / Google AdSense</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label small fw-bold">İçerik (URL veya Kod)</label>
+                    <textarea asp-for="Content" class="form-control" rows="5" placeholder="Görsel linki veya reklam kodunu buraya yapıştırın..." required></textarea>
+                    <span asp-validation-for="Content" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ClickUrl" class="form-label small fw-bold">Tıklama Linki (Opsiyonel)</label>
+                    <input asp-for="ClickUrl" class="form-control" placeholder="https://..." />
+                    <span asp-validation-for="ClickUrl" class="text-danger small"></span>
+                    <div class="form-text small">Görsel reklamlarda tıklanınca gidilecek adres.</div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end border-top pt-4">
+                    <a asp-action="Creatives" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
+                    <button type="submit" class="btn btn-success btn-sm px-4">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

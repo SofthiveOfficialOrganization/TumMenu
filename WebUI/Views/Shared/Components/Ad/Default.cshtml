@@ -1,0 +1,20 @@
+@using Application.Ads.DTOs
+@model AdPlacementDTO
+
+@if (Model != null && Model.AdCreative != null)
+{
+    <div class="ad-container my-4 text-center">
+        @if (Model.AdCreative.Type == "image")
+        {
+            <a href="@Model.AdCreative.ClickUrl" target="_blank" class="ad-link">
+                <img src="@Model.AdCreative.Content" alt="Advertisement" class="img-fluid rounded shadow-sm" style="max-width: 100%; height: auto;" />
+            </a>
+        }
+        else if (Model.AdCreative.Type == "html" || Model.AdCreative.Type == "third_party")
+        {
+            <div class="ad-html-content">
+                @Html.Raw(Model.AdCreative.Content)
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,43 @@
+@using Application.Ads.Commands
+@model CreateAdSlotCommand
+@{
+    ViewData["Title"] = "Yeni Reklam Slotu";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-4">
+                <h4 class="fw-bold mb-1">Yeni Reklam Slotu</h4>
+                <p class="text-secondary small">Sitede reklam gösterilecek yeni bir alan tanımlayın.</p>
+            </div>
+
+            <form asp-action="CreateSlot" method="post">
+                <div class="mb-3">
+                    <label asp-for="Key" class="form-label small fw-bold">Slot Anahtarı (Key)</label>
+                    <input asp-for="Key" class="form-control" placeholder="Örn: menu_top, sticky_footer" required />
+                    <span asp-validation-for="Key" class="text-danger small"></span>
+                    <div class="form-text small">Bu anahtarı kod tarafında reklamı çağırmak için kullanacağız.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label small fw-bold">Açıklama</label>
+                    <textarea asp-for="Description" class="form-control" rows="2" placeholder="Bu alanın nerede olduğunu belirtin..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="isActive" checked>
+                        <label class="form-check-label small fw-bold" for="isActive">Aktif</label>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end border-top pt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
+                    <button type="submit" class="btn btn-success btn-sm px-4">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
