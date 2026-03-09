@@ -50,94 +50,66 @@ public sealed class CategoryProductItemDTO
 }
 
 public class GetCategoryBySlugHandler(
-	IRepository<Store> repoStore
+	IRepository<Category> repoCategory
 ) : IRequestHandler<GetCategoryBySlugQuery, CategoryPageDTO>
 {
 	public async Task<CategoryPageDTO> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
 	{
-		var store = await repoStore.Query()
-			.AsSplitQuery()
-			.Include(s => s.Company)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.CategoryLibraryItem)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.Parent)
-					.ThenInclude(p => p.CategoryLibraryItem)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.Products.Where(p => p.IsActive))
-				.ThenInclude(p => p.Medias)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active)) // Include SubCategories
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.SubCategories.Where(sc => sc.IsActive))
-				.ThenInclude(sc => sc.CategoryLibraryItem)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active)) // Include Products of SubCategories for count
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.SubCategories.Where(sc => sc.IsActive))
-				.ThenInclude(sc => sc.Products.Where(p => p.IsActive))
-			.FirstOrDefaultAsync(
-				s => s.Slug == req.StoreSlug && s.Company.Slug == req.CompanySlug,
-				ct
-			);
+		var categoryData = await repoCategory.Query()
+			.Where(c => c.IsActive && 
+			           c.CategoryLibraryItem.Slug == req.CategorySlug && 
+			           c.Menu.Status == MenuStatus.Active &&
+			           c.Menu.Store.Slug == req.StoreSlug && 
+			           c.Menu.Store.Company.Slug == req.CompanySlug)
+			.Select(c => new CategoryPageDTO
+			{
+				CompanySlug = c.Menu.Store.Company.Slug,
+				StoreSlug = c.Menu.Store.Slug,
+				StoreName = c.Menu.Store.Title,
+				CompanyName = c.Menu.Store.Company.Title,
+				CategorySlug = c.CategoryLibraryItem.Slug,
+				CategoryTitle = c.CategoryLibraryItem.Title,
+				CategoryId = c.Id,
+				CategoryDescription = c.CategoryLibraryItem.Description,
+				ParentCategorySlug = c.Parent != null ? c.Parent.CategoryLibraryItem.Slug : null,
+				Products = c.Products
+					.Where(p => p.IsActive)
+					.OrderBy(p => p.SortOrder)
+					.Select(p => new CategoryProductItemDTO
+					{
+						Id = p.Id,
+						Title = p.Title,
+						Slug = p.Slug,
+						Description = p.Description,
+						BasePrice = p.BasePrice,
+						IsVegan = p.IsVegan,
+						IsVegetarian = p.IsVegetarian,
+						EstimatedPreparationTimeInMinutes = p.EstimatedPreparationTimeInMinutes,
+						Allergens = p.Allergens,
+						ImageUrl = p.Medias
+							.Where(m => m.Kind == MediaKind.Image)
+							.OrderBy(m => m.SortOrder)
+							.Select(m => m.MediaUrl)
+							.FirstOrDefault()
+					})
+					.ToList(),
+				SubCategories = c.SubCategories
+					.Where(sc => sc.IsActive)
+					.OrderBy(sc => sc.SortOrder)
+					.Select(sc => new CategorySubCategoryItemDTO
+					{
+						Title = sc.CategoryLibraryItem.Title,
+						Slug = sc.CategoryLibraryItem.Slug,
+						IconKey = sc.CategoryLibraryItem.IconKey,
+						ProductCount = sc.Products.Count(p => p.IsActive)
+					})
+					.ToList()
+			})
+			.FirstOrDefaultAsync(ct);
 
-		if (store is null)
-			throw new NotFoundAppException("Dükkan bulunamadı.");
-
-		var menu = store.Menus.FirstOrDefault();
-		if (menu is null)
-			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
-
-		var category = menu.Categories
-			.FirstOrDefault(c => c.IsActive && c.CategoryLibraryItem.Slug == req.CategorySlug);
-
-		if (category is null)
+		if (categoryData is null)
 			throw new NotFoundAppException("Kategori bulunamadı.");
 
-		return new CategoryPageDTO
-		{
-			CompanySlug = store.Company.Slug,
-			StoreSlug = store.Slug,
-			StoreName = store.Title,
-			CompanyName = store.Company.Title,
-			CategorySlug = category.CategoryLibraryItem.Slug,
-			CategoryTitle = category.CategoryLibraryItem.Title,
-			CategoryId = category.Id,
-			CategoryDescription = category.CategoryLibraryItem.Description,
-			ParentCategorySlug = category.Parent?.CategoryLibraryItem.Slug,
-			Products = category.Products
-				.Where(p => p.IsActive)
-				.OrderBy(p => p.SortOrder)
-				.Select(p => new CategoryProductItemDTO
-				{
-					Id = p.Id,
-					Title = p.Title,
-					Slug = p.Slug,
-					Description = p.Description,
-					BasePrice = p.BasePrice,
-					IsVegan = p.IsVegan,
-					IsVegetarian = p.IsVegetarian,
-					EstimatedPreparationTimeInMinutes = p.EstimatedPreparationTimeInMinutes,
-					Allergens = p.Allergens,
-					ImageUrl = p.Medias
-						.Where(m => m.Kind == MediaKind.Image)
-						.OrderBy(m => m.SortOrder)
-						.Select(m => m.MediaUrl)
-						.FirstOrDefault()
-				})
-				.ToList(),
-			SubCategories = category.SubCategories
-				.Where(sc => sc.IsActive)
-				.OrderBy(sc => sc.SortOrder)
-				.Select(sc => new CategorySubCategoryItemDTO
-				{
-					Title = sc.CategoryLibraryItem.Title,
-					Slug = sc.CategoryLibraryItem.Slug,
-					IconKey = sc.CategoryLibraryItem.IconKey,
-					ProductCount = sc.Products.Count(p => p.IsActive)
-				})
-				.ToList()
-		};
+		return categoryData;
 	}
 }
