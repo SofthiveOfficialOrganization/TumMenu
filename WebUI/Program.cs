@@ -37,8 +37,8 @@ builder.Services.AddAuthorizationBuilder()
         );
     });
 
-builder.Services
-    .AddRazorPages()
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages()
     .AddMvcOptions(options =>
     {
         options.Filters.Add<AppExceptionFilter>();
@@ -82,6 +82,10 @@ app.UseStatusCodePagesWithReExecute("/status-code/{0}");
 
 
 app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
@@ -99,10 +103,6 @@ app.MapControllerRoute(
     name: "publicStore",
     pattern: "{companySlug}/{storeSlug}",
     defaults: new { controller = "Menu", action = "Index" });
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 
