@@ -8,6 +8,7 @@ namespace Domain.Entities
 		[MaxLength(1024)] public string MediaUrl { get; set; } = null!;
 		[MaxLength(300)] public string? AltText { get; set; }
 		public int SortOrder { get; set; }
+		public Guid? CompanyId { get; set; }
 		public Guid ReferenceId { get; set; }
 		public MediaRefType Type { get; set; } = MediaRefType.Unknown;
 		public MediaKind Kind { get; set; } = MediaKind.Unknown;
@@ -31,7 +32,8 @@ namespace Domain.Entities
 		Menu,
 		Category,
 		Product,
-		QRCode
+		QRCode,
+		CategoryLibraryItem
 	}
 	public enum MediaKind
 	{

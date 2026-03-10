@@ -1,0 +1,162 @@
+@using Application.Medias.DTOs
+@using Domain.Entities
+@model (Guid referenceId, MediaRefType type, List<MediaDTO> medias, string slot)
+
+<div class="media-gallery-container" id="gallery-@Model.referenceId-@Model.slot">
+    <div class="media-gallery-header">
+        <h3 class="media-gallery-title">
+            @if (Model.slot == "logo") { <text>Logo Yönetimi</text> }
+            else if (Model.slot == "banner") { <text>Banner Yönetimi</text> }
+            else { <text>Fotoğraf Galerisi</text> }
+        </h3>
+    </div>
+
+    <div class="media-grid" id="grid-@Model.referenceId-@Model.slot">
+        @foreach (var media in (Model.medias ?? new()).Where(m => m.Slot == Model.slot))
+        {
+            <div class="media-item" data-media-id="@media.Id" onclick="window.open('@media.MediaUrl', '_blank')">
+                <img src="@media.MediaUrl" alt="@media.AltText" />
+                <div class="media-item-overlay">
+                    <button type="button" class="media-delete-btn" onclick="event.stopPropagation(); deleteMedia('@media.Id', this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="media-upload-area" id="upload-@Model.referenceId-@Model.slot">
+        @Html.AntiForgeryToken()
+        <input type="file" class="d-none" id="file-@Model.referenceId-@Model.slot" accept="image/*" />
+        <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <div class="upload-text">Dosya yüklemek için buraya tıklayın veya sürükleyin</div>
+        <div class="upload-hint">PNG, JPG, WEBP (Max 5MB)</div>
+        
+        <div class="media-upload-progress" id="progress-@Model.referenceId-@Model.slot">
+            <div class="media-upload-progress-bar" id="bar-@Model.referenceId-@Model.slot"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const refId = '@Model.referenceId';
+        const type = '@((int)Model.type)';
+        const slot = '@Model.slot';
+        
+        const container = document.getElementById(`gallery-${refId}-${slot}`);
+        const uploadArea = document.getElementById(`upload-${refId}-${slot}`);
+        const fileInput = document.getElementById(`file-${refId}-${slot}`);
+        const grid = document.getElementById(`grid-${refId}-${slot}`);
+        const progressBar = document.getElementById(`progress-${refId}-${slot}`);
+        const bar = document.getElementById(`bar-${refId}-${slot}`);
+
+        const getAntiforgeryToken = () => {
+             return container.querySelector('input[name="__RequestVerificationToken"]').value;
+        };
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                handleUpload(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                handleUpload(fileInput.files[0]);
+            }
+        });
+
+        async function handleUpload(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('referenceId', refId);
+            formData.append('type', type);
+            formData.append('slot', slot);
+
+            progressBar.style.display = 'block';
+            bar.style.width = '0%';
+
+            try {
+                const response = await fetch('/Media/Upload', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': getAntiforgeryToken()
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const media = await response.json();
+                    addMediaToGrid(media);
+                    bar.style.width = '100%';
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        bar.style.width = '0%';
+                    }, 1000);
+                    TumMenuAlerts.toast('success', 'Görsel başarıyla yüklendi.');
+                } else {
+                    const error = await response.text();
+                    TumMenuAlerts.toast('error', 'Yükleme hatası: ' + error);
+                    progressBar.style.display = 'none';
+                }
+            } catch (err) {
+                TumMenuAlerts.toast('error', 'Bir hata oluştu.');
+                progressBar.style.display = 'none';
+            }
+        }
+
+        window.deleteMedia = async function(id, btn) {
+            if (!confirm('Bu görseli silmek istediğinize emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`/Media/Delete/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': getAntiforgeryToken()
+                    }
+                });
+
+                if (response.ok) {
+                    btn.closest('.media-item').remove();
+                    TumMenuAlerts.toast('success', 'Görsel silindi.');
+                } else {
+                    TumMenuAlerts.toast('error', 'Silme işlemi başarısız.');
+                }
+            } catch (err) {
+                TumMenuAlerts.toast('error', 'Bir hata oluştu.');
+            }
+        };
+
+        function addMediaToGrid(media) {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.dataset.mediaId = media.id;
+            div.onclick = () => window.open(media.mediaUrl, '_blank');
+            div.innerHTML = `
+                <img src="${media.mediaUrl}" alt="${media.altText || ''}" />
+                <div class="media-item-overlay">
+                    <button type="button" class="media-delete-btn" onclick="event.stopPropagation(); deleteMedia('${media.id}', this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            grid.appendChild(div);
+        }
+    })();
+</script>

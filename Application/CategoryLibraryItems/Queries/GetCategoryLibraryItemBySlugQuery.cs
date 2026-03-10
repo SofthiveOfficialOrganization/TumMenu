@@ -21,6 +21,7 @@ public class GetCategoryBySlugHandler(
 	public async Task<CategoryLibraryItemDTO?> Handle(GetCategoryLibraryItemBySlugQuery req, CancellationToken ct)
 	{
 		var categoryLibItem = (await repoCategory.Query()
+			.Include(c => c.Medias)
 			.Where(c => c.Slug == req.Slug)
 			.FirstOrDefaultAsync(ct)).EnsureFound("Kategori bulunamadı.");
 

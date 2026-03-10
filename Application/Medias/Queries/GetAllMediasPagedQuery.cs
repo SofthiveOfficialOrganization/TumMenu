@@ -19,6 +19,7 @@ public sealed class GetAllMediasPagedQuery : PageRequest, IRequest<PaginatedList
 	public MediaKind? MediaKind { get; set; }
 	public string? Extension { get; set; }
 	public string? Slot { get; set; }
+	public Guid? CompanyId { get; set; }
 }
 
 public class GetAllMediasPagedHandler(
@@ -34,7 +35,8 @@ public class GetAllMediasPagedHandler(
 				(req.Type == null || media.Type == req.Type) &&
 				(req.MediaKind == null || media.Kind == req.MediaKind) &&
 				(string.IsNullOrEmpty(req.Extension) || (media.Extension != null && media.Extension.Contains(req.Extension))) &&
-				(string.IsNullOrEmpty(req.Slot) || (media.Slot != null && media.Slot.Contains(req.Slot))),
+				(string.IsNullOrEmpty(req.Slot) || (media.Slot != null && media.Slot.Contains(req.Slot))) &&
+				(req.CompanyId == null || media.CompanyId == req.CompanyId),
 			orderBy: media => media.OrderBy(m => m.SortOrder).ThenByDescending(m => m.CreatedAt),
 			ct: ct
 		);

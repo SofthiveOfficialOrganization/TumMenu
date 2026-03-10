@@ -14,6 +14,7 @@ public sealed class MediaDTO : BaseDTO
 	public string MediaUrl { get; set; } = null!;
 	public string? AltText { get; set; }
 	public int SortOrder { get; set; }
+	public Guid? CompanyId { get; set; }
 	public Guid ReferenceId { get; set; }
 	public MediaRefType Type { get; set; } = MediaRefType.Unknown;
 	public MediaKind Kind { get; set; } = MediaKind.Unknown;

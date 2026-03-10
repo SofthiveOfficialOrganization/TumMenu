@@ -1,4 +1,5 @@
 ﻿using Application.Common.Base.DTOs;
+using Application.Medias.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,4 +21,5 @@ public sealed class ProductDTO : BaseDTO
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
+	public List<MediaDTO> Medias { get; set; } = [];
 }

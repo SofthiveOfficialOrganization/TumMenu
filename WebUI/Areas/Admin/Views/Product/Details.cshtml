@@ -150,7 +150,13 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Product, Model.Medias, "default-gallery")' />
+        </div>
+    </div>
 }
+
 else
 {
     <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center">

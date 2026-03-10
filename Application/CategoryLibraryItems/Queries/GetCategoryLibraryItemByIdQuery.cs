@@ -6,6 +6,8 @@ using Domain.Entities;
 using MapsterMapper;
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Application.Categories.Queries;
 
 public class GetCategoryLibraryItemByIdQuery : IRequest<CategoryLibraryItemDTO?>
@@ -20,7 +22,9 @@ public class GetCategoryByIdHandler(
 {
 	public async Task<CategoryLibraryItemDTO?> Handle(GetCategoryLibraryItemByIdQuery req, CancellationToken ct)
 	{
-		var categoryLibItem = (await repoCategoryLibraryItem.GetByIdAsync(req.CategoryId, ct)).EnsureFound("Kategori bulunamadı.");
+		var categoryLibItem = (await repoCategoryLibraryItem.Query()
+			.Include(x => x.Medias)
+			.FirstOrDefaultAsync(x => x.Id == req.CategoryId, ct)).EnsureFound("Kategori bulunamadı.");
 
 		return mapper.Map<CategoryLibraryItemDTO?>(categoryLibItem);
 	}

@@ -32,6 +32,7 @@ public sealed class CategorySubCategoryItemDTO
 	public string Title { get; set; } = null!;
 	public string Slug { get; set; } = null!;
 	public string? IconKey { get; set; }
+	public string? ImageUrl { get; set; }
 	public int ProductCount { get; set; }
 }
 
@@ -101,7 +102,12 @@ public class GetCategoryBySlugHandler(
 						Title = sc.CategoryLibraryItem.Title,
 						Slug = sc.CategoryLibraryItem.Slug,
 						IconKey = sc.CategoryLibraryItem.IconKey,
-						ProductCount = sc.Products.Count(p => p.IsActive)
+						ProductCount = sc.Products.Count(p => p.IsActive),
+						ImageUrl = sc.CategoryLibraryItem.Medias
+							.Where(m => m.Kind == MediaKind.Image)
+							.OrderBy(m => m.SortOrder)
+							.Select(m => m.MediaUrl)
+							.FirstOrDefault()
 					})
 					.ToList()
 			})

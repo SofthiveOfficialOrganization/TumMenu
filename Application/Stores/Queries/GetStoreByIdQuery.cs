@@ -28,6 +28,7 @@ public class GetStoreByIdQueryHandler(
 			.Include(s => s.Company)
 			.Include(s => s.Address)
 			.Include(s => s.Staffs)
+			.Include(s => s.Medias)
 			.Include(s => s.Menus)
 			.FirstOrDefaultAsync(s => s.Id == req.Id, ct)).EnsureFound("Dükkan bulunamadı.");
 

@@ -86,6 +86,15 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Company, Model.Medias, "logo")' />
+    </div>
+    <div class="col-md-6 mb-4">
+        <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Company, Model.Medias, "banner")' />
+    </div>
+</div>
+
 @section Scripts {
     <script>
         function confirmDelete() {

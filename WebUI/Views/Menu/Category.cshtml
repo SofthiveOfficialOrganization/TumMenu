@@ -57,9 +57,16 @@
                             if (ViewBag.IsQrSource == true) subCategoryUrl += "?isQr=true";
                             <a href="@subCategoryUrl" class="pm-cat-card pm-cat-card--link">
                                 <div class="pm-cat-card-photo">
-                                    <div class="pm-cat-card-photo-placeholder">
-                                        @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
-                                    </div>
+                                    @if (!string.IsNullOrEmpty(subCat.ImageUrl))
+                                    {
+                                        <img src="@subCat.ImageUrl" alt="@subCat.Title" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="pm-cat-card-photo-placeholder">
+                                            @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
+                                        </div>
+                                    }
                                 </div>
                                 <div class="pm-cat-card-info">
                                     <h3 class="pm-cat-card-title">@subCat.Title</h3>

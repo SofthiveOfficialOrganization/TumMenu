@@ -33,6 +33,7 @@ namespace Infrastructure
 			services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddScoped<IStorageService, LocalStorageService>();
 
 			services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 

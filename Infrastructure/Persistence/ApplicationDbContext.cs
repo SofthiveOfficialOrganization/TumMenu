@@ -143,6 +143,13 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(s => s.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// Company(1) -> Media(n) polymorphic
+			builder.Entity<Company>()
+				.HasMany(c => c.Medias)
+				.WithOne()
+				.HasForeignKey(m => m.ReferenceId)
+				.HasPrincipalKey(c => c.Id);
+
 			// Store(1) -> Staff(n)
 			builder.Entity<Staff>()
 				.HasOne(s => s.Store)
@@ -164,6 +171,13 @@ namespace Infrastructure.Persistence
 				.WithOne(q => q.Store)
 				.HasForeignKey<QRCode>(q => q.StoreId)
 				.OnDelete(DeleteBehavior.NoAction);
+
+			// Store(1) -> Media(n) polymorphic
+			builder.Entity<Store>()
+				.HasMany(s => s.Medias)
+				.WithOne()
+				.HasForeignKey(m => m.ReferenceId)
+				.HasPrincipalKey(s => s.Id);
 
 
 			// Company(1) -> Subscription(1)
@@ -224,6 +238,13 @@ namespace Infrastructure.Persistence
 				.HasForeignKey<Menu>(m => m.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			// Menu(1) -> Media(n) polymorphic
+			builder.Entity<Menu>()
+				.HasMany(m => m.Medias)
+				.WithOne()
+				.HasForeignKey(m => m.ReferenceId)
+				.HasPrincipalKey(m => m.Id);
+
 			// Store(1) -> Menu(n)
 			builder.Entity<Menu>()
 				.HasOne(m => m.Store)
@@ -270,6 +291,20 @@ namespace Infrastructure.Persistence
 				.WithMany(ca => ca.Products)
 				.HasForeignKey(p => p.CategoryId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			// Product(1) -> Media(n) polymorphic
+			builder.Entity<Product>()
+				.HasMany(p => p.Medias)
+				.WithOne()
+				.HasForeignKey(m => m.ReferenceId)
+				.HasPrincipalKey(p => p.Id);
+
+			// CategoryLibraryItem(1) -> Media(n) polymorphic
+			builder.Entity<CategoryLibraryItem>()
+				.HasMany(c => c.Medias)
+				.WithOne()
+				.HasForeignKey(m => m.ReferenceId)
+				.HasPrincipalKey(c => c.Id);
 
 			// Product(1) -> ProductPrice(n)
 			builder.Entity<ProductPrice>()

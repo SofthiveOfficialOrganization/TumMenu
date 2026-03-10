@@ -4,6 +4,7 @@ using Application.Products.DTOs;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,9 @@ public class GetProductByIdHandler(
 {
 	public async Task<ProductDTO> Handle(GetProductByIdQuery req, CancellationToken ct)
 	{
-		var product = (await repoProduct.GetByIdAsync(req.ProductId, ct)).EnsureFound("Ürün bulunamadı.");
+		var product = (await repoProduct.Query()
+			.Include(p => p.Medias)
+			.FirstOrDefaultAsync(p => p.Id == req.ProductId, ct)).EnsureFound("Ürün bulunamadı.");
 		var productDTO = mapper.Map<ProductDTO>(product);
 		return productDTO;
 	}

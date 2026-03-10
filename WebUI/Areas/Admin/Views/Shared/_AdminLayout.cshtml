@@ -16,6 +16,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link rel="stylesheet" href="~/css/admin-tummenu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/media-management.css" asp-append-version="true" />
     <script>
         // Apply dark mode BEFORE render to prevent white flash
         if (localStorage.getItem('theme') === 'dark') {
@@ -69,6 +70,16 @@
                     </li>
                 }
                 
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Media", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Media" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-images"></i></div>
+                            <span>Tüm İçerikler</span>
+                        </a>
+                    </li>
+                }
+                
                 @if (User.IsInRole("Owner"))
                 {
                     <li class="horizon-menu-item">
@@ -116,7 +127,12 @@
                             <span>Qr'larım</span>
                         </a>
                     </li>
-
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("MyMedias", "Media", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Media" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-images"></i></div>
+                            <span>İçeriklerim</span>
+                        </a>
+                    </li>
                 }
 
                 @if (User.IsInRole("Admin"))

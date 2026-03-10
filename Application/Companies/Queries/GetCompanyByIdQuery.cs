@@ -25,6 +25,7 @@ public class GetCompanyByIdHandler(
 			.Include(c => c.BaseMenu)
 			.Include(c => c.Subscription)
 			.Include(c => c.PaymentMethods)
+			.Include(c => c.Medias)
 			.Include(c => c.Stores)
 			.FirstOrDefaultAsync(ct)).EnsureFound("Şirket bulunamadı.");
 		var companyDTO = mapper.Map<CompanyDTO>(company);

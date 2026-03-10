@@ -1,0 +1,164 @@
+/* Media Management Design System */
+.media-gallery-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(163, 174, 208, 0.2);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.media-gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.media-gallery-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1B254B;
+    margin: 0;
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.media-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.media-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+.media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.media-item:hover .media-item-overlay {
+    opacity: 1;
+}
+
+.media-delete-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.media-delete-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Upload Area */
+.media-upload-area {
+    border: 2px dashed rgba(163, 174, 208, 0.4);
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: rgba(163, 174, 208, 0.05);
+}
+
+.media-upload-area:hover, .media-upload-area.dragover {
+    background: rgba(67, 24, 255, 0.05);
+    border-color: #4318FF;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #4318FF;
+    margin-bottom: 12px;
+}
+
+.upload-text {
+    font-weight: 600;
+    color: #1B254B;
+    margin-bottom: 4px;
+}
+
+.upload-hint {
+    font-size: 0.875rem;
+    color: #A3AED0;
+}
+
+/* Slot Labels */
+.media-slot-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1B254B;
+    z-index: 1;
+}
+
+/* Progress Bar */
+.media-upload-progress {
+    height: 4px;
+    width: 100%;
+    background: #E9EDF7;
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+    display: none;
+}
+
+.media-upload-progress-bar {
+    height: 100%;
+    background: #4318FF;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Dark Mode Support */
+.dark-mode .media-gallery-container {
+    background: rgba(17, 25, 40, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .media-gallery-title, .dark-mode .upload-text {
+    color: #fff;
+}
+
+.dark-mode .media-upload-area {
+    background: rgba(255, 255, 255, 0.02);
+}

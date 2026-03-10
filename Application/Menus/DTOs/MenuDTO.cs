@@ -1,4 +1,5 @@
 ﻿using Application.Common.Base.DTOs;
+using Application.Medias.DTOs;
 using Application.Categories.DTOs;
 using Domain.Entities;
 
@@ -10,7 +11,7 @@ public sealed class MenuDTO : BaseDTO
 	public Guid? StoreId { get; set; }
 	public Guid? CompanyId { get; set; }
 	public Guid? MenuTemplateId { get; set; }
-	public ICollection<Media> Medias { get; set; } = [];
+	public List<MediaDTO> Medias { get; set; } = [];
 	public ICollection<CategoryDTO> Categories { get; set; } = [];
 	public MenuStatus Status { get; set; }
 	public string? StoreName { get; set; }

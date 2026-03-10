@@ -78,6 +78,9 @@
                         <a asp-action="Create" asp-route-parentId="@item.Id" class="btn btn-sm btn-light text-success" title="Alt Kategori Ekle">
                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                         </a>
+                        <a asp-action="Details" asp-route-slug="@item.Slug" class="btn btn-sm btn-light text-info" title="Detaylar ve Fotoğraflar">
+                            <i class="fas fa-images"></i>
+                        </a>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Düzenle">
                             <i class="fas fa-pencil-alt"></i>
                         </a>

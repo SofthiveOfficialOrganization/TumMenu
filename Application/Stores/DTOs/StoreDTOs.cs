@@ -1,6 +1,7 @@
 using Application.Addresses.DTOs;
 using Application.Common.Base.DTOs;
 using Application.Companies.DTOs;
+using Application.Medias.DTOs;
 using Application.Staffs.DTOs;
 using Domain.Entities;
 
@@ -21,4 +22,6 @@ public sealed class StoreDTO : BaseDTO
 	public CompanyDTO? Company { get; set; }
 	public AddressDTO? Address { get; set; }
 	public List<StaffDTO> Staffs { get; set; } = new List<StaffDTO>();
+	public List<MediaDTO> Medias { get; set; } = [];
 }
+

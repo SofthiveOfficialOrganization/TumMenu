@@ -1,6 +1,7 @@
 using Application.Medias.Commands;
 using Application.Medias.DTOs;
 using Application.Medias.Queries;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,20 @@ public class MediaController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Details), new { id = media.Id });
 	}
 
-	[Authorize(Policy = "OwnerOnly")]
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Upload(Guid referenceId, MediaRefType type, IFormFile file, string slot = "default-gallery", CancellationToken ct = default)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Dosya seçilmedi.");
+
+        var command = new UploadMediaCommand(file, referenceId, type, Slot: slot);
+        var media = await mediator.Send(command, ct);
+
+        return Json(media);
+    }
+
+	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost("[action]")]
 	public async Task<IActionResult> Update(UpdateMediaCommand req, CancellationToken ct)
 	{
@@ -47,7 +61,7 @@ public class MediaController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Details), new { id = media.Id });
 	}
 
-	[Authorize(Policy = "OwnerOnly")]
+	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost("[action]/{id}")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
