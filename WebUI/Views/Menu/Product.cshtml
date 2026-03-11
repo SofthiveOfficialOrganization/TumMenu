@@ -29,12 +29,11 @@
             <div class="pm-view active">
                 <div class="pm-view-header">
                     <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
-                        @Model.CategoryTitle'e Dön
+                        <span>Geri Dön</span>
                     </a>
-                    <h2 class="pm-view-title mb-0">@Model.ProductTitle</h2>
                 </div>
 
                 @await Component.InvokeAsync("Ad", new { slotKey = "product_top" })
@@ -53,7 +52,7 @@
                 <!-- Ürün Bilgileri -->
                 <div class="pm-product-detail-body">
                     <div class="pm-product-detail-header">
-                        <h3 class="pm-product-detail-title">@Model.ProductTitle</h3>
+                        <h1 class="pm-product-detail-title">@Model.ProductTitle</h1>
                         <span class="pm-product-price pm-product-price--lg">@Model.BasePrice.ToString("N2") ₺</span>
                     </div>
 
@@ -62,7 +61,7 @@
                         <p class="pm-product-detail-desc">@Model.ProductDescription</p>
                     }
 
-                    <div class="pm-product-badges">
+                    <div class="pm-product-badges mt-4">
                         @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
                         @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
                         @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
@@ -79,7 +78,6 @@
                         </div>
                     }
                 </div>
-
             </div>
 
         </div>

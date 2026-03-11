@@ -32,15 +32,16 @@
             <div class="pm-view active">
                 <div class="pm-view-header">
                     <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
-                        @backLabel
+                        <span>@backLabel</span>
                     </a>
-                    <h2 class="pm-view-title mb-0">@Model.CategoryTitle</h2>
                 </div>
 
                 @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
+
+                <h2 class="pm-view-title mb-2">@Model.CategoryTitle</h2>
 
                 @if (!string.IsNullOrEmpty(Model.CategoryDescription))
                 {
@@ -49,43 +50,45 @@
 
                 @if (Model.SubCategories != null && Model.SubCategories.Count > 0)
                 {
-                    <div class="pm-category-grid mb-5">
-                        <h4 class="pm-section-title mb-3 w-100">Alt Kategoriler</h4>
-                        @foreach (var subCat in Model.SubCategories)
-                        {
-                            var subCategoryUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{subCat.Slug}";
-                            if (ViewBag.IsQrSource == true) subCategoryUrl += "?isQr=true";
-                            <a href="@subCategoryUrl" class="pm-cat-card pm-cat-card--link">
-                                <div class="pm-cat-card-photo">
-                                    @if (!string.IsNullOrEmpty(subCat.ImageUrl))
-                                    {
-                                        <img src="@subCat.ImageUrl" alt="@subCat.Title" loading="lazy" />
-                                    }
-                                    else
-                                    {
-                                        <div class="pm-cat-card-photo-placeholder">
-                                            @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
-                                        </div>
-                                    }
-                                </div>
-                                <div class="pm-cat-card-info">
-                                    <h3 class="pm-cat-card-title">@subCat.Title</h3>
-                                    <span class="pm-cat-card-count">@subCat.ProductCount ürün</span>
-                                </div>
-                            </a>
-                        }
+                    <div class="mb-5">
+                        <h4 class="pm-section-title mb-4">Alt Kategoriler</h4>
+                        <div class="pm-category-grid">
+                            @foreach (var subCat in Model.SubCategories)
+                            {
+                                var subCategoryUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{subCat.Slug}";
+                                if (ViewBag.IsQrSource == true) subCategoryUrl += "?isQr=true";
+                                <a href="@subCategoryUrl" class="pm-cat-card">
+                                    <div class="pm-cat-card-photo">
+                                        @if (!string.IsNullOrEmpty(subCat.ImageUrl))
+                                        {
+                                            <img src="@subCat.ImageUrl" alt="@subCat.Title" loading="lazy" />
+                                        }
+                                        else
+                                        {
+                                            <div class="pm-cat-card-photo-placeholder">
+                                                @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="pm-cat-card-info">
+                                        <h3 class="pm-cat-card-title">@subCat.Title</h3>
+                                        <span class="pm-cat-card-count">@subCat.ProductCount ürün</span>
+                                    </div>
+                                </a>
+                            }
+                        </div>
                     </div>
                 }
 
                 @if (Model.Products != null && Model.Products.Count > 0)
                 {
-                    <h4 class="pm-section-title mb-3">Ürünler</h4>
+                    <h4 class="pm-section-title mb-4">Ürünler</h4>
                     <div class="pm-product-list">
                         @foreach (var product in Model.Products)
                         {
                             var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
                             if (ViewBag.IsQrSource == true) productUrl += "?isQr=true";
-                            <a href="@productUrl" class="pm-product-card pm-product-card--link">
+                            <a href="@productUrl" class="pm-product-card">
                                 @if (!string.IsNullOrEmpty(product.ImageUrl))
                                 {
                                     <div class="pm-product-img-wrap">
@@ -103,9 +106,8 @@
                                     }
                                     <div class="pm-product-badges">
                                         @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
-                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
+                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Veg</span> }
                                         @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time">⏱ @product.EstimatedPreparationTimeInMinutes dk</span> }
-                                        @if (!string.IsNullOrEmpty(product.Allergens)) { <span class="pm-badge pm-badge-allergen" title="@product.Allergens">⚠️ Alerjen</span> }
                                     </div>
                                 </div>
                             </a>

@@ -141,7 +141,7 @@
                 {
                     @foreach (var store in homepageStores.NewStores)
                     {
-                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
@@ -226,7 +226,7 @@
                 {
                     @foreach (var store in homepageStores.PopularStores)
                     {
-                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
@@ -311,7 +311,7 @@
                 {
                     @foreach (var store in homepageStores.DailyStores)
                     {
-                        <a class="home-store-card" href="/Store/Details/@store.Id">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {

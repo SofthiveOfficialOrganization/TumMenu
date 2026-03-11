@@ -175,8 +175,83 @@
                 </table>
             </div>
         </div>
-        <div class="col-12">
-        <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "default-gallery")' />
+        <div class="col-12 mt-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="horizon-card h-100 p-0 overflow-hidden">
+                    <div class="bg-light px-3 py-2 border-bottom">
+                        <span class="text-secondary fw-bold small text-uppercase">Dükkan Logosu</span>
+                    </div>
+                    <div class="p-3 d-flex justify-content-center align-items-center" style="min-height: 200px;">
+                        @{
+                            var logo = Model.Medias.FirstOrDefault(m => m.Slot == "logo");
+                            if (logo != null)
+                            {
+                                <img src="@logo.MediaUrl" class="img-fluid rounded shadow-sm" style="max-height: 160px;" alt="Logo" />
+                            }
+                            else
+                            {
+                                <div class="text-muted small text-center">
+                                    <i class="fas fa-image fa-2x mb-2 opacity-25"></i><br/>Logo yüklenmemiş
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="horizon-card h-100 p-0 overflow-hidden">
+                    <div class="bg-light px-3 py-2 border-bottom">
+                        <span class="text-secondary fw-bold small text-uppercase">Dükkan Banner</span>
+                    </div>
+                    <div class="p-0 position-relative" style="min-height: 200px; background: #f8f9fa;">
+                         @{
+                            var banner = Model.Medias.FirstOrDefault(m => m.Slot == "banner");
+                            if (banner != null)
+                            {
+                                <img src="@banner.MediaUrl" class="w-100 h-100" style="object-fit: cover; position: absolute;" alt="Banner" />
+                            }
+                            else
+                            {
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small">
+                                    <i class="fas fa-panorama fa-2x mb-2 opacity-25"></i><br/>Banner yüklenmemiş
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="horizon-card p-0 overflow-hidden">
+                    <div class="bg-light px-3 py-2 border-bottom">
+                        <span class="text-secondary fw-bold small text-uppercase">Görsel Galerisi</span>
+                    </div>
+                    <div class="p-3">
+                        <div class="d-flex flex-wrap gap-2">
+                             @{
+                                var galleryPhotos = Model.Medias.Where(m => m.Slot == "default-gallery").ToList();
+                                if (galleryPhotos.Any())
+                                {
+                                    foreach(var photo in galleryPhotos)
+                                    {
+                                        <div class="media-preview-item" style="width: 120px; height: 120px;">
+                                            <img src="@photo.MediaUrl" class="w-100 h-100 rounded object-fit-cover shadow-sm clickable-img" 
+                                                 style="cursor: pointer" onclick="window.open('@photo.MediaUrl', '_blank')" />
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-muted small py-4 w-100 text-center">
+                                        Galeri boş.
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

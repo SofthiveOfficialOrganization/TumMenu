@@ -94,6 +94,56 @@
     </div>
 </div>
 
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
+                    <i class="fas fa-image me-2"></i>Dükkan Logosu
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "logo")' />
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Kare formatında (1:1) görseller önerilir.</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
+                    <i class="fas fa-panorama me-2"></i>Dükkan Banner / Kapak
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "banner")' />
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Geniş formatta (16:9 veya 21:9) yüksek çözünürlüklü görseller önerilir.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
+                    <i class="fas fa-images me-2"></i>Dükkan Galerisi
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "default-gallery")' />
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Dükkanınızın iç ve dış mekan fotoğraflarını buraya yükleyebilirsiniz.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>

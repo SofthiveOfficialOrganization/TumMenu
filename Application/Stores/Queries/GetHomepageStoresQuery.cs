@@ -24,6 +24,7 @@ public class GetHomepageStoresQueryHandler(
 		var baseQuery = repoStore.Query()
 			.Include(s => s.Address)
 			.Include(s => s.Medias)
+			.Include(s => s.Company)
 			.Where(s => !s.IsDeleted);
 
 		// Yeni restoranlar – en son eklenenler
@@ -45,7 +46,7 @@ public class GetHomepageStoresQueryHandler(
 		var rng = new Random(today);
 		var dailyIds = allIds.OrderBy(_ => rng.Next()).Take(6).ToList();
 		var dailyStores = dailyIds.Count > 0
-			? await baseQuery.Where(s => dailyIds.Contains(s.Id)).ToListAsync(ct)
+			? await baseQuery.Where(s => dailyIds.Contains(s.Id)).Include(s => s.Address).Include(s => s.Medias).Include(s => s.Company).ToListAsync(ct)
 			: new List<Store>();
 
 		return new HomepageStoresDTO
@@ -84,6 +85,7 @@ public class GetHomepageStoresQueryHandler(
 			Id = store.Id,
 			Title = store.Title,
 			Slug = store.Slug,
+			CompanySlug = store.Company.Slug,
 			ImageUrl = storeImage?.MediaUrl,
 			City = city,
 			District = district,

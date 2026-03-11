@@ -43,7 +43,7 @@
                 {
                     <div class="pm-empty">
                         <span class="pm-empty-icon">🍽️</span>
-                        <p>Henüz menüde bulunmuyor.</p>
+                        <p>Henüz menüde kategori bulunmuyor.</p>
                     </div>
                 }
                 else
@@ -54,7 +54,7 @@
                             var productCount = cat.Products.Count(p => p.IsActive);
                             var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
                             if (ViewBag.IsQrSource == true) categoryUrl += "?isQr=true";
-                            <a href="@categoryUrl" class="pm-cat-card pm-cat-card--link">
+                            <a href="@categoryUrl" class="pm-cat-card">
                                 <div class="pm-cat-card-photo">
                                     @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.ImageUrl))
                                     {
