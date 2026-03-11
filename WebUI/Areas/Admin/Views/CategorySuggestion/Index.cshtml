@@ -151,7 +151,7 @@
                         <nav>
                             <ul class="pagination pagination-sm mb-0 gap-1">
                                 <!-- Önceki -->
-                                <li class="page-item @(currentPage == 0 ? "disabled" : "")">
+                                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
                                     <a class="page-link rounded-2"
                                        asp-action="Index"
                                        asp-route-status="@statusFilter"
@@ -161,11 +161,11 @@
                                     </a>
                                 </li>
 
-                                @for (int i = 0; i < totalPages; i++)
+                                @for (int i = 1; i <= totalPages; i++)
                                 {
-                                    if (totalPages > 7 && i != 0 && i != totalPages - 1 && Math.Abs(i - currentPage) > 2)
+                                    if (totalPages > 7 && i != 1 && i != totalPages && Math.Abs(i - currentPage) > 2)
                                     {
-                                        if (i == 1 || i == totalPages - 2)
+                                        if (i == 2 || i == totalPages - 1)
                                         {
                                             <li class="page-item disabled"><span class="page-link border-0 bg-transparent">…</span></li>
                                         }
@@ -176,12 +176,12 @@
                                            asp-action="Index"
                                            asp-route-status="@statusFilter"
                                            asp-route-page="@i"
-                                           asp-route-pageSize="@pageSize">@(i + 1)</a>
+                                           asp-route-pageSize="@pageSize">@i</a>
                                     </li>
                                 }
 
                                 <!-- Sonraki -->
-                                <li class="page-item @(currentPage >= totalPages - 1 ? "disabled" : "")">
+                                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
                                     <a class="page-link rounded-2"
                                        asp-action="Index"
                                        asp-route-status="@statusFilter"
