@@ -22,6 +22,13 @@ public class EnsureCompanyExistsFilter : IAsyncActionFilter
         // 1. Check if user is authenticated and is an Owner
         if (user.Identity?.IsAuthenticated == true && user.IsInRole("Owner"))
         {
+            // 1.1 exclude API requests from redirection
+            if (context.HttpContext.Request.Path.Value?.StartsWith("/api", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                await next();
+                return;
+            }
+
             // 2. exclude Identity area (Logout, Manage, etc.) 
             // We want to allow them to logout or manage account if they want
             var area = context.RouteData.Values["area"]?.ToString();

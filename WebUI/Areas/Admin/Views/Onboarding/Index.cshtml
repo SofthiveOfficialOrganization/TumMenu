@@ -5,13 +5,36 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; 
 }
 
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    <style>
+        #map { height: 350px; border-radius: 0.8rem; border: 1px solid #dee2e6; z-index: 1; }
+        .map-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 350px;
+            background: rgba(255,255,255,0.8);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.8rem;
+            backdrop-filter: blur(2px);
+            font-weight: 600;
+            color: #6c757d;
+        }
+    </style>
+}
+
 <div class="container-fluid p-0 overflow-hidden position-relative">
 
     <div class="row min-vh-100 align-items-center justify-content-center bg-light">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <div class="card shadow-xl border-0 overflow-hidden rounded-4">
-                <div class="card-body p-0">
-                    <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); width: 400%;">
+                <div class="card-body p-0 position-relative">
+                    <div class="onboarding-progress-bar" style="height: 5px; width: 0%; background: linear-gradient(90deg, #0d6efd, #0dcaf0); position: absolute; top: 0; left: 0; z-index: 100; transition: width 0.6s ease;"></div>
+                    <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), height 0.4s ease; width: 400%; align-items: flex-start;">
                         
                         <!-- Step 1: Create Company -->
                         <div class="wizard-step w-100 p-5 fade-in-up" id="step-company">
@@ -90,6 +113,46 @@
                                     </div>
                                     <div id="StoreSlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
                                 </div>
+
+                                <div class="mb-4">
+                                    <h5 class="fw-bold text-secondary text-uppercase small mb-3 border-bottom pb-2">
+                                        <i class="fas fa-map-marker-alt me-2"></i> Adres Bilgileri
+                                    </h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="citySelect" class="form-label small fw-bold">İl</label>
+                                            <select class="form-select form-select-lg shadow-sm" id="citySelect" name="Address.CityId" required>
+                                                <option value="">İl Seçiniz</option>
+                                            </select>
+                                            <input type="hidden" name="Address.CityName" id="cityNameInput">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="districtSelect" class="form-label small fw-bold">İlçe</label>
+                                            <select class="form-select form-select-lg shadow-sm" id="districtSelect" name="Address.DistrictId" disabled required>
+                                                <option value="">Önce İl Seçiniz</option>
+                                            </select>
+                                            <input type="hidden" name="Address.DistrictName" id="districtNameInput">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="FullAddress" class="form-label small fw-bold">Açık Adres</label>
+                                            <textarea class="form-control shadow-sm" id="FullAddress" name="Address.FullAddress" rows="2" placeholder="Sokak, No, Kat..." required></textarea>
+                                        </div>
+                                        
+                                        <div class="col-12 mt-4">
+                                            <h6 class="fw-bold text-secondary small text-uppercase mb-2">Konum Belirle</h6>
+                                            <div class="position-relative">
+                                                <div id="mapOverlay" class="map-overlay">
+                                                    <span><i class="fas fa-map-marker-alt me-2"></i>Haritayı görmek için lütfen İl/İlçe seçiniz</span>
+                                                </div>
+                                                <div id="map"></div>
+                                                <input type="hidden" name="Address.Latitude" id="cityLatInput">
+                                                <input type="hidden" name="Address.Longitude" id="cityLngInput">
+                                            </div>
+                                            <p class="text-muted small mt-2"><i class="fas fa-info-circle me-1"></i>İmleci sürükleyerek dükkanınızın tam konumunu işaretleyebilirsiniz.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-success btn-xl shadow-lg hover-scale">
                                         Şubeyi Kaydet ve Devam Et <i class="fas fa-arrow-right ms-2"></i>
@@ -194,9 +257,11 @@
     }
     
     .btn-xl {
-        font-size: 1.25rem;
-        padding: 0.8rem 1.5rem;
+        font-size: 1.15rem;
+        padding: 0.9rem 1.6rem;
         border-radius: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
     }
 
     .scale-125 { transform: scale(1.25); }
@@ -210,9 +275,9 @@
     }
 
     .fade-in-up {
-        animation: fadeInUp 0.8s ease-out forwards;
+        animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
 
     @@keyframes fadeInUp {
@@ -220,6 +285,25 @@
             opacity: 1;
             transform: translateY(0);
         }
+    }
+
+    .form-select-lg {
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+        font-size: 1.1rem;
+        border-radius: 0.8rem;
+    }
+
+    .card {
+        border-radius: 1.25rem !important;
+    }
+
+    .wizard-step {
+        transition: opacity 0.4s ease;
+    }
+
+    .wizard-step:not(.active) {
+        /* opacity: 0.5; */
     }
 
     .animate-bounce {
@@ -254,6 +338,9 @@
 </style>
 
 @section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -380,19 +467,196 @@
                 });
             }
 
-            // Init Slug Handling
             setupSlugHandling('Company', '@Url.Action("CheckSlug", "Company", new { area = "Admin" })');
             setupSlugHandling('Store', '@Url.Action("CheckSlug", "Store", new { area = "Admin" })');
+
+            // --- Address Handling for Store Step ---
+            const cityInput = document.getElementById('citySelect');
+            const districtSelect = $('#districtSelect');
+            const citySelect = $('#citySelect'); // for select2
+            
+            // Re-initialize Select2
+            citySelect.select2({ theme: 'bootstrap-5', width: '100%' });
+            districtSelect.select2({ theme: 'bootstrap-5', width: '100%' });
+
+            const cityNameInput = $('#cityNameInput');
+            const districtNameInput = $('#districtNameInput');
+            const latInput = $('#cityLatInput');
+            const lngInput = $('#cityLngInput');
+
+            let map = null;
+            let marker = null;
+
+            let state = {
+                cityId: null,
+                cityName: null,
+                districtName: null
+            };
+
+            function initMap(lat, lng, zoom = 12) {
+                if (!map) {
+                    map = L.map('map').setView([lat, lng], zoom);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(map);
+
+                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+                    marker.on('dragend', function (e) {
+                        const pos = marker.getLatLng();
+                        latInput.val(pos.lat);
+                        lngInput.val(pos.lng);
+                    });
+
+                    setTimeout(() => map.invalidateSize(), 300);
+                } else {
+                    map.setView([lat, lng], zoom);
+                    marker.setLatLng([lat, lng]);
+                    setTimeout(() => map.invalidateSize(), 300);
+                }
+                latInput.val(lat);
+                lngInput.val(lng);
+                $('#mapOverlay').hide();
+            }
+
+            function loadDistricts(cityId, targetDistrictName = null) {
+                districtSelect.prop('disabled', true);
+                fetch(`/api/location/districts/${cityId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        districtSelect.prop('disabled', false).empty().append('<option value="">İlçe Seçiniz</option>');
+                        data.forEach(d => {
+                            var opt = $('<option>', { value: d.id, text: d.name });
+                            if(targetDistrictName && d.name === targetDistrictName) {
+                                opt.attr('selected', true);
+                            }
+                            districtSelect.append(opt);
+                        });
+                        districtSelect.trigger('change');
+                    })
+                    .catch(err => console.error('District load error:', err));
+            }
+
+            // Load Cities
+            fetch('/api/location/provinces')
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(p => {
+                        var opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = p.name;
+                        opt.dataset.name = p.name;
+                        if(state.cityId === p.id || state.cityName === p.name) {
+                            opt.selected = true;
+                            state.cityId = p.id;
+                            state.cityName = p.name;
+                        }
+                        cityInput.appendChild(opt);
+                    });
+                    citySelect.trigger('change');
+                    if(state.cityId) {
+                        loadDistricts(state.cityId, state.districtName);
+                    }
+                })
+                .catch(err => console.error('City load error:', err));
+
+            citySelect.on('change', function() {
+                const cityId = $(this).val();
+                const selectedOption = $(this).find('option:selected');
+                const cityName = selectedOption.text();
+                
+                if (cityId) {
+                    cityNameInput.val(cityName);
+                    loadDistricts(cityId);
+
+                    // Geocode city to center map
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                initMap(parseFloat(data[0].lat), parseFloat(data[0].lon), 10);
+                            }
+                        });
+                } else {
+                    cityNameInput.val('');
+                    districtSelect.prop('disabled', true).empty().append('<option value="">Önce İl Seçiniz</option>');
+                    districtSelect.trigger('change');
+                    $('#mapOverlay').show();
+                }
+            });
+
+            districtSelect.on('change', function() {
+                const districtId = $(this).val();
+                const selectedOption = $(this).find('option:selected');
+                const districtName = selectedOption.text();
+                const cityName = cityNameInput.val();
+
+                if (districtId) {
+                    districtNameInput.val(districtName);
+
+                    // Geocode district to center map
+                    let query = '';
+                    if (districtName.toLowerCase() === 'merkez') {
+                        query = `city=${encodeURIComponent(cityName)}&state=${encodeURIComponent(cityName)}`;
+                    } else {
+                        query = `county=${encodeURIComponent(districtName)}&state=${encodeURIComponent(cityName)}`;
+                    }
+                    
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&${query}&country=Türkiye&limit=1`;
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                initMap(parseFloat(data[0].lat), parseFloat(data[0].lon), 13);
+                            }
+                        });
+                } else {
+                    districtNameInput.val('');
+                }
+            });
+
+            const heightObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    const stepIndex = $('.wizard-step').index(entry.target);
+                    if (stepIndex === currentStep) {
+                        // Add a small buffer to prevent pixel-perfect cutoffs
+                        wizard.css('height', (entry.target.offsetHeight) + 'px');
+                    }
+                }
+            });
+
+            $('.wizard-step').each(function() {
+                heightObserver.observe(this);
+            });
+
+            function updateWizardHeight() {
+                const activeStep = $('.wizard-step').eq(currentStep);
+                if (activeStep.length) {
+                    wizard.css('height', activeStep.outerHeight() + 'px');
+                }
+            }
 
             // --- Helper to slide to next step ---
             function nextStep() {
                 currentStep++;
+                const progress = (currentStep / 3) * 100;
+                $('.onboarding-progress-bar').css('width', progress + '%');
+                
                 wizard.css('transform', `translateX(-${currentStep * 25}%)`);
+                updateWizardHeight();
+
                 // Auto-init category step when reaching step 4
                 if (currentStep === 3) {
                     setTimeout(() => initCategoryStep(), 300);
                 }
             }
+            
+            // Initial progress & height
+            $('.onboarding-progress-bar').css('width', (@(ViewBag.InitialStep ?? 0) / 3 * 100) + '%');
+            setTimeout(updateWizardHeight, 500);
+            $(window).on('resize', updateWizardHeight);
             
             // --- Helper for Error Handling ---
             function handleError(xhr, titleContext) {
@@ -512,7 +776,16 @@
                     CompanyId: $('#StoreCompanyId').val(),
                     Title: $('#StoreTitle').val(),
                     PhoneNumber: $('#StorePhone').val(),
-                    Slug: $('#StoreSlug').val()
+                    Slug: $('#StoreSlug').val(),
+                    Address: {
+                        CityId: $('#citySelect').val(),
+                        CityName: $('#cityNameInput').val(),
+                        DistrictId: $('#districtSelect').val(),
+                        DistrictName: $('#districtNameInput').val(),
+                        FullAddress: $('#FullAddress').val(),
+                        Latitude: parseFloat($('#cityLatInput').val()),
+                        Longitude: parseFloat($('#cityLngInput').val())
+                    }
                 };
 
                 $.ajax({
