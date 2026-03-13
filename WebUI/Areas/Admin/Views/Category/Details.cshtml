@@ -30,7 +30,7 @@
                     <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm bg-white text-success border border-success shadow-sm px-3" title="Alt Kategori Ekle" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-plus"></i> <span class="d-none d-md-inline ms-2">Alt Kategori Ekle</span>
                     </a>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Details", "Menu", new { id = Model.MenuId }))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </div>

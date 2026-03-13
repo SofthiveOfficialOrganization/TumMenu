@@ -29,7 +29,7 @@
 
 <div class="container-fluid p-0 overflow-hidden position-relative">
 
-    <div class="row min-vh-100 align-items-center justify-content-center bg-light">
+    <div class="row min-vh-100 align-items-center justify-content-center bg-light mx-0">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <div class="card shadow-xl border-0 overflow-hidden rounded-4">
                 <div class="card-body p-0 position-relative">
@@ -37,13 +37,13 @@
                     <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), height 0.4s ease; width: 400%; align-items: flex-start;">
                         
                         <!-- Step 1: Create Company -->
-                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-company">
+                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-company">
                             <div class="text-center mb-5">
                                 <div class="mb-4">
                                     <i class="fas fa-building fa-4x text-primary animate-bounce"></i>
                                 </div>
-                                <h2 class="display-5 fw-bold text-primary mb-3">Hoşgeldiniz!</h2>
-                                <p class="lead text-muted">Hemen başlayalım. Şirketinizin adı nedir?</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-primary mb-2 mb-md-3">Hoşgeldiniz!</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Hemen başlayalım. Şirketinizin adı nedir?</p>
                             </div>
                             <form id="form-company" class="onboarding-form">
                                 <div class="mb-4">
@@ -52,18 +52,19 @@
                                 </div>
                                 
                                 <div class="mb-5">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <label for="CompanySlug" class="form-label h5 text-muted mb-0">Şirket Linki (Opsiyonel)</label>
-                                        <div class="form-check form-switch mb-0">
-                                            <input class="form-check-input scale-125" type="checkbox" id="CompanySlugToggle">
-                                            <label class="form-check-label ms-2" for="CompanySlugToggle">El ile düzenle</label>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                                        <label for="CompanySlug" class="form-label h6 text-muted mb-0">Şirket Linki (Opsiyonel)</label>
+                                        <div class="form-check form-switch mb-0 d-flex align-items-center">
+                                            <input class="form-check-input scale-110 cursor-pointer" type="checkbox" id="CompanySlugToggle">
+                                            <label class="form-check-label ms-2 small text-secondary cursor-pointer" for="CompanySlugToggle">El ile düzenle</label>
                                         </div>
                                     </div>
-                                    <div class="input-group input-group-lg shadow-sm">
-                                        <span class="input-group-text bg-transparent text-muted">tummenu.com/</span>
-                                        <input type="text" class="form-control" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
-                                        <span class="input-group-text border-start-0 bg-transparent" id="CompanySlugStatus">
-                                            <i class="fas fa-lock text-secondary" id="CompanySlugIcon"></i>
+                                    <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
+                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">tummenu.com/</span>
+                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"><i class="fas fa-link"></i></span>
+                                        <input type="text" class="form-control border-0 bg-white" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly style="min-height: 52px;">
+                                        <span class="input-group-text border-0 bg-white px-3" id="CompanySlugStatus" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                            <i class="fas fa-lock text-secondary opacity-50" id="CompanySlugIcon"></i>
                                         </span>
                                     </div>
                                     <div id="CompanySlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
@@ -78,13 +79,13 @@
                         </div>
 
                         <!-- Step 2: Create Store -->
-                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-store">
+                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-store">
                             <div class="text-center mb-5">
                                 <div class="mb-4">
                                     <i class="fas fa-store-alt fa-4x text-success animate-pulse"></i>
                                 </div>
-                                <h2 class="display-5 fw-bold text-success mb-3">Harika Gidiyoruz!</h2>
-                                <p class="lead text-muted">Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-success mb-2 mb-md-3">Harika Gidiyoruz!</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!</p>
                             </div>
                             <form id="form-store" class="onboarding-form">
                                 <input type="hidden" id="StoreCompanyId" name="CompanyId">
@@ -97,18 +98,19 @@
                                     <input type="tel" class="form-control form-control-xl shadow-sm" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
                                 </div>
                                  <div class="mb-5">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <label for="StoreSlug" class="form-label h5 text-muted mb-0">Şube Linki (Opsiyonel)</label>
-                                        <div class="form-check form-switch mb-0">
-                                            <input class="form-check-input scale-125" type="checkbox" id="StoreSlugToggle">
-                                            <label class="form-check-label ms-2" for="StoreSlugToggle">El ile düzenle</label>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                                        <label for="StoreSlug" class="form-label h6 text-muted mb-0">Şube Linki (Opsiyonel)</label>
+                                        <div class="form-check form-switch mb-0 d-flex align-items-center">
+                                            <input class="form-check-input scale-110 cursor-pointer" type="checkbox" id="StoreSlugToggle">
+                                            <label class="form-check-label ms-2 small text-secondary cursor-pointer" for="StoreSlugToggle">El ile düzenle</label>
                                         </div>
                                     </div>
-                                    <div class="input-group input-group-lg shadow-sm">
-                                        <span class="input-group-text bg-transparent text-muted">tummenu.com/sirket/</span>
-                                        <input type="text" class="form-control" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
-                                        <span class="input-group-text border-start-0 bg-transparent" id="StoreSlugStatus">
-                                            <i class="fas fa-lock text-secondary" id="StoreSlugIcon"></i>
+                                    <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
+                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">tummenu.com/sirket/</span>
+                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"><i class="fas fa-link"></i></span>
+                                        <input type="text" class="form-control border-0 bg-white" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly style="min-height: 52px;">
+                                        <span class="input-group-text border-0 bg-white px-3" id="StoreSlugStatus" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                            <i class="fas fa-lock text-secondary opacity-50" id="StoreSlugIcon"></i>
                                         </span>
                                     </div>
                                     <div id="StoreSlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
@@ -162,13 +164,13 @@
                         </div>
 
                         <!-- Step 3: Create Menu -->
-                        <div class="wizard-step w-100 p-5 fade-in-up" id="step-menu">
+                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-menu">
                             <div class="text-center mb-5">
                                 <div class="mb-4">
                                     <i class="fas fa-utensils fa-4x text-info animate-shake"></i>
                                 </div>
-                                <h2 class="display-5 fw-bold text-info mb-3">Neredeyse Bitti!</h2>
-                                <p class="lead text-muted">Menünü oluştur ve sipariş almaya başla.</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-info mb-2 mb-md-3">Neredeyse Bitti!</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Menünü oluştur ve sipariş almaya başla.</p>
                             </div>
                             <form id="form-menu" class="onboarding-form">
                                 <input type="hidden" id="MenuStoreId" name="StoreId">
@@ -191,17 +193,17 @@
                         </div>
 
                         <!-- Step 4: Select Categories -->
-                        <div class="wizard-step w-100 p-4 fade-in-up" id="step-category">
+                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-category">
                             <input type="hidden" id="CategoryMenuId" name="MenuId">
                             <div class="text-center mb-4">
                                 <i class="fas fa-tags fa-4x text-warning animate-bounce mb-3"></i>
-                                <h2 class="display-5 fw-bold text-warning mb-1">İlk Kategorilerin!</h2>
-                                <p class="lead text-muted">Kütüphaneden kategorileri seç ve menüne ekle. Dilediğin zaman tamamla.</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-warning mb-1 mb-md-2">İlk Kategorilerin!</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Kütüphaneden kategorileri seç ve menüne ekle. Dilediğin zaman tamamla.</p>
                             </div>
 
                             <div class="row g-3" style="min-height: 340px;">
                                 <!-- Left: Library Search -->
-                                <div class="col-6">
+                                <div class="col-12 col-md-6">
                                     <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-book-open me-2"></i> Kategori Bul
@@ -217,7 +219,7 @@
                                 </div>
 
                                 <!-- Right: Added Categories (Sortable 2-col grid) -->
-                                <div class="col-6">
+                                <div class="col-12 col-md-6">
                                     <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-list me-2"></i> Menüm
@@ -251,9 +253,15 @@
     /* .content-wrapper { overflow: hidden; } */ 
     
     .form-control-xl {
-        font-size: 1.25rem;
-        padding: 0.8rem 1rem;
+        font-size: 1.15rem;
+        padding: 0.75rem 1rem;
         border-radius: 0.8rem;
+    }
+    @@media (min-width: 768px) {
+        .form-control-xl {
+            font-size: 1.25rem;
+            padding: 0.85rem 1.25rem;
+        }
     }
     
     .btn-xl {
@@ -300,6 +308,14 @@
 
     .wizard-step {
         transition: opacity 0.4s ease;
+        width: 25% !important;
+        flex-shrink: 0;
+        padding: 2.5rem 1rem !important;
+    }
+    @@media (min-width: 768px) {
+        .wizard-step {
+            padding: 4rem 3rem !important;
+        }
     }
 
     .wizard-step:not(.active) {
@@ -885,16 +901,15 @@
                         return;
                     }
                     items.forEach(function(item) {
-                        const row = $('<div>')
-                            .addClass('d-flex align-items-center justify-content-between p-3 rounded mb-2 library-item border')
-                            .css({ cursor: 'pointer', transition: 'background .15s' })
-                            .attr('data-id', item.id)
-                            .attr('data-title', item.title)
-                            .html(`
-                                <span class="text-body fw-semibold fs-6">${item.title}</span>
-                                <button type="button" class="btn btn-warning btn-add-category px-3" title="Ekle">
+                        const row = $(`
+                            <div class="d-flex align-items-center justify-content-between p-3 rounded mb-2 library-item border bg-white shadow-sm"
+                                style="cursor: pointer; transition: all 0.2s ease;"
+                                data-id="${item.id}" data-title="${item.title}">
+                                <span class="text-body fw-semibold fs-6 pe-2">${item.title}</span>
+                                <button type="button" class="btn btn-warning btn-add-category px-3 btn-sm fw-bold flex-shrink-0" title="Ekle">
                                     <i class="fas fa-plus me-1"></i> Ekle
-                                </button>`);
+                                </button>
+                            </div>`);
                         row.find('.btn-add-category').on('click', function() {
                             addCategoryToMenu(item.id, item.title, row);
                         });
@@ -935,6 +950,7 @@
                         if ($('#addedCategoryList .added-category-item').length === 1) {
                             initAddedCategoriesSortable();
                         }
+                        updateWizardHeight();
                     },
                     error: function(xhr) { handleError(xhr, 'AddCategory'); }
                 });
@@ -943,15 +959,15 @@
             // Shared helper: build and append a category card to the right panel
             function appendAddedCategoryCard(categoryId, title) {
                 $('#addedPlaceholder').hide();
-                const colDiv = $('<div>').addClass('col-6 added-category-item').attr('data-id', categoryId);
+                const colDiv = $('<div>').addClass('col-12 col-sm-6 added-category-item').attr('data-id', categoryId);
                 const card = $('<div>')
-                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2 bg-warning bg-opacity-10 border border-warning border-2')
+                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2 bg-warning bg-opacity-10 border border-warning border-2 position-relative')
                     .html(`
                         <i class="fas fa-grip-vertical text-secondary handle fs-5 flex-shrink-0" style="cursor:grab"></i>
-                        <span class="text-body fw-bold flex-grow-1 fs-6">${title}</span>
-                        <button type="button" class="btn btn-danger btn-remove-category flex-shrink-0 d-flex align-items-center justify-content-center"
-                            style="width:34px;height:34px;padding:0;" title="Kaldır">
-                            <i class="fas fa-times text-white"></i>
+                        <span class="text-body fw-bold flex-grow-1 fs-6 pe-5">${title}</span>
+                        <button type="button" class="btn btn-danger btn-remove-category position-absolute d-flex align-items-center justify-content-center"
+                            style="width:32px;height:32px;padding:0; top: 10px; right: 10px;" title="Kaldır">
+                            <i class="fas fa-times text-white small"></i>
                         </button>`);
                 card.find('.btn-remove-category').on('click', function() {
                     $.post('/admin/Onboarding/remove-category/' + categoryId, function() {
@@ -960,12 +976,14 @@
                             $('#addedPlaceholder').show();
                         }
                         loadCategoryLibrary($('#categorySearch').val());
+                        updateWizardHeight();
                     }).fail(function() {
                         Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Kaldırma işlemi başarısız.', showConfirmButton: false, timer: 3000 });
                     });
                 });
                 colDiv.append(card);
                 $('#addedCategoryList').append(colDiv);
+                updateWizardHeight();
             }
 
             function initAddedCategoriesSortable() {

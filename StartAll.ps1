@@ -13,6 +13,10 @@
 $webUiUrls = "https://0.0.0.0:7019;http://0.0.0.0:5000"
 $locationApiUrls = "http://localhost:5197"
 
+# Set environment to Development for appsettings.Development.json
+$env:ASPNETCORE_ENVIRONMENT = "Development"
+$env:DOTNET_ENVIRONMENT = "Development"
+
 Write-Host "Starting Location API silently..."
 Start-Process -FilePath "dotnet" `
   -ArgumentList @(
