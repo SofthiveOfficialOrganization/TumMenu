@@ -1,5 +1,7 @@
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebUI.Extensions;
 using WebUI.ExternalServices;
 using WebUI.Filters;
@@ -13,61 +15,64 @@ builder.AddServices();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+	options.LoginPath = "/Identity/Account/Login";
+	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("OwnerOnly", p =>
-    {
-        p.RequireRole("Owner");
-        p.RequireClaim("owner_id");
-    })
-    .AddPolicy("AdminOnly", p =>
-    {
-        p.RequireRole("Admin");
-    })
-    .AddPolicy("OwnerOrAdmin", p =>
-    {
-        p.RequireAssertion(ctx =>
-            ctx.User.IsInRole("Admin") ||
-            (ctx.User.IsInRole("Owner") && ctx.User.HasClaim(c => c.Type == "owner_id"))
-        );
-    });
+	.AddPolicy("OwnerOnly", p =>
+	{
+		p.RequireRole("Owner");
+		p.RequireClaim("owner_id");
+	})
+	.AddPolicy("AdminOnly", p =>
+	{
+		p.RequireRole("Admin");
+	})
+	.AddPolicy("OwnerOrAdmin", p =>
+	{
+		p.RequireAssertion(ctx =>
+			ctx.User.IsInRole("Admin") ||
+			(ctx.User.IsInRole("Owner") && ctx.User.HasClaim(c => c.Type == "owner_id"))
+		);
+	});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages()
-    .AddMvcOptions(options =>
-    {
-        options.Filters.Add<AppExceptionFilter>();
-        options.Filters.Add<ValidationLoggingFilter>();
-        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-        options.Filters.Add<EnsureCompanyExistsFilter>();
-        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-    });
+	.AddMvcOptions(options =>
+	{
+		options.Filters.Add<AppExceptionFilter>();
+		options.Filters.Add<ValidationLoggingFilter>();
+		options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+		options.Filters.Add<EnsureCompanyExistsFilter>();
+		options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+	});
 
 
 
 var app = builder.Build();
+var serviceProvider = app.Services.CreateScope().ServiceProvider;
+var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+await db.Database.MigrateAsync();
 
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+	app.UseMigrationsEndPoint();
 }
 else
 {
-    app.UseExceptionHandler("/error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 var supportedCultures = new[] { "tr-TR" };
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
+	.SetDefaultCulture(supportedCultures[0])
+	.AddSupportedCultures(supportedCultures)
+	.AddSupportedUICultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
 
@@ -82,27 +87,27 @@ app.UseStatusCodePagesWithReExecute("/status-code/{0}");
 
 
 app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+	name: "areas",
+	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+	name: "default",
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "publicProduct",
-    pattern: "{companySlug}/{storeSlug}/{categorySlug}/{productSlug}",
-    defaults: new { controller = "Menu", action = "Product" });
+	name: "publicProduct",
+	pattern: "{companySlug}/{storeSlug}/{categorySlug}/{productSlug}",
+	defaults: new { controller = "Menu", action = "Product" });
 
 app.MapControllerRoute(
-    name: "publicCategory",
-    pattern: "{companySlug}/{storeSlug}/{categorySlug}",
-    defaults: new { controller = "Menu", action = "Category" });
+	name: "publicCategory",
+	pattern: "{companySlug}/{storeSlug}/{categorySlug}",
+	defaults: new { controller = "Menu", action = "Category" });
 
 app.MapControllerRoute(
-    name: "publicStore",
-    pattern: "{companySlug}/{storeSlug}",
-    defaults: new { controller = "Menu", action = "Index" });
+	name: "publicStore",
+	pattern: "{companySlug}/{storeSlug}",
+	defaults: new { controller = "Menu", action = "Index" });
 
 app.MapRazorPages();
 
