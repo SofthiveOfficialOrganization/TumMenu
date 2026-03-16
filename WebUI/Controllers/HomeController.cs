@@ -20,6 +20,14 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new GetAllCategoryLibraryItemsPagedQuery { Page = 1, PageSize = 100 }, ct);
         ViewBag.Categories = categories.Items.ToList();
 
+        // Add platform cookie to identify legitimate platform users
+        HttpContext.Response.Cookies.Append("FromTumMenuPlatform", "true", new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddHours(2), // Short lived cookie
+            HttpOnly = true,
+            SameSite = SameSiteMode.Lax
+        });
+
         return View();
     }
 
@@ -88,6 +96,14 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         var categories = await mediator.Send(
             new GetAllCategoryLibraryItemsPagedQuery { Page = 1, PageSize = 100 }, ct);
         ViewBag.Categories = categories.Items.ToList();
+        // Add platform cookie to identify legitimate platform users
+        HttpContext.Response.Cookies.Append("FromTumMenuPlatform", "true", new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddHours(2),
+            HttpOnly = true,
+            SameSite = SameSiteMode.Lax
+        });
+
         return View();
     }
 

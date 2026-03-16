@@ -35,7 +35,10 @@
             <!-- KATEGORİLER -->
             <div class="pm-view active">
                 
-                @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
+                @if (ViewBag.IsQrSource == true)
+                {
+                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
+                }
 
                 <h2 class="pm-view-title">Kategoriler</h2>
 
@@ -49,8 +52,10 @@
                 else
                 {
                     <div class="pm-category-grid">
+                        @{ int categoryCounter = 0; }
                         @foreach (var cat in categories)
                         {
+                            categoryCounter++;
                             var productCount = cat.Products.Count(p => p.IsActive);
                             var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
                             if (ViewBag.IsQrSource == true) categoryUrl += "?isQr=true";
@@ -72,6 +77,13 @@
                                     <span class="pm-cat-card-count">@productCount ürün</span>
                                 </div>
                             </a>
+
+                            if (ViewBag.IsQrSource == true && categoryCounter % 4 == 0 && categoryCounter < categories.Count)
+                            {
+                                <div class="pm-ad-in-feed" style="grid-column: 1 / -1;">
+                                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
+                                </div>
+                            }
                         }
                     </div>
                 }

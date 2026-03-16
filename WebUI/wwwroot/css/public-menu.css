@@ -479,3 +479,31 @@ body {
   text-transform: uppercase;
 }
 
+/* ── IN-FEED AD ── */
+.pm-ad-in-feed {
+    grid-column: 1 / -1;
+    margin: 12px 0;
+    padding: 16px;
+    background: rgba(104, 135, 69, 0.03);
+    border: 1px dashed var(--pm-border);
+    border-radius: var(--pm-radius);
+    text-align: center;
+    position: relative;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pm-ad-in-feed::before {
+    content: "Sizin İçin Seçtiklerimiz";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    background: var(--pm-bg);
+    padding: 0 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--pm-muted);
+}
+

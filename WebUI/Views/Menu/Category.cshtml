@@ -39,7 +39,10 @@
                     </a>
                 </div>
 
-                @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
+                @if (ViewBag.IsQrSource == true)
+                {
+                    @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
+                }
 
                 <h2 class="pm-view-title mb-2">@Model.CategoryTitle</h2>
 
@@ -84,8 +87,10 @@
                 {
                     <h4 class="pm-section-title mb-4">Ürünler</h4>
                     <div class="pm-product-list">
+                        @{ int productCounter = 0; }
                         @foreach (var product in Model.Products)
                         {
+                            productCounter++;
                             var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
                             if (ViewBag.IsQrSource == true) productUrl += "?isQr=true";
                             <a href="@productUrl" class="pm-product-card">
@@ -111,6 +116,13 @@
                                     </div>
                                 </div>
                             </a>
+
+                            if (ViewBag.IsQrSource == true && productCounter % 5 == 0 && productCounter < Model.Products.Count)
+                            {
+                                <div class="pm-ad-in-feed">
+                                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
+                                </div>
+                            }
                         }
                     </div>
                 }

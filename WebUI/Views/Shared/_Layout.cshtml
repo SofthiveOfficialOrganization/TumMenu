@@ -1,4 +1,4 @@
-﻿@{
+@{
     var pageTitle = ViewData["Title"] as string ?? "Tüm Menü";
     var fullTitle = $"{pageTitle} | Tüm Menü";
 
@@ -32,6 +32,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @RenderSection("Head", required: false)
+    
+    @if (ViewBag.IsQrSource == true)
+    {
+        <!-- AdSense Code Placeholder -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
+            crossorigin="anonymous">
+            </script>
+    }
 </head>
 <body class="app-shell">
     <!-- HEADER -->
@@ -213,24 +221,27 @@
 
     @RenderSection("Scripts", required: false)
     
-    <!-- Sticky Footer Ad -->
-    <div id="stickyAd" class="sticky-ad-footer" style="display:none;">
-        <div style="position:relative; width:100%; display:flex; justify-content:center;">
-            @await Component.InvokeAsync("Ad", new { slotKey = "sticky_footer" })
-            <button type="button" onclick="document.getElementById('stickyAd').style.display='none'; document.body.classList.remove('has-sticky-ad');" 
-                    style="position:absolute;top:-25px;right:10px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;box-shadow:0 -2px 5px rgba(0,0,0,0.1);">
-                Kapat &times;
-            </button>
+    @if (ViewBag.IsQrSource == true)
+    {
+        <!-- Sticky Footer Ad -->
+        <div id="stickyAd" class="sticky-ad-footer" style="display:none;">
+            <div style="position:relative; width:100%; display:flex; justify-content:center;">
+                @await Component.InvokeAsync("Ad", new { slotKey = "sticky_footer" })
+                <button type="button" onclick="document.getElementById('stickyAd').style.display='none'; document.body.classList.remove('has-sticky-ad');" 
+                        style="position:absolute;top:-25px;right:10px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;box-shadow:0 -2px 5px rgba(0,0,0,0.1);">
+                    Kapat &times;
+                </button>
+            </div>
         </div>
-    </div>
 
-    <!-- Interstitial Ad Modal -->
-    <div id="interstitialAd" class="interstitial-modal">
-        <div class="interstitial-content">
-            <button type="button" class="interstitial-close" onclick="closeInterstitial()">&times; Reklamı Kapat</button>
-            @await Component.InvokeAsync("Ad", new { slotKey = "interstitial_popup" })
+        <!-- Interstitial Ad Modal -->
+        <div id="interstitialAd" class="interstitial-modal">
+            <div class="interstitial-content">
+                <button type="button" class="interstitial-close" onclick="closeInterstitial()">&times; Reklamı Kapat</button>
+                @await Component.InvokeAsync("Ad", new { slotKey = "interstitial_popup" })
+            </div>
         </div>
-    </div>
+    }
 
     <script>
         function closeInterstitial() {
@@ -240,10 +251,12 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Interstitial Logic (Show once per session)
-            if (!sessionStorage.getItem('interstitialShown')) {
+            const isQr = @(ViewBag.IsQrSource == true ? "true" : "false");
+
+            if (isQr && !sessionStorage.getItem('interstitialShown')) {
                 const interstitial = document.getElementById('interstitialAd');
-                // Check if the component actually rendered an ad container
-                if (interstitial && interstitial.querySelector('.ad-container')) {
+                // AdSense Auto Ads usually handle this, but for manual triggers:
+                if (interstitial) {
                      setTimeout(() => {
                         interstitial.classList.add('is-active');
                         document.body.classList.add('no-scroll');
@@ -252,9 +265,9 @@
                 }
             }
 
-            // Sticky Footer Logic
+            // Sticky Footer Logic (Always show containers, AdSense fills them)
             const stickyAd = document.getElementById('stickyAd');
-            if (stickyAd && stickyAd.querySelector('.ad-container')) {
+            if (stickyAd) {
                 stickyAd.style.display = 'flex';
                 document.body.classList.add('has-sticky-ad');
             }
