@@ -67,12 +67,12 @@
                             <!-- Kapsam -->
                             <div class="col-lg-2 col-md-3">
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Kapsam</label>
-                                <div class="btn-group w-100" role="group">
+                                <div class="btn-group w-100" role="group" aria-label="Kapsam seçimi">
                                     <input type="radio" class="btn-check" name="FilterType" id="filterCompany" value="company" autocomplete="off" @(string.IsNullOrEmpty(Context.Request.Query["StoreId"]) ? "checked" : "")>
-                                    <label class="btn btn-outline-primary" for="filterCompany">Şirket</label>
+                                    <label class="btn btn-outline-secondary" for="filterCompany"><i class="fas fa-building me-1"></i>Şirket</label>
 
                                     <input type="radio" class="btn-check" name="FilterType" id="filterStore" value="store" autocomplete="off" @(!string.IsNullOrEmpty(Context.Request.Query["StoreId"]) ? "checked" : "")>
-                                    <label class="btn btn-outline-primary" for="filterStore">Dükkan</label>
+                                    <label class="btn btn-outline-secondary" for="filterStore"><i class="fas fa-store me-1"></i>Dükkan</label>
                                 </div>
                             </div>
 
@@ -107,7 +107,7 @@
                             <!-- Butonlar (Son Sütun) -->
                             <div class="col-lg-2 col-md-12 d-flex justify-content-lg-end justify-content-start align-items-end mt-3 mt-lg-0">
                                 <div class="d-flex gap-2 w-100 w-lg-auto">
-                                    <a href="@Url.Action("MyCategories")" class="btn btn-light h-100 px-3" title="Filtreleri Temizle"><i class="fas fa-times"></i></a>
+                                    <a href="@Url.Action("MyCategories")" class="btn btn-outline-secondary h-100 px-3" title="Filtreleri Temizle"><i class="fas fa-times"></i></a>
                                     <button type="submit" class="btn btn-primary px-3 shadow-sm flex-grow-1"><i class="fas fa-filter me-1"></i> Uygula</button>
                                 </div>
                             </div>
@@ -199,10 +199,10 @@
                                         }
                                     </td>
                                     <td class="text-center text-nowrap">
-                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm bg-white text-success border border-success me-1" title="Alt Kategori Ekle">
+                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm btn-outline-success me-1" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm bg-white text-secondary border border-secondary" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

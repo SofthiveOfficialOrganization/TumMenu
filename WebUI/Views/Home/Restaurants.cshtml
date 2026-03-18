@@ -53,13 +53,21 @@
                 
                 <div id="restMap" style="height: 100%; width: 100%; z-index: 1;"></div>
                 
-                <!-- Use My Location Overlay Button (Bottom Right) -->
-                <button id="useMapLocationBtn" type="button" style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; background: #fff; padding: 10px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
-                    </svg>
-                    <span>Konumumu Kullan</span>
-                </button>
+                <!-- Map Buttons (Bottom Right) -->
+                <div style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; display: flex; flex-direction: column; gap: 8px;">
+                    <button id="centerMapBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Buraya Odakla</span>
+                    </button>
+                    <button id="useMapLocationBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                        </svg>
+                        <span>Konumumu Kullan</span>
+                    </button>
+                </div>
             </div>
             
             <!-- MAP SIDE FILTERS -->

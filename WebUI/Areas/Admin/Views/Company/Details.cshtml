@@ -34,18 +34,18 @@
             <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
                 <h5 class="fw-bold text-dark mb-0">Genel Bilgiler</h5>
                 <div class="d-flex gap-2 flex-shrink-0">
-                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm bg-white text-primary border border-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-edit"></i>
                     </a>
                     <form id="deleteForm" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
-                        <button type="button" class="btn btn-sm bg-white text-danger border border-danger shadow-sm" title="Sil" onclick="confirmDelete()" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <button type="button" class="btn btn-sm btn-outline-danger shadow-sm" title="Sil" onclick="confirmDelete()" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </form>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                         </a>
                     }

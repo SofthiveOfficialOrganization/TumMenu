@@ -8,7 +8,7 @@
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <a href="@Url.Action("MyQR", "QRManagement", new { area = "Admin" })" class="btn btn-sm bg-white text-dark border border-dark rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@Url.Action("MyQR", "QRManagement", new { area = "Admin" })" class="btn btn-sm btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <div>
@@ -21,10 +21,10 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 flex-shrink-0">
-                    <button class="btn btn-sm bg-white text-primary border border-primary shadow-sm px-3" onclick="window.print()" style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <button class="btn btn-sm btn-outline-primary shadow-sm px-3" onclick="window.print()" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-print me-2"></i> <span class="d-none d-md-inline">Yazdır / İndir</span>
                     </button>
-                    <a href="@(string.IsNullOrWhiteSpace(Model.BaseDomain) ? $"{Context.Request.Scheme}://{Context.Request.Host}" : Model.BaseDomain.TrimEnd('/'))@Model.PublicUrl" target="_blank" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Menüyü Gör" style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@(string.IsNullOrWhiteSpace(Model.BaseDomain) ? $"{Context.Request.Scheme}://{Context.Request.Host}" : Model.BaseDomain.TrimEnd('/'))@Model.PublicUrl" target="_blank" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Menüyü Gör" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-external-link-alt me-2"></i> <span class="d-none d-md-inline">Menüyü Gör</span>
                     </a>
                 </div>

@@ -22,7 +22,7 @@
                     <a asp-action="Placements" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-layer-group me-1"></i> Yerleşimler
                     </a>
-                    <a asp-action="CreateSlot" class="btn btn-success border border-success btn-sm">
+                    <a asp-action="CreateSlot" class="btn btn-success btn-sm">
                         <i class="fas fa-plus me-1"></i> Yeni Slot
                     </a>
                 </div>
@@ -58,11 +58,11 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-1">
-                                            <a asp-action="EditSlot" asp-route-id="@item.Id" class="btn btn-sm bg-white text-primary border border-primary">
+                                            <a asp-action="EditSlot" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form asp-action="DeleteSlot" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bu slotu silmek istediğinize emin misiniz?');">
-                                                <button type="submit" class="btn btn-sm bg-white text-danger border border-danger">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>

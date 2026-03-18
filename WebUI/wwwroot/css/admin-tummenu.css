@@ -513,6 +513,88 @@ body.dark-mode .btn-outline-secondary:hover {
     color: var(--horizon-text-primary) !important;
 }
 
+/* Ensure all outline buttons are visible in dark mode */
+html.dark-mode .btn[class*="btn-outline-"],
+body.dark-mode .btn[class*="btn-outline-"] {
+    color: var(--horizon-text-primary);
+    border-color: rgba(163, 174, 208, 0.35);
+}
+
+html.dark-mode .btn-outline-primary,
+body.dark-mode .btn-outline-primary {
+    color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+}
+
+html.dark-mode .btn-outline-primary:hover,
+body.dark-mode .btn-outline-primary:hover {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-outline-success,
+body.dark-mode .btn-outline-success {
+    color: #22c55e !important;
+    border-color: rgba(34, 197, 94, 0.6) !important;
+}
+
+html.dark-mode .btn-outline-success:hover,
+body.dark-mode .btn-outline-success:hover {
+    background-color: rgba(34, 197, 94, 0.18) !important;
+    color: #bbf7d0 !important;
+}
+
+html.dark-mode .btn-outline-danger,
+body.dark-mode .btn-outline-danger {
+    color: #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+}
+
+html.dark-mode .btn-outline-danger:hover,
+body.dark-mode .btn-outline-danger:hover {
+    background-color: rgba(239, 68, 68, 0.18) !important;
+    color: #fecaca !important;
+}
+
+html.dark-mode .btn-outline-warning,
+body.dark-mode .btn-outline-warning {
+    color: #f59e0b !important;
+    border-color: rgba(245, 158, 11, 0.65) !important;
+}
+
+html.dark-mode .btn-outline-warning:hover,
+body.dark-mode .btn-outline-warning:hover {
+    background-color: rgba(245, 158, 11, 0.18) !important;
+    color: #fde68a !important;
+}
+
+html.dark-mode .btn-outline-info,
+body.dark-mode .btn-outline-info {
+    color: #3b82f6 !important;
+    border-color: rgba(59, 130, 246, 0.65) !important;
+}
+
+html.dark-mode .btn-outline-info:hover,
+body.dark-mode .btn-outline-info:hover {
+    background-color: rgba(59, 130, 246, 0.18) !important;
+    color: #bfdbfe !important;
+}
+
+/* Solid gray buttons can disappear on dark backgrounds */
+html.dark-mode .btn-secondary,
+body.dark-mode .btn-secondary {
+    background-color: rgba(163, 174, 208, 0.14) !important;
+    border-color: rgba(163, 174, 208, 0.28) !important;
+    color: var(--horizon-text-primary) !important;
+}
+
+html.dark-mode .btn-secondary:hover,
+body.dark-mode .btn-secondary:hover {
+    background-color: rgba(163, 174, 208, 0.22) !important;
+    border-color: rgba(163, 174, 208, 0.35) !important;
+}
+
 html.dark-mode .btn-light,
 body.dark-mode .btn-light {
     background-color: rgba(17, 28, 68, 0.5) !important;

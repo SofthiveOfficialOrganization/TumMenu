@@ -49,13 +49,25 @@
     function init() {
         initCategorySelect2();
         readURLParams();
+        
+        // Try to hydrate location from cache
+        if (window.locationService && !state.cityId && !state.districtId && !state.userLat && !state.userLng) {
+            const cachedPosition = window.locationService.getCachedPosition();
+            if (cachedPosition) {
+                state.userLat = cachedPosition.coords.latitude;
+                state.userLng = cachedPosition.coords.longitude;
+                console.log('Using cached location:', state.userLat, state.userLng);
+            }
+        }
+        
         bindEvents();
 
         if (state.cityId || state.districtId || (state.userLat && state.userLng)) {
             doSearch(false);
         } else {
             initRestMap(39.0, 35.0, 5, false);
-            requestUserLocation(false);
+            // Konum izni sadece butona tıklandığında istensin
+            // requestUserLocation(false);
         }
 
         // Handle browser back-forward cache issues
@@ -496,14 +508,72 @@
         var useMapLocBtn = document.getElementById('useMapLocationBtn');
         if (useMapLocBtn) {
             useMapLocBtn.addEventListener('click', function () {
-                // Konum izni isterken butonun içeriğini değiştir
-                var originalHtml = useMapLocBtn.innerHTML;
-                useMapLocBtn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block; border-top-color: var(--color-primary);"></span><span>Konum Bulunuyor...</span>';
-                
-                // Başarılı veya başarısız olduğunda butonu eski haline getirmek için küçük bir callback mantığı
-                requestUserLocation(true, function() {
-                    useMapLocBtn.innerHTML = originalHtml;
+                window.locationService.getLocation({
+                    showLoading: true,
+                    buttonId: 'useMapLocationBtn',
+                    showErrorPopup: false, // Popup gösterme, sadece log yap
+                    onSuccess: function (position) {
+                        state.userLat = position.coords.latitude;
+                        state.userLng = position.coords.longitude;
+                        
+                        cityInput.value = '';
+                        districtInput.value = '';
+                        state.cityId = '';
+                        state.cityName = '';
+                        state.districtId = '';
+                        state.districtName = '';
+                        districtInput.disabled = true;
+                        districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
+                        
+                        initRestMap(state.userLat, state.userLng, 13);
+                        state.page = 0;
+                        doSearch(false);
+                    },
+                    onError: function (error, message) {
+                        console.warn('Geolocation error:', { code: error.code, message: error.message });
+                        
+                        // Sadece ciddi hatalarda ve elimizde konum yoksa popup göster
+                        if ((error.code === 1 || error.code === 2) && !state.userLat) {
+                            window.locationService.showErrorPopup(message);
+                        }
+                        
+                        if (!state.cityId && !state.userLat) {
+                            showLocationRequiredState();
+                        }
+                    }
+                }).catch(function(error) {
+                    console.warn('Location request failed:', error);
                 });
+            });
+        }
+
+        // Center map button
+        var centerMapBtn = document.getElementById('centerMapBtn');
+        if (centerMapBtn) {
+            centerMapBtn.addEventListener('click', function () {
+                if (restMap) {
+                    var center = restMap.getCenter();
+                    var lat = center.lat;
+                    var lng = center.lng;
+                    
+                    // Pin'i haritanın merkezine taşı
+                    if (restMarker) {
+                        restMarker.setLatLng([lat, lng]);
+                    } else {
+                        restMarker = L.marker([lat, lng], { draggable: true }).addTo(restMap);
+                        restMarker.on('dragend', function (e) {
+                            var pos = e.target.getLatLng();
+                            state.userLat = pos.lat;
+                            state.userLng = pos.lng;
+                            doSearch(false);
+                        });
+                    }
+                    
+                    // State'i güncelle ve ara
+                    state.userLat = lat;
+                    state.userLng = lng;
+                    doSearch(false);
+                }
             });
         }
 
@@ -609,39 +679,29 @@
         if (locReqEl) locReqEl.hidden = false;
     }
 
-    let isLocating = false;
-
     // ── Geolocation ──
     function requestUserLocation(forcePrompt, callback) {
-        if (!navigator.geolocation) {
+        if (!window.locationService) {
              if (!forcePrompt && !state.cityId && !state.userLat) showLocationRequiredState();
              if (callback) callback();
              return;
-        }
-
-        if (isLocating) {
-            if (callback) callback();
-            return;
         }
 
         // Try to get location
         if (forcePrompt || (!state.cityId && !state.districtId && !state.userLat)) {
             
             const btn = forcePrompt ? (document.getElementById('useMapLocationBtn') || useMyLocBtn) : null;
-            const originalHtml = btn ? btn.innerHTML : '';
+            const buttonId = btn ? (btn.id || 'useMyLocation') : null;
 
-            if (btn) {
-                btn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block; border-top-color: var(--color-primary);"></span><span>Bulunuyor...</span>';
-            }
-
-            isLocating = true;
-
-            navigator.geolocation.getCurrentPosition(
-                function (pos) {
-                    isLocating = false;
-                    if (btn) btn.innerHTML = originalHtml;
-                    state.userLat = pos.coords.latitude;
-                    state.userLng = pos.coords.longitude;
+            window.locationService.getLocation({
+                showLoading: forcePrompt,
+                buttonId: buttonId,
+                forceFresh: forcePrompt,
+                enableHighAccuracy: true,
+                showErrorPopup: false, // Handle errors manually
+                onSuccess: function (position) {
+                    state.userLat = position.coords.latitude;
+                    state.userLng = position.coords.longitude;
                     
                     if (forcePrompt) {
                         cityInput.value = '';
@@ -655,20 +715,23 @@
                     }
                     
                     initRestMap(state.userLat, state.userLng, 13);
-                    state.page = 0;
-                    doSearch(false);
+                    
+                    // Sadece forcePrompt ise search yap, yoksa sadece konumu al
+                    if (forcePrompt) {
+                        state.page = 0;
+                        doSearch(false);
+                    }
 
                     if (callback) callback();
                 },
-                function (err) { 
-                    isLocating = false;
-                    console.warn('Geolocation error:', { code: err.code, message: err.message });
-                    if (btn) btn.innerHTML = originalHtml;
+                onError: function (error, message) {
+                    console.warn('Geolocation error:', { code: error.code, message: error.message });
                     
-                    if (forcePrompt) {
+                    // Error'ları daha iyi handle et - sadece ciddi hatalarda göster
+                    if (forcePrompt && (error.code === 1 || error.code === 2)) { // Sadece permission denied ve position unavailable
                         let text = 'Konum yetkisi kapalı olabilir veya cihaz konumu bulamadı.';
-                        if (err.code === 3) text = 'Konum bulma işlemi zaman aşımına uğradı. Cihazınızın konum servisini kontrol edin.';
-                        else if (err.code === 1) text = 'Konum erişim izni reddedildi. Tarayıcı ayarlarından izin vermeniz gerekmektedir.';
+                        if (error.code === 1) text = 'Konum erişim izni reddedildi. Tarayıcı ayarlarından izin vermeniz gerekmektedir.';
+                        else if (error.code === 2) text = 'Konum bilgisi mevcut değil. Cihazınızın konum servisini kontrol edin.';
 
                         // Sadece elimizde hiç konum yoksa hatayı göster:
                         if (!state.userLat) {
@@ -681,14 +744,20 @@
                             });
                         }
                     }
-
+                    
+                    // Timeout (code 3) ve diğer warning'lerde hata gösterme
                     if (!state.cityId && !state.userLat) {
                         showLocationRequiredState();
                     }
                     if (callback) callback();
-                 },
-                { timeout: 10000, maximumAge: 60000 }
-            );
+                }
+            }).catch(function(error) {
+                console.warn('Location request failed:', error);
+                if (!state.cityId && !state.userLat) {
+                    showLocationRequiredState();
+                }
+                if (callback) callback();
+            });
         } else {
              if (callback) callback();
         }

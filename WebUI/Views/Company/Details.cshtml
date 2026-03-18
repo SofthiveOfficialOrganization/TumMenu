@@ -27,10 +27,10 @@
     </dl>
 
     <div class="d-flex gap-2">
-        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm bg-white text-primary border border-primary shadow-sm" title="Edit" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-sm" title="Edit" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
             <i class="fas fa-edit"></i>
         </a>
-        <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm bg-white text-dark border border-dark shadow-sm px-3" title="Back to List" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+        <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Back to List" style="height: 36px; display: flex; align-items: center; justify-content: center;">
             <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Back to List</span>
         </a>
     </div>

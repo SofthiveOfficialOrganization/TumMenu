@@ -76,6 +76,21 @@
                 </div>
 
                 <div id="map" style="height: 350px; width: 100%; border-radius: 0.5rem; border: 1px solid #ced4da; z-index: 1;"></div>
+                
+                <div style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; display: flex; flex-direction: column; gap: 8px;">
+                    <button id="centerMapBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--bs-primary); transition: all 0.2s;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Buraya Odakla</span>
+                    </button>
+                    <button id="useMyLocationBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--bs-primary); transition: all 0.2s;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                        </svg>
+                        <span>Konumumu Kullan</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Company usually shouldn't be changed after creation easily, or requires admin. 
@@ -392,6 +407,138 @@
             console.log('CityId:', citySelect.val());
             console.log('DistrictId:', districtSelect.val());
         });
+
+        // Buraya odakla butonu
+        $('#centerMapBtn').on('click', function() {
+            if (map) {
+                const center = map.getCenter();
+                const lat = center.lat;
+                const lng = center.lng;
+                
+                // Pin'i haritanın merkezine taşı
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                    marker.on('dragend', function(e) {
+                        const pos = e.target.getLatLng();
+                        cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
+                        cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
+                    });
+                }
+                
+                // Koordinatları inputlara yaz
+                cityLatInput.val(lat.toFixed(6).replace('.', ','));
+                cityLngInput.val(lng.toFixed(6).replace('.', ','));
+                
+                // Overlay'i gizle
+                $('#mapOverlay').hide();
+            }
+        });
+
+            
+            $.get(url, function(data) {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    // Only reposition to district if no saved coords (first load)
+                    if (!initialCoordsLoaded) {
+                        cityLatInput.val(lat.toFixed(6).replace('.', ','));
+                        cityLngInput.val(lng.toFixed(6).replace('.', ','));
+                        $('#mapOverlay').hide();
+                        if (map) {
+                            map.setView([lat, lng], 13);
+                            if (marker) marker.setLatLng([lat, lng]);
+                        } else {
+                            initMap(lat, lng, 13);
+                        }
+                    } else {
+                        // Coords already loaded from DB — just show the map overlay off
+                        $('#mapOverlay').hide();
+                        // After initial load, mark flag as done so user changes work normally
+                        initialCoordsLoaded = false;
+                    }
+                }
+            });
+         }
+         
+     } else {
+         districtNameInput.val('');
+     }
+});
+
+// Form submit log
+$('form').on('submit', function() {
+    console.log('=== FORM GÖNDERİLİYOR ===')
+    console.log('Latitude:', cityLatInput.val());
+    console.log('Longitude:', cityLngInput.val());
+    console.log('CityId:', citySelect.val());
+    console.log('DistrictId:', districtSelect.val());
+});
+
+// Buraya odakla butonu
+$('#centerMapBtn').on('click', function() {
+    if (map) {
+        const center = map.getCenter();
+        const lat = center.lat;
+        const lng = center.lng;
+        
+        // Pin'i haritanın merkezine taşı
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+            marker.on('dragend', function(e) {
+                const pos = e.target.getLatLng();
+                cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
+                cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
+            });
+        }
+        
+        // Koordinatları inputlara yaz
+        cityLatInput.val(lat.toFixed(6).replace('.', ','));
+        cityLngInput.val(lng.toFixed(6).replace('.', ','));
+        
+        // Overlay'i gizle
+        $('#mapOverlay').hide();
+    }
+});
+
+// Konumu kullan butonu
+$('#useMyLocationBtn').on('click', function() {
+    const btn = $(this);
+    const originalContent = btn.html();
+    
+    window.locationService.getLocation({
+        showLoading: true,
+        buttonId: 'useMyLocationBtn',
+        showErrorPopup: true,
+        onSuccess: function (pos) {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            
+            cityLatInput.val(lat.toFixed(6).replace('.', ','));
+            cityLngInput.val(lng.toFixed(6).replace('.', ','));
+            
+            if (map) {
+                map.setView([lat, lng], 15);
+                if (marker) marker.setLatLng([lat, lng]);
+            } else {
+                initMap(lat, lng, 15);
+            }
+            
+            // Overlay'i gizle
+            $('#mapOverlay').hide();
+        },
+        onError: function (err, message) {
+            console.warn('Geolocation error:', err);
+            alert('Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.');
+        }
+    }).catch(function(error) {
+        console.warn('Location request failed:', error);
+        alert('Tarayıcınız konum özelliğini desteklemiyor.');
     });
-    </script>
+});
+});
+</script>
 }
