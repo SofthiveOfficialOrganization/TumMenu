@@ -231,7 +231,7 @@
         }
 
         <!-- Main Content -->
-        <div class="horizon-main" style="@(isOnboarding ? "margin-left: 0; width: 100%; padding: 0;" : "")">
+        <div class="horizon-main @(isOnboarding ? "horizon-main--onboarding" : "")">
             @if (!isOnboarding)
             {
                 <!-- Navbar -->

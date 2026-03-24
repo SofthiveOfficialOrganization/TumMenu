@@ -19,6 +19,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddAuthorizationBuilder()

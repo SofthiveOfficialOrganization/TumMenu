@@ -31,7 +31,7 @@
 
             <div class="pm-view active">
                 <div class="pm-view-header">
-                    <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
+                    <a href="@backUrl" class="pm-btn-back">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
@@ -39,10 +39,8 @@
                     </a>
                 </div>
 
-                @if (ViewBag.IsQrSource == true)
-                {
-                    @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
-                }
+                <!-- Category Top Ad - Show to all visitors for approval -->
+                @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
 
                 <h2 class="pm-view-title mb-2">@Model.CategoryTitle</h2>
 
@@ -59,7 +57,6 @@
                             @foreach (var subCat in Model.SubCategories)
                             {
                                 var subCategoryUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{subCat.Slug}";
-                                if (ViewBag.IsQrSource == true) subCategoryUrl += "?isQr=true";
                                 <a href="@subCategoryUrl" class="pm-cat-card">
                                     <div class="pm-cat-card-photo">
                                         @if (!string.IsNullOrEmpty(subCat.ImageUrl))
@@ -92,7 +89,6 @@
                         {
                             productCounter++;
                             var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
-                            if (ViewBag.IsQrSource == true) productUrl += "?isQr=true";
                             <a href="@productUrl" class="pm-product-card">
                                 @if (!string.IsNullOrEmpty(product.ImageUrl))
                                 {
@@ -117,7 +113,7 @@
                                 </div>
                             </a>
 
-                            if (ViewBag.IsQrSource == true && productCounter % 5 == 0 && productCounter < Model.Products.Count)
+                            if (productCounter % 5 == 0 && productCounter < Model.Products.Count)
                             {
                                 <div class="pm-ad-in-feed">
                                     @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })

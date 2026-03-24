@@ -90,3 +90,31 @@ body.dark-mode .skeleton-card {
     pointer-events: none;
     position: absolute;
 }
+
+/* Skeleton size utilities */
+.skeleton-line--sm { width: 30%; }
+.skeleton-line--md { width: 40%; }
+.skeleton-line--lg { width: 50%; }
+.skeleton-line--xl { width: 60%; }
+.skeleton-line--2xl { width: 70%; }
+.skeleton-line--3xl { width: 80%; }
+.skeleton-line--4xl { width: 90%; }
+.skeleton-line--full { width: 100%; }
+
+.skeleton-line--h-sm { height: 12px; }
+.skeleton-line--h-md { height: 14px; }
+.skeleton-line--h-lg { height: 16px; }
+.skeleton-line--h-xl { height: 20px; }
+.skeleton-line--h-2xl { height: 22px; }
+.skeleton-line--h-3xl { height: 28px; }
+.skeleton-line--h-4xl { height: 38px; }
+
+.skeleton-line--mb-sm { margin-bottom: 6px; }
+.skeleton-line--mb-md { margin-bottom: 8px; }
+.skeleton-line--mb-lg { margin-bottom: 12px; }
+.skeleton-line--ml-sm { margin-left: 16px; }
+.skeleton-line--ml-md { margin-left: 20px; }
+.skeleton-line--mr-sm { margin-right: 14px; }
+
+.skeleton-line--rounded-sm { border-radius: 8px; }
+.skeleton-line--rounded-md { border-radius: 16px; }

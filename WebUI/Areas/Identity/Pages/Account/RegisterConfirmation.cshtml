@@ -1,23 +1,69 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Kayıt Onayı";
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
-    }
+@section Head {
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 }
+<div class="confirmation-container">
+
+    <h1 class="confirmation-title">Kayıt İşleminizi Tamamlayın!</h1>
+    
+    <p class="confirmation-message">
+        Kayıt işleminiz başarıyla tamamlandı! <br>
+        Hesabınızı aktive etmek için lütfen e-posta adresinizi kontrol edin.
+    </p>
+
+    <div class="email-display">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        </svg>
+        @Model.Email
+    </div>
+
+    <div class="instruction-list">
+        <div class="instruction-item">
+            <div class="instruction-number">1</div>
+            <div class="instruction-text">E-posta kutunuzu açın</div>
+        </div>
+        <div class="instruction-item">
+            <div class="instruction-number">2</div>
+            <div class="instruction-text">TumMenu'dan gelen e-postayı bulun</div>
+        </div>
+        <div class="instruction-item">
+            <div class="instruction-number">3</div>
+            <div class="instruction-text">"Hesabımı Onayla" butonuna tıklayın</div>
+        </div>
+    </div>
+
+    <!-- @if (Model.DisplayConfirmAccountLink)
+    {
+        <div class="resend-section">
+            <p class="resend-text">
+                E-posta gelmedi mi? Spam klasörünü kontrol edin veya aşağıdaki linki kullanın:
+            </p>
+            <a href="@Model.EmailConfirmationUrl" class="btn-resend">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                Hesabımı Şimdi Onayla
+            </a>
+        </div>
+    } -->
+
+    <div class="resend-section">
+        <p class="resend-text">
+            E-posta adresiniz yanlışsa veya başka bir sorun yaşarsanız, 
+            lütfen destek ekibimizle iletişime geçin.
+        </p>
+        <a href="/Identity/Account/Login" class="btn-resend">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+            Giriş Sayfasına Dön
+        </a>
+    </div>
+</div>
 

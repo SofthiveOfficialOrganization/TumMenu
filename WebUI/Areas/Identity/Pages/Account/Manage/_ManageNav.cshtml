@@ -2,25 +2,25 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav flex-column" style="padding: 8px 0;">
+<ul class="nav flex-column manage-nav">
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.IndexNavClass(ViewContext)"
-           id="profile" asp-page="./Index" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-            <i class="fas fa-user" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+           id="profile" asp-page="./Index">
+            <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.EmailNavClass(ViewContext)"
-           id="email" asp-page="./Email" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-            <i class="fas fa-envelope" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+           id="email" asp-page="./Email">
+            <i class="fas fa-envelope"></i>
             <span>E-posta</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.ChangePasswordNavClass(ViewContext)"
-           id="change-password" asp-page="./ChangePassword" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-            <i class="fas fa-key" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+           id="change-password" asp-page="./ChangePassword">
+            <i class="fas fa-key"></i>
             <span>Şifre</span>
         </a>
     </li>
@@ -28,46 +28,24 @@
     {
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.ExternalLoginsNavClass(ViewContext)"
-               id="external-login" asp-page="./ExternalLogins" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-                <i class="fas fa-link" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+               id="external-login" asp-page="./ExternalLogins">
+                <i class="fas fa-link"></i>
                 <span>Harici Girişler</span>
             </a>
         </li>
     }
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"
-           id="two-factor" asp-page="./TwoFactorAuthentication" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-            <i class="fas fa-shield-alt" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+           id="two-factor" asp-page="./TwoFactorAuthentication">
+            <i class="fas fa-shield-alt"></i>
             <span>İki Faktörlü Doğrulama</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded @ManageNavPages.PersonalDataNavClass(ViewContext)"
-           id="personal-data" asp-page="./PersonalData" style="color: var(--horizon-text-primary); transition: all 0.2s;">
-            <i class="fas fa-database" style="width:20px;text-align:center;color:var(--horizon-text-secondary);"></i>
+           id="personal-data" asp-page="./PersonalData">
+            <i class="fas fa-database"></i>
             <span>Kişisel Veriler</span>
         </a>
     </li>
 </ul>
-
-<style>
-    .nav-link.active {
-        background-color: rgba(67, 24, 255, 0.08) !important;
-        color: var(--horizon-primary) !important;
-        font-weight: 600;
-    }
-    .nav-link.active i {
-        color: var(--horizon-primary) !important;
-    }
-    .nav-link:hover:not(.active) {
-        background-color: var(--horizon-bg);
-    }
-    html.dark-mode .nav-link.active,
-    body.dark-mode .nav-link.active {
-        background-color: rgba(117, 81, 255, 0.12) !important;
-    }
-    html.dark-mode .nav-link:hover:not(.active),
-    body.dark-mode .nav-link:hover:not(.active) {
-        background-color: rgba(163, 174, 208, 0.06);
-    }
-</style>

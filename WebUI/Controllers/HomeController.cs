@@ -77,7 +77,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             TempData["Success"] = "Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.";
             return RedirectToAction(nameof(Contact));
         }
-        catch (Exception ex)
+        catch
         {
             // Log error
             TempData["Error"] = "Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.";
@@ -85,7 +85,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         }
     }
 
-    public IActionResult NotFound()
+    public new IActionResult NotFound()
     {
         return View();
     }

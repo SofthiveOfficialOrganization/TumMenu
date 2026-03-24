@@ -35,10 +35,8 @@
             <!-- KATEGORİLER -->
             <div class="pm-view active">
                 
-                @if (ViewBag.IsQrSource == true)
-                {
-                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
-                }
+                <!-- Menu Top Ad - Show to all visitors for approval -->
+                @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
 
                 <h2 class="pm-view-title">Kategoriler</h2>
 
@@ -58,7 +56,6 @@
                             categoryCounter++;
                             var productCount = cat.Products.Count(p => p.IsActive);
                             var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
-                            if (ViewBag.IsQrSource == true) categoryUrl += "?isQr=true";
                             <a href="@categoryUrl" class="pm-cat-card">
                                 <div class="pm-cat-card-photo">
                                     @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.ImageUrl))
@@ -78,7 +75,7 @@
                                 </div>
                             </a>
 
-                            if (ViewBag.IsQrSource == true && categoryCounter % 4 == 0 && categoryCounter < categories.Count)
+                            if (categoryCounter % 4 == 0 && categoryCounter < categories.Count)
                             {
                                 <div class="pm-ad-in-feed" style="grid-column: 1 / -1;">
                                     @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })

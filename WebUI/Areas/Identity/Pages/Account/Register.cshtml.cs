@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using WebUI.Models.Email;
+using WebUI.Services;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -29,6 +31,7 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ApplicationDbContext _db;
         private readonly IMediator _mediator;
+        private readonly IEmailTemplateService _emailTemplateService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -38,7 +41,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             IEmailSender emailSender,
             RoleManager<ApplicationRole> roleManager,
             IMediator mediator,
-            ApplicationDbContext db)
+            ApplicationDbContext db,
+            IEmailTemplateService emailTemplateService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +53,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             _roleManager = roleManager;
             _db = db;
             _mediator = mediator;
+            _emailTemplateService = emailTemplateService;
         }
 
         /// <summary>
@@ -137,14 +142,30 @@ namespace WebUI.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
+                    
+                    var confirmationUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var accountActivationUrl = Url.Action(
+                        "ActivateAccount", 
+                        "Account",
+                        values: new { userId = userId, code = code },
+                        protocol: Request.Scheme);
+
+                    var emailModel = new RegistrationEmailModel
+                    {
+                        UserName = Input.Email,
+                        UserEmail = Input.Email,
+                        ConfirmationUrl = confirmationUrl,
+                        AccountActivationUrl = accountActivationUrl
+                    };
+
+                    var htmlEmail = _emailTemplateService.GenerateRegistrationEmail(emailModel);
+                    
+                    await _emailSender.SendEmailAsync(Input.Email, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", htmlEmail);
 
                     if(_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

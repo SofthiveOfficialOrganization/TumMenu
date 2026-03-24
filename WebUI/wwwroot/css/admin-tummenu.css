@@ -206,6 +206,13 @@ body.dark-mode .horizon-submenu-link.active {
     transition: var(--sidebar-transition);
 }
 
+/* Onboarding mode - full width without sidebar */
+.horizon-main--onboarding {
+    margin-left: 0;
+    width: 100%;
+    padding: 0;
+}
+
 /* Navbar */
 .horizon-navbar {
     display: flex;
@@ -861,6 +868,46 @@ body.dark-mode .nav-link {
     opacity: 1;
 }
 
+/* Manage Nav - Profile Settings Navigation */
+.manage-nav {
+    padding: 8px 0;
+}
+
+.manage-nav .nav-link {
+    color: var(--horizon-text-primary);
+    transition: all 0.2s;
+}
+
+.manage-nav .nav-link i {
+    width: 20px;
+    text-align: center;
+    color: var(--horizon-text-secondary);
+}
+
+.manage-nav .nav-link.active {
+    background-color: rgba(67, 24, 255, 0.08) !important;
+    color: var(--horizon-primary) !important;
+    font-weight: 600;
+}
+
+.manage-nav .nav-link.active i {
+    color: var(--horizon-primary) !important;
+}
+
+.manage-nav .nav-link:hover:not(.active) {
+    background-color: var(--horizon-bg);
+}
+
+html.dark-mode .manage-nav .nav-link.active,
+body.dark-mode .manage-nav .nav-link.active {
+    background-color: rgba(117, 81, 255, 0.12) !important;
+}
+
+html.dark-mode .manage-nav .nav-link:hover:not(.active),
+body.dark-mode .manage-nav .nav-link:hover:not(.active) {
+    background-color: rgba(163, 174, 208, 0.06);
+}
+
 /* ======================================
    RESPONSIVE: TABLET & BELOW (≤1200px)
    ====================================== */
@@ -1376,4 +1423,105 @@ html.dark-mode .select2-container--bootstrap-5 .select2-results__option--highlig
 body.dark-mode .select2-container--bootstrap-5 .select2-results__option--highlighted {
     background-color: var(--horizon-primary) !important;
     color: #ffffff !important;
+}
+
+/* ======================================
+   ONBOARDING WIZARD STYLES
+   ====================================== */
+
+/* Progress Bar */
+.onboarding-progress-bar {
+    height: 5px;
+    width: 0%;
+    background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    transition: width 0.6s ease;
+}
+
+/* Wizard Container */
+.onboarding-wizard {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), height 0.4s ease;
+    width: 400%;
+    align-items: flex-start;
+}
+
+/* Input Group Fixes */
+.input-group-text.rounded-start {
+    border-top-left-radius: 0.5rem !important;
+    border-bottom-left-radius: 0.5rem !important;
+}
+
+.input-group-text.rounded-end {
+    border-top-right-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+}
+
+/* Form Feedback */
+.form-feedback {
+    display: none;
+}
+
+.form-feedback.visible {
+    display: block;
+}
+
+/* Category Container */
+.category-container {
+    min-height: 340px;
+}
+
+.category-list {
+    max-height: 280px;
+}
+
+.category-list-added {
+    min-height: 280px;
+    max-height: 280px;
+}
+
+/* Search Input */
+.search-input-lg {
+    font-size: 1.05rem;
+}
+
+/* Map Buttons - Bootstrap Theme variant */
+.map-button-bs {
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--bs-primary);
+    transition: all 0.2s;
+}
+
+.map-button-bs:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* Map Buttons Container */
+.map-buttons-container {
+    position: absolute;
+    bottom: 20px;
+    right: 12px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Utility Classes */
+.min-h-52 {
+    min-height: 52px !important;
 }

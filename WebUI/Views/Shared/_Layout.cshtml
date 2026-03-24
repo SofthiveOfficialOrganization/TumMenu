@@ -33,15 +33,12 @@
 
     @RenderSection("Head", required: false)
     
-    @if (ViewBag.IsQrSource == true)
-    {
-        <!-- AdSense Code Placeholder -->
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
-            crossorigin="anonymous">
-            </script>
-    }
+    <!-- AdSense Code - Show to all visitors for approval -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
+        crossorigin="anonymous">
+        </script>
 </head>
-<body class="app-shell">
+<body class="app-shell @RenderSection("BodyClass", required: false)">
     <!-- HEADER -->
     <header class="site-header" role="banner">
         <div class="container site-header__inner">
@@ -220,31 +217,28 @@
     </script>
 
     <!-- Location Service -->
-    <script src="~/js/location-service.js"></script>
+    <script src="~/js/location-service.js?v=@DateTime.Now.Ticks"></script>
 
     @RenderSection("Scripts", required: false)
     
-    @if (ViewBag.IsQrSource == true)
-    {
-        <!-- Sticky Footer Ad -->
-        <div id="stickyAd" class="sticky-ad-footer" style="display:none;">
-            <div style="position:relative; width:100%; display:flex; justify-content:center;">
-                @await Component.InvokeAsync("Ad", new { slotKey = "sticky_footer" })
-                <button type="button" onclick="document.getElementById('stickyAd').style.display='none'; document.body.classList.remove('has-sticky-ad');" 
-                        style="position:absolute;top:-25px;right:10px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;box-shadow:0 -2px 5px rgba(0,0,0,0.1);">
-                    Kapat &times;
-                </button>
-            </div>
+    <!-- Sticky Footer Ad - Show to all visitors for approval -->
+    <div id="stickyAd" class="sticky-ad-footer" style="display:none;">
+        <div style="position:relative; width:100%; display:flex; justify-content:center;">
+            @await Component.InvokeAsync("Ad", new { slotKey = "sticky_footer" })
+            <button type="button" onclick="document.getElementById('stickyAd').style.display='none'; document.body.classList.remove('has-sticky-ad');" 
+                    style="position:absolute;top:-25px;right:10px;background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;box-shadow:0 -2px 5px rgba(0,0,0,0.1);">
+                Kapat &times;
+            </button>
         </div>
+    </div>
 
-        <!-- Interstitial Ad Modal -->
-        <div id="interstitialAd" class="interstitial-modal">
-            <div class="interstitial-content">
-                <button type="button" class="interstitial-close" onclick="closeInterstitial()">&times; Reklamı Kapat</button>
-                @await Component.InvokeAsync("Ad", new { slotKey = "interstitial_popup" })
-            </div>
+    <!-- Interstitial Ad Modal - Show to all visitors for approval -->
+    <div id="interstitialAd" class="interstitial-modal">
+        <div class="interstitial-content">
+            <button type="button" class="interstitial-close" onclick="closeInterstitial()">&times; Reklamı Kapat</button>
+            @await Component.InvokeAsync("Ad", new { slotKey = "interstitial_popup" })
         </div>
-    }
+    </div>
 
     <script>
         function closeInterstitial() {
@@ -253,10 +247,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Interstitial Logic (Show once per session)
-            const isQr = @(ViewBag.IsQrSource == true ? "true" : "false");
-
-            if (isQr && !sessionStorage.getItem('interstitialShown')) {
+            // Interstitial Logic (Show once per session to all visitors for approval)
+            if (!sessionStorage.getItem('interstitialShown')) {
                 const interstitial = document.getElementById('interstitialAd');
                 // AdSense Auto Ads usually handle this, but for manual triggers:
                 if (interstitial) {

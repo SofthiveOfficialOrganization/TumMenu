@@ -2,6 +2,7 @@
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using WebUI.Services;
 
 namespace WebUI.Extensions
 {
@@ -26,6 +27,9 @@ namespace WebUI.Extensions
 				configuration.GetSection("LocationMicroservice"));
 
 			services.AddHttpClient<Application.Microservices.Location.ILocationMicroservice, Application.Microservices.Location.LocationMicroservice>();
+
+			// Register EmailTemplateService
+			services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 			services
 				.AddApplication()

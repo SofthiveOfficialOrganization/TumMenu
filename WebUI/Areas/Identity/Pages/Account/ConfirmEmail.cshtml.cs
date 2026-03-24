@@ -41,8 +41,17 @@ namespace WebUI.Areas.Identity.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
-            return Page();
+            
+            if (result.Succeeded)
+            {
+                // Redirect to account activation page with success
+                return RedirectToPage("/Account/ActivateAccount", new { area = "", userId = userId, code = code });
+            }
+            else
+            {
+                StatusMessage = "E-posta onaylanırken bir hata oluştu. Lütfen linkin geçerliliğini kontrol edin veya destek ile iletişime geçin.";
+                return Page();
+            }
         }
     }
 }

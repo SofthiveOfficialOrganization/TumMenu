@@ -268,3 +268,4 @@ window.locationService = new LocationService();
 
 // Debug için console'a yaz
 console.log('LocationService initialized:', window.locationService);
+console.log('LocationService script loaded successfully at:', new Date().toISOString());

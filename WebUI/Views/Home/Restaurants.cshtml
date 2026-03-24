@@ -40,28 +40,28 @@
         <!-- MAP ROW -->
         <div class="rest-map-row">
             <!-- MAP SECTION HERO -->
-            <div id="mapSection" style="position: relative; width: 100%; height:100%; min-height: 350px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); overflow: hidden; border: 4px solid #fff; z-index: 1;">
+            <div id="mapSection" class="map-section">
                 
                 <!-- Map Helper Text Overlay (Top Right) -->
-                <div style="position: absolute; top: 12px; right: 12px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(1px); padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; pointer-events: none;">
+                <div class="map-helper-overlay">
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" width="16" height="16">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    <span style="font-size: 13px; font-weight: 600; color: var(--color-secondary-dark);">Konumunuzu ayarlamak için mavi imleci sürükleyin</span>
+                    <span class="map-helper-overlay__text">Konumunuzu ayarlamak için mavi imleci sürükleyin</span>
                 </div>
                 
-                <div id="restMap" style="height: 100%; width: 100%; z-index: 1;"></div>
+                <div id="restMap" class="map-section__map"></div>
                 
                 <!-- Map Buttons (Bottom Right) -->
-                <div style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; display: flex; flex-direction: column; gap: 8px;">
-                    <button id="centerMapBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
+                <div class="map-buttons">
+                    <button id="centerMapBtn" type="button" class="map-button">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                             <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                         </svg>
                         <span>Buraya Odakla</span>
                     </button>
-                    <button id="useMapLocationBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
+                    <button id="useMapLocationBtn" type="button" class="map-button">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                             <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
                         </svg>
@@ -71,8 +71,8 @@
             </div>
             
             <!-- MAP SIDE FILTERS -->
-            <button id="mapFilterToggle" type="button" class="rest-filter-toggle" aria-controls="mapFilterPanel" aria-expanded="false" style="margin-top: 16px;">
-                <span style="display:flex;align-items:center;gap:6px;font-size:15px;">📍 Konum &amp; Mesafe</span>
+            <button id="mapFilterToggle" type="button" class="rest-filter-toggle" aria-controls="mapFilterPanel" aria-expanded="false">
+                <span class="rest-filter-toggle__label">📍 Konum &amp; Mesafe</span>
                 <span class="rest-filter-toggle__chevron">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
                         <polyline points="6 9 12 15 18 9"/>
@@ -101,11 +101,11 @@
                 <!-- İl / İlçe -->
                 <div class="rest-filters__group">
                     <h3 class="rest-filters__group-title">Konum</h3>
-                    <div class="rest-filters__location" style="display:flex; flex-direction:column; gap:8px;">
-                        <select id="cityInput" class="rest-input" style="width:100%;">
+                    <div class="rest-filters__location">
+                        <select id="cityInput" class="rest-input rest-input--full">
                             <option value="">İl Seçiniz</option>
                         </select>
-                        <select id="districtInput" class="rest-input" disabled style="width:100%;">
+                        <select id="districtInput" class="rest-input rest-input--full" disabled>
                             <option value="">Önce İl Seçiniz</option>
                         </select>
                     </div>
@@ -123,7 +123,7 @@
         <div class="rest-content__layout">
 
         <!-- FILTER TOGGLE (MOBILE) -->
-        <button id="filterToggle" type="button" class="rest-filter-toggle" aria-controls="filterPanel" aria-expanded="false" style="margin-bottom: 0;">
+        <button id="filterToggle" type="button" class="rest-filter-toggle" aria-controls="filterPanel" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                 <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/>
                 <line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="2"/>
@@ -148,7 +148,7 @@
                     </svg>
                     <span class="desktop-only-title">Filtreler</span>
                 </h2>
-                <div style="display:flex;align-items:center;gap:8px;">
+                <div class="rest-filters__header-actions">
                     <button id="clearFilters" type="button" class="rest-filters__clear">Temizle</button>
                     <!-- Close button removed, no longer needed since it's a dropdown and we click toggle to close -->
                 </div>
@@ -158,7 +158,7 @@
             <div class="rest-filters__group">
                 <h3 class="rest-filters__group-title">Kategoriler</h3>
                 <div class="rest-filters__category-select">
-                    <select id="categoryInput" class="form-select" multiple="multiple" style="width: 100%;">
+                    <select id="categoryInput" class="form-select rest-input--full" multiple="multiple">
                         @foreach (var cat in categories)
                         {
                             <option value="@cat.Id">@cat.Title</option>
@@ -198,11 +198,11 @@
 
             <!-- Location required state -->
             <div id="locationRequiredState" class="rest-results__empty" hidden>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64" style="color:var(--color-primary); margin:0 auto 16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64" class="location-required__icon">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <h3 style="color:var(--color-secondary-dark);">Lütfen Bir Konum Seçin</h3>
+                <h3 class="location-required__title">Lütfen Bir Konum Seçin</h3>
                 <p>Restoranları görebilmek için haritadan bir konum işaretleyin, il/ilçe seçin veya konum izni verin.</p>
             </div>
 

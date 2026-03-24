@@ -58,8 +58,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             }
 
             Email = email;
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
+            // Since we're sending real emails, we don't need to display the confirmation link
+            DisplayConfirmAccountLink = false;
             if(DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);

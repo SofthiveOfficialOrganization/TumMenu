@@ -151,3 +151,483 @@
 .password-wrapper .form-input {
     padding-right: 48px;
 }
+
+/* Email Verification Success Screen - Redesigned */
+.success-container {
+    text-align: center !important;
+    padding: 50px 40px !important;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    color: var(--color-text-main) !important;
+    margin: 40px auto !important;
+    max-width: 540px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid rgba(107, 114, 128, 0.08) !important;
+}
+
+.success-icon {
+    width: 64px !important;
+    height: 64px !important;
+    margin: 0 auto 24px !important;
+    background: linear-gradient(135deg, #688745 0%, #495E31 100%) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 28px !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(104, 135, 69, 0.2) !important;
+}
+
+.success-title {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    margin-bottom: 12px !important;
+    color: var(--color-primary-dark) !important;
+    line-height: 1.2 !important;
+}
+
+.success-message {
+    font-size: 16px !important;
+    margin-bottom: 32px !important;
+    color: var(--color-muted) !important;
+    line-height: 1.6 !important;
+    max-width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.success-message strong {
+    color: var(--color-text-main) !important;
+    font-weight: 600 !important;
+}
+
+.features-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin: 32px 0 !important;
+    text-align: left !important;
+}
+
+.feature-card {
+    background: #FAFAF9 !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(107, 114, 128, 0.06) !important;
+    transition: all 0.2s ease !important;
+}
+
+.feature-card:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+.feature-icon-small {
+    font-size: 24px !important;
+    margin-bottom: 12px !important;
+    color: var(--color-primary) !important;
+}
+
+.feature-title-small {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin-bottom: 6px !important;
+    color: var(--color-text-main) !important;
+}
+
+.feature-description-small {
+    font-size: 14px !important;
+    color: var(--color-muted) !important;
+    line-height: 1.5 !important;
+}
+
+.btn-dashboard {
+    display: inline-block !important;
+    padding: 14px 32px !important;
+    background: var(--color-primary) !important;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid var(--color-primary) !important;
+    margin: 8px !important;
+}
+
+.btn-dashboard:hover {
+    background: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(104, 135, 69, 0.25) !important;
+}
+
+.btn-secondary {
+    background: transparent !important;
+    color: var(--color-primary) !important;
+    border: 1px solid var(--color-primary) !important;
+}
+
+.btn-secondary:hover {
+    background: var(--color-primary) !important;
+    color: white !important;
+}
+
+/* Error Container - Updated for consistency */
+.error-container {
+    text-align: center !important;
+    padding: 50px 40px !important;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    color: var(--color-text-main) !important;
+    margin: 40px auto !important;
+    max-width: 540px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid rgba(107, 114, 128, 0.08) !important;
+}
+
+/* ======================================
+   EMAIL CONFIRMATION / REGISTER CONFIRMATION
+   ====================================== */
+
+/* Page background - warm off-white */
+body.confirmation-page {
+    background-color: #FAF9F7;
+}
+
+/* Main card container */
+.confirmation-container {
+    text-align: center;
+    padding: 48px 40px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    color: var(--color-text-main, #1F2937);
+    margin: 40px auto;
+    max-width: 540px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+/* Icon badge - small, subtle */
+.email-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 20px;
+    background: #F5F4F2;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary, #688745);
+}
+
+.email-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 1.5;
+}
+
+/* Title - strong but not overwhelming */
+.confirmation-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--color-primary-dark, #495E31);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+/* Description - soft secondary text */
+.confirmation-message {
+    font-size: 15px;
+    margin-bottom: 28px;
+    color: var(--color-muted, #6B7280);
+    line-height: 1.6;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Email display - pill/badge style */
+.email-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FAFAF9;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-main, #1F2937);
+    border: 1px solid rgba(139, 115, 85, 0.12);
+    margin: 0 auto 28px;
+}
+
+.email-display svg {
+    width: 16px;
+    height: 16px;
+    color: var(--color-primary, #688745);
+    flex-shrink: 0;
+}
+
+/* Steps list - individual soft boxes */
+.instruction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 380px;
+    margin: 0 auto 28px;
+    text-align: left;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #FAFAF9;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(139, 115, 85, 0.08);
+    transition: background-color 0.2s ease;
+}
+
+.instruction-item:hover {
+    background: #F5F4F2;
+}
+
+/* Step numbers - minimal circles */
+.instruction-number {
+    width: 26px;
+    height: 26px;
+    background: #FFFFFF;
+    color: var(--color-primary, #688745);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid rgba(104, 135, 69, 0.2);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.instruction-text {
+    color: var(--color-text-main, #1F2937);
+    font-size: 14px;
+    line-height: 1.5;
+    padding-top: 3px;
+}
+
+/* Divider - thin and elegant */
+.resend-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+/* Support text */
+.resend-text {
+    font-size: 13px;
+    color: var(--color-muted, #6B7280);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+/* Primary CTA button - solid green */
+.btn-resend {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: var(--color-primary, #688745);
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-resend:hover {
+    background: var(--color-primary-dark, #495E31);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(104, 135, 69, 0.25);
+}
+
+.btn-resend svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Secondary action link */
+.support-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--color-muted, #6B7280);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.support-link:hover {
+    color: var(--color-primary, #688745);
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .confirmation-container {
+        margin: 24px 16px;
+        padding: 36px 24px;
+        max-width: none;
+    }
+
+    .confirmation-title {
+        font-size: 24px;
+    }
+
+    .confirmation-message {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .email-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+    }
+
+    .email-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .instruction-list {
+        max-width: 100%;
+    }
+
+    .instruction-item {
+        padding: 14px 16px;
+    }
+
+    .btn-resend {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .confirmation-container {
+        margin: 16px 12px;
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .confirmation-title {
+        font-size: 22px;
+    }
+
+    .email-display {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+
+    .instruction-text {
+        font-size: 13px;
+    }
+
+    .btn-resend {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+}
+
+.error-icon {
+    width: 64px !important;
+    height: 64px !important;
+    margin: 0 auto 24px !important;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 28px !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
+}
+
+.error-title {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    margin-bottom: 12px !important;
+    color: #dc3545 !important;
+    line-height: 1.2 !important;
+}
+
+.error-message {
+    font-size: 16px !important;
+    margin-bottom: 32px !important;
+    color: var(--color-muted) !important;
+    line-height: 1.6 !important;
+    max-width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .success-container, .error-container {
+        margin: 20px 16px !important;
+        padding: 40px 24px !important;
+        max-width: none !important;
+    }
+
+    .success-title, .error-title {
+        font-size: 28px !important;
+    }
+
+    .success-message, .error-message {
+        font-size: 15px !important;
+        margin-bottom: 28px !important;
+    }
+
+    .btn-dashboard {
+        display: block !important;
+        margin: 8px auto !important;
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+
+    .feature-card {
+        padding: 18px !important;
+    }
+
+    .success-icon, .error-icon {
+        width: 56px !important;
+        height: 56px !important;
+        font-size: 24px !important;
+        margin-bottom: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .success-container, .error-container {
+        padding: 32px 20px !important;
+        margin: 16px 12px !important;
+    }
+
+    .success-title, .error-title {
+        font-size: 26px !important;
+    }
+
+    .btn-dashboard {
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+    }
+}

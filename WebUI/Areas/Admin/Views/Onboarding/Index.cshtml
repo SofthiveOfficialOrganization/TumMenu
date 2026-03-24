@@ -33,8 +33,8 @@
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <div class="card shadow-xl border-0 overflow-hidden rounded-4">
                 <div class="card-body p-0 position-relative">
-                    <div class="onboarding-progress-bar" style="height: 5px; width: 0%; background: linear-gradient(90deg, #0d6efd, #0dcaf0); position: absolute; top: 0; left: 0; z-index: 100; transition: width 0.6s ease;"></div>
-                    <div id="onboarding-wizard" class="d-flex" style="transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), height 0.4s ease; width: 400%; align-items: flex-start;">
+                    <div class="onboarding-progress-bar" id="progressBar"></div>
+                    <div id="onboarding-wizard" class="onboarding-wizard">
                         
                         <!-- Step 1: Create Company -->
                         <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-company">
@@ -60,14 +60,14 @@
                                         </div>
                                     </div>
                                     <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
-                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">tummenu.com/</span>
-                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"><i class="fas fa-link"></i></span>
-                                        <input type="text" class="form-control border-0 bg-white" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly style="min-height: 52px;">
-                                        <span class="input-group-text border-0 bg-white px-3" id="CompanySlugStatus" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3 rounded-start">tummenu.com/</span>
+                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3 rounded-start"><i class="fas fa-link"></i></span>
+                                        <input type="text" class="form-control border-0 bg-white min-h-52" id="CompanySlug" name="Slug" placeholder="guzel-yemekler" readonly>
+                                        <span class="input-group-text border-0 bg-white px-3 rounded-end" id="CompanySlugStatus">
                                             <i class="fas fa-lock text-secondary opacity-50" id="CompanySlugIcon"></i>
                                         </span>
                                     </div>
-                                    <div id="CompanySlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
+                                    <div id="CompanySlugFeedback" class="mt-2 fw-bold form-feedback"></div>
                                 </div>
 
                                 <div class="d-grid gap-2">
@@ -106,14 +106,14 @@
                                         </div>
                                     </div>
                                     <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
-                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">tummenu.com/sirket/</span>
-                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"><i class="fas fa-link"></i></span>
-                                        <input type="text" class="form-control border-0 bg-white" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly style="min-height: 52px;">
-                                        <span class="input-group-text border-0 bg-white px-3" id="StoreSlugStatus" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                        <span class="input-group-text bg-light border-0 text-muted d-none d-sm-flex px-3 rounded-start">tummenu.com/sirket/</span>
+                                        <span class="input-group-text bg-light border-0 text-muted d-flex d-sm-none px-3 rounded-start"><i class="fas fa-link"></i></span>
+                                        <input type="text" class="form-control border-0 bg-white min-h-52" id="StoreSlug" name="Slug" placeholder="merkez-sube" readonly>
+                                        <span class="input-group-text border-0 bg-white px-3 rounded-end" id="StoreSlugStatus">
                                             <i class="fas fa-lock text-secondary opacity-50" id="StoreSlugIcon"></i>
                                         </span>
                                     </div>
-                                    <div id="StoreSlugFeedback" class="mt-2 fw-bold" style="display:none;"></div>
+                                    <div id="StoreSlugFeedback" class="mt-2 fw-bold form-feedback"></div>
                                 </div>
 
                                 <div class="mb-4">
@@ -150,14 +150,14 @@
                                                 <input type="hidden" name="Address.Latitude" id="cityLatInput">
                                                 <input type="hidden" name="Address.Longitude" id="cityLngInput">
                                                 
-                                                <div style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; display: flex; flex-direction: column; gap: 8px;">
-                                                    <button id="centerMapBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--bs-primary); transition: all 0.2s;">
+                                                <div class="map-buttons-container">
+                                                    <button id="centerMapBtn" type="button" class="map-button-bs">
                                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                             <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                                                         </svg>
                                                         <span>Buraya Odakla</span>
                                                     </button>
-                                                    <button id="useMyLocationBtn" type="button" style="background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--bs-primary); transition: all 0.2s;">
+                                                    <button id="useMyLocationBtn" type="button" class="map-button-bs">
                                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                             <circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
                                                         </svg>
@@ -216,15 +216,15 @@
                                 <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Kütüphaneden kategorileri seç ve menüne ekle. Dilediğin zaman tamamla.</p>
                             </div>
 
-                            <div class="row g-3" style="min-height: 340px;">
+                            <div class="row g-3 category-container">
                                 <!-- Left: Library Search -->
                                 <div class="col-12 col-md-6">
                                     <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-book-open me-2"></i> Kategori Bul
                                         </h5>
-                                        <input type="text" id="categorySearch" class="form-control form-control-lg mb-3" placeholder="Ara..." style="font-size:1.05rem;">
-                                        <div id="categoryLibraryList" class="flex-grow-1 overflow-auto" style="max-height: 280px;">
+                                        <input type="text" id="categorySearch" class="form-control form-control-lg mb-3 search-input-lg" placeholder="Ara...">
+                                        <div id="categoryLibraryList" class="flex-grow-1 overflow-auto category-list">
                                             <div class="text-center text-muted py-5" id="libraryPlaceholder">
                                                 <i class="fas fa-search fa-2x d-block mb-3 opacity-50"></i>
                                                 <span class="fs-6">Aramak için yazmaya başlayın</span>
@@ -239,7 +239,7 @@
                                         <h5 class="fw-bold text-muted text-uppercase mb-3">
                                             <i class="fas fa-list me-2"></i> Menüm
                                         </h5>
-                                        <div id="addedCategoryList" class="flex-grow-1 overflow-auto row g-2 align-content-start" style="min-height: 280px; max-height: 280px;">
+                                        <div id="addedCategoryList" class="flex-grow-1 overflow-auto row g-2 align-content-start category-list-added">
                                             <div class="col-12 text-center text-muted py-5" id="addedPlaceholder">
                                                 <i class="fas fa-inbox fa-2x d-block mb-3 opacity-50"></i>
                                                 <span class="fs-6">Henüz kategori eklenmedi</span>
