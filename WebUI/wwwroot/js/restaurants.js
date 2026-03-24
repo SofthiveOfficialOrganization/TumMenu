@@ -698,7 +698,7 @@
                 buttonId: buttonId,
                 forceFresh: forcePrompt,
                 enableHighAccuracy: true,
-                showErrorPopup: false, // Handle errors manually
+                showErrorPopup: false, // Hataları manuel handle et
                 onSuccess: function (position) {
                     state.userLat = position.coords.latitude;
                     state.userLng = position.coords.longitude;
@@ -727,25 +727,18 @@
                 onError: function (error, message) {
                     console.warn('Geolocation error:', { code: error.code, message: error.message });
                     
-                    // Error'ları daha iyi handle et - sadece ciddi hatalarda göster
-                    if (forcePrompt && (error.code === 1 || error.code === 2)) { // Sadece permission denied ve position unavailable
-                        let text = 'Konum yetkisi kapalı olabilir veya cihaz konumu bulamadı.';
-                        if (error.code === 1) text = 'Konum erişim izni reddedildi. Tarayıcı ayarlarından izin vermeniz gerekmektedir.';
-                        else if (error.code === 2) text = 'Konum bilgisi mevcut değil. Cihazınızın konum servisini kontrol edin.';
-
-                        // Sadece elimizde hiç konum yoksa hatayı göster:
-                        if (!state.userLat) {
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Konum Alınamadı',
-                                text: text,
-                                timer: 4000,
-                                showConfirmButton: false
-                            });
-                        }
+                    // Sadece ciddi hatalarda popup göster - timeout ve geçici hatalarda gösterme
+                    if (forcePrompt && error.code === 1 && !state.userLat) { // Sadece permission denied ve konum yoksa
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Konum İzni Gerekli',
+                            text: 'Konumunuzu kullanabilmemiz için tarayıcı ayarlarından izin vermeniz gerekmektedir.',
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
                     }
                     
-                    // Timeout (code 3) ve diğer warning'lerde hata gösterme
+                    // Diğer hatalarda sessizce devam et veya state'i temizle
                     if (!state.cityId && !state.userLat) {
                         showLocationRequiredState();
                     }

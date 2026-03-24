@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /Admin/
+Disallow: /Identity/
+
+# Sitemap
+Sitemap: https://tummenu.com/sitemap.xml

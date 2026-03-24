@@ -50,9 +50,9 @@
 
             <!-- Menü ORTA -->
             <nav class="site-header__nav" aria-label="Ana menü">
-                <a asp-area="" asp-controller="Home" asp-action="WhatToEat" class="site-header__nav-link">Ne yesem?</a>
-                <a asp-area="" asp-controller="Home" asp-action="Restaurants" class="site-header__nav-link">Restoranlar</a>
-                <a asp-area="" asp-controller="Home" asp-action="Pricing" class="site-header__nav-link">Fiyatlandırma</a>
+                <a href="/ne-yesem" class="site-header__nav-link">Ne yesem?</a>
+                <a href="/restoranlar" class="site-header__nav-link">Restoranlar</a>
+                <a href="/fiyatlandirma" class="site-header__nav-link">Fiyatlandırma</a>
             
             </nav>
 
@@ -64,7 +64,7 @@
                 }
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="BeQr" class="btn btn--header">QR’lı Ol</a>
+                    <a href="/qr-kod" class="btn btn--header">QR'lı Ol</a>
                 }
                 <button class="site-header__burger"
                         type="button"
@@ -78,12 +78,12 @@
         </div>
         <div id="mobileMenu" class="site-header__mobile" hidden>
             <div class="site-header__mobile-inner">
-                <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="WhatToEat">Ne yesem?</a>
-                <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="Restaurants">Restoranlar</a>
-                <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="Pricing">Fiyatlandırma</a>
+                <a class="site-header__mobile-link" href="/ne-yesem">Ne yesem?</a>
+                <a class="site-header__mobile-link" href="/restoranlar">Restoranlar</a>
+                <a class="site-header__mobile-link" href="/fiyatlandirma">Fiyatlandırma</a>
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {
-                    <a class="site-header__mobile-link" asp-area="" asp-controller="Home" asp-action="BeQr">QR’lı Ol</a>
+                    <a class="site-header__mobile-link" href="/qr-kod">QR'lı Ol</a>
                 }
             </div>
         </div>
@@ -118,17 +118,17 @@
                     <h3 class="site-footer__column-title">İşletmeler</h3>
                     <ul class="site-footer__links">
                         <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
-                        <li><a href="/Home/BeQr">QR'lı Ol</a></li>
-                        <li><a href="/Home/Pricing">Fiyatlandırma</a></li>
+                        <li><a href="/qr-kod">QR'lı Ol</a></li>
+                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
                     </ul>
                 </div>
 
                 <div class="site-footer__col">
                     <h3 class="site-footer__column-title">Şirket</h3>
                     <ul class="site-footer__links">
-                        <li><a href="/Home/About">Hakkımızda</a></li>
-                        <li><a href="/Home/Contact">İletişim</a></li>
-                        <li><a href="/Home/Legal">Yasal Bilgiler</a></li>
+                        <li><a href="/hakkimizda">Hakkımızda</a></li>
+                        <li><a href="/iletisim">İletişim</a></li>
+                        <li><a href="/yasal-bilgiler">Yasal Bilgiler</a></li>
                     </ul>
                 </div>
             </div>
@@ -153,18 +153,18 @@
                     <summary>İşletmeler</summary>
                     <ul class="site-footer__links">
                         <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
-                        <li><a href="/Home/BeQr">QR'lı Ol</a></li>
-                        <li><a href="/Home/Pricing">Fiyatlandırma</a></li>
+                        <li><a href="/qr-kod">QR'lı Ol</a></li>
+                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
                     </ul>
                 </details>
 
                 <details class="site-footer__acc">
                     <summary>Hakkımızda</summary>
                     <ul class="site-footer__links">
-                        <li><a href="/Home/About">Hakkımızda</a></li>
-                        <li><a href="/Home/Legal#section-privacy">Politikamız</a></li>
-                        <li><a href="/Home/Legal#section-kvkk">KVKK &amp; Gizlilik</a></li>
-                        <li><a href="/Home/Contact">İletişim</a></li>
+                        <li><a href="/hakkimizda">Hakkımızda</a></li>
+                        <li><a href="/yasal-bilgiler#section-privacy">Politikamız</a></li>
+                        <li><a href="/yasal-bilgiler#section-kvkk">KVKK &amp; Gizlilik</a></li>
+                        <li><a href="/iletisim">İletişim</a></li>
                     </ul>
                 </details>
             </div>

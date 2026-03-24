@@ -641,6 +641,13 @@
           }
 
           function requestHomeUserLocation() {
+            if (!window.locationService) {
+                console.warn('Location service not available');
+                initHomeMap(41.0082, 28.9784, 12);
+                fetchNearbyStores(41.0082, 28.9784);
+                return;
+            }
+
             const btn = document.getElementById('homeUseMyLocation');
             const originalContent = btn ? btn.innerHTML : '';
 
@@ -648,28 +655,33 @@
                 btn.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block; border-top-color: var(--color-primary);"></span><span>Bulunuyor...</span>';
             }
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (pos) {
-                        if (btn) btn.innerHTML = originalContent;
-                        const lat = pos.coords.latitude;
-                        const lng = pos.coords.longitude;
-                        initHomeMap(lat, lng, 13);
-                        fetchNearbyStores(lat, lng);
-                    },
-                    function (err) {
-                        console.warn('Geolocation error:', err);
-                        if (btn) btn.innerHTML = originalContent;
-                        initHomeMap(41.0082, 28.9784, 12);
-                        fetchNearbyStores(41.0082, 28.9784);
-                    },
-                    { timeout: 10000, maximumAge: 60000 }
-                );
-            } else {
+            window.locationService.getLocation({
+                showLoading: false, // Custom loading
+                buttonId: 'homeUseMyLocation',
+                forceFresh: true,
+                enableHighAccuracy: true,
+                showErrorPopup: false, // Handle errors manually
+                onSuccess: function (position) {
+                    if (btn) btn.innerHTML = originalContent;
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    initHomeMap(lat, lng, 13);
+                    fetchNearbyStores(lat, lng);
+                },
+                onError: function (error, message) {
+                    console.warn('Geolocation error:', { code: error.code, message: error.message });
+                    if (btn) btn.innerHTML = originalContent;
+                    
+                    // Fallback to default location
+                    initHomeMap(41.0082, 28.9784, 12);
+                    fetchNearbyStores(41.0082, 28.9784);
+                }
+            }).catch(function(error) {
+                console.warn('Location request failed:', error);
                 if (btn) btn.innerHTML = originalContent;
                 initHomeMap(41.0082, 28.9784, 12);
                 fetchNearbyStores(41.0082, 28.9784);
-            }
+            });
           }
 
           function setupHomepage() {

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Xml.Linq;
 using WebUI.Models;
 
 namespace WebUI.Controllers;
@@ -35,21 +36,32 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     {
         return Redirect("/Home/Legal#section-privacy");
     }
+    [Route("qr-kod")]
     public IActionResult BeQr()
     {
         return View();
     }
+
+    [Route("ne-yesem")]
     public IActionResult WhatToEat()
     {
         return View();
     }
 
+    [Route("hakkimizda")]
+    public IActionResult About()
+    {
+        return View();
+    }
+
+    [Route("iletisim")]
     [HttpGet]
     public IActionResult Contact()
     {
         return View();
     }
 
+    [Route("iletisim")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Contact(ContactViewModel model)
@@ -90,6 +102,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return View();
     }
 
+    [Route("restoranlar")]
     public async Task<IActionResult> Restaurants(CancellationToken ct)
     {
         // Load category library items for filter chips
@@ -130,19 +143,13 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return Json(new { results = items, pagination = new { more = hasMore } });
     }
 
-    [HttpGet]
+    [Route("yasal-bilgiler")]
     public IActionResult Legal()
     {
         return View();
     }
 
-    [HttpGet]
-    public IActionResult About()
-    {
-        return View();
-    }
-
-    [HttpGet]
+    [Route("fiyatlandirma")]
     public IActionResult Pricing()
     {
         return View();
@@ -152,5 +159,91 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    // 301 Redirects for old URLs
+    [Route("Home/About")]
+    public IActionResult AboutRedirect()
+    {
+        return RedirectPermanent("/hakkimizda");
+    }
+
+    [Route("Home/Contact")]
+    public IActionResult ContactRedirect()
+    {
+        return RedirectPermanent("/iletisim");
+    }
+
+    [Route("Home/Legal")]
+    public IActionResult LegalRedirect()
+    {
+        return RedirectPermanent("/yasal-bilgiler");
+    }
+
+    [Route("Home/Pricing")]
+    public IActionResult PricingRedirect()
+    {
+        return RedirectPermanent("/fiyatlandirma");
+    }
+
+    [Route("Home/Restaurants")]
+    public IActionResult RestaurantsRedirect()
+    {
+        return RedirectPermanent("/restoranlar");
+    }
+
+    [Route("Home/BeQr")]
+    public IActionResult BeQrRedirect()
+    {
+        return RedirectPermanent("/qr-kod");
+    }
+
+    [Route("Home/WhatToEat")]
+    public IActionResult WhatToEatRedirect()
+    {
+        return RedirectPermanent("/ne-yesem");
+    }
+
+    [Route("sitemap.xml")]
+    public async Task<IActionResult> Sitemap(CancellationToken ct)
+    {
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        
+        var urlset = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
+        
+        // Statik sayfaları ekle
+        var staticPages = new[]
+        {
+            new { Url = "", ChangeFreq = "daily", Priority = "1.0" },
+            new { Url = "/hakkimizda", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/iletisim", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/yasal-bilgiler", ChangeFreq = "monthly", Priority = "0.5" },
+            new { Url = "/fiyatlandirma", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
+            new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
+            new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },
+            // Identity Pages
+            new { Url = "/giris", ChangeFreq = "monthly", Priority = "0.6" },
+            new { Url = "/kayit", ChangeFreq = "monthly", Priority = "0.6" },
+            new { Url = "/sifremi-unuttum", ChangeFreq = "monthly", Priority = "0.4" },
+            new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" }
+        };
+
+        foreach (var page in staticPages)
+        {
+            urlset.Add(new XElement("url",
+                new XElement("loc", $"{baseUrl}{page.Url}"),
+                new XElement("lastmod", DateTime.UtcNow.ToString("yyyy-MM-dd")),
+                new XElement("changefreq", page.ChangeFreq),
+                new XElement("priority", page.Priority)
+            ));
+        }
+
+        var sitemap = new XDocument(
+            new XDeclaration("1.0", "UTF-8", "yes"),
+            urlset
+        );
+
+        return Content(sitemap.ToString(), "application/xml");
     }
 }

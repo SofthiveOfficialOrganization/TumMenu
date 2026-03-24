@@ -1,0 +1,20 @@
+/* Debug CSS - Production test */
+body {
+    background-color: #ff0000 !important;
+    font-size: 14px !important;
+}
+
+.site-header {
+    background-color: #00ff00 !important;
+    padding: 10px !important;
+}
+
+/* Test if CSS loads */
+.debug-test::before {
+    content: "CSS LOADED";
+    display: block;
+    background: yellow;
+    color: red;
+    padding: 10px;
+    font-weight: bold;
+}
