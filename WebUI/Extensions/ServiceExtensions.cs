@@ -3,6 +3,8 @@ using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using WebUI.Services;
+using WebUI.Validators;
+using Domain.Entities;
 
 namespace WebUI.Extensions
 {
@@ -21,6 +23,16 @@ namespace WebUI.Extensions
 				o.SignIn.RequireConfirmedAccount = true;
 				o.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
 
+				// Use email for login instead of username
+				o.User.RequireUniqueEmail = true;
+				o.User.AllowedUserNameCharacters = ""; // Disable username validation
+
+				// Password validation with Turkish error messages
+				o.Password.RequireNonAlphanumeric = true;
+				o.Password.RequireUppercase = true;
+				o.Password.RequireLowercase = true;
+				o.Password.RequireDigit = true;
+				o.Password.RequiredUniqueChars = 1;
 			});
 
 			services.Configure<Application.Microservices.Location.LocationMicroserviceOptions>(
@@ -30,6 +42,10 @@ namespace WebUI.Extensions
 
 			// Register EmailTemplateService
 			services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+
+			// Register custom Turkish validators
+			services.AddTransient<IPasswordValidator<ApplicationUser>, TurkishPasswordValidator>();
+			services.AddTransient<IUserValidator<ApplicationUser>, TurkishUserValidator>();
 
 			services
 				.AddApplication()

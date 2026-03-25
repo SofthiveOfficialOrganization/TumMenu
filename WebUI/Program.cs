@@ -15,7 +15,7 @@ builder.AddServices();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/Identity/Account/Login";
+	options.LoginPath = "/giris";
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 

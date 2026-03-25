@@ -226,7 +226,9 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/giris", ChangeFreq = "monthly", Priority = "0.6" },
             new { Url = "/kayit", ChangeFreq = "monthly", Priority = "0.6" },
             new { Url = "/sifremi-unuttum", ChangeFreq = "monthly", Priority = "0.4" },
-            new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" }
+            new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" },
+            // Account Pages
+            new { Url = "/hesap-aktivasyon", ChangeFreq = "monthly", Priority = "0.3" }
         };
 
         foreach (var page in staticPages)

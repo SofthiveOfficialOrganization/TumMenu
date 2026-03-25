@@ -61,15 +61,15 @@ namespace WebUI.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "E-posta adresi gereklidir.")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Şifre gereklidir.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -77,7 +77,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Beni Hatırla")]
             public bool RememberMe { get; set; }
         }
 
@@ -158,7 +158,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "E-posta adresi veya şifre hatalı.");
                     return Page();
                 }
             }

@@ -1,2 +1,40 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Boş validation mesajlarını gizle
+        $('.field-validation-valid').each(function() {
+            if (!$(this).text().trim()) {
+                $(this).hide();
+            }
+        });
+
+        // Validation error olduğunda göster
+        $('form').on('submit', function() {
+            setTimeout(function() {
+                $('.field-validation-error').each(function() {
+                    if ($(this).text().trim()) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }, 100);
+        });
+
+        // Input değiştiğinde validation'ı güncelle
+        $('input, select, textarea').on('input change blur', function() {
+            var field = $(this);
+            var validationMessage = field.closest('form').find('[data-valmsg-for="' + field.attr('name') + '"]');
+            
+            setTimeout(function() {
+                if (validationMessage.text().trim()) {
+                    validationMessage.show().removeClass('field-validation-valid').addClass('field-validation-error');
+                } else {
+                    validationMessage.hide().removeClass('field-validation-error').addClass('field-validation-valid');
+                }
+            }, 100);
+        });
+    });
+</script>

@@ -108,6 +108,10 @@ namespace WebUI.ExternalServices
                 emailMessage.Headers.Add("X-Mailer", "TumMenu");
                 emailMessage.Headers.Add("Reply-To", _emailSettings.FromEmail);
                 
+                // Add List-Unsubscribe header for compliance
+                emailMessage.Headers.Add("List-Unsubscribe", $"<mailto:{_emailSettings.FromEmail}?subject=Unsubscribe>");
+                emailMessage.Headers.Add("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
+                
                 LogToFile($"Mail message created with {emailMessage.To.Count} recipient(s)");
                 LogToFile($"Message details - From: {emailMessage.From}, To: {emailMessage.To}, Subject: {emailMessage.Subject}");
                 LogToFile($"Body preview: {(htmlMessage?.Length > 100 ? htmlMessage.Substring(0, 100) + "..." : htmlMessage)}");

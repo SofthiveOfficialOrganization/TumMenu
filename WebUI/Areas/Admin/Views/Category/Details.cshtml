@@ -10,8 +10,7 @@
         <div class="horizon-card">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
-                         style="width:56px; height:56px; font-size:24px; flex-shrink:0;">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center" style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(104, 135, 69, 0.1); color: #688745;">
                         @if (!string.IsNullOrEmpty(Model.CategoryLibraryItem.IconKey))
                         {
                             <i class="@Model.CategoryLibraryItem.IconKey"></i>
@@ -23,14 +22,14 @@
                     </div>
                     <div>
                         <h4 class="fw-bold text-dark mb-0">@Model.CategoryLibraryItem.Title</h4>
-                        <span class="badge bg-light border text-secondary font-monospace fw-normal">Sıra: @Model.SortOrder</span>
+                        <span class="badge" style="background-color: #F5E6D3; color: #333; border: 1px solid #E5E7EB;" class="font-monospace fw-normal">Sıra: @Model.SortOrder</span>
                     </div>
                 </div>
                 <div class="d-flex gap-2 flex-shrink-0 text-nowrap">
-                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm btn-outline-success shadow-sm px-3" title="Alt Kategori Ekle" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm shadow-sm px-3" title="Alt Kategori Ekle" style="height: 36px; display: flex; align-items: center; justify-content: center; color: #ffffff; background-color: #688745; border-color: #688745;">
                         <i class="fas fa-plus"></i> <span class="d-none d-md-inline ms-2">Alt Kategori Ekle</span>
                     </a>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Details", "Menu", new { id = Model.MenuId }))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Details", "Menu", new { id = Model.MenuId }))" class="btn btn-sm shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center; color: #666; background-color: transparent; border-color: #666;">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </div>
@@ -41,14 +40,14 @@
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+    <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #d4edda; border-color: #c3e6cb; color: #155724;">
         <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+    <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
         <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
@@ -86,7 +85,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-sm btn-outline-secondary" title="Detaylar">
+                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-sm" title="Detaylar" style="color: #666; background-color: transparent; border-color: #666;">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -98,7 +97,7 @@
                 else
                 {
                     <div class="col-12">
-                        <div class="text-center py-4 text-secondary border rounded bg-light border-dashed">
+                        <div class="text-center py-4 text-secondary border rounded" style="background-color: #FAFAF9; border-style: dashed; border-color: #dee2e6;">
                             <i class="fas fa-layer-group fa-lg mb-2 d-block opacity-50"></i>
                             <p class="mb-0 small">Alt kategori bulunamadı.</p>
                         </div>
@@ -118,7 +117,7 @@
                 </div>
                 <div class="d-flex gap-2">
                     <!-- Ürün Ekle -->
-                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-success">
+                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm" style="color: #ffffff; background-color: #688745; border-color: #688745;">
                         <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
                     </a>
                 </div>
@@ -144,17 +143,17 @@
                                             }
                                         </div>
                                         <p class="text-muted small mb-0 d-flex gap-3 mt-1">
-                                            <span class="fw-bold text-success">@product.BasePrice.ToString("C")</span>
-                                            @if(product.IsVegan == true) { <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-leaf me-1"></i>Vegan</span> }
-                                            @if(product.IsVegetarian == true) { <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-seedling me-1"></i>Vejetaryen</span> }
+                                            <span class="fw-bold" style="color: #688745;">@product.BasePrice.ToString("C")</span>
+                                            @if(product.IsVegan == true) { <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-leaf me-1"></i>Vegan</span> }
+                                            @if(product.IsVegetarian == true) { <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-seedling me-1"></i>Vejetaryen</span> }
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm" title="Düzenle" style="color: #688745; background-color: transparent; border-color: #688745;">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
+                                            <button type="button" class="btn btn-sm" style="color: #dc3545; background-color: transparent; border-color: #dc3545;" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -167,7 +166,7 @@
                 else
                 {
                     <div class="col-12">
-                        <div class="text-center py-5 text-secondary border rounded bg-light">
+                        <div class="text-center py-5 text-secondary border rounded" style="background-color: #FAFAF9;">
                             <i class="fas fa-hamburger fa-2x mb-3 d-block opacity-50"></i>
                             <p class="mb-0">Bu kategoride henüz ürün yok. Yukarıdan ekleyebilirsiniz.</p>
                         </div>

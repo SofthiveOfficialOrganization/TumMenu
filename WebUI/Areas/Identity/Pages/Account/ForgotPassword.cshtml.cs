@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using WebUI.Models.Email;
+using WebUI.Services;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -18,11 +20,13 @@ namespace WebUI.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IEmailTemplateService _emailTemplateService;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IEmailTemplateService emailTemplateService)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _emailTemplateService = emailTemplateService;
         }
 
         /// <summary>
@@ -42,8 +46,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "E-posta adresi gereklidir.")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
             public string Email { get; set; }
         }
 
@@ -55,25 +59,34 @@ namespace WebUI.Areas.Identity.Pages.Account
                 if(user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    return RedirectToPage("./ForgotPasswordConfirmation", new { area = "Identity" });
                 }
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
+                
+                // Türkçe URL'yi manuel oluştur
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var passwordResetUrl = $"{baseUrl}/sifre-sifirla?code={code}&userId={user.Id}";
+
+                var emailModel = new PasswordResetEmailModel
+                {
+                    UserName = user.Email,
+                    UserEmail = Input.Email,
+                    PasswordResetUrl = passwordResetUrl,
+                    ExpiryHours = "24"
+                };
+
+                var htmlEmail = _emailTemplateService.GeneratePasswordResetEmail(emailModel);
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "TumMenu - Şifre Sıfırlama Talebi",
+                    htmlEmail);
 
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                return RedirectToPage("./ForgotPasswordConfirmation", new { area = "Identity" });
             }
 
             return Page();

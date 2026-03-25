@@ -599,14 +599,19 @@
 
           function fetchNearbyStores(lat, lng) {
             const categories = $('#homeCategoryInput').val() || [];
-            let url = `/api/stores/search?UserLatitude=${lat}&UserLongitude=${lng}&MaxDistanceKm=5&Page=0&PageSize=20`;
+            // Cache breaker ekleyerek her seferinde fresh sonuç al
+            const timestamp = new Date().getTime();
+            let url = `/api/stores/search?UserLatitude=${lat}&UserLongitude=${lng}&MaxDistanceKm=5&Page=0&PageSize=20&_t=${timestamp}`;
             if (categories.length > 0) {
                 url += `&CategoryLibraryItemIds=${categories.join(',')}`;
             }
 
+            console.log('Fetching nearby stores:', url); // Debug log
+
             fetch(url)
               .then(res => res.json())
               .then(data => {
+                console.log('Stores received:', data); // Debug log
                 updateHomeMapMarkers(data.items);
               })
               .catch(err => console.error('Error fetching stores for homepage map:', err));

@@ -85,19 +85,18 @@ namespace WebUI.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [Required(ErrorMessage = "E-posta adresi gereklidir.")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+            [Display(Name = "E-posta")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Şifre gereklidir.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Şifre")]
             public string Password { get; set; }
 
             /// <summary>
@@ -105,8 +104,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Şifre Tekrar")]
+            [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -155,12 +154,16 @@ namespace WebUI.Areas.Identity.Pages.Account
                         values: new { userId = userId, code = code },
                         protocol: Request.Scheme);
 
+                    // Türkçe URL'yi manuel oluştur
+                    var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                    var turkishAccountActivationUrl = $"{baseUrl}/hesap-aktivasyon?userId={userId}&code={code}";
+
                     var emailModel = new RegistrationEmailModel
                     {
                         UserName = Input.Email,
                         UserEmail = Input.Email,
                         ConfirmationUrl = confirmationUrl,
-                        AccountActivationUrl = accountActivationUrl
+                        AccountActivationUrl = turkishAccountActivationUrl
                     };
 
                     var htmlEmail = _emailTemplateService.GenerateRegistrationEmail(emailModel);

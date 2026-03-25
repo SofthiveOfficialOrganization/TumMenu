@@ -25,7 +25,7 @@ namespace WebUI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("hesap-aktivasyon")]
         public async Task<IActionResult> ActivateAccount(string userId, string code)
         {
             if (userId == null || code == null)
