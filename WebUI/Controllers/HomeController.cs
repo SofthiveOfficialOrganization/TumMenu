@@ -205,13 +205,14 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     }
 
     [Route("sitemap.xml")]
+    [ResponseCache(Duration = 3600)]
     public async Task<IActionResult> Sitemap(CancellationToken ct)
     {
         var baseUrl = $"{Request.Scheme}://{Request.Host}";
         
         var urlset = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
         
-        // Statik sayfaları ekle
+        // 1. Statik Sayfalar
         var staticPages = new[]
         {
             new { Url = "", ChangeFreq = "daily", Priority = "1.0" },
@@ -222,22 +223,57 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
             new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },
-            // Identity Pages
             new { Url = "/giris", ChangeFreq = "monthly", Priority = "0.6" },
             new { Url = "/kayit", ChangeFreq = "monthly", Priority = "0.6" },
             new { Url = "/sifremi-unuttum", ChangeFreq = "monthly", Priority = "0.4" },
             new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" },
-            // Account Pages
             new { Url = "/hesap-aktivasyon", ChangeFreq = "monthly", Priority = "0.3" }
         };
 
         foreach (var page in staticPages)
         {
-            urlset.Add(new XElement("url",
-                new XElement("loc", $"{baseUrl}{page.Url}"),
-                new XElement("lastmod", DateTime.UtcNow.ToString("yyyy-MM-dd")),
-                new XElement("changefreq", page.ChangeFreq),
-                new XElement("priority", page.Priority)
+            urlset.Add(new XElement(XName.Get("url", "http://www.sitemaps.org/schemas/sitemap/0.9"),
+                new XElement(XName.Get("loc", "http://www.sitemaps.org/schemas/sitemap/0.9"), $"{baseUrl}{page.Url}"),
+                new XElement(XName.Get("lastmod", "http://www.sitemaps.org/schemas/sitemap/0.9"), DateTime.UtcNow.ToString("yyyy-MM-dd")),
+                new XElement(XName.Get("changefreq", "http://www.sitemaps.org/schemas/sitemap/0.9"), page.ChangeFreq),
+                new XElement(XName.Get("priority", "http://www.sitemaps.org/schemas/sitemap/0.9"), page.Priority)
+            ));
+        }
+
+        // 2. Dinamik Sayfalar (Şirketler, Kategoriler, Ürünler)
+        var dynamicData = await mediator.Send(new Application.Sitemaps.Queries.GetSitemapDataQuery(), ct);
+
+        foreach (var item in dynamicData.Items)
+        {
+            string url = item.Type switch
+            {
+                Application.Sitemaps.Queries.SitemapItemType.Store => $"/{item.CompanySlug}/{item.StoreSlug}",
+                Application.Sitemaps.Queries.SitemapItemType.Category => $"/{item.CompanySlug}/{item.StoreSlug}/{item.CategorySlug}",
+                Application.Sitemaps.Queries.SitemapItemType.Product => $"/{item.CompanySlug}/{item.StoreSlug}/{item.CategorySlug}/{item.ProductSlug}",
+                _ => string.Empty
+            };
+
+            if (string.IsNullOrEmpty(url)) continue;
+
+            string priority = item.Type switch
+            {
+                Application.Sitemaps.Queries.SitemapItemType.Store => "0.9",
+                Application.Sitemaps.Queries.SitemapItemType.Category => "0.8",
+                Application.Sitemaps.Queries.SitemapItemType.Product => "0.6",
+                _ => "0.5"
+            };
+
+            string changefreq = item.Type switch
+            {
+                Application.Sitemaps.Queries.SitemapItemType.Store => "daily",
+                _ => "weekly"
+            };
+
+            urlset.Add(new XElement(XName.Get("url", "http://www.sitemaps.org/schemas/sitemap/0.9"),
+                new XElement(XName.Get("loc", "http://www.sitemaps.org/schemas/sitemap/0.9"), $"{baseUrl}{url}"),
+                new XElement(XName.Get("lastmod", "http://www.sitemaps.org/schemas/sitemap/0.9"), item.LastModified.ToString("yyyy-MM-dd")),
+                new XElement(XName.Get("changefreq", "http://www.sitemaps.org/schemas/sitemap/0.9"), changefreq),
+                new XElement(XName.Get("priority", "http://www.sitemaps.org/schemas/sitemap/0.9"), priority)
             ));
         }
 
