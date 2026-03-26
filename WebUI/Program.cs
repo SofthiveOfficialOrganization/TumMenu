@@ -17,6 +17,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/giris";
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+	options.ReturnUrlParameter = "DonusUrl";
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));

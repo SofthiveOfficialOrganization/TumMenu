@@ -145,7 +145,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                     var confirmationUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = userId, code = code },
                         protocol: Request.Scheme);
 
                     var accountActivationUrl = Url.Action(
@@ -154,21 +154,17 @@ namespace WebUI.Areas.Identity.Pages.Account
                         values: new { userId = userId, code = code },
                         protocol: Request.Scheme);
 
-                    // Türkçe URL'yi manuel oluştur
-                    var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                    var turkishAccountActivationUrl = $"{baseUrl}/hesap-aktivasyon?userId={userId}&code={code}";
-
                     var emailModel = new RegistrationEmailModel
                     {
                         UserName = Input.Email,
                         UserEmail = Input.Email,
                         ConfirmationUrl = confirmationUrl,
-                        AccountActivationUrl = turkishAccountActivationUrl
+                        AccountActivationUrl = accountActivationUrl
                     };
 
-                    var htmlEmail = _emailTemplateService.GenerateRegistrationEmail(emailModel);
+                    var emailHtml = await _emailTemplateService.GenerateRegistrationEmail(emailModel);
                     
-                    await _emailSender.SendEmailAsync(Input.Email, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", htmlEmail);
+                    await _emailSender.SendEmailAsync(user.Email!, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", emailHtml);
 
                     if(_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

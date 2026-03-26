@@ -79,7 +79,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                     ExpiryHours = "24"
                 };
 
-                var htmlEmail = _emailTemplateService.GeneratePasswordResetEmail(emailModel);
+                var htmlEmail = await _emailTemplateService.GeneratePasswordResetEmail(emailModel);
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
