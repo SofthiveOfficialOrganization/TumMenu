@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 [Authorize(Policy = "OwnerOrAdmin")]
 public class PlaygroundController : Controller
 {
@@ -15,3 +14,4 @@ public class PlaygroundController : Controller
         return View();
     }
 }
+

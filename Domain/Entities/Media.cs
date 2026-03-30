@@ -1,4 +1,4 @@
-﻿using Domain.Base;
+using Domain.Base;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
@@ -23,6 +23,14 @@ namespace Domain.Entities
 		[MaxLength(100)]
 		public string? MimeType { get; set; }
 
+		// For CategoryLibraryItem, we use a separate field to avoid foreign key conflicts
+		public Guid? CategoryLibraryItemId { get; set; }
+		public CategoryLibraryItem? CategoryLibraryItem { get; set; }
+
+		// Distinct foreign keys for parent relationships
+		public Guid? StoreId { get; set; }
+		public Guid? MenuId { get; set; }
+		public Guid? ProductId { get; set; }
 	}
 	public enum MediaRefType
 	{

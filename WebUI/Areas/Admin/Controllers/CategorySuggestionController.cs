@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/category-suggestions")]
 public class CategorySuggestionController(IMediator mediator) : Controller
 {
     [Authorize(Roles = "Admin")]
@@ -30,34 +29,34 @@ public class CategorySuggestionController(IMediator mediator) : Controller
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("approve/{id:guid}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Approve(Guid id, CancellationToken ct)
     {
         await mediator.Send(new ApproveCategorySuggestionCommand { Id = id }, ct);
         TempData["Success"] = "Öneri onaylandı.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("reject/{id:guid}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Reject(Guid id, string? adminNote, CancellationToken ct)
     {
         await mediator.Send(new RejectCategorySuggestionCommand { Id = id, AdminNote = adminNote }, ct);
         TempData["Success"] = "Öneri reddedildi.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("submit")]
+    [HttpGet]
     public IActionResult Submit()
     {
         return View();
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("submit")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(SubmitCategorySuggestionCommand cmd, CancellationToken ct)
     {
@@ -66,6 +65,10 @@ public class CategorySuggestionController(IMediator mediator) : Controller
 
         await mediator.Send(cmd, ct);
         TempData["Success"] = "Öneriniz alındı. Teşekkürler!";
-        return RedirectToAction(nameof(Submit));
+        return RedirectToAction(nameof(Submit), new { role = RouteData.Values["role"] });
     }
 }
+
+
+
+

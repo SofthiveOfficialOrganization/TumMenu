@@ -190,7 +190,9 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<ApplicationUser>();
+                var user = Activator.CreateInstance<ApplicationUser>();
+                user.CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                return user;
             }
             catch
             {

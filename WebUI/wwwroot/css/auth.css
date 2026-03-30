@@ -356,6 +356,11 @@ body.confirmation-page {
     border: 1px solid rgba(139, 115, 85, 0.1);
 }
 
+.confirmation-container svg {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Icon badge - small, subtle */
 .email-icon {
     width: 56px;

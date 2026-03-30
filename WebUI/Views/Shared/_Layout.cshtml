@@ -33,6 +33,30 @@
 
     @RenderSection("Head", required: false)
     
+    <!-- Organization Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "Organization",
+      "name": "Tüm Menü",
+      "alternateName": "TumMenu",
+      "url": "https://tummenu.com",
+      "logo": "https://tummenu.com/images/logo.png",
+      "description": "Restoranlar ve kafeler için yeni nesil QR menü ve sipariş yönetim sistemi.",
+      "parentOrganization": {
+        "@@type": "Organization",
+        "name": "SoftHive",
+        "description": "Yazılım ve Teknoloji Çözümleri"
+      },
+      "contactPoint": {
+        "@@type": "ContactPoint",
+        "contactType": "Müşteri Destek",
+        "email": "destek@tummenu.com",
+        "availableLanguage": "Turkish"
+      }
+    }
+    </script>
+    
     <!-- AdSense Code - Show to all visitors for approval -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
         crossorigin="anonymous">

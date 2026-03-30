@@ -12,24 +12,28 @@ namespace WebUI.Areas.Admin.Controllers;
 [Authorize(Roles = "Admin")]
 public class AdsController(IMediator mediator) : Controller
 {
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var slots = await mediator.Send(new GetAdSlotsQuery());
         return View(slots);
     }
 
+    [HttpGet]
     public async Task<IActionResult> Creatives()
     {
         var creatives = await mediator.Send(new GetAdCreativesQuery());
         return View(creatives);
     }
 
+    [HttpGet]
     public async Task<IActionResult> Placements()
     {
         var placements = await mediator.Send(new GetAdPlacementsQuery());
         return View(placements);
     }
 
+    [HttpGet]
     public async Task<IActionResult> Revenue()
     {
         var summary = await mediator.Send(new GetAdRevenueSummaryQuery());
@@ -46,7 +50,7 @@ public class AdsController(IMediator mediator) : Controller
         if (!ModelState.IsValid) return View(command);
         await mediator.Send(command);
         TempData["Success"] = "Reklam slotu başarıyla oluşturuldu.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
 
     [HttpGet]
@@ -63,7 +67,7 @@ public class AdsController(IMediator mediator) : Controller
         if (!ModelState.IsValid) return View(command);
         await mediator.Send(command);
         TempData["Success"] = "Reklam slotu güncellendi.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
 
     [HttpPost]
@@ -71,7 +75,7 @@ public class AdsController(IMediator mediator) : Controller
     {
         await mediator.Send(new DeleteAdSlotCommand(id));
         TempData["Success"] = "Reklam slotu silindi.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
     #endregion
 
@@ -85,7 +89,7 @@ public class AdsController(IMediator mediator) : Controller
         if (!ModelState.IsValid) return View(command);
         await mediator.Send(command);
         TempData["Success"] = "Reklam içeriği başarıyla oluşturuldu.";
-        return RedirectToAction(nameof(Creatives));
+        return RedirectToAction(nameof(Creatives), new { role = RouteData.Values["role"] });
     }
 
     [HttpGet]
@@ -102,7 +106,7 @@ public class AdsController(IMediator mediator) : Controller
         if (!ModelState.IsValid) return View(command);
         await mediator.Send(command);
         TempData["Success"] = "Reklam içeriği güncellendi.";
-        return RedirectToAction(nameof(Creatives));
+        return RedirectToAction(nameof(Creatives), new { role = RouteData.Values["role"] });
     }
 
     [HttpPost]
@@ -110,7 +114,7 @@ public class AdsController(IMediator mediator) : Controller
     {
         await mediator.Send(new DeleteAdCreativeCommand(id));
         TempData["Success"] = "Reklam içeriği silindi.";
-        return RedirectToAction(nameof(Creatives));
+        return RedirectToAction(nameof(Creatives), new { role = RouteData.Values["role"] });
     }
     #endregion
 
@@ -134,7 +138,7 @@ public class AdsController(IMediator mediator) : Controller
         }
         await mediator.Send(command);
         TempData["Success"] = "Reklam yerleşimi başarıyla oluşturuldu.";
-        return RedirectToAction(nameof(Placements));
+        return RedirectToAction(nameof(Placements), new { role = RouteData.Values["role"] });
     }
 
     [HttpGet]
@@ -158,7 +162,7 @@ public class AdsController(IMediator mediator) : Controller
         }
         await mediator.Send(command);
         TempData["Success"] = "Reklam yerleşimi güncellendi.";
-        return RedirectToAction(nameof(Placements));
+        return RedirectToAction(nameof(Placements), new { role = RouteData.Values["role"] });
     }
 
     [HttpPost]
@@ -166,7 +170,9 @@ public class AdsController(IMediator mediator) : Controller
     {
         await mediator.Send(new DeleteAdPlacementCommand(id));
         TempData["Success"] = "Reklam yerleşimi silindi.";
-        return RedirectToAction(nameof(Placements));
+        return RedirectToAction(nameof(Placements), new { role = RouteData.Values["role"] });
     }
     #endregion
 }
+
+

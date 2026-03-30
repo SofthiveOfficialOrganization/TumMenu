@@ -11,12 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 [Authorize]
 [IgnoreAntiforgeryToken] // Debugging: Disable CSRF to rule it out for 400 Bad Request
+[Route("admin/Onboarding")]
 public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingController> logger) : Controller
 {
     [HttpGet]
+    [Route("")]
+    [Route("Index")]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
         // Check state to resume wizard
@@ -202,3 +204,4 @@ public class AddOnboardingCategoryRequest
     public Guid CategoryLibraryItemId { get; set; }
     public int SortOrder { get; set; }
 }
+

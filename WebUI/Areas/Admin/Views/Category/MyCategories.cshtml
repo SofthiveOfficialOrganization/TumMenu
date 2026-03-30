@@ -80,7 +80,7 @@
                             <div class="col-lg-4 col-md-4" id="companyContainer">
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Şirket Filtresi</label>
                                 <div class="w-100">
-                                    <select name="CompanyId" id="companySelect" class="form-select select2-ajax w-100" data-url="/admin/Company/GetCompaniesForSelect2" data-placeholder="Şirket Seçin...">
+                                    <select name="CompanyId" id="companySelect" class="form-select select2-ajax w-100" data-url="@Url.Action("GetCompaniesForSelect2", "Company", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })" data-placeholder="Şirket Seçin...">
                                         @if (!string.IsNullOrEmpty(Context.Request.Query["CompanyId"])) { <option value="@Context.Request.Query["CompanyId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["CompanyId"].ToString()!, out var companyName) ? companyName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
@@ -88,7 +88,7 @@
                             <div class="col-lg-4 col-md-4" id="storeContainer" style="display: none;">
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Dükkan Filtresi</label>
                                 <div class="w-100">
-                                    <select name="StoreId" id="storeSelect" class="form-select select2-ajax w-100" data-url="/admin/Store/GetStoresForSelect2" data-placeholder="Dükkan Seçin...">
+                                    <select name="StoreId" id="storeSelect" class="form-select select2-ajax w-100" data-url="@Url.Action("GetStoresForSelect2", "Store", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })" data-placeholder="Dükkan Seçin...">
                                         @if (!string.IsNullOrEmpty(Context.Request.Query["StoreId"])) { <option value="@Context.Request.Query["StoreId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["StoreId"].ToString()!, out var storeName) ? storeName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
@@ -98,7 +98,7 @@
                             <div class="col-lg-4 col-md-5">
                                 <label class="form-label text-secondary small mb-2 fw-bold text-uppercase">Menü</label>
                                 <div class="w-100">
-                                    <select name="MenuId" id="menuSelect" class="form-select select2-ajax w-100" data-url="/admin/Menu/GetMenusForSelect2" data-placeholder="Menü Seçin...">
+                                    <select name="MenuId" id="menuSelect" class="form-select select2-ajax w-100" data-url="@Url.Action("GetMenusForSelect2", "Menu", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })" data-placeholder="Menü Seçin...">
                                         @if (!string.IsNullOrEmpty(Context.Request.Query["MenuId"])) { <option value="@Context.Request.Query["MenuId"]" selected>@(Model.FilterNames.TryGetValue(Context.Request.Query["MenuId"].ToString()!, out var menuName) ? menuName : "Seçili Filtre")</option> }
                                     </select>
                                 </div>
@@ -236,7 +236,7 @@
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
                                 <a class="page-link"
-                                   asp-action="MyCategories"
+                                   asp-action="Index"
                                    asp-route-PageIndex="@(Model.Index - 1)"
                                    asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
                             </li>
@@ -244,14 +244,14 @@
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
                                     <a class="page-link"
-                                       asp-action="MyCategories"
+                                       asp-action="Index"
                                        asp-route-PageIndex="@i"
                                        asp-route-Search="@Context.Request.Query["Search"]">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
                                 <a class="page-link"
-                                   asp-action="MyCategories"
+                                   asp-action="Index"
                                    asp-route-PageIndex="@(Model.Index + 1)"
                                    asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
                             </li>
@@ -332,3 +332,4 @@
         });
     </script>
 }
+

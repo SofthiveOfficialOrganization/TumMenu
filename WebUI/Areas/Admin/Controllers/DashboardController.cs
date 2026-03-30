@@ -7,7 +7,6 @@ using WebUI.Models;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 [Authorize(Policy = "OwnerOrAdmin")]
 public class DashboardController : Controller
 {
@@ -42,3 +41,4 @@ public class DashboardController : Controller
         return View();
     }
 }
+

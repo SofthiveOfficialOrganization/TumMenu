@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 [Authorize(Roles = "Admin,Owner")]
 public class StoreController(IMediator mediator) : Controller
 {
@@ -16,21 +15,13 @@ public class StoreController(IMediator mediator) : Controller
 	public async Task<IActionResult> Index(Guid? companyId, string? search, int page = 1, CancellationToken ct = default)
 	{
 		bool isFixedCompany = false;
-		if (!companyId.HasValue && User.IsInRole("Owner"))
+		
+		if (User.IsInRole("Owner"))
 		{
 			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
 			if (ownerCompany != null)
 			{
-				return RedirectToAction(nameof(Index), new { companyId = ownerCompany.Id, search });
-			}
-		}
-		
-		if (User.IsInRole("Owner"))
-		{
-			// Verify if the requested CompanyId matches the Owner's company to consider it "fixed"
-			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
-			if (ownerCompany != null && companyId == ownerCompany.Id)
-			{
+				companyId = ownerCompany.Id;
 				isFixedCompany = true;
 			}
 		}
@@ -56,7 +47,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(stores);
 	}
 
-	[HttpGet("[action]/{id}")]
+	[HttpGet]
 	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
@@ -74,7 +65,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(store);
 	}
 
-	[HttpGet("[action]")]
+	[HttpGet]
 	public async Task<IActionResult> Create(Guid? companyId, CancellationToken ct)
 	{
 		bool isFixedCompany = false;
@@ -99,7 +90,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(new Application.Stores.DTOs.StoreDTO { CompanyId = companyId ?? Guid.Empty });
 	}
 
-	[HttpPost("[action]")]
+	[HttpPost]
 	public async Task<IActionResult> Create(CreateStoreCommand req, CancellationToken ct)
 	{
 		// Owner can only create for their company
@@ -117,10 +108,10 @@ public class StoreController(IMediator mediator) : Controller
 		}
 
 		var store = await mediator.Send(req, ct);
-		return RedirectToAction(nameof(Index), new { companyId = store.CompanyId });
+		return RedirectToAction(nameof(Index), new { companyId = store.CompanyId, role = RouteData.Values["role"] });
 	}
 
-	[HttpGet("[action]/{id}")]
+	[HttpGet]
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
@@ -137,7 +128,7 @@ public class StoreController(IMediator mediator) : Controller
 		return View(store);
 	}
 
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	public async Task<IActionResult> Update(Guid id, UpdateStoreCommand req, CancellationToken ct)
 	{
 		if (User.IsInRole("Owner"))
@@ -153,10 +144,10 @@ public class StoreController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(req, ct);
-		return RedirectToAction(nameof(Index)); 
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] }); 
 	}
 
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
 		if (User.IsInRole("Owner"))
@@ -170,15 +161,15 @@ public class StoreController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new DeleteStoreCommand(id), ct);
-		return RedirectToAction(nameof(Index));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
 
-	[HttpGet("[action]/{companyId}")]
-	public IActionResult ByCompany(Guid companyId)
+	[HttpGet]
+	public IActionResult ByCompany(Guid id)
 	{
-		return RedirectToAction(nameof(Index), new { companyId });
+		return RedirectToAction(nameof(Index), new { companyId = id, role = RouteData.Values["role"] });
 	}
-	[HttpGet("[action]")]
+	[HttpGet]
 	public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
 	{
 		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
@@ -186,7 +177,7 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> GetStoresForSelect2(Guid? companyId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
         var query = new GetStoresPagedQuery { CompanyId = companyId, Search = search, Page = page, PageSize = pageSize };
@@ -195,3 +186,9 @@ public class StoreController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
+
+
+
+
+
+

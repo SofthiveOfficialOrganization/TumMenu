@@ -1,4 +1,4 @@
-﻿using Application.Companies.Commands;
+using Application.Companies.Commands;
 using Application.Companies.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -7,26 +7,35 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 public sealed class CompanyController(IMediator mediator) : Controller
 {
-	[Authorize(Policy = "AdminOnly")]
+	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet]
 	public async Task<IActionResult> Index(CancellationToken ct)
 	{
-		var companies = await mediator.Send(new GetAllCompaniesPagedQuery(), ct);
-		return View("AllCompanies", companies);
+		if (User.IsInRole("Admin"))
+		{
+			var companies = await mediator.Send(new GetAllCompaniesPagedQuery(), ct);
+			return View("AllCompanies", companies);
+		}
+		else
+		{
+			var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			if (company == null)
+				return RedirectToAction(nameof(Create), new { role = RouteData.Values["role"] });
+			return RedirectToAction(nameof(Details), new { area = "Admin", id = company.Id, role = RouteData.Values["role"] ?? (User.IsInRole("Admin") ? "admin" : "owner") });
+		}
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]")]
+	[HttpGet]
 	public async Task<IActionResult> Create(CancellationToken ct)
 	{
 		return View(new CreateCompanyCommand());
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Create([FromForm] CreateCompanyCommand cmd, CancellationToken ct)
 	{
@@ -34,11 +43,11 @@ public sealed class CompanyController(IMediator mediator) : Controller
 			return View(cmd);
 
 		var dto = await mediator.Send(cmd, ct);
-		return RedirectToAction(nameof(Details), new { id = dto.Id });
+		return RedirectToAction(nameof(Details), new { area = "Admin", id = dto.Id, role = RouteData.Values["role"] ?? (User.IsInRole("Admin") ? "admin" : "owner") });
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("{id:guid}")]
+	[HttpGet]
 	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
@@ -56,34 +65,10 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		return View(company);
 	}
 
-	[Authorize(Policy = "AdminOnly")]
-	[HttpGet("[action]")]
-	public async Task<IActionResult> AllCompanies(GetAllCompaniesPagedQuery req, CancellationToken ct)
-	{
-		var compaines = await mediator.Send(req, ct);
-		return View(compaines);
-	}
+
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]")]
-	public async Task<IActionResult> MyCompanies(CancellationToken ct)
-	{
-		var companies = await mediator.Send(new GetCompaniesPagedByCurrentOwnerQuery(), ct);
-		return View(companies);
-	}
-
-	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]")]
-	public async Task<IActionResult> MyCompany(CancellationToken ct)
-	{
-		var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
-		if (company == null)
-			return RedirectToAction(nameof(Create));
-		return RedirectToAction(nameof(Details), new { id = company.Id });
-	}
-
-	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]/{id}")]
+	[HttpGet]
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
@@ -106,7 +91,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		return View(cmd);
 	}
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	public async Task<IActionResult> Update([FromForm] UpdateCompanyCommand req, CancellationToken ct)
 	{
 		if(!ModelState.IsValid)
@@ -122,11 +107,11 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		}
 
 		var company = await mediator.Send(req, ct);
-		return RedirectToAction(nameof(Details), new { id = company.Id });
+		return RedirectToAction(nameof(Details), new { area = "Admin", id = company.Id, role = RouteData.Values["role"] ?? (User.IsInRole("Admin") ? "admin" : "owner") });
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
@@ -144,12 +129,12 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		if (User.IsInRole("Owner"))
 		{
 			// Owner sildiğinde, yeni şirket oluşturmaya yönlendir (veya MyCompany action'ına)
-			return RedirectToAction(nameof(Create));
+			return RedirectToAction(nameof(Create), new { role = RouteData.Values["role"] });
 		}
 		
-		return RedirectToAction(nameof(AllCompanies));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
-	[HttpGet("[action]")]
+	[HttpGet]
 	public IActionResult DivideByZeroError()
 	{
 		int zero = 0;
@@ -158,7 +143,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	}
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> Search(string? term, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var query = new GetCompanyListForSearchQuery
@@ -172,7 +157,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
     {
         var result = await mediator.Send(new CheckCompanySlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
@@ -180,7 +165,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> GetCompaniesForSelect2(string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
         var query = new GetCompanyListForSearchQuery { SearchTerm = search, Page = page, PageSize = pageSize };
@@ -189,3 +174,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
+
+
+
+

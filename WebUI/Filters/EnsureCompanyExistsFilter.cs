@@ -19,6 +19,19 @@ public class EnsureCompanyExistsFilter : IAsyncActionFilter
     {
         var user = context.HttpContext.User;
 
+        // 0. Exclude public Home/Index from this filter to allow logged-in users to see the landing page
+        var currentController = context.RouteData.Values["controller"]?.ToString();
+        var currentAction = context.RouteData.Values["action"]?.ToString();
+        var currentArea = context.RouteData.Values["area"]?.ToString();
+
+        if (string.IsNullOrEmpty(currentArea) && 
+            string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) && 
+            string.Equals(currentAction, "Index", StringComparison.OrdinalIgnoreCase))
+        {
+            await next();
+            return;
+        }
+
         // 1. Check if user is authenticated and is an Owner
         if (user.Identity?.IsAuthenticated == true && user.IsInRole("Owner"))
         {

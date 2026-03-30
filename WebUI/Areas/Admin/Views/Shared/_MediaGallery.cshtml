@@ -83,6 +83,18 @@
         });
 
         async function handleUpload(file) {
+            // Debug: Log the values
+            console.log('Debug - refId:', refId);
+            console.log('Debug - type:', type);
+            console.log('Debug - slot:', slot);
+            
+            // Validate referenceId
+            if (!refId || refId === '00000000-0000-0000-0000-000000000000') {
+                console.error('Invalid referenceId detected:', refId);
+                TumMenuAlerts.toast('error', 'Referans ID geçersiz. Lütfen sayfayı yenileyin veya kaydedin.');
+                return;
+            }
+            
             const formData = new FormData();
             formData.append('file', file);
             formData.append('referenceId', refId);

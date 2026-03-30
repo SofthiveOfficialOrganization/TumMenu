@@ -65,3 +65,7 @@ public class AnalysisController(IMediator mediator) : Controller
         return Json(result);
     }
 }
+
+
+
+

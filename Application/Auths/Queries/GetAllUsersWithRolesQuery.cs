@@ -11,6 +11,7 @@ namespace Application.Auths.Queries;
 public class GetAllUsersWithRolesQuery : PageRequest, IRequest<PaginatedListDTO<UserWithRolesDTO>>
 {
     public string? Search { get; set; }
+    public bool? WizardCompleted { get; set; }
 }
 
 public class GetAllUsersWithRolesHandler(
@@ -26,8 +27,16 @@ public class GetAllUsersWithRolesHandler(
             query = query.Where(u => u.Email!.Contains(req.Search) || u.FirstName!.Contains(req.Search) || u.LastName!.Contains(req.Search));
         }
 
+        if (req.WizardCompleted.HasValue)
+        {
+            query = query.Where(u => u.Owner != null && u.Owner.WizardCompleted == req.WizardCompleted.Value);
+        }
+
         int count = await query.CountAsync(ct);
         var items = await query
+            .Include(u => u.Owner)
+                .ThenInclude(o => o!.Company)
+            .OrderByDescending(u => u.CreatedOn)
             .Skip((req.Page - req.From) * req.PageSize)
             .Take(req.PageSize)
             .ToListAsync(ct);
@@ -43,7 +52,10 @@ public class GetAllUsersWithRolesHandler(
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Roles = roles.ToList()
+                Roles = roles.ToList(),
+                CompanyName = user.Owner?.Company?.Title,
+                CreatedOn = user.CreatedOn,
+                WizardCompleted = user.Owner?.WizardCompleted
             });
         }
 

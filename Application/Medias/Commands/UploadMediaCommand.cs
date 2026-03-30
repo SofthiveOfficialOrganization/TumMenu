@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using Application.Common.Interfaces;
 using Application.Medias.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -25,8 +26,11 @@ public class UploadMediaCommandHandler(
     IRepository<Category> categoryRepository,
     IRepository<Product> productRepository,
     IRepository<QRCode> qrRepository,
+    IRepository<CategoryLibraryItem> categoryLibraryRepository,
+    IRepository<Company> companyRepository,
     IStorageService storageService,
-    IMapper mapper
+    IMapper mapper,
+    IApplicationDbContext dbContext
     ) : IRequestHandler<UploadMediaCommand, MediaDTO>
 {
     public async Task<MediaDTO> Handle(UploadMediaCommand req, CancellationToken ct)
@@ -36,20 +40,30 @@ public class UploadMediaCommandHandler(
         switch (req.Type)
         {
             case MediaRefType.Company:
+                // Validate that Company exists
+                var company = await companyRepository.GetByIdAsync(req.ReferenceId, ct);
+                if (company == null)
+                    throw new ArgumentException($"Company with ID {req.ReferenceId} not found");
                 companyId = req.ReferenceId;
                 break;
             case MediaRefType.Store:
                 var store = await storeRepository.GetByIdAsync(req.ReferenceId, ct);
+                if (store == null)
+                    throw new ArgumentException($"Store with ID {req.ReferenceId} not found");
                 companyId = store?.CompanyId;
                 break;
             case MediaRefType.Menu:
                 var menu = await menuRepository.GetByIdAsync(req.ReferenceId, ct);
+                if (menu == null)
+                    throw new ArgumentException($"Menu with ID {req.ReferenceId} not found");
                 companyId = menu?.CompanyId;
                 break;
             case MediaRefType.Category:
                 var category = await categoryRepository.Query()
                     .Include(c => c.Menu)
                     .FirstOrDefaultAsync(c => c.Id == req.ReferenceId, ct);
+                if (category == null)
+                    throw new ArgumentException($"Category with ID {req.ReferenceId} not found");
                 companyId = category?.Menu?.CompanyId;
                 break;
             case MediaRefType.Product:
@@ -57,16 +71,31 @@ public class UploadMediaCommandHandler(
                     .Include(p => p.Category)
                     .ThenInclude(c => c.Menu)
                     .FirstOrDefaultAsync(p => p.Id == req.ReferenceId, ct);
+                if (product == null)
+                    throw new ArgumentException($"Product with ID {req.ReferenceId} not found");
                 companyId = product?.Category?.Menu?.CompanyId;
                 break;
             case MediaRefType.QRCode:
                 var qr = await qrRepository.Query()
                     .Include(q => q.Store)
                     .FirstOrDefaultAsync(q => q.Id == req.ReferenceId, ct);
+                if (qr == null)
+                    throw new ArgumentException($"QRCode with ID {req.ReferenceId} not found");
                 companyId = qr?.Store?.CompanyId;
                 break;
             case MediaRefType.CategoryLibraryItem:
-                companyId = null; // System-wide library items
+                // Validate that CategoryLibraryItem exists
+                Console.WriteLine($"DEBUG: Looking for CategoryLibraryItem with ID {req.ReferenceId}");
+                var categoryLibraryItem = await categoryLibraryRepository.GetByIdAsync(req.ReferenceId, ct);
+                if (categoryLibraryItem == null)
+                {
+                    Console.WriteLine($"ERROR: CategoryLibraryItem with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"CategoryLibraryItem with ID {req.ReferenceId} not found");
+                }
+                Console.WriteLine($"SUCCESS: CategoryLibraryItem found: {categoryLibraryItem.Title}");
+                
+                // CategoryLibraryItem is system-wide, no CompanyId needed
+                companyId = null;
                 break;
         }
 
@@ -80,14 +109,15 @@ public class UploadMediaCommandHandler(
             MediaUrl = url,
             AltText = req.AltText ?? req.File.FileName,
             SortOrder = req.SortOrder,
-            ReferenceId = req.ReferenceId,
+            ReferenceId = req.Type == MediaRefType.CategoryLibraryItem ? Guid.Empty : req.ReferenceId,
             Type = req.Type,
             CompanyId = companyId,
             Slot = req.Slot,
             Extension = Path.GetExtension(req.File.FileName),
             FileSize = req.File.Length,
             MimeType = req.File.ContentType,
-            Kind = MediaKind.Image
+            Kind = MediaKind.Image,
+            CategoryLibraryItemId = req.Type == MediaRefType.CategoryLibraryItem ? req.ReferenceId : null
         };
 
         await mediaRepository.AddAsync(media, ct);

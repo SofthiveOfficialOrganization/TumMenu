@@ -42,7 +42,7 @@
                 companyList.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"></div></div>';
                 
                 try {
-                    const response = await fetch(`/admin/Menu/SearchCompanies?search=${encodeURIComponent(query)}&page=${currentPage}&pageSize=10`);
+                    const response = await fetch(`/${window.rolePrefix}/Menu/SearchCompanies?search=${encodeURIComponent(query)}&page=${currentPage}&pageSize=10`);
                     if (!response.ok) throw new Error('Network response was not ok');
                     const data = await response.json();
                     

@@ -12,20 +12,28 @@ using System.Threading.Tasks;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 public class ProductController(IMediator mediator) : Controller
 {
-    // Keeping Index, Details mostly as they were but protected under Admin
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] GetAllProductsPagedQuery req, CancellationToken ct)
+    public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)
     {
-        var products = await mediator.Send(req, ct);
-        return View(products);
+        if (User.IsInRole("Admin"))
+        {
+            var req = new GetAllProductsPagedQuery { Search = search, Page = page, PageSize = 20 };
+            var products = await mediator.Send(req, ct);
+            return View("Index", products);
+        }
+        else
+        {
+            var req = new GetProductsPagedByCurrentOwnerQuery { Search = search, Page = page, PageSize = 20 };
+            var result = await mediator.Send(req, ct);
+            return View("MyProducts", result);
+        }
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]/{id}")]
+    [HttpGet]
     public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
     {
         ProductDTO? product = await mediator.Send(new GetProductByIdQuery(id), ct);
@@ -34,7 +42,7 @@ public class ProductController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public IActionResult Create(Guid categoryId)
     {
         // Notice we are returning the command directly so we have categoryId pre-filled
@@ -42,7 +50,7 @@ public class ProductController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateProductCommand req, CancellationToken ct)
     {
@@ -51,11 +59,11 @@ public class ProductController(IMediator mediator) : Controller
 
         await mediator.Send(req, ct);
         // Redirect back to the category details page where the product was created
-        return RedirectToAction("Details", "Category", new { id = req.CategoryId });
+        return RedirectToAction("Details", "Category", new { id = req.CategoryId, role = RouteData.Values["role"] });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]/{id}")]
+    [HttpGet]
     public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
     {
         var product = await mediator.Send(new GetProductByIdQuery(id), ct);
@@ -63,7 +71,7 @@ public class ProductController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(UpdateProductCommand req, CancellationToken ct)
     {
@@ -73,27 +81,21 @@ public class ProductController(IMediator mediator) : Controller
         await mediator.Send(req, ct);
         // Fetch after update to get the categoryId for redirect (avoids EF tracking conflict)
         var product = await mediator.Send(new GetProductByIdQuery(req.Id), ct);
-        return RedirectToAction("Details", "Category", new { id = product.CategoryId });
+        return RedirectToAction("Details", "Category", new { id = product.CategoryId, role = RouteData.Values["role"] });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]/{id}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, Guid categoryId, CancellationToken ct)
     {
         await mediator.Send(new DeleteProductCommand(id), ct);
         TempData["Success"] = "Ürün başarıyla silindi.";
-        return RedirectToAction("Details", "Category", new { id = categoryId });
+        return RedirectToAction("Details", "Category", new { id = categoryId, role = RouteData.Values["role"] });
     }
+
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
-    public async Task<IActionResult> MyProducts([FromQuery] GetProductsPagedByCurrentOwnerQuery req, CancellationToken ct)
-    {
-        var result = await mediator.Send(req, ct);
-        return View(result);
-    }
-    [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateSortOrder([FromBody] UpdateProductSortOrderCommand cmd, CancellationToken ct)
     {
@@ -101,3 +103,8 @@ public class ProductController(IMediator mediator) : Controller
         return Ok();
     }
 }
+
+
+
+
+

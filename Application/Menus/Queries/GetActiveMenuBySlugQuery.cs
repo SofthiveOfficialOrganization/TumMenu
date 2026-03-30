@@ -24,6 +24,7 @@ public class GetActiveMenuBySlugHandler(
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.CategoryLibraryItem)
+					.ThenInclude(cli => cli.Medias)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.Products.Where(p => p.IsActive))

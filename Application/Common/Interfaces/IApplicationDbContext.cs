@@ -1,0 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
+
+namespace Application.Common.Interfaces;
+
+public interface IApplicationDbContext
+{
+    DbSet<ApplicationUser> ApplicationUsers { get; }
+    DbSet<Owner> Owners { get; }
+    DbSet<Company> Companies { get; }
+    DbSet<Store> Stores { get; }
+    DbSet<Address> Addresses { get; }
+    DbSet<QRCode> QRCodes { get; }
+    DbSet<Menu> Menus { get; }
+    DbSet<Category> Categories { get; }
+    DbSet<Product> Products { get; }
+    DbSet<Media> Medias { get; }
+    DbSet<Staff> Staffs { get; }
+    DbSet<AuditLog> AuditLogs { get; }
+    DbSet<Notification> Notifications { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+}

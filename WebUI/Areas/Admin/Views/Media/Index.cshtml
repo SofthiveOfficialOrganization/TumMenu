@@ -112,7 +112,7 @@
             TumMenuAlerts.toast('info', 'Yükleniyor...');
 
             try {
-                const response = await fetch('/admin/Media/Upload', {
+                const response = await fetch(`/${window.rolePrefix}/Media/Upload`, {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -140,7 +140,7 @@
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
             try {
-                const response = await fetch(`/admin/Media/Delete/${id}`, {
+                const response = await fetch(`/${window.rolePrefix}/Media/Delete/${id}`, {
                     method: 'POST',
                     headers: {
                         'RequestVerificationToken': token

@@ -254,7 +254,7 @@ else
             const id = btn.getAttribute('data-id');
             const title = btn.getAttribute('data-title');
             document.getElementById('rejectTitle').textContent = title;
-            document.getElementById('rejectForm').action = `/admin/category-suggestions/reject/${id}`;
+            document.getElementById('rejectForm').action = `/${window.rolePrefix}/CategorySuggestion/reject/${id}`;
         });
     </script>
 }

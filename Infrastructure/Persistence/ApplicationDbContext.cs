@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+using Application.Common.Interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,8 @@ namespace Infrastructure.Persistence
 			ApplicationUserRole,
 			IdentityUserLogin<string>,
 			IdentityRoleClaim<string>,
-			IdentityUserToken<string>>
+			IdentityUserToken<string>>,
+		IApplicationDbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
@@ -143,12 +145,12 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(s => s.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Company(1) -> Media(n) polymorphic
+			// Company(1) -> Media(n)
 			builder.Entity<Company>()
 				.HasMany(c => c.Medias)
 				.WithOne()
-				.HasForeignKey(m => m.ReferenceId)
-				.HasPrincipalKey(c => c.Id);
+				.HasForeignKey(m => m.CompanyId)
+				.OnDelete(DeleteBehavior.NoAction);
 
 			// Store(1) -> Staff(n)
 			builder.Entity<Staff>()
@@ -162,22 +164,22 @@ namespace Infrastructure.Persistence
 				.HasOne(s => s.Address)
 				.WithOne(a => a.Store)
 				.HasForeignKey<Address>(a => a.StoreId)
-				.OnDelete(DeleteBehavior.NoAction);
+				.OnDelete(DeleteBehavior.Cascade);
 
 
-			// Store(1) -> QRCode(1)
+			// Store(1) -> QRCode(1) - NoAction to avoid cascade cycles
 			builder.Entity<Store>()
 				.HasOne(s => s.QRCode)
 				.WithOne(q => q.Store)
 				.HasForeignKey<QRCode>(q => q.StoreId)
 				.OnDelete(DeleteBehavior.NoAction);
 
-			// Store(1) -> Media(n) polymorphic
+			// Store(1) -> Media(n)
 			builder.Entity<Store>()
 				.HasMany(s => s.Medias)
 				.WithOne()
-				.HasForeignKey(m => m.ReferenceId)
-				.HasPrincipalKey(s => s.Id);
+				.HasForeignKey(m => m.StoreId)
+				.OnDelete(DeleteBehavior.NoAction);
 
 
 			// Company(1) -> Subscription(1)
@@ -238,12 +240,12 @@ namespace Infrastructure.Persistence
 				.HasForeignKey<Menu>(m => m.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Menu(1) -> Media(n) polymorphic
+			// Menu(1) -> Media(n)
 			builder.Entity<Menu>()
 				.HasMany(m => m.Medias)
 				.WithOne()
-				.HasForeignKey(m => m.ReferenceId)
-				.HasPrincipalKey(m => m.Id);
+				.HasForeignKey(m => m.MenuId)
+				.OnDelete(DeleteBehavior.NoAction);
 
 			// Store(1) -> Menu(n)
 			builder.Entity<Menu>()
@@ -292,19 +294,19 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(p => p.CategoryId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// Product(1) -> Media(n) polymorphic
+			// Product(1) -> Media(n)
 			builder.Entity<Product>()
 				.HasMany(p => p.Medias)
 				.WithOne()
-				.HasForeignKey(m => m.ReferenceId)
-				.HasPrincipalKey(p => p.Id);
+				.HasForeignKey(m => m.ProductId)
+				.OnDelete(DeleteBehavior.NoAction);
 
-			// CategoryLibraryItem(1) -> Media(n) polymorphic
+			// CategoryLibraryItem(1) -> Media(n)
 			builder.Entity<CategoryLibraryItem>()
 				.HasMany(c => c.Medias)
-				.WithOne()
-				.HasForeignKey(m => m.ReferenceId)
-				.HasPrincipalKey(c => c.Id);
+				.WithOne(m => m.CategoryLibraryItem)
+				.HasForeignKey(m => m.CategoryLibraryItemId)
+				.OnDelete(DeleteBehavior.NoAction);
 
 			// Product(1) -> ProductPrice(n)
 			builder.Entity<ProductPrice>()

@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Auth;
 using Infrastructure.Persistence;
@@ -26,6 +27,8 @@ namespace Infrastructure
 				opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 				opts.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
 			});
+
+			services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
 			services.AddIdentity<ApplicationUser, ApplicationRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>()

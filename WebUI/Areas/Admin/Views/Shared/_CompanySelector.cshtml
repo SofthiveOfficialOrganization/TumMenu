@@ -82,7 +82,7 @@
                 </div>`;
 
             try {
-                const url = `/admin/Company/Search?term=${encodeURIComponent(currentSearchTerm)}&page=${page}&pageSize=${pageSize}`;
+                const url = `/${window.rolePrefix}/Company/Search?term=${encodeURIComponent(currentSearchTerm)}&page=${page}&pageSize=${pageSize}`;
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Network response was not ok');
                 

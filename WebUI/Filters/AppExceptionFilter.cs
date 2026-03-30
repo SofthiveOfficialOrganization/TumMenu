@@ -179,7 +179,7 @@ public sealed class AppExceptionFilter(
 			_logger.LogWarning(ex, "Handled exception. TraceId: {TraceId}", traceId);
 
 		// In development mode, allow unhandled exceptions or DB exceptions to bubble up to the Developer Exception Page
-		if (_env.IsDevelopment() && !wantsJson && (status >= 500 || ex is DbUpdateException))
+		if(_env.IsDevelopment() && !wantsJson && (status >= 500 || ex is DbUpdateException))
 		{
 			return Task.CompletedTask;
 		}
@@ -227,7 +227,9 @@ public sealed class AppExceptionFilter(
 			if(!string.IsNullOrEmpty(referer))
 				context.Result = new RedirectResult(referer);
 			else
+			{
 				context.Result = new RedirectResult("/admin/Dashboard");
+			}
 
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;
@@ -249,7 +251,10 @@ public sealed class AppExceptionFilter(
 			if(!string.IsNullOrEmpty(dbReferer))
 				context.Result = new RedirectResult(dbReferer);
 			else
-				context.Result = new RedirectResult("/admin/Dashboard");
+			{
+				var role = httpContext.User.IsInRole("Admin") ? "admin" : "owner";
+				context.Result = new RedirectResult($"/admin/Dashboard");
+			}
 
 			context.ExceptionHandled = true;
 			return Task.CompletedTask;

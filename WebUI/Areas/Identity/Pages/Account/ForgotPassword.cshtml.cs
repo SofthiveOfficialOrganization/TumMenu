@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -69,7 +69,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                 
                 // Türkçe URL'yi manuel oluştur
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var passwordResetUrl = $"{baseUrl}/sifre-sifirla?code={code}&userId={user.Id}";
+                var passwordResetUrl = $"{baseUrl}/reset-password?code={code}&userId={user.Id}";
 
                 var emailModel = new PasswordResetEmailModel
                 {
@@ -93,3 +93,4 @@ namespace WebUI.Areas.Identity.Pages.Account
         }
     }
 }
+

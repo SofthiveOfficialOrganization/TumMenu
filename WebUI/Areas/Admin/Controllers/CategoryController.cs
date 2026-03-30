@@ -11,11 +11,10 @@ using System.Text.Json;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 public class CategoryController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> Create(Guid menuId, Guid? parentId, CancellationToken ct)
     {
         // 1. Get the menu and its existing categories
@@ -59,7 +58,7 @@ public class CategoryController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(AddCategoryToMenuCommand cmd, CancellationToken ct)
     {
@@ -90,14 +89,14 @@ public class CategoryController(IMediator mediator) : Controller
 
         await mediator.Send(cmd, ct);
         TempData["Success"] = "Kategori başarıyla eklendi.";
-        return RedirectToAction("Create", "Category", new { menuId = cmd.MenuId });
+        return RedirectToAction("Create", "Category", new { menuId = cmd.MenuId, role = RouteData.Values["role"] });
     }
 
     /// <summary>
     /// AJAX endpoint for Select2: returns category library items matching search, excluding given IDs.
     /// </summary>
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> GetCategoryLibraryItems(
         string? search,
         string? excludeIds,
@@ -128,15 +127,15 @@ public class CategoryController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]/{id}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, Guid menuId, CancellationToken ct)
     {
         await mediator.Send(new RemoveCategoryFromMenuCommand { Id = id }, ct);
-        return RedirectToAction("Details", "Menu", new { id = menuId });
+        return RedirectToAction("Details", "Menu", new { id = menuId, role = RouteData.Values["role"] });
     }
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateSortOrder([FromBody] UpdateCategorySortOrderCommand cmd, CancellationToken ct)
     {
@@ -145,7 +144,7 @@ public class CategoryController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("{id:guid}")]
+    [HttpGet]
     public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
     {
         var category = await mediator.Send(new GetCategoryByIdQuery(id), ct);
@@ -172,15 +171,16 @@ public class CategoryController(IMediator mediator) : Controller
         return View(category);
     }
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
-    public async Task<IActionResult> MyCategories([FromQuery] GetCategoriesPagedByCurrentOwnerQuery req, CancellationToken ct)
+    [HttpGet]
+    public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)
     {
+        var req = new GetCategoriesPagedByCurrentOwnerQuery { Search = search, Page = page, PageSize = 20 };
         var result = await mediator.Send(req, ct);
-        return View(result);
+        return View("MyCategories", result);
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> GetCategoriesForSelect2(Guid? companyId, Guid? storeId, Guid? menuId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
         var query = new GetCategoriesPagedByCurrentOwnerQuery
@@ -197,3 +197,8 @@ public class CategoryController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
+
+
+
+
+

@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Common.Helpers;
 using Application.Menus.DTOs;
@@ -25,6 +25,7 @@ public class GetMenuByIdHandler(
 			.AsSplitQuery()
 			.Include(x => x.Categories)
 				.ThenInclude(x => x.CategoryLibraryItem)
+					.ThenInclude(cli => cli.Medias)
 			.Include(x => x.Categories)
 				.ThenInclude(x => x.Products)
 			.Include(x => x.Store)

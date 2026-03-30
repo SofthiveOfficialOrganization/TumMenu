@@ -9,30 +9,31 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 public sealed class MediaController(IMediator mediator) : Controller
 {
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
     public async Task<IActionResult> Index(GetAllMediasPagedQuery req, CancellationToken ct)
     {
-        var result = await mediator.Send(req, ct);
-        ViewData["Title"] = "Tüm İçerikler";
-        return View(result);
+        if (User.IsInRole("Admin"))
+        {
+            var result = await mediator.Send(req, ct);
+            ViewData["Title"] = "Tüm İçerikler";
+            return View(result);
+        }
+        else
+        {
+            var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+            if (company == null) return Forbid();
+
+            req.CompanyId = company.Id;
+            var result = await mediator.Send(req, ct);
+            ViewData["Title"] = "İçeriklerim";
+            return View(result);
+        }
     }
 
-    [Authorize(Policy = "OwnerOnly")]
-    [HttpGet("MyMedias")]
-    public async Task<IActionResult> MyMedias(GetAllMediasPagedQuery req, CancellationToken ct)
-    {
-        var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
-        if (company == null) return Forbid();
 
-        req.CompanyId = company.Id;
-        var result = await mediator.Send(req, ct);
-        ViewData["Title"] = "İçeriklerim";
-        return View("Index", result);
-    }
 
     [Authorize(Policy = "OwnerOnly")]
     [HttpPost("Upload")]
@@ -53,7 +54,7 @@ public sealed class MediaController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("Delete/{id}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
@@ -61,3 +62,7 @@ public sealed class MediaController(IMediator mediator) : Controller
         return Ok();
     }
 }
+
+
+
+

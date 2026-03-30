@@ -177,7 +177,7 @@
             
             if (currentCompanyId) {
                 // Load stores for this company
-                $.get('@Url.Action("GetStoresByCompany", "Analysis", new { area = "Admin" })', { companyId: currentCompanyId }, function(response) {
+                $.get('@Url.Action("GetStoresByCompany", "Analysis", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', { companyId: currentCompanyId }, function(response) {
                     let html = '<option value="">Tüm Dükkanlar</option>';
                     response.forEach(store => {
                         html += `<option value="${store.storeId}">${store.storeTitle}</option>`;
@@ -209,11 +209,11 @@
         function loadStats() {
             let url = '';
             if (currentAnalysisType === 'QR') {
-                url = '@Url.Action("GetQRStats", "Analysis", new { area = "Admin" })';
+                url = '@Url.Action("GetQRStats", "Analysis", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })';
             } else if (currentAnalysisType === 'Product') {
-                url = '@Url.Action("GetProductStats", "Analysis", new { area = "Admin" })';
+                url = '@Url.Action("GetProductStats", "Analysis", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })';
             } else if (currentAnalysisType === 'Category') {
-                url = '@Url.Action("GetCategoryStats", "Analysis", new { area = "Admin" })';
+                url = '@Url.Action("GetCategoryStats", "Analysis", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })';
             }
 
             $.get(url, { 
@@ -254,7 +254,7 @@
         }
 
         function loadStoreBreakdown() {
-            $.get('@Url.Action("GetStoreBreakdown", "Analysis", new { area = "Admin" })', { companyId: currentCompanyId }, function(data) {
+            $.get('@Url.Action("GetStoreBreakdown", "Analysis", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', { companyId: currentCompanyId }, function(data) {
                 // 1. Render Table
                 let html = '';
                 if (data.length === 0) {

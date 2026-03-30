@@ -12,25 +12,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/[controller]")]
 public sealed class MenuController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Index(CancellationToken ct)
+    public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)
     {
-         var menus = await mediator.Send(new GetAllMenusPagedQuery(), ct);
-         return View("AllMenus", menus);
+        if (User.IsInRole("Admin"))
+        {
+            var menus = await mediator.Send(new GetAllMenusPagedQuery { Search = search, Page = page }, ct);
+            return View("AllMenus", menus);
+        }
+        else
+        {
+            var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Search = search, Page = page }, ct);
+            return View("MyMenus", menus);
+        }
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> CreateToStore(CancellationToken ct)
     {
         return View(new CreateMenuToStoreCommand());
     }
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateToStore([FromForm] CreateMenuToStoreCommand cmd, CancellationToken ct)
     {
@@ -53,18 +60,18 @@ public sealed class MenuController(IMediator mediator) : Controller
         }
 
         var dto = await mediator.Send(cmd, ct);
-        return RedirectToAction(nameof(Details), new { id = dto.Id });
+        return RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public IActionResult CreateToCompany()
     {
         return View(new CreateMenuToCompanyCommand());
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpPost("[action]")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateToCompany([FromForm] CreateMenuToCompanyCommand cmd, CancellationToken ct)
     {
@@ -86,11 +93,11 @@ public sealed class MenuController(IMediator mediator) : Controller
         }
 
         var dto = await mediator.Send(cmd, ct);
-        return RedirectToAction(nameof(Details), new { id = dto.Id });
+        return RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] });
     }
 
     	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("{id:guid}")]
+	[HttpGet]
 	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
@@ -124,24 +131,12 @@ public sealed class MenuController(IMediator mediator) : Controller
 		return View(menu);
 	}
 
-	[Authorize(Policy = "AdminOnly")]
-	[HttpGet("[action]")]
-	public async Task<IActionResult> AllMenus(GetAllMenusPagedQuery req, CancellationToken ct)
-	{
-		var menus = await mediator.Send(req, ct);
-		return View(menus);
-	}
+
+
+
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]")]
-	public async Task<IActionResult> MyMenus([FromQuery] GetMenusPagedByCurrentOwnerQuery req, CancellationToken ct)
-	{
-		var menus = await mediator.Send(req, ct);
-		return View(menus);
-	}
-
-	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpGet("[action]/{id:guid}")]
+	[HttpGet]
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
@@ -166,7 +161,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Update(UpdateMenuCommand req, CancellationToken ct)
 	{
@@ -191,11 +186,11 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		var updatedMenu = await mediator.Send(req, ct);
-		return RedirectToAction(nameof(Details), new { id = updatedMenu.Id });
+		return RedirectToAction(nameof(Details), new { id = updatedMenu.Id, role = RouteData.Values["role"] });
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> SetActive(Guid id, CancellationToken ct)
 	{
@@ -217,11 +212,11 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new SetMenuActiveCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Details), new { id });
+		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
 	}
 	
 	[Authorize(Policy = "OwnerOrAdmin")]
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
@@ -243,10 +238,10 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new DeleteMenuCommand { Id = id }, ct);
-		return RedirectToAction(nameof(AllMenus));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}    
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> SearchCompanies(string? search, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
         IEnumerable<CompanyDTO> items;
@@ -279,7 +274,7 @@ public sealed class MenuController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> SearchStores(string? search, Guid? companyId, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
         var result = await mediator.Send(new GetStoresPagedQuery 
@@ -293,7 +288,7 @@ public sealed class MenuController(IMediator mediator) : Controller
         return Json(new { items = result.Items, totalCount = result.Count });
     }
 
-    [HttpGet("[action]")]
+    [HttpGet]
     public IActionResult DivideByZeroError()
     {
         int zero = 0;
@@ -302,7 +297,7 @@ public sealed class MenuController(IMediator mediator) : Controller
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
-    [HttpGet("[action]")]
+    [HttpGet]
     public async Task<IActionResult> GetMenusForSelect2(Guid? companyId, Guid? storeId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
         var result = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery 
@@ -319,3 +314,7 @@ public sealed class MenuController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
+
+
+
+

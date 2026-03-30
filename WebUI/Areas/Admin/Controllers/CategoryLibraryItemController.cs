@@ -1,4 +1,4 @@
-﻿using Application.Categories.Commands;
+using Application.Categories.Commands;
 using Application.Categories.Queries;
 using Application.CategorySuggestions.Commands;
 using MapsterMapper;
@@ -26,7 +26,7 @@ public class CategoryLibraryItemController(
 	}
 
 	[Authorize(Roles = "Admin")]
-	[HttpGet("[action]")]
+	[HttpGet]
 	public async Task<IActionResult> Create(string? suggestedTitle, Guid? suggestionId, Guid? parentId)
 	{
 		var cmd = new CreateCategoryLibraryItemCommand();
@@ -48,7 +48,7 @@ public class CategoryLibraryItemController(
 	}
 
 	[Authorize(Roles = "Admin")]
-	[HttpPost("[action]")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Create([FromForm] CreateCategoryLibraryItemCommand cmd, Guid? suggestionId, CancellationToken ct)
 	{
@@ -61,11 +61,11 @@ public class CategoryLibraryItemController(
 		if (suggestionId.HasValue)
 			await mediator.Send(new ApproveCategorySuggestionCommand { Id = suggestionId.Value }, ct);
 
-		return RedirectToAction(nameof(Index));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
 
 	[Authorize(Roles = "Admin,Owner")]
-	[HttpGet("{slug}")]
+	[HttpGet]
 	public async Task<IActionResult> Details(string slug, string? returnUrl, CancellationToken ct)
 	{
 		var categories = await mediator.Send(new GetCategoryLibraryItemBySlugQuery { Slug = slug }, ct);
@@ -74,7 +74,7 @@ public class CategoryLibraryItemController(
 	}
 
 	[Authorize(Roles = "Admin")]
-	[HttpGet("[action]/{id:guid}")]
+	[HttpGet]
 	public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
 	{
 		var dto = await mediator.Send(new GetCategoryLibraryItemByIdQuery { CategoryId = id }, ct);
@@ -94,7 +94,7 @@ public class CategoryLibraryItemController(
 	}
 
 	[Authorize(Roles = "Admin")]
-	[HttpPost("[action]")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Edit(UpdateCategoryLibraryItemCommand cmd, CancellationToken ct)
 	{
@@ -104,16 +104,20 @@ public class CategoryLibraryItemController(
 		}
 
 		await mediator.Send(cmd, ct);
-		return RedirectToAction(nameof(Index));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
 
 
 	[Authorize(Roles = "Admin")]
-	[HttpPost("[action]/{id}")]
+	[HttpPost]
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
 		await mediator.Send(new DeleteCategoryLibraryItemCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Index));
+		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
 }
+
+
+
+
