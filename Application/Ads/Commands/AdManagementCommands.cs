@@ -30,7 +30,7 @@ public class UpdateAdSlotCommandHandler(IRepository<AdSlot> repo, IMapper mapper
 {
     public async Task<AdSlotDTO> Handle(UpdateAdSlotCommand request, CancellationToken ct)
     {
-        var slot = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Slot not found");
+        var slot = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Slot bulunamadı");
         mapper.Map(request, slot);
         slot.Description ??= "";
         repo.Update(slot);
@@ -58,7 +58,7 @@ public class UpdateAdCreativeCommandHandler(IRepository<AdCreative> repo, IMappe
 {
     public async Task<AdCreativeDTO> Handle(UpdateAdCreativeCommand request, CancellationToken ct)
     {
-        var creative = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Creative not found");
+        var creative = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Kreatif bulunamadı");
         mapper.Map(request, creative);
         repo.Update(creative);
         return mapper.Map<AdCreativeDTO>(creative);
@@ -85,7 +85,7 @@ public class UpdateAdPlacementCommandHandler(IRepository<AdPlacement> repo, IMap
 {
     public async Task<AdPlacementDTO> Handle(UpdateAdPlacementCommand request, CancellationToken ct)
     {
-        var placement = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Placement not found");
+        var placement = await repo.GetByIdAsync(request.Id, ct) ?? throw new Exception("Yerleştirme bulunamadı");
         mapper.Map(request, placement);
         repo.Update(placement);
         return mapper.Map<AdPlacementDTO>(placement);

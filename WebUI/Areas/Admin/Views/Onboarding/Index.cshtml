@@ -770,7 +770,7 @@
                 };
 
                 $.ajax({
-                    url: `/${window.rolePrefix}/Onboarding/company`,
+                    url: `/admin/Onboarding/company`,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
@@ -820,7 +820,7 @@
                 };
 
                 $.ajax({
-                    url: `/${window.rolePrefix}/Onboarding/store`,
+                    url: `/admin/Onboarding/store`,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
@@ -855,7 +855,7 @@
                 };
 
                 $.ajax({
-                    url: `/${window.rolePrefix}/Onboarding/menu`,
+                    url: `/admin/Onboarding/menu`,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
@@ -877,10 +877,10 @@
 
             // --- Step 4: Category Library Search + Add + Sort ---
             let categorySearchTimer = null;
-            const categorySearchUrl  = `/${window.rolePrefix}/CategoryLibrary/Index`;
-            const menuCategoriesUrl  = `/${window.rolePrefix}/Onboarding/menu-categories`;
-            const addCategoryUrl     = `/${window.rolePrefix}/Onboarding/add-category`;
-            const sortUrl            = `/${window.rolePrefix}/Category/UpdateSortOrder`;
+            const categorySearchUrl  = `/admin/CategoryLibrary/Index`;
+            const menuCategoriesUrl  = `/admin/Onboarding/menu-categories`;
+            const addCategoryUrl     = `/admin/Onboarding/add-category`;
+            const sortUrl            = `/admin/Category/UpdateSortOrder`;
 
             // Called on step 4 entry: load existing menu categories into right panel,
             // then load the library (which excludes already-added ones).
@@ -985,7 +985,7 @@
                             <i class="fas fa-times text-white small"></i>
                         </button>`);
                 card.find('.btn-remove-category').on('click', function() {
-                    $.post(`/${window.rolePrefix}/Onboarding/remove-category/${categoryId}`, function() {
+                    $.post(`/admin/Onboarding/remove-category/${categoryId}`, function() {
                         colDiv.remove();
                         if ($('#addedCategoryList .added-category-item').length === 0) {
                             $('#addedPlaceholder').show();
@@ -1029,7 +1029,7 @@
                 const menuId = $('#CategoryMenuId').val();
 
                 $.ajax({
-                    url: `/${window.rolePrefix}/Onboarding/complete`,
+                    url: `/admin/Onboarding/complete`,
                     type: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     success: function() {

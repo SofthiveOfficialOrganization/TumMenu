@@ -43,19 +43,19 @@ public class UploadMediaCommandHandler(
                 // Validate that Company exists
                 var company = await companyRepository.GetByIdAsync(req.ReferenceId, ct);
                 if (company == null)
-                    throw new ArgumentException($"Company with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan şirket bulunamadı");
                 companyId = req.ReferenceId;
                 break;
             case MediaRefType.Store:
                 var store = await storeRepository.GetByIdAsync(req.ReferenceId, ct);
                 if (store == null)
-                    throw new ArgumentException($"Store with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan mağaza bulunamadı");
                 companyId = store?.CompanyId;
                 break;
             case MediaRefType.Menu:
                 var menu = await menuRepository.GetByIdAsync(req.ReferenceId, ct);
                 if (menu == null)
-                    throw new ArgumentException($"Menu with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan menü bulunamadı");
                 companyId = menu?.CompanyId;
                 break;
             case MediaRefType.Category:
@@ -63,7 +63,7 @@ public class UploadMediaCommandHandler(
                     .Include(c => c.Menu)
                     .FirstOrDefaultAsync(c => c.Id == req.ReferenceId, ct);
                 if (category == null)
-                    throw new ArgumentException($"Category with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan kategori bulunamadı");
                 companyId = category?.Menu?.CompanyId;
                 break;
             case MediaRefType.Product:
@@ -72,7 +72,7 @@ public class UploadMediaCommandHandler(
                     .ThenInclude(c => c.Menu)
                     .FirstOrDefaultAsync(p => p.Id == req.ReferenceId, ct);
                 if (product == null)
-                    throw new ArgumentException($"Product with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan ürün bulunamadı");
                 companyId = product?.Category?.Menu?.CompanyId;
                 break;
             case MediaRefType.QRCode:
@@ -80,7 +80,7 @@ public class UploadMediaCommandHandler(
                     .Include(q => q.Store)
                     .FirstOrDefaultAsync(q => q.Id == req.ReferenceId, ct);
                 if (qr == null)
-                    throw new ArgumentException($"QRCode with ID {req.ReferenceId} not found");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan QR kodu bulunamadı");
                 companyId = qr?.Store?.CompanyId;
                 break;
             case MediaRefType.CategoryLibraryItem:
@@ -89,8 +89,8 @@ public class UploadMediaCommandHandler(
                 var categoryLibraryItem = await categoryLibraryRepository.GetByIdAsync(req.ReferenceId, ct);
                 if (categoryLibraryItem == null)
                 {
-                    Console.WriteLine($"ERROR: CategoryLibraryItem with ID {req.ReferenceId} not found");
-                    throw new ArgumentException($"CategoryLibraryItem with ID {req.ReferenceId} not found");
+                    Console.WriteLine($"HATA: ID {req.ReferenceId} olan KategoriKütüphaneÖğesi bulunamadı");
+                    throw new ArgumentException($"ID {req.ReferenceId} olan KategoriKütüphaneÖğesi bulunamadı");
                 }
                 Console.WriteLine($"SUCCESS: CategoryLibraryItem found: {categoryLibraryItem.Title}");
                 

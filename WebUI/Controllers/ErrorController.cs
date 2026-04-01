@@ -50,7 +50,7 @@ public sealed class ErrorController(IWebHostEnvironment env) : Controller
 			{
 				Status = code,
 				Code = code == StatusCodes.Status404NotFound ? "not_found" : "http_error",
-				Message = code == StatusCodes.Status404NotFound ? "Not Found" : "HTTP error",
+				Message = code == StatusCodes.Status404NotFound ? "Bulunamadı" : "HTTP hatası",
 				TraceId = HttpContext.TraceIdentifier
 			};
 

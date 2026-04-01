@@ -1,4 +1,8 @@
-@model Application.Products.Commands.CreateProductCommand
+@using Application.Menus.Queries
+@using Application.Categories.Queries
+@using Application.Products.Commands
+@using Application.Products.DTOs
+@model CreateProductCommand
 
 @{
     ViewData["Title"] = "Yeni Ürün Ekle";
@@ -12,15 +16,33 @@
                 <p class="text-secondary">Kategoriye yeni bir ürün ekleyin.</p>
             </div>
 
-            <form asp-action="Create" method="post">
+            <form asp-action="CreateProduct" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-                <input asp-for="CategoryId" type="hidden" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Menü Seçimi</label>
+                        <select name="menuId" id="menuSelect" class="form-select" required>
+                            <option value="">Menü seçin...</option>
+                        </select>
+                        <span class="text-danger small" data-valmsg-for="menuId"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Kategori Seçimi</label>
+                        <select name="categoryId" id="categorySelect" class="form-select" required>
+                            <option value="">Kategori seçin...</option>
+                        </select>
+                        <span class="text-danger small" data-valmsg-for="categoryId"></span>
+                    </div>
+                </div>
 
                 <div class="mb-4">
                     <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Ürün Adı</label>
                     <input asp-for="Title" class="form-control" placeholder="Örn: Karışık Pizza" id="titleInput" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
+
                 <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <label asp-for="Slug" class="form-label fw-bold text-secondary small text-uppercase mb-0">Slug (URL Yolu)</label>
@@ -38,6 +60,7 @@
                     <span asp-validation-for="Slug" class="text-danger small"></span>
                     <div class="form-text text-muted small">Boş bırakılırsa ürün adından otomatik oluşturulur.</div>
                 </div>
+
                 <div class="mb-4">
                     <label asp-for="Description" class="form-label fw-bold text-secondary small text-uppercase">Açıklama</label>
                     <textarea asp-for="Description" class="form-control" rows="3" placeholder="Ürün içerik bilgisi vb."></textarea>
@@ -76,8 +99,6 @@
                     <span asp-validation-for="Allergens" class="text-danger small"></span>
                 </div>
 
-
-
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase d-block mb-3">Durum</label>
@@ -114,18 +135,9 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-5">
-                    @if (Model.CategoryId != Guid.Empty)
-                    {
-                        <a asp-action="Details" asp-controller="Category" asp-route-id="@Model.CategoryId" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>İptal
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>İptal
-                        </a>
-                    }
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>İptal
+                    </a>
                     <button type="submit" class="btn btn-primary px-4">
                         <i class="fas fa-check-circle me-2"></i> Kaydet
                     </button>
@@ -138,60 +150,84 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-    $(document).ready(function () {
-        const titleInput = $('#titleInput');
-        const slugInput  = $('#slugInput');
-        const slugToggle = $('#slugManualToggle');
-        const slugIcon   = $('#slugIcon');
+        $(document).ready(function () {
+            const titleInput = $('#titleInput');
+            const slugInput  = $('#slugInput');
+            const slugToggle = $('#slugManualToggle');
+            const slugIcon   = $('#slugIcon');
 
-        let isManual = false;
+            let isManual = false;
 
-        function slugify(text) {
-            const turkishMap = {
-                'ğ':'g','ü':'u','ş':'s','ı':'i','ö':'o','ç':'c',
-                'Ğ':'g','Ü':'u','Ş':'s','İ':'i','I':'i','Ö':'o','Ç':'c'
-            };
-            let result = text.trim().toLowerCase();
-            result = result.split('').map(c => turkishMap[c] || c).join('');
-            result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            result = result.replace(/[^a-z0-9\s\-_]/g, '');
-            result = result.replace(/[\s_]+/g, '-');
-            result = result.replace(/-+/g, '-');
-            result = result.replace(/^-|-$/g, '');
-            if (result.length > 30) result = result.substring(0, 30).replace(/-$/, '');
-            return result;
-        }
-
-        // Title → auto slug
-        titleInput.on('input', function () {
-            if (!isManual) {
-                slugInput.val(slugify($(this).val()));
+            function slugify(text) {
+                const turkishMap = {
+                    'ğ':'g','ü':'u','ş':'s','ı':'i','ö':'o','ç':'c',
+                    'Ğ':'g','Ü':'u','Ş':'s','İ':'i','I':'i','Ö':'o','Ç':'c'
+                };
+                let result = text.trim().toLowerCase();
+                result = result.split('').map(c => turkishMap[c] || c).join('');
+                result = result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                result = result.replace(/[^a-z0-9\s\-_]/g, '');
+                result = result.replace(/[\s_]+/g, '-');
+                result = result.replace(/-+/g, '-');
+                result = result.replace(/^-|-$/g, '');
+                if (result.length > 30) result = result.substring(0, 30).replace(/-$/, '');
+                return result;
             }
-        });
 
-        // Manual toggle
-        slugToggle.on('change', function () {
-            isManual = $(this).is(':checked');
-            if (isManual) {
-                slugInput.prop('readonly', false).focus();
-                slugIcon.removeClass('fa-lock text-secondary').addClass('fa-pencil-alt text-primary');
-            } else {
-                slugInput.prop('readonly', true);
-                slugInput.val(slugify(titleInput.val()));
-                slugIcon.removeClass('fa-pencil-alt text-primary').addClass('fa-lock text-secondary');
-            }
-        });
+            // Title → auto slug
+            titleInput.on('input', function () {
+                if (!isManual) {
+                    slugInput.val(slugify($(this).val()));
+                }
+            });
 
-        // Manual slug: enforce lowercase slug chars as user types
-        slugInput.on('input', function () {
-            if (isManual) {
-                let val = $(this).val().toLowerCase()
-                    .replace(/[^a-z0-9\-]/g, '')
-                    .replace(/-+/g, '-');
-                if (val.length > 30) val = val.substring(0, 30);
-                $(this).val(val);
-            }
+            // Manual toggle
+            slugToggle.on('change', function () {
+                isManual = $(this).is(':checked');
+                if (isManual) {
+                    slugInput.prop('readonly', false).focus();
+                    slugIcon.removeClass('fa-lock text-secondary').addClass('fa-pencil-alt text-primary');
+                } else {
+                    slugInput.prop('readonly', true);
+                    slugInput.val(slugify(titleInput.val()));
+                    slugIcon.removeClass('fa-pencil-alt text-primary').addClass('fa-lock text-secondary');
+                }
+            });
+
+            // Manual slug: enforce lowercase slug chars as user types
+            slugInput.on('input', function () {
+                if (isManual) {
+                    let val = $(this).val().toLowerCase()
+                        .replace(/[^a-z0-9\-]/g, '')
+                        .replace(/-+/g, '-');
+                    if (val.length > 30) val = val.substring(0, 30);
+                    $(this).val(val);
+                }
+            });
+
+            // Load menus
+            $.get('@Url.Action("GetMenusForSelect2", "Menu", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', 
+                function(data) {
+                    data.results.forEach(function(menu) {
+                        $('#menuSelect').append('<option value="' + menu.id + '">' + menu.text + '</option>');
+                    });
+                });
+
+            // When menu changes, load its categories
+            $('#menuSelect').on('change', function() {
+                var menuId = $(this).val();
+                $('#categorySelect').html('<option value="">Kategori seçin...</option>');
+                
+                if (menuId) {
+                    $.get('@Url.Action("GetCategoriesForSelect2", "Category", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', 
+                        { menuId: menuId }, 
+                        function(data) {
+                            data.results.forEach(function(cat) {
+                                $('#categorySelect').append('<option value="' + cat.id + '">' + cat.text + '</option>');
+                            });
+                        });
+                }
+            });
         });
-    });
     </script>
 }

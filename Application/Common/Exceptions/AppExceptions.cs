@@ -15,7 +15,7 @@ public sealed class ValidationAppException : AppException
 	public IDictionary<string, string[]> Errors { get; }
 
 	public ValidationAppException(IDictionary<string, string[]> errors)
-		: base(ErrorCodes.Validation, "Validation error")
+		: base(ErrorCodes.Validation, "Doğrulama hatası")
 		=> Errors = errors;
 }
 

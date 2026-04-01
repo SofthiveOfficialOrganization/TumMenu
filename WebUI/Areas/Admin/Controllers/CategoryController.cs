@@ -196,6 +196,53 @@ public class CategoryController(IMediator mediator) : Controller
         var items = result.Items.Select(c => new { id = c.Id, text = c.Title });
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet]
+    public IActionResult CreateCategory()
+    {
+        return View();
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateCategory(Guid menuId, Guid? parentId, Guid categoryLibraryItemId, CancellationToken ct)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        var command = new AddCategoryToMenuCommand 
+        { 
+            MenuId = menuId, 
+            ParentId = parentId, 
+            CategoryLibraryItemId = categoryLibraryItemId 
+        };
+
+        // Security Check
+        var menu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
+        if (User.IsInRole("Owner"))
+        {
+             var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+             bool isOwner = false;
+             if (ownerCompany != null)
+             {
+                 if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+                 else if (menu.StoreId.HasValue)
+                 {
+                     var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(menu.StoreId.Value), ct);
+                     if (store.CompanyId == ownerCompany.Id) isOwner = true;
+                 }
+             }
+             if (!isOwner) return Forbid();
+        }
+
+        await mediator.Send(command, ct);
+        TempData["Success"] = "Kategori başarıyla eklendi.";
+        return RedirectToAction("Index");
+    }
 }
 
 

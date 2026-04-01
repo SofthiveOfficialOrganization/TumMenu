@@ -36,7 +36,7 @@ namespace WebUI.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                _logger.LogWarning($"User with ID {userId} not found.");
+                _logger.LogWarning($"ID {userId} olan kullanıcı bulunamadı.");
                 ViewBag.IsSuccess = false;
                 ViewBag.Message = "Kullanıcı bulunamadı. Lütfen kayıt olduğunuz e-posta adresini kontrol edin.";
                 return View();

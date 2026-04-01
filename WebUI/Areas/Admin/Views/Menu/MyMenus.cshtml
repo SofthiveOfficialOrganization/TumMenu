@@ -122,16 +122,16 @@
                     <nav aria-label="Sayfa navigasyonu">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@(Model.Index - 1)">Önceki</a>
+                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index - 1)">Önceki</a>
                             </li>
                              @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@i">@i</a>
+                                    <a class="page-link" asp-action="Index" asp-route-PageIndex="@i">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="MyMenus" asp-route-PageIndex="@(Model.Index + 1)">Sonraki</a>
+                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index + 1)">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

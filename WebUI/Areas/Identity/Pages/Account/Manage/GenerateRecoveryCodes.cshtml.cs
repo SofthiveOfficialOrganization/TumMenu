@@ -47,7 +47,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
             if(!isTwoFactorEnabled)
             {
-                throw new InvalidOperationException($"Cannot generate recovery codes for user because they do not have 2FA enabled.");
+                throw new InvalidOperationException($"Kullanıcı için kurtarma kodu oluşturulamıyor çünkü 2FA etkin değil.");
             }
 
             return Page();
@@ -65,7 +65,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             if(!isTwoFactorEnabled)
             {
-                throw new InvalidOperationException($"Cannot generate recovery codes for user as they do not have 2FA enabled.");
+                throw new InvalidOperationException($"Kullanıcı için kurtarma kodu oluşturulamıyor çünkü 2FA etkin değil.");
             }
 
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);

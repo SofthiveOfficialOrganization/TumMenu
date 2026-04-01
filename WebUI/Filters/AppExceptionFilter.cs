@@ -126,7 +126,7 @@ public sealed class AppExceptionFilter(
 				{
 					Status = status,
 					Code = ErrorCodes.Validation,
-					Message = "Validation error",
+					Message = "Doğrulama hatası",
 					TraceId = traceId,
 					Errors = errors
 				};

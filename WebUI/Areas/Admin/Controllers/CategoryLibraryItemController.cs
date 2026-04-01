@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Route("admin/category-library")]
 public class CategoryLibraryItemController(
 	IMediator mediator, 
 	IMapper mapper,
@@ -18,7 +17,7 @@ public class CategoryLibraryItemController(
 ) : Controller
 {
 	[Authorize(Roles = "Admin,Owner")]
-	[HttpGet("", Name = "CategoryLib_Index")]
+	[HttpGet]
 	public async Task<IActionResult> Index(GetAllCategoryLibraryItemsPagedQuery req, CancellationToken ct)
 	{
 		var categories = await mediator.Send(req, ct);

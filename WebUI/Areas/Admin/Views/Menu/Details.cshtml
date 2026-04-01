@@ -33,7 +33,7 @@
                     <button type="button" class="btn btn-sm btn-outline-danger shadow-sm" title="Menüyü Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteMenuForm-@Model.Id').submit(); })" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("AllMenus"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </form>
@@ -202,7 +202,7 @@
                         }
 
                         // Send to backend
-                        fetch(`/${window.rolePrefix}/Category/UpdateSortOrder`, {
+                        fetch(`/admin/Category/UpdateSortOrder`, {
                             method: 'POST',
                             headers: headers,
                             body: JSON.stringify({ items: sortData })

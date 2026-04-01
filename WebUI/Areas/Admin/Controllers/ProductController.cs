@@ -2,6 +2,7 @@ using Application.Products.Commands;
 using Application.Products.DTOs;
 using Application.Products.Queries;
 using Application.Categories.Queries;
+using Application.Menus.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,49 @@ public class ProductController(IMediator mediator) : Controller
         await mediator.Send(req, ct);
         // Redirect back to the category details page where the product was created
         return RedirectToAction("Details", "Category", new { id = req.CategoryId, role = RouteData.Values["role"] });
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet]
+    public IActionResult CreateProduct()
+    {
+        return View();
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateProduct(Guid menuId, Guid categoryId, CreateProductCommand req, CancellationToken ct)
+    {
+        if (!ModelState.IsValid)
+            return View(req);
+
+        // Set the categoryId from form
+        req = req with { CategoryId = categoryId };
+
+        // Security Check - verify user owns the category
+        var category = await mediator.Send(new GetCategoryByIdQuery(categoryId), ct);
+        if (User.IsInRole("Owner"))
+        {
+            var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+            bool isOwner = false;
+            if (ownerCompany != null)
+            {
+                // Get the menu to verify ownership
+                var menu = await mediator.Send(new GetMenuByIdQuery { Id = category.MenuId }, ct);
+                if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+                else if (menu.StoreId.HasValue)
+                {
+                    var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(menu.StoreId.Value), ct);
+                    if (store.CompanyId == ownerCompany.Id) isOwner = true;
+                }
+            }
+            if (!isOwner) return Forbid();
+        }
+
+        await mediator.Send(req, ct);
+        TempData["Success"] = "Ürün başarıyla eklendi.";
+        return RedirectToAction("Index");
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]

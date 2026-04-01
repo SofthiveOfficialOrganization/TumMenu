@@ -39,7 +39,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
 
             if(!await _userManager.GetTwoFactorEnabledAsync(user))
             {
-                throw new InvalidOperationException($"Cannot disable 2FA for user as it's not currently enabled.");
+                throw new InvalidOperationException($"Kullanıcı için 2FA devre dışı bırakılamıyor çünkü şu an etkin değil.");
             }
 
             return Page();
@@ -56,7 +56,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if(!disable2faResult.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred disabling 2FA.");
+                throw new InvalidOperationException($"2FA devre dışı bırakılırken beklenmedik hata oluştu.");
             }
 
             _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));

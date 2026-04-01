@@ -117,7 +117,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var info = await _signInManager.GetExternalLoginInfoAsync(userId);
             if(info == null)
             {
-                throw new InvalidOperationException($"Unexpected error occurred loading external login info.");
+                throw new InvalidOperationException($"Harici giriş bilgileri yüklenirken beklenmedik hata oluştu.");
             }
 
             var result = await _userManager.AddLoginAsync(user, info);

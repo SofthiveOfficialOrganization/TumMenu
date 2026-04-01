@@ -198,7 +198,7 @@
 
                         var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-                        fetch(`/${window.rolePrefix}/Product/UpdateSortOrder`, {
+                        fetch(`/admin/Product/UpdateSortOrder`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -233,7 +233,7 @@
 
                         var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
                         
-                        fetch(`/${window.rolePrefix}/Category/UpdateSortOrder`, {
+                        fetch(`/admin/Category/UpdateSortOrder`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

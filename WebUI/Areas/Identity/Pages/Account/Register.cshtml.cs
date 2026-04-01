@@ -196,9 +196,9 @@ namespace WebUI.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+                throw new InvalidOperationException($"'{nameof(ApplicationUser)}' örneği oluşturulamıyor. " +
+                    $"'{nameof(ApplicationUser)}' soyut bir sınıf olmadığından ve parametresiz bir kurucuya sahip olduğundan emin olun, veya alternatif olarak " +
+                    $"kayıt sayfasını /Areas/Identity/Pages/Account/Register.cshtml içinde geçersiz kılın");
             }
         }
 
@@ -206,7 +206,7 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             if(!_userManager.SupportsUserEmail)
             {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
+                throw new NotSupportedException("Varsayılan arayüz e-posta desteği olan bir kullanıcı deposu gerektirir.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
         }

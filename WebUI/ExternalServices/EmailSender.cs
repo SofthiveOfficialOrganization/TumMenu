@@ -146,20 +146,20 @@ namespace WebUI.ExternalServices
                     stopwatch.Stop();
                     LogToFile($"Authentication Error: {ex.Message}");
                     LogToFile($"Inner Exception: {ex.InnerException?.Message}");
-                    throw new Exception($"SMTP Authentication failed: {ex.Message}", ex);
+                    throw new Exception($"SMTP kimlik doğrulaması başarısız oldu: {ex.Message}", ex);
                 }
                 catch (MailKit.Net.Smtp.SmtpCommandException ex)
                 {
                     stopwatch.Stop();
                     LogToFile($"SMTP Command Error: {ex.ErrorCode} - {ex.Message}");
                     LogToFile($"StatusCode: {ex.StatusCode}");
-                    throw new Exception($"SMTP Command failed: {ex.Message}", ex);
+                    throw new Exception($"SMTP Komutu başarısız oldu: {ex.Message}", ex);
                 }
                 catch (MailKit.Net.Smtp.SmtpProtocolException ex)
                 {
                     stopwatch.Stop();
                     LogToFile($"SMTP Protocol Error: {ex.Message}");
-                    throw new Exception($"SMTP Protocol failed: {ex.Message}", ex);
+                    throw new Exception($"SMTP Protokolü başarısız oldu: {ex.Message}", ex);
                 }
             }
             catch (Exception ex) when (!(ex is MailKit.Security.AuthenticationException) && 

@@ -366,7 +366,7 @@ public class EfRepositoryBase<TEntity, TEntityId, TContext>(TContext context) : 
                 .GetMethods()
                 .First(m => m is { Name: nameof(query.Provider.CreateQuery), IsGenericMethod: true })
                 ?.MakeGenericMethod(navigationPropertyType)
-            ?? throw new InvalidOperationException("CreateQuery<TElement> method is not found in IQueryProvider.");
+            ?? throw new InvalidOperationException("IQueryProvider'de CreateQuery<TElement> metodu bulunamadı.");
         var queryProviderQuery = (IQueryable<object>)createQueryMethod.Invoke(query.Provider, parameters: [query.Expression])!;
         return queryProviderQuery.Where(x => !((IEntityTimestamps)x).DeletedDate.HasValue);
     }

@@ -76,7 +76,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 
             if(user == null)
             {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                throw new InvalidOperationException($"İki faktörlü doğrulama kullanıcısı yüklenemedi.");
             }
 
             ReturnUrl = returnUrl;
@@ -97,7 +97,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if(user == null)
             {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                throw new InvalidOperationException($"İki faktörlü doğrulama kullanıcısı yüklenemedi.");
             }
 
             var authenticatorCode = Input.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);

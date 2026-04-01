@@ -88,7 +88,7 @@ namespace WebUI.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             if(!result.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user.");
+                throw new InvalidOperationException($"Kullanıcı silinirken beklenmedik hata oluştu.");
             }
 
             await _signInManager.SignOutAsync();

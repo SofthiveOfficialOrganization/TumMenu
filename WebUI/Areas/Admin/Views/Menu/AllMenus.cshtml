@@ -120,16 +120,16 @@
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="AllMenus" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
                             </li>
                             @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="AllMenus" asp-route-Index="@i" asp-route-Search="@Context.Request.Query["Search"]">@i</a>
+                                    <a class="page-link" asp-action="Index" asp-route-Index="@i" asp-route-Search="@Context.Request.Query["Search"]">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="AllMenus" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
+                                <a class="page-link" asp-action="Index" asp-route-Index="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

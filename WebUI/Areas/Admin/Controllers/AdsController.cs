@@ -57,7 +57,7 @@ public class AdsController(IMediator mediator) : Controller
     public async Task<IActionResult> EditSlot(Guid id)
     {
         var slots = await mediator.Send(new GetAdSlotsQuery());
-        var slot = slots.Find(x => x.Id == id) ?? throw new Exception("Slot not found");
+        var slot = slots.Find(x => x.Id == id) ?? throw new Exception("Slot bulunamadı");
         return View(new UpdateAdSlotCommand(slot.Id, slot.Key, slot.Description, slot.IsActive));
     }
 
@@ -96,7 +96,7 @@ public class AdsController(IMediator mediator) : Controller
     public async Task<IActionResult> EditCreative(Guid id)
     {
         var creatives = await mediator.Send(new GetAdCreativesQuery());
-        var creative = creatives.Find(x => x.Id == id) ?? throw new Exception("Creative not found");
+        var creative = creatives.Find(x => x.Id == id) ?? throw new Exception("Kreatif bulunamadı");
         return View(new UpdateAdCreativeCommand(creative.Id, creative.Type, creative.Content, creative.ClickUrl));
     }
 
@@ -145,7 +145,7 @@ public class AdsController(IMediator mediator) : Controller
     public async Task<IActionResult> EditPlacement(Guid id)
     {
         var placements = await mediator.Send(new GetAdPlacementsQuery());
-        var p = placements.Find(x => x.Id == id) ?? throw new Exception("Placement not found");
+        var p = placements.Find(x => x.Id == id) ?? throw new Exception("Yerleştirme bulunamadı");
         ViewBag.Slots = await mediator.Send(new GetAdSlotsQuery());
         ViewBag.Creatives = await mediator.Send(new GetAdCreativesQuery());
         return View(new UpdateAdPlacementCommand(p.Id, p.AdSlotId, p.AdCreativeId, p.StartAt, p.EndAt, p.DailyCap, p.IsActive));
