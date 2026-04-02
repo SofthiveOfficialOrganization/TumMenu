@@ -19,7 +19,7 @@ public record GetCategoryAnalysisQuery(
     QRStatsGranularity Granularity = QRStatsGranularity.Monthly, 
     Guid? StoreId = null,
     Guid? CompanyId = null
-) : IRequest<CategoryAnalysisResult>;
+) : IRequest<CategoryAnalysisResult>, IAuthorizedRequest;
 
 public class GetCategoryAnalysisQueryHandler(
     IRepository<CategoryDailyStats> repoStats,
@@ -33,7 +33,7 @@ public class GetCategoryAnalysisQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new CategoryAnalysisResult([], []);
 
-        var isAdmin = userContext.Roles.Contains("Admin");
+        var isAdmin = userContext.IsAdmin;
         
         IQueryable<Store> storesQuery = repoStore.Query(tracked: false);
         

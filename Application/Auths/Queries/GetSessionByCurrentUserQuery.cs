@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Auths.DTOs;
 using Domain.Entities;
 using MediatR;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auths.Queries;
 
-public sealed record GetSessionByCurrentUserQuery : IRequest<SessionDTO>;
+public sealed record GetSessionByCurrentUserQuery : IRequest<SessionDTO>, IAuthorizedRequest;
 
 public sealed class GetSesssionByCurrentUserHandler(
     IUserContext userContext,
@@ -16,27 +16,22 @@ public sealed class GetSesssionByCurrentUserHandler(
 {
     public async Task<SessionDTO> Handle(GetSessionByCurrentUserQuery req, CancellationToken ct)
     {
-        Guid? companyId = null;
         string? companyName = null;
 
-        if(Guid.TryParse(userContext.CompanyId, out var cid))
+        if (userContext.CompanyIdParsed.HasValue)
         {
-            companyId = cid;
             companyName = await repoCompany.Query()
-                .Where(c => c.Id == cid)
+                .Where(c => c.Id == userContext.CompanyIdParsed.Value)
                 .Select(c => c.Title)
                 .FirstOrDefaultAsync(ct);
         }
-
-        Guid? ownerId = Guid.TryParse(userContext.OwnerId, out var owid) ? owid : null;
-
 
         return new SessionDTO()
         {
             UserId = userContext.UserId ?? "",
             Email = userContext.Email ?? "",
             Roles = userContext.Roles,
-            OwnerId = ownerId
+            OwnerId = userContext.OwnerIdParsed
         };
     }
 }

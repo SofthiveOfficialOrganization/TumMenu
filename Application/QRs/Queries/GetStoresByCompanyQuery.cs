@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.QRs.Queries;
 
-public record GetStoresByCompanyQuery(Guid CompanyId) : IRequest<List<MyQRDTO>>;
+public record GetStoresByCompanyQuery(Guid CompanyId) : IRequest<List<MyQRDTO>>, IAuthorizedRequest;
 
 public class GetStoresByCompanyQueryHandler(
     IRepository<Store> repoStore,
@@ -15,7 +15,7 @@ public class GetStoresByCompanyQueryHandler(
     public async Task<List<MyQRDTO>> Handle(GetStoresByCompanyQuery req, CancellationToken ct)
     {
         // Only admins can query by company specifically this way for now
-        if (!userContext.Roles.Contains("Admin"))
+        if (!userContext.IsAdmin)
             return new List<MyQRDTO>();
 
         var stores = await repoStore.Query(tracked: false)

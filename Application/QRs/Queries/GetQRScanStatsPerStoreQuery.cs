@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.QRs.Queries;
 
-public record GetQRScanStatsPerStoreQuery(Guid? CompanyId = null) : IRequest<List<QRStoreStatsDTO>>;
+public record GetQRScanStatsPerStoreQuery(Guid? CompanyId = null) : IRequest<List<QRStoreStatsDTO>>, IAuthorizedRequest;
 
 public class QRStoreStatsDTO
 {
@@ -25,7 +25,7 @@ public class GetQRScanStatsPerStoreQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new List<QRStoreStatsDTO>();
 
-        var isAdmin = userContext.Roles.Contains("Admin");
+        var isAdmin = userContext.IsAdmin;
         
         IQueryable<Store> storesQuery = repoStore.Query(tracked: false)
             .Include(s => s.QRCode);

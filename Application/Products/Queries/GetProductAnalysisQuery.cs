@@ -19,7 +19,7 @@ public record GetProductAnalysisQuery(
     QRStatsGranularity Granularity = QRStatsGranularity.Monthly, 
     Guid? StoreId = null,
     Guid? CompanyId = null
-) : IRequest<ProductAnalysisResult>;
+) : IRequest<ProductAnalysisResult>, IAuthorizedRequest;
 
 public class GetProductAnalysisQueryHandler(
     IRepository<ProductDailyStats> repoStats,
@@ -33,7 +33,7 @@ public class GetProductAnalysisQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new ProductAnalysisResult([], []);
 
-        var isAdmin = userContext.Roles.Contains("Admin");
+        var isAdmin = userContext.IsAdmin;
         
         IQueryable<Store> storesQuery = repoStore.Query(tracked: false);
         

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.QRs.Queries;
 
-public record GetAdminCompaniesQuery : IRequest<List<AdminCompanyDTO>>;
+public record GetAdminCompaniesQuery : IRequest<List<AdminCompanyDTO>>, IAuthorizedRequest;
 
 public class AdminCompanyDTO
 {
@@ -20,7 +20,7 @@ public class GetAdminCompaniesQueryHandler(
 {
     public async Task<List<AdminCompanyDTO>> Handle(GetAdminCompaniesQuery req, CancellationToken ct)
     {
-        if (!userContext.Roles.Contains("Admin"))
+        if (!userContext.IsAdmin)
             return new List<AdminCompanyDTO>();
 
         return await repoCompany.Query(tracked: false)

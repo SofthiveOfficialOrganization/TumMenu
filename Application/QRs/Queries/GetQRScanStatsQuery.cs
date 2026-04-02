@@ -12,7 +12,7 @@ public record GetQRScanStatsQuery(
     QRStatsGranularity Granularity = QRStatsGranularity.Monthly, 
     Guid? StoreId = null,
     Guid? CompanyId = null
-) : IRequest<List<QRStatsDTO>>;
+) : IRequest<List<QRStatsDTO>>, IAuthorizedRequest;
 
 public class QRStatsDTO
 {
@@ -32,7 +32,7 @@ public class GetQRScanStatsQueryHandler(
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId)) return new List<QRStatsDTO>();
 
-        var isAdmin = userContext.Roles.Contains("Admin");
+        var isAdmin = userContext.IsAdmin;
         
         // Find all QR IDs
         IQueryable<Store> qrIdsQuery = repoStore.Query(tracked: false)

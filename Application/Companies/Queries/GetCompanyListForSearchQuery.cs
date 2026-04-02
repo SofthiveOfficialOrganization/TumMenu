@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Queries;
 
-public class GetCompanyListForSearchQuery : PageRequest, IRequest<PaginatedListDTO<CompanyFilterDTO>>
+public class GetCompanyListForSearchQuery : PageRequest, IRequest<PaginatedListDTO<CompanyFilterDTO>>, IAuthorizedRequest
 {
     public string? SearchTerm { get; set; }
 }
@@ -22,7 +22,7 @@ public class GetCompanyListForSearchHandler(
     public async Task<PaginatedListDTO<CompanyFilterDTO>> Handle(GetCompanyListForSearchQuery request, CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
-        var isAdmin = userContext.Roles.Contains("Admin");
+        var isAdmin = userContext.IsAdmin;
 
         var query = repoCompany.Query();
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Stores.Queries;
 
-public sealed class GetStoresPagedQuery : PageRequest, IRequest<PaginatedListDTO<StoreDTO>>
+public sealed class GetStoresPagedQuery : PageRequest, IRequest<PaginatedListDTO<StoreDTO>>, IAuthorizedRequest
 {
 	public Guid? CompanyId { get; set; }
 	public string? Search { get; set; }
@@ -28,7 +28,7 @@ public class GetStoresPagedHandler(
 			expression: s => 
 				(string.IsNullOrEmpty(req.Search) || s.Title.Contains(req.Search) || s.Slug.Contains(req.Search)) &&
 				(req.CompanyId == null || s.CompanyId == req.CompanyId) &&
-				(userContext.Roles.Contains("Admin") || s.Company.Owner!.ApplicationUserId == userId),
+				(userContext.IsAdmin || s.Company.Owner!.ApplicationUserId == userId),
 			include: s => s
 				.Include(s => s.Menus)
 				.Include(s => s.Company)
