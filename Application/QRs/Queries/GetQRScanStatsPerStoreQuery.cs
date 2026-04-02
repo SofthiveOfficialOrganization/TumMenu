@@ -22,9 +22,6 @@ public class GetQRScanStatsPerStoreQueryHandler(
 {
     public async Task<List<QRStoreStatsDTO>> Handle(GetQRScanStatsPerStoreQuery req, CancellationToken ct)
     {
-        var userId = userContext.UserId;
-        if (string.IsNullOrEmpty(userId)) return new List<QRStoreStatsDTO>();
-
         var isAdmin = userContext.IsAdmin;
         
         IQueryable<Store> storesQuery = repoStore.Query(tracked: false)
@@ -35,7 +32,7 @@ public class GetQRScanStatsPerStoreQueryHandler(
             storesQuery = storesQuery
                 .Include(s => s.Company)
                     .ThenInclude(c => c.Owner)
-                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId && s.QRCode != null);
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userContext.UserId && s.QRCode != null);
         }
         else
         {

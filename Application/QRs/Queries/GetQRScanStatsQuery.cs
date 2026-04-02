@@ -29,9 +29,6 @@ public class GetQRScanStatsQueryHandler(
 {
     public async Task<List<QRStatsDTO>> Handle(GetQRScanStatsQuery req, CancellationToken ct)
     {
-        var userId = userContext.UserId;
-        if (string.IsNullOrEmpty(userId)) return new List<QRStatsDTO>();
-
         var isAdmin = userContext.IsAdmin;
         
         // Find all QR IDs
@@ -44,7 +41,7 @@ public class GetQRScanStatsQueryHandler(
             qrIdsQuery = qrIdsQuery
                 .Include(s => s.Company)
                     .ThenInclude(c => c.Owner)
-                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId);
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userContext.UserId);
         }
         else if (req.CompanyId.HasValue)
         {

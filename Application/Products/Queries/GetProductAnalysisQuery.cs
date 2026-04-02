@@ -30,9 +30,6 @@ public class GetProductAnalysisQueryHandler(
 {
     public async Task<ProductAnalysisResult> Handle(GetProductAnalysisQuery req, CancellationToken ct)
     {
-        var userId = userContext.UserId;
-        if (string.IsNullOrEmpty(userId)) return new ProductAnalysisResult([], []);
-
         var isAdmin = userContext.IsAdmin;
         
         IQueryable<Store> storesQuery = repoStore.Query(tracked: false);
@@ -42,7 +39,7 @@ public class GetProductAnalysisQueryHandler(
             storesQuery = storesQuery
                 .Include(s => s.Company)
                     .ThenInclude(c => c.Owner)
-                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId);
+                .Where(s => s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userContext.UserId);
         }
         else if (req.CompanyId.HasValue)
         {
