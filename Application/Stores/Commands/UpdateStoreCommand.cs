@@ -15,7 +15,11 @@ public sealed record UpdateStoreCommand
 	string Slug,
 	string PhoneNumber,
 	AddressDTO? Address
-) : IRequest<Unit>, ITransactionalRequest;
+) : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
+{
+	public string ActionName => "Dükkan güncellendi";
+	public Guid EntityId => Id;
+}
 
 public class UpdateStoreCommandHandler(
 	IRepository<Store> repoStore,

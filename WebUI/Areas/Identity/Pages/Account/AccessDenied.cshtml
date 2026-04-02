@@ -2,7 +2,7 @@
 @model AccessDeniedModel
 @{
     bool isAdmin = !string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("admin", StringComparison.OrdinalIgnoreCase);
-    ViewData["Title"] = isAdmin ? "Erişim Engellendi (Admin)" : "Erişim Engellendi";
+    ViewData["Title"] = isAdmin ? "Erişim Engellendi" : "Erişim Engellendi";
     Layout = isAdmin ? "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml" : "/Views/Shared/_Layout.cshtml";
 }
 

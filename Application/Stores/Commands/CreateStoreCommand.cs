@@ -8,8 +8,9 @@ using MediatR;
 
 namespace Application.Stores.Commands;
 
-public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest
+public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest, IAuditableCommand
 {
+	public string ActionName => "Dükkan oluşturuldu";
 	public string Title { get; set; } = string.Empty;
 	public string Slug { get; set; } = string.Empty;
 	public string PhoneNumber { get; set; } = string.Empty;

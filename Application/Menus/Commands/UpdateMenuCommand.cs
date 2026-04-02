@@ -13,7 +13,11 @@ namespace Application.Menus.Commands;
 public sealed record UpdateMenuCommand(
 	Guid Id,
 	string? Title
-) : IRequest<Menu>, ITransactionalRequest;
+) : IRequest<Menu>, ITransactionalRequest, IEntityAuditableCommand
+{
+	public string ActionName => "Menü güncellendi";
+	public Guid EntityId => Id;
+}
 
 public class UpdateMenuCommandHandler(
 	IRepository<Menu> repoMenu,

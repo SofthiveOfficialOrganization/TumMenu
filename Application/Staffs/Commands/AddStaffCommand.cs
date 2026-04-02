@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Staffs.Commands;
 
-public class AddStaffCommand : IRequest<StaffDTO>, ITransactionalRequest
+public class AddStaffCommand : IRequest<StaffDTO>, ITransactionalRequest, IAuditableCommand
 {
+	public string ActionName => "Personel eklendi";
 	public string FirstName { get; set; } = string.Empty;
 	public string LastName { get; set; } = string.Empty;
 	public string? Email { get; set; }

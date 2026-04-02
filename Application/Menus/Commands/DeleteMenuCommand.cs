@@ -6,9 +6,11 @@ using MediatR;
 
 namespace Application.Menus.Commands;
 
-public class DeleteMenuCommand : IRequest<Unit>, ITransactionalRequest
+public class DeleteMenuCommand : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
 {
 	public Guid Id { get; set; }
+	public string ActionName => "Menü silindi";
+	public Guid EntityId => Id;
 }
 
 public class DeleteMenuCommandHandler(

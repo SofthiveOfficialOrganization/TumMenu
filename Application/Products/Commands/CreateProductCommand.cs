@@ -14,8 +14,9 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest
+public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest, IAuditableCommand
 {
+	public string ActionName => "Ürün oluşturuldu";
 	public string Title { get; set; } = string.Empty;
 	public string? Slug { get; set; }
 	public string? Description { get; set; }

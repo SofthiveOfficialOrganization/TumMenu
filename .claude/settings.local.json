@@ -1,8 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.cs$\")",
-      "Bash(dotnet build:*)"
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(xargs:*)",
+      "Bash(ls:*)",
+      "Bash(dotnet build:*)",
+      "Bash(echo:*)",
+      "Bash(cd:*)"
     ]
   }
 }

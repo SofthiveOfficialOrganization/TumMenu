@@ -5,9 +5,11 @@ using MediatR;
 
 namespace Application.Staffs.Commands;
 
-public class DeleteStaffCommand : IRequest<Unit>, ITransactionalRequest
+public class DeleteStaffCommand : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
 {
 	public Guid Id { get; set; }
+	public string ActionName => "Personel silindi";
+	public Guid EntityId => Id;
 }
 
 public class DeleteStaffCommandHandler(

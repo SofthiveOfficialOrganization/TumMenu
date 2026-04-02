@@ -7,8 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Menus.Commands;
 
-public class CreateMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest
+public class CreateMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest, IAuditableCommand
 {
+	public string ActionName => "Menü oluşturuldu";
 	public string Title { get; set; } = string.Empty;
 	public Guid StoreId { get; set; }
 	public MenuStatus Status { get; set; } = MenuStatus.Inactive;

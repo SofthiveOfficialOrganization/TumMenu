@@ -7,8 +7,9 @@ using MediatR;
 
 namespace Application.Menus.Commands;
 
-public class CopyMenuCommand : IRequest<MenuDTO>, ITransactionalRequest
+public class CopyMenuCommand : IRequest<MenuDTO>, ITransactionalRequest, IAuditableCommand
 {
+	public string ActionName => "Menü kopyalandı";
 	public Guid SourceMenuId { get; set; }
 	public Guid TargetMenuId { get; set; }
 }

@@ -67,9 +67,9 @@
                     <h5 class="fw-bold mb-0">QR Okutma İstatistikleri</h5>
                     <p class="text-secondary small mb-0">Dükkan bazlı karşılaştırma</p>
                 </div>
-                <div class="btn-group btn-group-sm" role="group" id="periodToggle">
-                    <button type="button" class="btn btn-primary active" data-period="weekly" onclick="switchPeriod(this)">Haftalık</button>
-                    <button type="button" class="btn btn-outline-secondary" data-period="monthly" onclick="switchPeriod(this)">Aylık</button>
+                <div id="periodToggle" style="display:inline-flex;background:var(--horizon-card-bg,#f0f0f5);border-radius:999px;padding:3px;gap:0">
+                    <button type="button" class="period-btn active" data-period="weekly" onclick="switchPeriod(this)">Haftalık</button>
+                    <button type="button" class="period-btn" data-period="monthly" onclick="switchPeriod(this)">Aylık</button>
                 </div>
             </div>
             <div style="position:relative;height:280px">
@@ -132,6 +132,28 @@
 </div>
 
 @section Scripts {
+<style>
+    .period-btn {
+        border: none;
+        background: transparent;
+        border-radius: 999px;
+        padding: 5px 16px;
+        font-size: .8rem;
+        font-weight: 500;
+        color: var(--horizon-text-secondary, #a3aed0);
+        cursor: pointer;
+        transition: background .2s, color .2s;
+        white-space: nowrap;
+    }
+    .period-btn.active {
+        background: var(--horizon-primary, #4f9ef8);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(79,158,248,.35);
+    }
+    .period-btn:not(.active):hover {
+        color: var(--horizon-text, #2b3674);
+    }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const CHART_COLORS = ['#4f9ef8','#38d9a9','#f7c948','#f06595','#a78bfa','#fb923c','#34d399','#f472b6'];
@@ -182,12 +204,8 @@
     }
 
     async function switchPeriod(btn) {
-        document.querySelectorAll('#periodToggle .btn').forEach(b => {
-            b.classList.remove('btn-primary', 'active');
-            b.classList.add('btn-outline-secondary');
-        });
-        btn.classList.remove('btn-outline-secondary');
-        btn.classList.add('btn-primary', 'active');
+        document.querySelectorAll('#periodToggle .period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
         const period = btn.dataset.period;
         const response = await fetch(`/Admin/Dashboard/QRChartData?period=${period}`);

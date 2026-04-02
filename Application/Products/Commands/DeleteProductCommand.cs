@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public class DeleteProductCommand : IRequest<Unit>, ITransactionalRequest
+public class DeleteProductCommand : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
 {
 	public Guid ProductId { get; set; }
+	public string ActionName => "Ürün silindi";
+	public Guid EntityId => ProductId;
 }
 
 public class DeleteProductCommandHandler(

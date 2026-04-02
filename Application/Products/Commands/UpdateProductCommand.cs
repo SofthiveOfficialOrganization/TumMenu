@@ -14,8 +14,10 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public class UpdateProductCommand : IRequest<ProductDTO>, ITransactionalRequest
+public class UpdateProductCommand : IRequest<ProductDTO>, ITransactionalRequest, IEntityAuditableCommand
 {
+	public string ActionName => "Ürün güncellendi";
+	public Guid EntityId => Id;
 	public Guid Id { get; set; }
 	public string Title { get; set; } = string.Empty;
 	public string? Description { get; set; }

@@ -8,7 +8,11 @@ namespace Application.Stores.Commands;
 public sealed record DeleteStoreCommand
 (
     Guid Id
-) : IRequest<Unit>, ITransactionalRequest;
+) : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
+{
+	public string ActionName => "Dükkan silindi";
+	public Guid EntityId => Id;
+}
 
 
 public class DeleteStoreCommandHandler(

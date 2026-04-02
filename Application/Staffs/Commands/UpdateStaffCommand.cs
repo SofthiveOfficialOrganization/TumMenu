@@ -7,8 +7,10 @@ using MediatR;
 
 namespace Application.Staffs.Commands;
 
-public class UpdateStaffCommand : IRequest<StaffDTO>, ITransactionalRequest
+public class UpdateStaffCommand : IRequest<StaffDTO>, ITransactionalRequest, IEntityAuditableCommand
 {
+	public string ActionName => "Personel güncellendi";
+	public Guid EntityId => Id;
     public Guid Id { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
