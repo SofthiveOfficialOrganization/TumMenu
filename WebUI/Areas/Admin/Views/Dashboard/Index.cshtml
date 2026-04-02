@@ -137,6 +137,10 @@
     const CHART_COLORS = ['#4f9ef8','#38d9a9','#f7c948','#f06595','#a78bfa','#fb923c','#34d399','#f472b6'];
     let qrChart = null;
 
+    function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     function buildChart(data) {
         const ctx = document.getElementById('qrChart').getContext('2d');
         if (qrChart) qrChart.destroy();
@@ -172,7 +176,7 @@
         legend.innerHTML = datasets.map((ds, i) =>
             `<span class="d-flex align-items-center gap-1 small text-secondary">
                 <span style="width:10px;height:10px;border-radius:2px;background:${CHART_COLORS[i % CHART_COLORS.length]};display:inline-block"></span>
-                ${ds.label}
+                ${escapeHtml(ds.label)}
             </span>`
         ).join('');
     }

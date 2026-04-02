@@ -19,7 +19,7 @@ public record OwnerDashboardDto(
 
 public record TopProductDashboardDto(string Title, string StoreName, int Views);
 
-public record RecentActivityDto(string Time, string Description, string StoreName, DateTimeOffset CreatedAtRaw);
+public record RecentActivityDto(string Time, string Description, string StoreName);
 
 public class GetOwnerDashboardQueryHandler(
     IRepository<Store> repoStore,
@@ -30,6 +30,7 @@ public class GetOwnerDashboardQueryHandler(
     IUserContext userContext
 ) : IRequestHandler<GetOwnerDashboardQuery, OwnerDashboardDto>
 {
+    private record RecentActivityRaw(string Time, string Description, string StoreName, DateTimeOffset CreatedAtRaw);
     public async Task<OwnerDashboardDto> Handle(GetOwnerDashboardQuery req, CancellationToken ct)
     {
         var userId = userContext.UserId;
@@ -110,8 +111,8 @@ public class GetOwnerDashboardQueryHandler(
                 (m.CompanyId != null && companyIds.Contains(m.CompanyId.Value)))
             .OrderByDescending(m => m.CreatedAt)
             .Take(5)
-            .Select(m => new RecentActivityDto(
-                m.CreatedAt.ToString("HH:mm"),
+            .Select(m => new RecentActivityRaw(
+                m.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
                 "Yeni menü eklendi",
                 m.Store != null ? m.Store.Title : (m.Company != null ? m.Company.Title : ""),
                 m.CreatedAt))
@@ -122,8 +123,8 @@ public class GetOwnerDashboardQueryHandler(
             .Where(p => p.Category.Menu.StoreId != null && storeIds.Contains(p.Category.Menu.Store!.Id))
             .OrderByDescending(p => p.CreatedAt)
             .Take(5)
-            .Select(p => new RecentActivityDto(
-                p.CreatedAt.ToString("HH:mm"),
+            .Select(p => new RecentActivityRaw(
+                p.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
                 "Yeni ürün eklendi",
                 p.Category.Menu.Store!.Title,
                 p.CreatedAt))
@@ -133,6 +134,7 @@ public class GetOwnerDashboardQueryHandler(
             .Concat(recentProducts)
             .OrderByDescending(a => a.CreatedAtRaw)
             .Take(5)
+            .Select(a => new RecentActivityDto(a.Time, a.Description, a.StoreName))
             .ToList();
 
         return new OwnerDashboardDto(
