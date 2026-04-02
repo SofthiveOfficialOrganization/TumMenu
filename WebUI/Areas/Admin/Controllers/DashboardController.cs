@@ -1,44 +1,31 @@
+using Application.Dashboard.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Domain.Entities;
-using WebUI.Models;
 
 namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize(Policy = "OwnerOrAdmin")]
-public class DashboardController : Controller
+public class DashboardController(IMediator mediator) : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public DashboardController(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
-
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        ViewData["Title"] = "Dashboard";
-        
-        // AUTO-FIX: Check specific user roles and fix if needed
-        var targetEmail = "aemir@gmail.com";
-        var user = await _userManager.FindByEmailAsync(targetEmail);
-        if (user != null)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            Console.WriteLine($"DEBUG ROLE CHECK for {targetEmail}: {string.Join(", ", roles)}");
+        ViewData["Title"] = "Kontrol Paneli";
 
-            if (roles.Contains("Owner") && roles.Contains("Admin"))
-            {
-                 Console.WriteLine($"FIXING ROLES for {targetEmail}: Removing Owner role...");
-                 await _userManager.RemoveFromRoleAsync(user, "Owner");
-                 Console.WriteLine("FIX COMPLETE. Owner role removed.");
-            }
-        }
+        var dashboard = await mediator.Send(new GetOwnerDashboardQuery());
+        var initialChartData = await mediator.Send(new GetQRChartDataQuery("weekly"));
 
-        return View();
+        ViewData["InitialChartData"] = System.Text.Json.JsonSerializer.Serialize(initialChartData);
+
+        return View(dashboard);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> QRChartData(string period = "weekly")
+    {
+        var data = await mediator.Send(new GetQRChartDataQuery(period));
+        return Json(data);
     }
 }
-
