@@ -1,3 +1,4 @@
+using Application.Abstractions;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
@@ -6,9 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auths.Commands;
 
-public class DeleteUserCommand : IRequest<bool>
+public class DeleteUserCommand : IRequest<bool>, IAuditableCommand
 {
     public string Id { get; set; } = null!;
+    public string ActionName => "Kullanıcı silindi";
 }
 
 public class DeleteUserCommandHandler(

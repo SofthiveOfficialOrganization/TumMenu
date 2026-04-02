@@ -1,12 +1,14 @@
+using Application.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Auths.Commands;
 
-public class UpdateUserCommand : IRequest<bool>
+public class UpdateUserCommand : IRequest<bool>, IAuditableCommand
 {
     public string Id { get; set; } = null!;
+    public string ActionName => "Kullanıcı güncellendi";
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string Email { get; set; } = null!;

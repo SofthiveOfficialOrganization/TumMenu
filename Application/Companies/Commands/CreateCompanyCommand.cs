@@ -10,10 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Commands;
 
-public class CreateCompanyCommand : IRequest<CompanyDTO>, ITransactionalRequest
+public class CreateCompanyCommand : IRequest<CompanyDTO>, ITransactionalRequest, IAuditableCommand
 {
 	public string Title { get; set; } = string.Empty;
 	public string? Slug { get; set; }
+	public string ActionName => "Şirket oluşturuldu";
 }
 
 public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyCommand>

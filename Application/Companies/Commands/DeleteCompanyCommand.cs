@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Companies.Commands;
 
-public class DeleteCompanyCommand : IRequest<Unit>, ITransactionalRequest
+public class DeleteCompanyCommand : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
 {
 	public Guid Id { get; set; }
+	public string ActionName => "Şirket silindi";
+	public Guid EntityId => Id;
 }
 
 public class DeleteCompanyCommandHandler(
