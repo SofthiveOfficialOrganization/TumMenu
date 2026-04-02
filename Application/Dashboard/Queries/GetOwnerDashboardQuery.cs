@@ -2,7 +2,6 @@ using Application.Abstractions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace Application.Dashboard.Queries;
 
@@ -20,7 +19,7 @@ public record OwnerDashboardDto(
 
 public record TopProductDashboardDto(string Title, string StoreName, int Views);
 
-public record RecentActivityDto(string Time, string Description, string StoreName);
+public record RecentActivityDto(string Time, string Description, string StoreName, DateTimeOffset CreatedAtRaw);
 
 public class GetOwnerDashboardQueryHandler(
     IRepository<Store> repoStore,
@@ -91,7 +90,6 @@ public class GetOwnerDashboardQueryHandler(
         if (storeIds.Count > 0)
         {
             topProducts = await repoProductStats.Query(tracked: false)
-                .Include(s => s.Product).ThenInclude(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Store)
                 .Where(s => s.Day >= thisMonthStart &&
                             s.Product.Category.Menu.StoreId != null &&
                             storeIds.Contains(s.Product.Category.Menu.Store!.Id))
@@ -115,7 +113,8 @@ public class GetOwnerDashboardQueryHandler(
             .Select(m => new RecentActivityDto(
                 m.CreatedAt.ToString("HH:mm"),
                 "Yeni menü eklendi",
-                m.Store != null ? m.Store.Title : (m.Company != null ? m.Company.Title : "")))
+                m.Store != null ? m.Store.Title : (m.Company != null ? m.Company.Title : ""),
+                m.CreatedAt))
             .ToListAsync(ct);
 
         var recentProducts = await repoProduct.Query(tracked: false)
@@ -126,12 +125,13 @@ public class GetOwnerDashboardQueryHandler(
             .Select(p => new RecentActivityDto(
                 p.CreatedAt.ToString("HH:mm"),
                 "Yeni ürün eklendi",
-                p.Category.Menu.Store!.Title))
+                p.Category.Menu.Store!.Title,
+                p.CreatedAt))
             .ToListAsync(ct);
 
         recentActivity = recentMenus
             .Concat(recentProducts)
-            .OrderByDescending(a => a.Time)
+            .OrderByDescending(a => a.CreatedAtRaw)
             .Take(5)
             .ToList();
 
