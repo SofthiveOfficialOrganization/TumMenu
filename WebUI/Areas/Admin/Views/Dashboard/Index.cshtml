@@ -1,119 +1,198 @@
+@model Application.Dashboard.Queries.OwnerDashboardDto
 @{
     ViewData["Title"] = "Kontrol Paneli";
+    var momSign = Model.MonthOverMonthPercent >= 0 ? "+" : "";
+    var momClass = Model.MonthOverMonthPercent >= 0 ? "text-success" : "text-danger";
+    var momIcon = Model.MonthOverMonthPercent >= 0 ? "fa-arrow-up" : "fa-arrow-down";
 }
 
-<div class="row">
+<div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
-        <div class="horizon-card">
-            <div class="d-flex align-items-center mb-3">
-                <i class="fas fa-dollar-sign fa-2x text-primary me-3"></i>
-                <h5 class="mb-0 text-secondary">Kazançlar</h5>
+        <div class="horizon-card h-100">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-2 p-2 bg-primary bg-opacity-10">
+                    <i class="fas fa-store text-primary"></i>
+                </div>
+                <span class="text-secondary small">Dükkan Sayısı</span>
             </div>
-            <h3 class="fw-bold">$340.50</h3>
-            <span class="text-success small"><i class="fas fa-arrow-up"></i> +2.5%</span>
+            <h3 class="fw-bold mb-0 text-primary">@Model.StoreCount</h3>
+            <p class="text-secondary small mb-0 mt-1">Aktif dükkanlar</p>
         </div>
     </div>
-    
     <div class="col-6 col-md-3">
-        <div class="horizon-card">
-            <div class="d-flex align-items-center mb-3">
-                <i class="fas fa-file-alt fa-2x text-primary me-3"></i>
-                <h5 class="mb-0 text-secondary">Bu ay harcamaları</h5>
+        <div class="horizon-card h-100">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-2 p-2" style="background:rgba(56,217,169,.12)">
+                    <i class="fas fa-list-alt" style="color:#38d9a9"></i>
+                </div>
+                <span class="text-secondary small">Menü Sayısı</span>
             </div>
-            <h3 class="fw-bold">$642.39</h3>
+            <h3 class="fw-bold mb-0" style="color:#38d9a9">@Model.MenuCount</h3>
+            <p class="text-secondary small mb-0 mt-1">Yayınlanan menüler</p>
         </div>
     </div>
-
     <div class="col-6 col-md-3">
-        <div class="horizon-card">
-            <h5 class="text-secondary mb-3">Satışlar</h5>
-            <h3 class="fw-bold">$574.34</h3>
-            <span class="text-success small"><i class="fas fa-arrow-up"></i> +2.5%</span>
+        <div class="horizon-card h-100">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-2 p-2" style="background:rgba(247,201,72,.12)">
+                    <i class="fas fa-utensils" style="color:#f7c948"></i>
+                </div>
+                <span class="text-secondary small">Ürün Sayısı</span>
+            </div>
+            <h3 class="fw-bold mb-0" style="color:#f7c948">@Model.ProductCount</h3>
+            <p class="text-secondary small mb-0 mt-1">Toplam ürün</p>
         </div>
     </div>
-    
     <div class="col-6 col-md-3">
-        <div class="horizon-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0 text-secondary">Bakiye</h5>
-                <img src="https://flagcdn.com/us.svg" width="20" alt="US">
+        <div class="horizon-card h-100">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-2 p-2" style="background:rgba(240,101,149,.12)">
+                    <i class="fas fa-qrcode" style="color:#f06595"></i>
+                </div>
+                <span class="text-secondary small">Bu Ay QR</span>
             </div>
-            <h3 class="fw-bold">$1,000</h3>
-            <div class="mt-3">
-                 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" width="30" alt="Mastercard">
-                 <span class="ms-2 small text-secondary">**** 1234</span>
-            </div>
+            <h3 class="fw-bold mb-0" style="color:#f06595">@Model.CurrentMonthQRScans.ToString("N0")</h3>
+            <p class="@momClass small mb-0 mt-1">
+                <i class="fas @momIcon me-1"></i>@momSign@Model.MonthOverMonthPercent% geçen aya göre
+            </p>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
-    <div class="col-md-6">
+<div class="row g-3 mb-4">
+    <div class="col-12">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Toplam Harcamalar</h4>
-            <div class="d-flex align-items-center mb-4">
-                <h2 class="fw-bold me-3">$37.5K</h2>
-                <span class="badge bg-success text-white">+2.45%</span>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <h5 class="fw-bold mb-0">QR Okutma İstatistikleri</h5>
+                    <p class="text-secondary small mb-0">Dükkan bazlı karşılaştırma</p>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" id="periodToggle">
+                    <button type="button" class="btn btn-primary active" data-period="weekly" onclick="switchPeriod(this)">Haftalık</button>
+                    <button type="button" class="btn btn-outline-secondary" data-period="monthly" onclick="switchPeriod(this)">Aylık</button>
+                </div>
             </div>
-             <p class="text-success small"><i class="fas fa-check-circle me-1"></i> Hedefte</p>
-             <!-- Chart placeholder -->
-             <div style="height: 200px; background: #f4f7fe; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a3aed0;">
-                 Grafik Alanı
-             </div>
-        </div>
-    </div>
-    
-     <div class="col-md-6">
-        <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Haftalık Gelirler</h4>
-             <!-- Chart placeholder -->
-             <div style="height: 250px; background: #f4f7fe; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a3aed0;">
-                 Çubuk Grafik Alanı
-             </div>
+            <div style="position:relative;height:280px">
+                <canvas id="qrChart"></canvas>
+            </div>
+            <div id="chartLegend" class="d-flex flex-wrap gap-3 mt-3"></div>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="horizon-card">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold">Kontrol Tablosu</h4>
-                <i class="fas fa-ellipsis-h text-secondary cursor-pointer"></i>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="table table-borderless align-middle">
-                    <thead>
-                        <tr class="text-secondary small text-uppercase">
-                            <th>İsim</th>
-                            <th>İlerleme</th>
-                            <th>Miktar</th>
-                            <th>Tarih</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">TumMenu PRO</td>
-                            <td>17.5%</td>
-                            <td>2,458</td>
-                            <td>24.Jan.2021</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">TumMenu Ücretsiz</td>
-                            <td>10.8%</td>
-                            <td>1,485</td>
-                            <td>12.Jun.2021</td>
-                        </tr>
-                         <tr>
-                            <td class="fw-bold">Haftalık Güncelleme</td>
-                            <td>21.3%</td>
-                            <td>1,024</td>
-                            <td>05.Jan.2021</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <div class="horizon-card h-100">
+            <h5 class="fw-bold mb-3">En Çok Görüntülenen Ürünler</h5>
+            @if (Model.TopProducts.Count == 0)
+            {
+                <p class="text-secondary small">Henüz veri yok.</p>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var product in Model.TopProducts)
+                    {
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-opacity-10">
+                            <div>
+                                <div class="fw-semibold small">@product.Title</div>
+                                <div class="text-secondary" style="font-size:.75rem">@product.StoreName</div>
+                            </div>
+                            <span class="fw-bold text-primary">@product.Views.ToString("N0")</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="horizon-card h-100">
+            <h5 class="fw-bold mb-3">Son Aktivite</h5>
+            @if (Model.RecentActivity.Count == 0)
+            {
+                <p class="text-secondary small">Henüz aktivite yok.</p>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var item in Model.RecentActivity)
+                    {
+                        <li class="d-flex gap-3 py-2 border-bottom border-opacity-10">
+                            <span class="text-secondary small" style="min-width:36px">@item.Time</span>
+                            <div>
+                                <div class="fw-semibold small">@item.Description</div>
+                                <div class="text-secondary" style="font-size:.75rem">@item.StoreName</div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const CHART_COLORS = ['#4f9ef8','#38d9a9','#f7c948','#f06595','#a78bfa','#fb923c','#34d399','#f472b6'];
+    let qrChart = null;
+
+    function buildChart(data) {
+        const ctx = document.getElementById('qrChart').getContext('2d');
+        if (qrChart) qrChart.destroy();
+
+        const datasets = data.datasets.map((ds, i) => ({
+            label: ds.storeTitle,
+            data: ds.data,
+            backgroundColor: CHART_COLORS[i % CHART_COLORS.length] + 'cc',
+            borderColor: CHART_COLORS[i % CHART_COLORS.length],
+            borderWidth: 1,
+            borderRadius: 4,
+        }));
+
+        qrChart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: data.labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false }, ticks: { color: '#a3aed0' } },
+                    y: { stacked: true, grid: { color: 'rgba(163,174,208,.1)' }, ticks: { color: '#a3aed0', precision: 0 } }
+                }
+            }
+        });
+
+        // Legend
+        const legend = document.getElementById('chartLegend');
+        legend.innerHTML = datasets.map((ds, i) =>
+            `<span class="d-flex align-items-center gap-1 small text-secondary">
+                <span style="width:10px;height:10px;border-radius:2px;background:${CHART_COLORS[i % CHART_COLORS.length]};display:inline-block"></span>
+                ${ds.label}
+            </span>`
+        ).join('');
+    }
+
+    async function switchPeriod(btn) {
+        document.querySelectorAll('#periodToggle .btn').forEach(b => {
+            b.classList.remove('btn-primary', 'active');
+            b.classList.add('btn-outline-secondary');
+        });
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-primary', 'active');
+
+        const period = btn.dataset.period;
+        const response = await fetch(`/Admin/Dashboard/QRChartData?period=${period}`);
+        const data = await response.json();
+        buildChart(data);
+    }
+
+    // Initial load — use server-embedded data (no extra HTTP request)
+    const initialData = @Html.Raw(ViewData["InitialChartData"]?.ToString() ?? "null");
+    if (initialData) buildChart(initialData);
+</script>
+}
