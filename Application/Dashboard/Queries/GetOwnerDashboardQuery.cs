@@ -90,15 +90,19 @@ public class GetOwnerDashboardQueryHandler(
         List<TopProductDashboardDto> topProducts = [];
         if (storeIds.Count > 0)
         {
-            topProducts = await repoProductStats.Query(tracked: false)
+            var rawStats = await repoProductStats.Query(tracked: false)
                 .Where(s => s.Day >= thisMonthStart &&
                             s.Product.Category.Menu.StoreId != null &&
                             storeIds.Contains(s.Product.Category.Menu.Store!.Id))
-                .GroupBy(s => new { s.Product.Title, StoreName = s.Product.Category.Menu.Store!.Title })
+                .Select(s => new { s.Product.Title, StoreName = s.Product.Category.Menu.Store!.Title, s.Views })
+                .ToListAsync(ct);
+
+            topProducts = rawStats
+                .GroupBy(s => new { s.Title, s.StoreName })
                 .Select(g => new TopProductDashboardDto(g.Key.Title, g.Key.StoreName, g.Sum(s => s.Views)))
                 .OrderByDescending(x => x.Views)
                 .Take(5)
-                .ToListAsync(ct);
+                .ToList();
         }
 
         // --- Recent activity: last 5 events across menus, products, QR codes ---
