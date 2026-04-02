@@ -1,14 +1,14 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Staffs.Commands;
 
-public sealed record DeleteStaffCommand
-(
-	Guid Id
-) : IRequest<Unit>, ITransactionalRequest;
+public class DeleteStaffCommand : IRequest<Unit>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+}
 
 public class DeleteStaffCommandHandler(
 	IRepository<Staff> repoStaff

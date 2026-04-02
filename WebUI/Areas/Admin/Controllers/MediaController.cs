@@ -43,12 +43,13 @@ public sealed class MediaController(IMediator mediator) : Controller
         var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
         if (company == null) return Forbid();
 
-        var result = await mediator.Send(new UploadMediaCommand(
-            File: file,
-            ReferenceId: company.Id,
-            Type: MediaRefType.Company,
-            Slot: "general-library"
-        ), ct);
+        var result = await mediator.Send(new UploadMediaCommand
+        {
+            File = file,
+            ReferenceId = company.Id,
+            Type = MediaRefType.Company,
+            Slot = "general-library"
+        }, ct);
 
         return Ok(result);
     }
@@ -58,7 +59,7 @@ public sealed class MediaController(IMediator mediator) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
-        await mediator.Send(new DeleteMediaCommand(id), ct);
+        await mediator.Send(new DeleteMediaCommand { Id = id }, ct);
         return Ok();
     }
 }

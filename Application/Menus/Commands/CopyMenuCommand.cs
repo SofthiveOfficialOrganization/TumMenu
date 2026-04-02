@@ -13,7 +13,7 @@ public class CopyMenuCommand : IRequest<MenuDTO>, ITransactionalRequest
 	public Guid TargetMenuId { get; set; }
 }
 
-public class CopyMenuHandler(
+public class CopyMenuCommandHandler(
 	IRepository<Menu> repoMenu,
 	IMapper mapper
 ) : IRequestHandler<CopyMenuCommand, MenuDTO>

@@ -18,16 +18,16 @@ public class AddCategoryToMenuCommand : IRequest<CategoryDTO>, ITransactionalReq
 	public bool IsActive { get; set; } = true;
 }
 
-public class AddCategoryToMenuValidator : AbstractValidator<AddCategoryToMenuCommand>
+public class AddCategoryToMenuCommandValidator : AbstractValidator<AddCategoryToMenuCommand>
 {
-	public AddCategoryToMenuValidator()
+	public AddCategoryToMenuCommandValidator()
 	{
 		RuleFor(x => x.MenuId).NotEmpty();
 		RuleFor(x => x.CategoryLibraryItemId).NotEmpty();
 	}
 }
 
-public class AddCategoryToMenuHandler(
+public class AddCategoryToMenuCommandHandler(
 	IRepository<Menu> repoMenu,
 	IRepository<CategoryLibraryItem> repoLibraryItem,
 	IRepository<Category> repoCategory,

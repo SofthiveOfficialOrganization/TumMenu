@@ -58,7 +58,7 @@ public class AdsController(IMediator mediator) : Controller
     {
         var slots = await mediator.Send(new GetAdSlotsQuery());
         var slot = slots.Find(x => x.Id == id) ?? throw new Exception("Slot bulunamadı");
-        return View(new UpdateAdSlotCommand(slot.Id, slot.Key, slot.Description, slot.IsActive));
+        return View(new UpdateAdSlotCommand { Id = slot.Id, Key = slot.Key, Description = slot.Description, IsActive = slot.IsActive });
     }
 
     [HttpPost]
@@ -73,7 +73,7 @@ public class AdsController(IMediator mediator) : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteSlot(Guid id)
     {
-        await mediator.Send(new DeleteAdSlotCommand(id));
+        await mediator.Send(new DeleteAdSlotCommand { Id = id });
         TempData["Success"] = "Reklam slotu silindi.";
         return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
@@ -97,7 +97,7 @@ public class AdsController(IMediator mediator) : Controller
     {
         var creatives = await mediator.Send(new GetAdCreativesQuery());
         var creative = creatives.Find(x => x.Id == id) ?? throw new Exception("Kreatif bulunamadı");
-        return View(new UpdateAdCreativeCommand(creative.Id, creative.Type, creative.Content, creative.ClickUrl));
+        return View(new UpdateAdCreativeCommand { Id = creative.Id, Type = creative.Type, Content = creative.Content, ClickUrl = creative.ClickUrl });
     }
 
     [HttpPost]
@@ -112,7 +112,7 @@ public class AdsController(IMediator mediator) : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteCreative(Guid id)
     {
-        await mediator.Send(new DeleteAdCreativeCommand(id));
+        await mediator.Send(new DeleteAdCreativeCommand { Id = id });
         TempData["Success"] = "Reklam içeriği silindi.";
         return RedirectToAction(nameof(Creatives), new { role = RouteData.Values["role"] });
     }
@@ -148,7 +148,7 @@ public class AdsController(IMediator mediator) : Controller
         var p = placements.Find(x => x.Id == id) ?? throw new Exception("Yerleştirme bulunamadı");
         ViewBag.Slots = await mediator.Send(new GetAdSlotsQuery());
         ViewBag.Creatives = await mediator.Send(new GetAdCreativesQuery());
-        return View(new UpdateAdPlacementCommand(p.Id, p.AdSlotId, p.AdCreativeId, p.StartAt, p.EndAt, p.DailyCap, p.IsActive));
+        return View(new UpdateAdPlacementCommand { Id = p.Id, AdSlotId = p.AdSlotId, AdCreativeId = p.AdCreativeId, StartAt = p.StartAt, EndAt = p.EndAt, DailyCap = p.DailyCap, IsActive = p.IsActive });
     }
 
     [HttpPost]
@@ -168,7 +168,7 @@ public class AdsController(IMediator mediator) : Controller
     [HttpPost]
     public async Task<IActionResult> DeletePlacement(Guid id)
     {
-        await mediator.Send(new DeleteAdPlacementCommand(id));
+        await mediator.Send(new DeleteAdPlacementCommand { Id = id });
         TempData["Success"] = "Reklam yerleşimi silindi.";
         return RedirectToAction(nameof(Placements), new { role = RouteData.Values["role"] });
     }

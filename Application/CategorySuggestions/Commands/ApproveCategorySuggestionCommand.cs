@@ -10,7 +10,7 @@ namespace Application.CategorySuggestions.Commands
         public Guid Id { get; set; }
     }
 
-    public class ApproveCategorySuggestionHandler(IRepository<CategorySuggestion> repo)
+    public class ApproveCategorySuggestionCommandHandler(IRepository<CategorySuggestion> repo)
         : IRequestHandler<ApproveCategorySuggestionCommand>
     {
         public async Task Handle(ApproveCategorySuggestionCommand request, CancellationToken ct)
@@ -31,7 +31,7 @@ namespace Application.CategorySuggestions.Commands
         public string? AdminNote { get; set; }
     }
 
-    public class RejectCategorySuggestionHandler(IRepository<CategorySuggestion> repo)
+    public class RejectCategorySuggestionCommandHandler(IRepository<CategorySuggestion> repo)
         : IRequestHandler<RejectCategorySuggestionCommand>
     {
         public async Task Handle(RejectCategorySuggestionCommand request, CancellationToken ct)

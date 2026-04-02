@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Helpers;
 using MediatR;
 using System;
@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Application.Tags.Commands;
 
-public sealed record UpdateTagCommand(
-	Guid Id,
-	string Title
-) : IRequest<Guid>, ITransactionalRequest;
+public class UpdateTagCommand : IRequest<Guid>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+	public string Title { get; set; } = string.Empty;
+}
 
 public class UpdateTagCommandHandler(
 	IRepository<Domain.Entities.Tag> repoTag

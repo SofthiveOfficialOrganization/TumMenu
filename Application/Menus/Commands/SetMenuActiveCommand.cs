@@ -10,7 +10,7 @@ public class SetMenuActiveCommand : IRequest<bool>, ITransactionalRequest
     public Guid Id { get; set; }
 }
 
-public class SetMenuActiveHandler(IRepository<Menu> repoMenu) : IRequestHandler<SetMenuActiveCommand, bool>
+public class SetMenuActiveCommandHandler(IRepository<Menu> repoMenu) : IRequestHandler<SetMenuActiveCommand, bool>
 {
     public async Task<bool> Handle(SetMenuActiveCommand req, CancellationToken ct)
     {

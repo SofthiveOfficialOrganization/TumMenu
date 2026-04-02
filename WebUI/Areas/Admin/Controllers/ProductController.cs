@@ -47,7 +47,7 @@ public class ProductController(IMediator mediator) : Controller
     public IActionResult Create(Guid categoryId)
     {
         // Notice we are returning the command directly so we have categoryId pre-filled
-        return View(new CreateProductCommand(string.Empty, null, null, 0, true, null, null, null, 0, null, categoryId));
+        return View(new CreateProductCommand { CategoryId = categoryId, IsActive = true });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -79,7 +79,7 @@ public class ProductController(IMediator mediator) : Controller
             return View(req);
 
         // Set the categoryId from form
-        req = req with { CategoryId = categoryId };
+        req.CategoryId = categoryId;
 
         // Security Check - verify user owns the category
         var category = await mediator.Send(new GetCategoryByIdQuery(categoryId), ct);
@@ -133,7 +133,7 @@ public class ProductController(IMediator mediator) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id, Guid categoryId, CancellationToken ct)
     {
-        await mediator.Send(new DeleteProductCommand(id), ct);
+        await mediator.Send(new DeleteProductCommand { ProductId = id }, ct);
         TempData["Success"] = "Ürün başarıyla silindi.";
         return RedirectToAction("Details", "Category", new { id = categoryId, role = RouteData.Values["role"] });
     }

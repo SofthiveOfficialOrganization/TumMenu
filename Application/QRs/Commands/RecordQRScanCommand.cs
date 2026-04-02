@@ -7,12 +7,13 @@ using System.Text;
 
 namespace Application.QRs.Commands;
 
-public record RecordQRScanCommand(
-    Guid QRCodeId,
-    string UserAgent,
-    string IpAddress,
-    string? Referrer
-) : IRequest;
+public class RecordQRScanCommand : IRequest
+{
+    public Guid QRCodeId { get; set; }
+    public string UserAgent { get; set; } = string.Empty;
+    public string IpAddress { get; set; } = string.Empty;
+    public string? Referrer { get; set; }
+}
 
 public class RecordQRScanCommandHandler(
     IRepository<QRScanEvent> repoScan,
@@ -58,12 +59,12 @@ public class RecordQRScanCommandHandler(
         else
         {
             stats.Scans++;
-            
+
             // Check if this IP has scanned today for this QR
             var startOfToday = today.ToDateTime(TimeOnly.MinValue); // This is TR date start
             var alreadyScannedToday = await repoScan.Query(tracked: false)
-                .AnyAsync(s => s.QRCodeId == req.QRCodeId 
-                            && s.IpHash == ipHash 
+                .AnyAsync(s => s.QRCodeId == req.QRCodeId
+                            && s.IpHash == ipHash
                             && s.ScannedAt >= startOfToday
                             && s.Id != scanEvent.Id, ct);
 

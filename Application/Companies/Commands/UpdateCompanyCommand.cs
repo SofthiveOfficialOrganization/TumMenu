@@ -1,7 +1,8 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Companies.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,21 @@ public class UpdateCompanyCommand : IRequest<CompanyDTO>, ITransactionalRequest
 	public string Slug { get => _slug; set => _slug = value ?? string.Empty; }
 }
 
-public class UpdateCompanyHandler(
+public class UpdateCompanyCommandValidator : AbstractValidator<UpdateCompanyCommand>
+{
+	public UpdateCompanyCommandValidator()
+	{
+		RuleFor(x => x.Title)
+			.NotEmpty().WithMessage("Şirket adı boş olamaz.")
+			.MaximumLength(200).WithMessage("Şirket adı en fazla 200 karakter olabilir.");
+
+		RuleFor(x => x.Slug)
+			.NotEmpty().WithMessage("Slug boş olamaz.")
+			.MaximumLength(30).WithMessage("Slug en fazla 30 karakter olabilir.");
+	}
+}
+
+public class UpdateCompanyCommandHandler(
 	IRepository<Company> repoCompany,
 	IMapper mapper
 ) : IRequestHandler<UpdateCompanyCommand, CompanyDTO>

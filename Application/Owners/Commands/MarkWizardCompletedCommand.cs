@@ -9,7 +9,7 @@ public class MarkWizardCompletedCommand : IRequest<bool>, ITransactionalRequest
 {
 }
 
-public class MarkWizardCompletedHandler(
+public class MarkWizardCompletedCommandHandler(
 	IRepository<Owner> repo,
 	IUserContext userContext
 ) : IRequestHandler<MarkWizardCompletedCommand, bool>

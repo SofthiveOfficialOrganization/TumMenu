@@ -12,15 +12,15 @@ public class RemoveCategoryFromMenuCommand : IRequest<bool>, ITransactionalReque
     public Guid Id { get; set; }
 }
 
-public class RemoveCategoryFromMenuValidator : AbstractValidator<RemoveCategoryFromMenuCommand>
+public class RemoveCategoryFromMenuCommandValidator : AbstractValidator<RemoveCategoryFromMenuCommand>
 {
-    public RemoveCategoryFromMenuValidator()
+    public RemoveCategoryFromMenuCommandValidator()
     {
         RuleFor(x => x.Id).NotEmpty();
     }
 }
 
-public class RemoveCategoryFromMenuHandler(
+public class RemoveCategoryFromMenuCommandHandler(
     IRepository<Category> repoCategory
 ) : IRequestHandler<RemoveCategoryFromMenuCommand, bool>
 {

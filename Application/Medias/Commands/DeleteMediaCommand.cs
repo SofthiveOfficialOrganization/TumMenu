@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Helpers;
 using Domain.Entities;
 using MediatR;
@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace Application.Medias.Commands;
 
-public sealed record DeleteMediaCommand(
-	Guid Id
-) : IRequest<Unit>;
+public class DeleteMediaCommand : IRequest<Unit>
+{
+	public Guid Id { get; set; }
+}
 
 public class DeleteMediaCommandHandler(
 	IRepository<Media> mediaRepository

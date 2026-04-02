@@ -14,7 +14,7 @@ public class CreateMenuToCompanyCommand : IRequest<MenuDTO>, ITransactionalReque
 	public MenuStatus Status { get; set; } = MenuStatus.Inactive;
 }
 
-public class CreateMenuToCompanyHandler(
+public class CreateMenuToCompanyCommandHandler(
 	IRepository<Menu> repoMenu,
 	IMapper mapper
 ) : IRequestHandler<CreateMenuToCompanyCommand, MenuDTO>

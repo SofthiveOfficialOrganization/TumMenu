@@ -16,7 +16,7 @@ public class ProductSortItem
     public int SortOrder { get; set; }
 }
 
-public class UpdateProductSortOrderHandler(IRepository<Product> repoProduct) : IRequestHandler<UpdateProductSortOrderCommand, bool>
+public class UpdateProductSortOrderCommandHandler(IRepository<Product> repoProduct) : IRequestHandler<UpdateProductSortOrderCommand, bool>
 {
     public async Task<bool> Handle(UpdateProductSortOrderCommand req, CancellationToken ct)
     {

@@ -52,7 +52,7 @@ public class QRManagementController(IMediator mediator) : Controller
             return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
         }
 
-        var count = await mediator.Send(new GlobalUpdateQRBaseDomainCommand(newBaseDomain), ct);
+        var count = await mediator.Send(new GlobalUpdateQRBaseDomainCommand { NewBaseDomain = newBaseDomain }, ct);
         TempData["Success"] = $"{count} adet QR kodunun base domain'i başarıyla güncellendi.";
         return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }

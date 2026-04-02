@@ -7,11 +7,12 @@ using System.Text;
 
 namespace Application.Products.Commands;
 
-public record RecordProductViewCommand(
-    Guid ProductId,
-    string UserAgent,
-    string IpAddress
-) : IRequest;
+public class RecordProductViewCommand : IRequest
+{
+    public Guid ProductId { get; set; }
+    public string UserAgent { get; set; } = string.Empty;
+    public string IpAddress { get; set; } = string.Empty;
+}
 
 public class RecordProductViewCommandHandler(
     IRepository<ProductViewEvent> repoEvent,
@@ -56,12 +57,12 @@ public class RecordProductViewCommandHandler(
         else
         {
             stats.Views++;
-            
+
             // Check if this IP has viewed this product today
             var startOfToday = today.ToDateTime(TimeOnly.MinValue); // This is TR date start
             var alreadyViewedToday = await repoEvent.Query(tracked: false)
-                .AnyAsync(v => v.ProductId == req.ProductId 
-                            && v.IpHash == ipHash 
+                .AnyAsync(v => v.ProductId == req.ProductId
+                            && v.IpHash == ipHash
                             && v.ViewedAt >= startOfToday
                             && v.Id != viewEvent.Id, ct);
 

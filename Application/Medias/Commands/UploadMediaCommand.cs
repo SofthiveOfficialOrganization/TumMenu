@@ -10,14 +10,15 @@ using System.IO;
 
 namespace Application.Medias.Commands;
 
-public sealed record UploadMediaCommand(
-    IFormFile File,
-    Guid ReferenceId,
-    MediaRefType Type,
-    string? AltText = null,
-    int SortOrder = 0,
-    string Slot = "default-gallery"
-) : IRequest<MediaDTO>, ITransactionalRequest;
+public class UploadMediaCommand : IRequest<MediaDTO>, ITransactionalRequest
+{
+    public IFormFile File { get; set; } = null!;
+    public Guid ReferenceId { get; set; }
+    public MediaRefType Type { get; set; }
+    public string? AltText { get; set; } = null;
+    public int SortOrder { get; set; } = 0;
+    public string Slot { get; set; } = "default-gallery";
+}
 
 public class UploadMediaCommandHandler(
     IRepository<Media> mediaRepository,

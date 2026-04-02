@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Owners.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -6,10 +6,10 @@ using MediatR;
 
 namespace Application.Owners.Commands;
 
-public sealed record CreateOwnerCommand
-(
-    string ApplicationUserId
-) : IRequest<OwnerDTO>, ITransactionalRequest;
+public class CreateOwnerCommand : IRequest<OwnerDTO>, ITransactionalRequest
+{
+    public string ApplicationUserId { get; set; } = string.Empty;
+}
 
 public class CreateOwnerCommandHandler(
     IRepository<Owner> repoOwner,

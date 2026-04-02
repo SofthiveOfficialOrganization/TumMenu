@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Staffs.DTOs;
 using Domain.Entities;
@@ -9,19 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Staffs.Commands;
 
-public sealed record AddStaffCommand
-(
-	string FirstName,
-	string LastName,
-	string? Email,
-	string? PhoneNumber,
-	string? Role,
-	Guid CompanyId
-) : IRequest<StaffDTO>, ITransactionalRequest;
-
-public class AddStaffValidator : AbstractValidator<AddStaffCommand>
+public class AddStaffCommand : IRequest<StaffDTO>, ITransactionalRequest
 {
-	public AddStaffValidator()
+	public string FirstName { get; set; } = string.Empty;
+	public string LastName { get; set; } = string.Empty;
+	public string? Email { get; set; }
+	public string? PhoneNumber { get; set; }
+	public string? Role { get; set; }
+	public Guid CompanyId { get; set; }
+}
+
+public class AddStaffCommandValidator : AbstractValidator<AddStaffCommand>
+{
+	public AddStaffCommandValidator()
 	{
 		RuleFor(x => x.FirstName).NotEmpty().MaximumLength(50);
 		RuleFor(x => x.LastName).NotEmpty().MaximumLength(50);
@@ -31,6 +31,7 @@ public class AddStaffValidator : AbstractValidator<AddStaffCommand>
 		RuleFor(x => x.CompanyId).NotEmpty();
 	}
 }
+
 public class AddStaffCommandHandler(
 	IRepository<Staff> repoStaff,
 	IMapper mapper
@@ -45,4 +46,3 @@ public class AddStaffCommandHandler(
 		return staffDTO;
 	}
 }
-

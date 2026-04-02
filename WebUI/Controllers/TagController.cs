@@ -60,7 +60,7 @@ public class TagController(IMediator mediator) : Controller
 	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
-		await mediator.Send(new DeleteTagCommand(id), ct);
+		await mediator.Send(new DeleteTagCommand { Id = id }, ct);
 		return RedirectToAction(nameof(Index));
 	}
 }

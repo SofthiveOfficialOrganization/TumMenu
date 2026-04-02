@@ -21,9 +21,9 @@ public class CreateCategoryLibraryItemCommand : IRequest<CategoryLibraryItemDTO>
 }
 
 
-public class CreateCategoryValidator : AbstractValidator<CreateCategoryLibraryItemCommand>
+public class CreateCategoryLibraryItemCommandValidator : AbstractValidator<CreateCategoryLibraryItemCommand>
 {
-	public CreateCategoryValidator()
+	public CreateCategoryLibraryItemCommandValidator()
 	{
 		RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
 		RuleFor(c => c.Slug)
@@ -33,7 +33,7 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryLibraryIt
 	}
 }
 
-public class CreateCategoryLibraryItemHandler(
+public class CreateCategoryLibraryItemCommandHandler(
 	IRepository<CategoryLibraryItem> repoCategoryLibItem,
 	IMapper mapper
 ) : IRequestHandler<CreateCategoryLibraryItemCommand, CategoryLibraryItemDTO>

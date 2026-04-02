@@ -23,9 +23,9 @@ public class UpdateCategoryLibraryItemCommand : IRequest<CategoryLibraryItemDTO>
 	public Guid? ParentId { get; set; }
 }
 
-public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryLibraryItemCommand>
+public class UpdateCategoryLibraryItemCommandValidator : AbstractValidator<UpdateCategoryLibraryItemCommand>
 {
-	public UpdateCategoryValidator()
+	public UpdateCategoryLibraryItemCommandValidator()
 	{
 		RuleFor(x => x.Id).NotEmpty();
 		RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
@@ -36,7 +36,7 @@ public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryLibraryIt
 				.When(c => !string.IsNullOrWhiteSpace(c.Slug));
 	}
 }
-public class UpdateCategoryLibraryItemHandler(
+public class UpdateCategoryLibraryItemCommandHandler(
 	IRepository<CategoryLibraryItem> repoCategoryLibItem,
 	IMapper mapper
 ) : IRequestHandler<UpdateCategoryLibraryItemCommand, CategoryLibraryItemDTO>

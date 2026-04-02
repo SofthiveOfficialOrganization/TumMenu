@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Staffs.DTOs;
 using Domain.Entities;
@@ -7,15 +7,15 @@ using MediatR;
 
 namespace Application.Staffs.Commands;
 
-public sealed record UpdateStaffCommand
-(
-    Guid Id,
-    string? FirstName,
-    string? LastName,
-    string? Email,
-    string? PhoneNumber,
-    string? Role
-) : IRequest<StaffDTO>, ITransactionalRequest;
+public class UpdateStaffCommand : IRequest<StaffDTO>, ITransactionalRequest
+{
+    public Guid Id { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Role { get; set; }
+}
 
 public class UpdateStaffCommandHandler(
     IRepository<Staff> repoStaff,

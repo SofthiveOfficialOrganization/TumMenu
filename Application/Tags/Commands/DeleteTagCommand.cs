@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Helpers;
 using Domain.Entities;
 using MediatR;
@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace Application.Tags.Commands;
 
-public sealed record DeleteTagCommand(
-	Guid Id
-) : IRequest<Unit>, ITransactionalRequest;
+public class DeleteTagCommand : IRequest<Unit>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+}
 
 public class DeleteTagCommandHandler(
 	IRepository<Tag> repoTag

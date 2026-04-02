@@ -12,92 +12,62 @@ namespace Application.Categories.Queries;
 
 public class GetCategoriesPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedListDTO<CategoryListDTO>>
 {
-    public string? Search { get; set; }
-    public Guid? CompanyId { get; set; }
-    public Guid? StoreId { get; set; }
-    public Guid? MenuId { get; set; }
+	public string? Search { get; set; }
+	public Guid? CompanyId { get; set; }
+	public Guid? StoreId { get; set; }
+	public Guid? MenuId { get; set; }
 }
 
 public class GetCategoriesByCurrentOwnerHandler(
-    IRepository<Category> repoCategory,
-    IRepository<Company> repoCompany,
-    IRepository<Store> repoStore,
-    IRepository<Menu> repoMenu,
-    IMapper mapper,
-    IUserContext userContext
+	IRepository<Category> repoCategory,
+	IRepository<Company> repoCompany,
+	IRepository<Store> repoStore,
+	IRepository<Menu> repoMenu,
+	IMapper mapper,
+	IUserContext userContext
 ) : IRequestHandler<GetCategoriesPagedByCurrentOwnerQuery, PaginatedListDTO<CategoryListDTO>>
 {
-    public async Task<PaginatedListDTO<CategoryListDTO>> Handle(GetCategoriesPagedByCurrentOwnerQuery req, CancellationToken ct)
-    {
-        var userId = userContext.UserId;
-        var query = repoCategory.Query(tracked: false);
+	public async Task<PaginatedListDTO<CategoryListDTO>> Handle(GetCategoriesPagedByCurrentOwnerQuery req, CancellationToken ct)
+	{
+		var userId = userContext.UserId;
+		var isAdmin = userContext.Roles.Contains("Admin");
+		var hasContextCompanyId = Guid.TryParse(userContext.CompanyId, out var contextCompanyId);
 
-        // 1. Authorization Optimization
-        if (!userContext.Roles.Contains("Admin"))
-        {
-            // Prefer using CompanyId from claims to avoid joining Owner/ApplicationUser tables
-            if (Guid.TryParse(userContext.CompanyId, out var companyId))
-            {
-                query = query.Where(c => c.Menu.CompanyId == companyId || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == companyId));
-            }
-            else
-            {
-                // Fallback authorization (still optimized by Projection later)
-                query = query.Where(c => (c.Menu.CompanyId != null && c.Menu.Company!.Owner!.ApplicationUserId == userId) ||
-                                         (c.Menu.StoreId != null && c.Menu.Store!.Company.Owner!.ApplicationUserId == userId));
-            }
-        }
+		var paginate = await repoCategory.GetPageListAsync(
+			req,
+			c =>
+				(isAdmin ||
+					(hasContextCompanyId
+						? (c.Menu.CompanyId == contextCompanyId || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == contextCompanyId))
+						: ((c.Menu.CompanyId != null && c.Menu.Company!.Owner!.ApplicationUserId == userId) ||
+						   (c.Menu.StoreId != null && c.Menu.Store!.Company.Owner!.ApplicationUserId == userId)))) &&
+				(string.IsNullOrEmpty(req.Search) || c.CategoryLibraryItem.Title.Contains(req.Search)) &&
+				(!req.CompanyId.HasValue || c.Menu.CompanyId == req.CompanyId.Value || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == req.CompanyId.Value)) &&
+				(!req.StoreId.HasValue || c.Menu.StoreId == req.StoreId.Value) &&
+				(!req.MenuId.HasValue || c.MenuId == req.MenuId.Value),
+			orderBy: c => c.OrderByDescending(x => x.CreatedAt),
+			enableTracking: false,
+			ct: ct
+		);
 
-        // 2. Filters
-        if (!string.IsNullOrEmpty(req.Search))
-            query = query.Where(c => c.CategoryLibraryItem.Title.Contains(req.Search));
+		var response = mapper.Map<PaginatedListDTO<CategoryListDTO>>(paginate);
 
-        if (req.CompanyId.HasValue)
-            query = query.Where(c => c.Menu.CompanyId == req.CompanyId.Value || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == req.CompanyId.Value));
+		if(req.CompanyId.HasValue)
+		{
+			var company = await repoCompany.GetByIdAsync(req.CompanyId.Value, ct);
+			if(company != null) response.FilterNames[req.CompanyId.ToString()!] = company.Title;
+		}
+		if(req.StoreId.HasValue)
+		{
+			var store = await repoStore.GetByIdAsync(req.StoreId.Value, ct);
+			if(store != null) response.FilterNames[req.StoreId.ToString()!] = store.Title;
+		}
+		if(req.MenuId.HasValue)
+		{
+			var menu = await repoMenu.GetByIdAsync(req.MenuId.Value, ct);
+			if(menu != null) response.FilterNames[req.MenuId.ToString()!] = menu.Title;
+		}
 
-        if (req.StoreId.HasValue)
-            query = query.Where(c => c.Menu.StoreId == req.StoreId.Value);
-
-        if (req.MenuId.HasValue)
-            query = query.Where(c => c.MenuId == req.MenuId.Value);
-
-        // 3. Sorting
-        query = query.OrderByDescending(c => c.CreatedAt);
-
-        // 4. Projection & Pagination (Mapster ProjectToType replaces Include/ThenInclude)
-        var paginate = await query
-            .ProjectToType<CategoryListDTO>(mapper.Config)
-            .ToPaginateAsync(ct, req.Page, req.PageSize, req.From);
-
-        var response = new PaginatedListDTO<CategoryListDTO>
-        {
-            Items = paginate.Items,
-            Index = paginate.Index,
-            Size = paginate.Size,
-            Count = paginate.Count,
-            From = paginate.From,
-            Pages = paginate.Pages,
-            HasPrevious = paginate.HasPrevious,
-            HasNext = paginate.HasNext
-        };
-
-        // Populate FilterNames for Select2 placeholders
-        if (req.CompanyId.HasValue)
-        {
-            var company = await repoCompany.GetByIdAsync(req.CompanyId.Value, ct);
-            if (company != null) response.FilterNames[req.CompanyId.ToString()!] = company.Title;
-        }
-        if (req.StoreId.HasValue)
-        {
-            var store = await repoStore.GetByIdAsync(req.StoreId.Value, ct);
-            if (store != null) response.FilterNames[req.StoreId.ToString()!] = store.Title;
-        }
-        if (req.MenuId.HasValue)
-        {
-            var menu = await repoMenu.GetByIdAsync(req.MenuId.Value, ct);
-            if (menu != null) response.FilterNames[req.MenuId.ToString()!] = menu.Title;
-        }
-
-        return response;
-    }
+		return response;
+	}
 }

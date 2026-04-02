@@ -12,20 +12,21 @@ using System.Threading.Tasks;
 
 namespace Application.Medias.Commands;
 
-public sealed record UpdateMediaCommand(
-	Guid Id,
-	string MediaUrl,
-	string? AltText,
-	int SortOrder,
-	string? Slot,
-	int? Width,
-	int? Height,
-	long? FileSize,
-	string? Extension,
-	string? MimeType,
-	Guid ReferenceId,
-	MediaRefType MediaRefType
-) : IRequest<MediaDTO>, ITransactionalRequest;
+public class UpdateMediaCommand : IRequest<MediaDTO>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+	public string MediaUrl { get; set; } = string.Empty;
+	public string? AltText { get; set; }
+	public int SortOrder { get; set; }
+	public string? Slot { get; set; }
+	public int? Width { get; set; }
+	public int? Height { get; set; }
+	public long? FileSize { get; set; }
+	public string? Extension { get; set; }
+	public string? MimeType { get; set; }
+	public Guid ReferenceId { get; set; }
+	public MediaRefType MediaRefType { get; set; }
+}
 
 public class UpdateMediaCommandHandler(
 	IRepository<Media> mediaRepository,

@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Helpers;
 using Domain.Entities;
 using Mapster;
@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public sealed record DeleteProductCommand(
-	Guid ProductId
-) : IRequest<Unit>, ITransactionalRequest;
+public class DeleteProductCommand : IRequest<Unit>, ITransactionalRequest
+{
+	public Guid ProductId { get; set; }
+}
 
 public class DeleteProductCommandHandler(
 	IRepository<Product> repoProduct

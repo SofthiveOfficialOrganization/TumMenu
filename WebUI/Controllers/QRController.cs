@@ -29,12 +29,13 @@ public class QRController(IMediator mediator, IServiceScopeFactory scopeFactory)
                     using var scope = scopeFactory.CreateScope();
                     var bgMediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                     
-                    await bgMediator.Send(new RecordQRScanCommand(
-                        qrCodeId,
-                        userAgent,
-                        remoteIp,
-                        referrer
-                    ), CancellationToken.None);
+                    await bgMediator.Send(new RecordQRScanCommand
+                    {
+                        QRCodeId = qrCodeId,
+                        UserAgent = userAgent,
+                        IpAddress = remoteIp,
+                        Referrer = referrer
+                    }, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {

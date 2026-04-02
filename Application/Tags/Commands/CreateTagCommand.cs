@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Common.Helpers;
 using Domain.Entities;
@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace Application.Tags.Commands;
 
-public sealed record CreateTagCommand(
-	string Title
-) : IRequest<Guid>, ITransactionalRequest;
+public class CreateTagCommand : IRequest<Guid>, ITransactionalRequest
+{
+	public string Title { get; set; } = string.Empty;
+}
 
 public class CreateTagCommandHandler(
 	IRepository<Tag> repoTag,

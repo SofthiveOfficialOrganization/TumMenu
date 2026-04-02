@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Products.DTOs;
 using Domain.Entities;
@@ -14,19 +14,20 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public sealed record CreateProductCommand(
-	string Title,
-	string? Slug,
-	string? Description,
-	decimal BasePrice,
-	bool IsActive,
-	bool? IsVegan,
-	bool? IsVegetarian,
-	int? EstimatedPreparationTimeInMinutes,
-	int SortOrder,
-	string? Allergens,
-	Guid CategoryId
-) : IRequest<ProductDTO>, ITransactionalRequest;
+public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest
+{
+	public string Title { get; set; } = string.Empty;
+	public string? Slug { get; set; }
+	public string? Description { get; set; }
+	public decimal BasePrice { get; set; }
+	public bool IsActive { get; set; }
+	public bool? IsVegan { get; set; }
+	public bool? IsVegetarian { get; set; }
+	public int? EstimatedPreparationTimeInMinutes { get; set; }
+	public int SortOrder { get; set; }
+	public string? Allergens { get; set; }
+	public Guid CategoryId { get; set; }
+}
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
@@ -48,7 +49,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 	}
 }
 
-public class CreateProductCommandMappingProfile(
+public class CreateProductCommandHandler(
 	IRepository<Product> repoProduct,
 	IRepository<Category> repoCategory,
 	IMapper mapper

@@ -34,7 +34,7 @@ public class CreateStoreCommandHandler(
 		await repoStore.AddAsync(store, ct);
 
         // Generate QR Code automatically
-        await mediator.Send(new Application.QRs.Commands.GenerateQRCodeCommand(store.Id), ct);
+        await mediator.Send(new Application.QRs.Commands.GenerateQRCodeCommand { StoreId = store.Id }, ct);
         
         var storeDTO = mapper.Map<StoreDTO>(store);
 		return storeDTO;

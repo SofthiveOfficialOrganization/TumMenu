@@ -33,7 +33,7 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory) :
             {
                 using var scope = scopeFactory.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
-                await mediator.Send(new RecordCategoryViewCommand(categoryId, userAgent, remoteIp));
+                await mediator.Send(new RecordCategoryViewCommand { CategoryId = categoryId, UserAgent = userAgent, IpAddress = remoteIp });
             }
             catch { /* Silent */ }
         });
@@ -56,7 +56,7 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory) :
             {
                 using var scope = scopeFactory.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
-                await mediator.Send(new RecordProductViewCommand(productId, userAgent, remoteIp));
+                await mediator.Send(new RecordProductViewCommand { ProductId = productId, UserAgent = userAgent, IpAddress = remoteIp });
             }
             catch { /* Silent */ }
         });

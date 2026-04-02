@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Common.Helpers;
 using Application.Products.DTOs;
@@ -14,20 +14,21 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands;
 
-public sealed record UpdateProductCommand(
-	Guid Id,
-	string Title,
-	string? Description,
-	Guid CategoryId,
-	decimal BasePrice,
-	int SortOrder,
-	bool IsActive,
-	string? Allergens,
-	bool? IsVegan,
-	bool? IsVegetarian,
-	int? EstimatedPreparationTimeInMinutes,
-	IReadOnlyList<Guid> TagIds
-) : IRequest<ProductDTO>, ITransactionalRequest;
+public class UpdateProductCommand : IRequest<ProductDTO>, ITransactionalRequest
+{
+	public Guid Id { get; set; }
+	public string Title { get; set; } = string.Empty;
+	public string? Description { get; set; }
+	public Guid CategoryId { get; set; }
+	public decimal BasePrice { get; set; }
+	public int SortOrder { get; set; }
+	public bool IsActive { get; set; }
+	public string? Allergens { get; set; }
+	public bool? IsVegan { get; set; }
+	public bool? IsVegetarian { get; set; }
+	public int? EstimatedPreparationTimeInMinutes { get; set; }
+	public IReadOnlyList<Guid> TagIds { get; set; } = [];
+}
 
 public class UpdateProductCommandHandler(
 	IRepository<Product> repoProduct,

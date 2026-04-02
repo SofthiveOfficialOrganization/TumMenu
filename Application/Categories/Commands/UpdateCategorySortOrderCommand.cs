@@ -16,7 +16,7 @@ public class CategorySortItem
     public int SortOrder { get; set; }
 }
 
-public class UpdateCategorySortOrderHandler(IRepository<Category> repoCategory) : IRequestHandler<UpdateCategorySortOrderCommand, bool>
+public class UpdateCategorySortOrderCommandHandler(IRepository<Category> repoCategory) : IRequestHandler<UpdateCategorySortOrderCommand, bool>
 {
     public async Task<bool> Handle(UpdateCategorySortOrderCommand req, CancellationToken ct)
     {

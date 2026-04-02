@@ -13,7 +13,7 @@ namespace Application.CategorySuggestions.Commands
         public string? Reason { get; set; }
     }
 
-    public class SubmitCategorySuggestionHandler(
+    public class SubmitCategorySuggestionCommandHandler(
         IRepository<CategorySuggestion> repo,
         IRepository<Owner> ownerRepo,
         IUserContext userContext)

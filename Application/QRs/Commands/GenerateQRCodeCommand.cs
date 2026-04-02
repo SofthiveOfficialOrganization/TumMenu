@@ -4,7 +4,10 @@ using MediatR;
 
 namespace Application.QRs.Commands;
 
-public record GenerateQRCodeCommand(Guid StoreId) : IRequest<Guid>;
+public class GenerateQRCodeCommand : IRequest<Guid>
+{
+    public Guid StoreId { get; set; }
+}
 
 public class GenerateQRCodeCommandHandler(
     IRepository<QRCode> repoQR
@@ -25,8 +28,8 @@ public class GenerateQRCodeCommandHandler(
         };
 
         await repoQR.AddAsync(qr, ct);
-        // We don't save changes here if we assume it's part of a larger transaction 
-        // that implements ITransactionalRequest. 
+        // We don't save changes here if we assume it's part of a larger transaction
+        // that implements ITransactionalRequest.
         // But for standalone use, we might need it.
         // The CreateStoreCommand is transactional.
 
@@ -37,7 +40,7 @@ public class GenerateQRCodeCommandHandler(
     {
         const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
         var random = new Random();
-        
+
         while (true)
         {
             var key = new string(Enumerable.Repeat(chars, 7)

@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Common.Helpers;
 using MediatR;
 using System;
@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace Application.Owners.Commands;
 
-public sealed record DeleteOwnerCommand(
-	Guid OwnerId
-) : IRequest<Unit>, ITransactionalRequest;
+public class DeleteOwnerCommand : IRequest<Unit>, ITransactionalRequest
+{
+	public Guid OwnerId { get; set; }
+}
 
-public class DeleteOwnerHandler(
+public class DeleteOwnerCommandHandler(
 	IRepository<Domain.Entities.Owner> repoOwner
 ) : IRequestHandler<DeleteOwnerCommand, Unit>
 {

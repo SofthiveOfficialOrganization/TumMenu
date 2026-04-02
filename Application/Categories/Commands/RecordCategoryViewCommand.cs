@@ -7,11 +7,12 @@ using System.Text;
 
 namespace Application.Categories.Commands;
 
-public record RecordCategoryViewCommand(
-    Guid CategoryId,
-    string UserAgent,
-    string IpAddress
-) : IRequest;
+public class RecordCategoryViewCommand : IRequest
+{
+    public Guid CategoryId { get; set; }
+    public string UserAgent { get; set; } = string.Empty;
+    public string IpAddress { get; set; } = string.Empty;
+}
 
 public class RecordCategoryViewCommandHandler(
     IRepository<CategoryViewEvent> repoEvent,

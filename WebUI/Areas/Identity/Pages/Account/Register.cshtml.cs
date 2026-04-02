@@ -130,7 +130,7 @@ namespace WebUI.Areas.Identity.Pages.Account
                 if(result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    await _mediator.Send(new CreateOwnerCommand(user.Id), ct);
+                    await _mediator.Send(new CreateOwnerCommand { ApplicationUserId = user.Id }, ct);
                     const string ownerRole = "Owner";
                     if(!await _roleManager.RoleExistsAsync(ownerRole))
                         await _roleManager.CreateAsync(new ApplicationRole(ownerRole));

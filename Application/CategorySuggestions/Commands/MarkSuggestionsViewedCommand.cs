@@ -10,7 +10,7 @@ namespace Application.CategorySuggestions.Commands
     /// </summary>
     public class MarkSuggestionsViewedCommand : IRequest, ITransactionalRequest { }
 
-    public class MarkSuggestionsViewedHandler(IRepository<CategorySuggestion> repo)
+    public class MarkSuggestionsViewedCommandHandler(IRepository<CategorySuggestion> repo)
         : IRequestHandler<MarkSuggestionsViewedCommand>
     {
         public async Task Handle(MarkSuggestionsViewedCommand request, CancellationToken ct)

@@ -47,7 +47,7 @@ public class MediaController(IMediator mediator) : Controller
         if (file == null || file.Length == 0)
             return BadRequest("Dosya seçilmedi.");
 
-        var command = new UploadMediaCommand(file, referenceId, type, Slot: slot);
+        var command = new UploadMediaCommand { File = file, ReferenceId = referenceId, Type = type, Slot = slot };
         var media = await mediator.Send(command, ct);
 
         return Json(media);
@@ -65,7 +65,7 @@ public class MediaController(IMediator mediator) : Controller
 	[HttpPost("[action]/{id}")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
-		await mediator.Send(new DeleteMediaCommand(id), ct);
+		await mediator.Send(new DeleteMediaCommand { Id = id }, ct);
 		return RedirectToAction(nameof(Index));
 	}
 }
