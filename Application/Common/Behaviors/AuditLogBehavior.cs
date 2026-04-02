@@ -23,16 +23,17 @@ public sealed class AuditLogBehavior<TRequest, TResponse>(
             ? entityAuditable.EntityId
             : Guid.Empty;
 
+        var userId = userContext.UserId ?? "unknown";
         var log = new AuditLog
         {
-            UserId = userContext.UserId ?? "unknown",
+            UserId = userId,
             Action = auditable.ActionName,
             Entity = entityName,
             EntityId = entityId,
             ChangesJson = "{}",
             Ip = userContext.RemoteIp
         };
-        log.Created(userContext.UserId);
+        log.Created(userId);
 
         await db.AuditLogs.AddAsync(log, ct);
         await db.SaveChangesAsync(ct);
