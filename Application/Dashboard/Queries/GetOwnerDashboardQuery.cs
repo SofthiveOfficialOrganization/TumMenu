@@ -27,6 +27,7 @@ public class GetOwnerDashboardQueryHandler(
     IRepository<Product> repoProduct,
     IRepository<QRDailyStats> repoQRStats,
     IRepository<ProductDailyStats> repoProductStats,
+    IRepository<AuditLog> repoAuditLog,
     IUserContext userContext
 ) : IRequestHandler<GetOwnerDashboardQuery, OwnerDashboardDto>
 {
@@ -105,41 +106,57 @@ public class GetOwnerDashboardQueryHandler(
                 .ToList();
         }
 
-        // --- Recent activity: last 5 events across menus, products, QR codes ---
-        var recentActivity = new List<RecentActivityDto>();
+        // --- Recent activity ---
+        List<RecentActivityDto> recentActivity;
 
-        var recentMenus = await repoMenu.Query(tracked: false)
-            .Include(m => m.Store).Include(m => m.Company)
-            .Where(m =>
-                (m.StoreId != null && storeIds.Contains(m.StoreId.Value)) ||
-                (m.CompanyId != null && companyIds.Contains(m.CompanyId.Value)))
-            .OrderByDescending(m => m.CreatedAt)
-            .Take(5)
-            .Select(m => new RecentActivityRaw(
-                m.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
-                "Yeni menü eklendi",
-                m.Store != null ? m.Store.Title : (m.Company != null ? m.Company.Title : ""),
-                m.CreatedAt))
-            .ToListAsync(ct);
+        if (isAdmin)
+        {
+            var auditEntries = await repoAuditLog.Query(tracked: false)
+                .OrderByDescending(a => a.CreatedAt)
+                .Take(5)
+                .Select(a => new RecentActivityDto(
+                    a.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
+                    a.Action,
+                    a.Entity))
+                .ToListAsync(ct);
 
-        var recentProducts = await repoProduct.Query(tracked: false)
-            .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Store)
-            .Where(p => p.Category.Menu.StoreId != null && storeIds.Contains(p.Category.Menu.Store!.Id))
-            .OrderByDescending(p => p.CreatedAt)
-            .Take(5)
-            .Select(p => new RecentActivityRaw(
-                p.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
-                "Yeni ürün eklendi",
-                p.Category.Menu.Store!.Title,
-                p.CreatedAt))
-            .ToListAsync(ct);
+            recentActivity = auditEntries;
+        }
+        else
+        {
+            var recentMenus = await repoMenu.Query(tracked: false)
+                .Include(m => m.Store).Include(m => m.Company)
+                .Where(m =>
+                    (m.StoreId != null && storeIds.Contains(m.StoreId.Value)) ||
+                    (m.CompanyId != null && companyIds.Contains(m.CompanyId.Value)))
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(5)
+                .Select(m => new RecentActivityRaw(
+                    m.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
+                    "Yeni menü eklendi",
+                    m.Store != null ? m.Store.Title : (m.Company != null ? m.Company.Title : ""),
+                    m.CreatedAt))
+                .ToListAsync(ct);
 
-        recentActivity = recentMenus
-            .Concat(recentProducts)
-            .OrderByDescending(a => a.CreatedAtRaw)
-            .Take(5)
-            .Select(a => new RecentActivityDto(a.Time, a.Description, a.StoreName))
-            .ToList();
+            var recentProducts = await repoProduct.Query(tracked: false)
+                .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Store)
+                .Where(p => p.Category.Menu.StoreId != null && storeIds.Contains(p.Category.Menu.Store!.Id))
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(5)
+                .Select(p => new RecentActivityRaw(
+                    p.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
+                    "Yeni ürün eklendi",
+                    p.Category.Menu.Store!.Title,
+                    p.CreatedAt))
+                .ToListAsync(ct);
+
+            recentActivity = recentMenus
+                .Concat(recentProducts)
+                .OrderByDescending(a => a.CreatedAtRaw)
+                .Take(5)
+                .Select(a => new RecentActivityDto(a.Time, a.Description, a.StoreName))
+                .ToList();
+        }
 
         return new OwnerDashboardDto(
             storeCount,
