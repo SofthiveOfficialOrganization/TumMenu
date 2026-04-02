@@ -1,4 +1,4 @@
-﻿namespace Application.Abstractions;
+namespace Application.Abstractions;
 
 public interface IUserContext
 {
@@ -11,4 +11,7 @@ public interface IUserContext
     string? CompanyName { get; }
     IReadOnlyList<string> Roles { get; }
     string? RemoteIp { get; }
+    bool IsAdmin { get; }
+    Guid? CompanyIdParsed { get; }
+    Guid? OwnerIdParsed { get; }
 }
