@@ -41,6 +41,12 @@ namespace WebUI.Extensions
 
 			services.AddHttpClient<Application.Microservices.Location.ILocationMicroservice, Application.Microservices.Location.LocationMicroservice>();
 
+			// Add HttpClientFactory for Turnstile API calls
+			services.AddHttpClient();
+
+			// Register Turnstile service
+			services.AddScoped<ITurnstileService, TurnstileService>();
+
 			// Register EmailTemplateService
 			services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 

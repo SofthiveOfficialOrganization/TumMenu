@@ -17,6 +17,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using WebUI.Models.Email;
 using WebUI.Services;
+using WebUI.Services.Turnstile;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -32,6 +33,7 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly ApplicationDbContext _db;
         private readonly IMediator _mediator;
         private readonly IEmailTemplateService _emailTemplateService;
+        private readonly ITurnstileService _turnstileService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -42,7 +44,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             RoleManager<ApplicationRole> roleManager,
             IMediator mediator,
             ApplicationDbContext db,
-            IEmailTemplateService emailTemplateService)
+            IEmailTemplateService emailTemplateService,
+            ITurnstileService turnstileService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -54,6 +57,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             _db = db;
             _mediator = mediator;
             _emailTemplateService = emailTemplateService;
+            _turnstileService = turnstileService;
         }
 
         /// <summary>
@@ -120,6 +124,16 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // Validate Turnstile token
+            var turnstileToken = Request.Form["cf-turnstile-response"];
+            var turnstileResult = await _turnstileService.ValidateAsync(turnstileToken);
+            if (!turnstileResult.Success)
+            {
+                ModelState.AddModelError("Turnstile", "Human verification failed. Please try again.");
+                return Page();
+            }
+
             if(ModelState.IsValid)
             {
                 var user = CreateUser();
