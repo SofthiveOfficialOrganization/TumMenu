@@ -8,9 +8,12 @@
 
 @if (enabled)
 {
-    <div class="form-group turnstile-widget">
-        <div class="cf-turnstile" data-sitekey="@siteKey"></div>
-        <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response" />
+    <div class="form-group turnstile-widget" style="display: flex; justify-content: center; margin-bottom: 15px;">
+        <div class="cf-turnstile" 
+             data-sitekey="@siteKey" 
+             data-theme="light" 
+             data-language="tr" 
+             ></div>
     </div>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
