@@ -31,7 +31,7 @@ public class AwsLocationsController(
     {
         var result = await _awsService.GetCoordinatesAsync(address);
 
-        return Ok(new SuccessDataResult<List<LocationData>>(result));
+        return Ok(new SuccessDataResult<List<LocationData>?>(result));
     }
     
     [ProducesResponseType(typeof(SuccessDataResult<List<AwsAddressSuggestionDto>>), StatusCodes.Status200OK)]

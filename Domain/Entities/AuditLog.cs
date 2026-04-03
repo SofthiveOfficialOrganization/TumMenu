@@ -9,7 +9,6 @@ namespace Domain.Entities
         public string Entity { get; set; } = null!;
         public Guid EntityId { get; set; }
         public string ChangesJson { get; set; } = "{}";
-        public DateTimeOffset CreatedAt { get; set; }
         public string? Ip { get; set; }
     }
 

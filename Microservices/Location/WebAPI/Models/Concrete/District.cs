@@ -5,11 +5,11 @@ namespace WebAPI.Models.Concrete;
 public class District : BaseEntity<Guid>
 {
     public Guid ProvinceId { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int Population { get; set; }
     public int Area { get; set; }
 
-    public virtual Province Province { get; set; }
+    public virtual Province? Province { get; set; }
     
     public void Update(
         Guid provinceId, string name, int population, 

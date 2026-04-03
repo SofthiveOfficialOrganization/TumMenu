@@ -10,22 +10,22 @@ public class Country : BaseEntity<Guid>
     /// <summary>
     /// Ülkenin yaygın kullanılan adı (örneğin: "Türkiye")
     /// </summary>
-    public string CommonName { get; set; }
+    public string? CommonName { get; set; }
 
     /// <summary>
     /// Ülkenin resmi adı (örneğin: "Türkiye Cumhuriyeti")
     /// </summary>
-    public string OfficialName { get; set; }
+    public string? OfficialName { get; set; }
 
     /// <summary>
     /// Ülkenin 2 harfli ISO kodu (örneğin: "TR")
     /// </summary>
-    public string Alpha2Code { get; set; }
+    public string? Alpha2Code { get; set; }
 
     /// <summary>
     /// Ülkenin 3 harfli ISO kodu (örneğin: "TUR")
     /// </summary>
-    public string Alpha3Code { get; set; }
+    public string? Alpha3Code { get; set; }
 
     /// <summary>
     /// Ülkenin 3 basamaklı numerik ISO kodu (örneğin: "792")
@@ -40,7 +40,7 @@ public class Country : BaseEntity<Guid>
     /// <summary>
     /// Ülkenin resmi statüsü (örneğin: "officially-assigned")
     /// </summary>
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     /// <summary>
     /// Ülkenin Birleşmiş Milletler (UN) üyesi olup olmadığını belirtir
@@ -50,7 +50,7 @@ public class Country : BaseEntity<Guid>
     /// <summary>
     /// Ülkenin ait olduğu kıta veya bölge (örneğin: "Europe", "Americas")
     /// </summary>
-    public string Region { get; set; }
+    public string? Region { get; set; }
 
     /// <summary>
     /// Ülkenin alt bölgesi (örneğin: "Western Europe", "Caribbean")

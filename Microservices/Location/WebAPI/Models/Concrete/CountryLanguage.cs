@@ -15,17 +15,17 @@ public class CountryLanguage : BaseEntity<Guid>
     /// <summary>
     /// Dilin ISO kodu (örneğin: "eng", "tur")
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Dilin adı (örneğin: "English", "Türkçe")
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// İlgili ülke ile bağlantı
     /// </summary>
-    public virtual Country Country { get; set; }
+    public virtual Country? Country { get; set; }
 
     public void Update(string code, string name)
     {

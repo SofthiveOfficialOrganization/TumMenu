@@ -15,7 +15,7 @@ public class CountryTranslation : BaseEntity<Guid>
     /// <summary>
     /// Çeviri yapılan dilin ISO kodu (örneğin: "ara", "fra", "spa")
     /// </summary>
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; set; }
 
     /// <summary>
     /// Ülkenin resmi adı bu dilde (örneğin: "République de Turquie" - Fransızca için)
@@ -31,7 +31,7 @@ public class CountryTranslation : BaseEntity<Guid>
     /// <summary>
     /// İlgili ülke ile bağlantı
     /// </summary>
-    public virtual Country Country { get; set; }
+    public virtual Country? Country { get; set; }
 
     public void Update(string languageCode, string? commonName, string? officialName = null)
     {

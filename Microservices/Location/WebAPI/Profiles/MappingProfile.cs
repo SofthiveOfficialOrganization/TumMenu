@@ -20,10 +20,10 @@ public class MappingProfile : Profile
         
         CreateMap<CityDataDto, Province>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Coordinates.Latitude))
-            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Coordinates.Longitude))
-            .ForMember(dest => dest.GoogleMaps, opt => opt.MapFrom(src => src.Maps.GoogleMaps))
-            .ForMember(dest => dest.OpenStreetMap, opt => opt.MapFrom(src => src.Maps.OpenStreetMap))
+            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Coordinates != null ? src.Coordinates.Latitude : 0))
+            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Coordinates != null ? src.Coordinates.Longitude : 0))
+            .ForMember(dest => dest.GoogleMaps, opt => opt.MapFrom(src => src.Maps != null ? src.Maps.GoogleMaps : null))
+            .ForMember(dest => dest.OpenStreetMap, opt => opt.MapFrom(src => src.Maps != null ? src.Maps.OpenStreetMap : null))
             .ForMember(dest => dest.Districts, opt => opt.MapFrom(src => src.Districts));
 
         CreateMap<Province, ProvinceDto>().ReverseMap();
@@ -46,8 +46,8 @@ public class MappingProfile : Profile
         #region Country Mapping Procedures
         
         CreateMap<CountryDataDto, Country>()
-            .ForMember(dest => dest.CommonName, opt => opt.MapFrom(src => src.Name.Common))
-            .ForMember(dest => dest.OfficialName, opt => opt.MapFrom(src => src.Name.Official))
+            .ForMember(dest => dest.CommonName, opt => opt.MapFrom(src => src.Name != null ? src.Name.Common : null))
+            .ForMember(dest => dest.OfficialName, opt => opt.MapFrom(src => src.Name != null ? src.Name.Official : null))
             .ForMember(dest => dest.Alpha2Code, opt => opt.MapFrom(src => src.Alpha2Code))
             .ForMember(dest => dest.Alpha3Code, opt => opt.MapFrom(src => src.Alpha3Code))
             .ForMember(dest => dest.NumericCode, opt => opt.MapFrom(src => src.NumericCode))
@@ -56,30 +56,30 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.IsUnMember, opt => opt.MapFrom(src => src.IsUNMember))
             .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region))
             .ForMember(dest => dest.Subregion, opt => opt.MapFrom(src => src.Subregion))
-            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Coordinates.Count > 0 ? src.Coordinates[0] : 0))
-            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Coordinates.Count > 1 ? src.Coordinates[1] : 0))
+            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Coordinates != null && src.Coordinates.Count > 0 ? src.Coordinates[0] : 0))
+            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Coordinates != null && src.Coordinates.Count > 1 ? src.Coordinates[1] : 0))
             .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area))
             .ForMember(dest => dest.Population, opt => opt.MapFrom(src => src.Population))
             .ForMember(dest => dest.FlagEmoji, opt => opt.MapFrom(src => src.FlagEmoji))
-            .ForMember(dest => dest.GoogleMaps, opt => opt.MapFrom(src => src.Maps.GoogleMaps))
-            .ForMember(dest => dest.OpenStreetMap, opt => opt.MapFrom(src => src.Maps.OpenStreetMaps))
-            .ForMember(dest => dest.Timezone, opt => opt.MapFrom(src => src.Timezones.Count > 0 ? src.Timezones[0] : "UTC"))
+            .ForMember(dest => dest.GoogleMaps, opt => opt.MapFrom(src => src.Maps != null ? src.Maps.GoogleMaps : null))
+            .ForMember(dest => dest.OpenStreetMap, opt => opt.MapFrom(src => src.Maps != null ? src.Maps.OpenStreetMaps : null))
+            .ForMember(dest => dest.Timezone, opt => opt.MapFrom(src => src.Timezones != null && src.Timezones.Count > 0 ? src.Timezones[0] : "UTC"))
             .ForMember(dest => dest.StartOfWeek, opt => opt.MapFrom(src => src.StartOfWeek))
-            .ForMember(dest => dest.Currencies, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.Currencies, opt => opt.MapFrom(src =>
                 src.Currencies != null ? src.Currencies.Select(kvp => new CountryCurrency
                 {
                     Code = kvp.Key,
                     Name = kvp.Value.Name,
                     Symbol = kvp.Value.Symbol
                 }).ToList() : new List<CountryCurrency>()))
-            .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => 
+            .ForMember(dest => dest.Languages, opt => opt.MapFrom(src =>
                 src.Languages != null ? src.Languages.Select(kvp => new CountryLanguage
                 {
                     Code = kvp.Key,
                     Name = kvp.Value
                 }).ToList() : new List<CountryLanguage>()))
-            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => 
-                src.Name.NativeName != null ? src.Name.NativeName.Select(kvp => new CountryTranslation
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src =>
+                src.Name != null && src.Name.NativeName != null ? src.Name.NativeName.Select(kvp => new CountryTranslation
                 {
                     LanguageCode = kvp.Key,
                     OfficialName = kvp.Value.Official,

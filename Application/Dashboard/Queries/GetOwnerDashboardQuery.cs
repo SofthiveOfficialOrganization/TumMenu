@@ -106,15 +106,19 @@ public class GetOwnerDashboardQueryHandler(
         }
 
         // --- Recent activity: owner sees their own recent actions from AuditLogs ---
-        var recentActivity = await repoAuditLog.Query(tracked: false)
+        var rawLogs = await repoAuditLog.Query(tracked: false)
             .Where(a => a.UserId == userId)
             .OrderByDescending(a => a.CreatedAt)
             .Take(5)
+            .Select(a => new { a.CreatedAt, a.Action, a.Entity })
+            .ToListAsync(ct);
+
+        var recentActivity = rawLogs
             .Select(a => new RecentActivityDto(
                 a.CreatedAt.ToOffset(TimeSpan.FromHours(3)).ToString("HH:mm"),
                 a.Action,
                 a.Entity))
-            .ToListAsync(ct);
+            .ToList();
 
         return new OwnerDashboardDto(
             storeCount,

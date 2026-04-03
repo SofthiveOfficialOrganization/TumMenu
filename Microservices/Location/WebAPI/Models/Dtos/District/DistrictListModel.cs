@@ -4,5 +4,5 @@ namespace WebAPI.Models.Dtos.District;
 
 public class DistrictListModel : BasePageableModel
 {
-    public IList<DistrictDto> Items { get; set; }
+    public IList<DistrictDto>? Items { get; set; }
 }

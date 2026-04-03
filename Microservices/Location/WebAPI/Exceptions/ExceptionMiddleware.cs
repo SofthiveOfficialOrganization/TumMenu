@@ -55,7 +55,7 @@ public class ExceptionMiddleware(
 
         LogDetail logDetail =
             new() {
-                MethodName = _next.Method.Name,
+                MethodName = _next.Method?.Name ?? "Unknown",
                 Parameters = logParameters,
                 User = _contextAccessor.HttpContext?.User.Identity?.Name ?? "?"
             };

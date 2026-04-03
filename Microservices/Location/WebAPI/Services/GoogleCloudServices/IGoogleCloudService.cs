@@ -27,7 +27,7 @@ public class GoogleCloudService(
     ) : IGoogleCloudService
 {
     private readonly GoogleCloudOptions _googleCloudOptions = options.Value;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly HttpClient _httpClient = httpClient;
 
     /// <summary>
     /// Google Maps API kullanarak verilen adres bilgisinden enlem ve boylam değerlerini alır.
@@ -38,15 +38,20 @@ public class GoogleCloudService(
     public async Task<LocationData?> GetCoordinatesAsync(string address)
     {
         var requestUri = string.Format(ApiUrls.GOOGLE_CLOUD_GEOCODE_API, address, _googleCloudOptions.ApiKey);
-        
-        var response = await _httpClient.GetStringAsync(requestUri);
-        dynamic jsonResponse = JsonConvert.DeserializeObject(response);
 
-        if (jsonResponse == null || jsonResponse.predictions == null)
+        var response = await _httpClient.GetStringAsync(requestUri);
+        dynamic? jsonResponse = JsonConvert.DeserializeObject(response);
+
+        if (jsonResponse is null)
             throw new NotFoundException(AppMessages.LOCATION_NOT_FOUND);
 
-        var latitude = jsonResponse.results[0].geometry.location.lat;
-        var longitude = jsonResponse.results[0].geometry.location.lng;
+        dynamic results = jsonResponse!.results;
+        if (results is null || results.Count == 0)
+            throw new NotFoundException(AppMessages.LOCATION_NOT_FOUND);
+
+        var result = results[0];
+        var latitude = result?.geometry?.location?.lat ?? 0;
+        var longitude = result?.geometry?.location?.lng ?? 0;
 
         return new LocationData
         {
@@ -66,21 +71,22 @@ public class GoogleCloudService(
     {
         var requestUri = string.Format(ApiUrls.GOOGLE_CLOUD_AUTOCOMPLETE_API, query, _googleCloudOptions.ApiKey);
 
-        var response = await httpClient.GetStringAsync(requestUri);
-        dynamic jsonResponse = JsonConvert.DeserializeObject(response);
+        var response = await _httpClient.GetStringAsync(requestUri);
+        dynamic? jsonResponse = JsonConvert.DeserializeObject(response);
 
-        if (jsonResponse == null || jsonResponse.predictions == null)
+        if (jsonResponse is null)
             throw new NotFoundException(AppMessages.LOCATION_NOT_FOUND);
 
-        // predictions listesini IEnumerable<dynamic> olarak cast ediyoruz.
-        IEnumerable<dynamic> predictions = jsonResponse.predictions;
+        dynamic predictions = jsonResponse!.predictions;
+        if (predictions is null)
+            throw new NotFoundException(AppMessages.LOCATION_NOT_FOUND);
 
-        var suggestions = predictions
+        var suggestions = ((IEnumerable<dynamic>)predictions)
             .Select(p => new AddressSuggestionDto
             {
-                SuggestedAddress = (string)p.description,
-                SecondaryText = p.structured_formatting.secondary_text != null 
-                    ? (string)p.structured_formatting.secondary_text 
+                SuggestedAddress = (string?)p.description,
+                SecondaryText = p.structured_formatting?.secondary_text != null
+                    ? (string)p.structured_formatting.secondary_text
                     : string.Empty
             })
             .ToList();

@@ -7,6 +7,7 @@ using Mapster;
 using MapsterMapper;
 using MediatR;
 using Application.Common.Base.Page;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Categories.Queries;
 
@@ -45,6 +46,11 @@ public class GetCategoriesByCurrentOwnerHandler(
                 (!req.CompanyId.HasValue || c.Menu.CompanyId == req.CompanyId.Value || (c.Menu.StoreId != null && c.Menu.Store!.CompanyId == req.CompanyId.Value)) &&
                 (!req.StoreId.HasValue || c.Menu.StoreId == req.StoreId.Value) &&
                 (!req.MenuId.HasValue || c.MenuId == req.MenuId.Value),
+            include: q => q
+                .Include(c => c.CategoryLibraryItem)
+                .Include(c => c.Menu).ThenInclude(m => m.Company)
+                .Include(c => c.Menu).ThenInclude(m => m.Store).ThenInclude(s => s!.Company)
+                .Include(c => c.Parent).ThenInclude(p => p!.CategoryLibraryItem),
             orderBy: c => c.OrderByDescending(x => x.CreatedAt),
             enableTracking: false,
             ct: ct

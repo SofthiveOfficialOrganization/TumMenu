@@ -15,12 +15,12 @@ public class CountryCurrency : BaseEntity<Guid>
     /// <summary>
     /// Para biriminin ISO 4217 kodu (örneğin: "USD", "EUR").
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Para biriminin adı (örneğin: "United States Dollar").
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Para biriminin sembolü (örneğin: "$", "€").
@@ -30,7 +30,7 @@ public class CountryCurrency : BaseEntity<Guid>
     /// <summary>
     /// Para biriminin bağlı olduğu ülke.
     /// </summary>
-    public virtual Country Country { get; set; }
+    public virtual Country? Country { get; set; }
 
     public void Update(string code, string name, string? symbol = null)
     {
