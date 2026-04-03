@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using WebUI.Models.Email;
 using WebUI.Services;
+using WebUI.Services.Turnstile;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -21,12 +22,14 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly IEmailTemplateService _emailTemplateService;
+        private readonly ITurnstileService _turnstileService;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IEmailTemplateService emailTemplateService)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IEmailTemplateService emailTemplateService, ITurnstileService turnstileService)
         {
             _userManager = userManager;
             _emailSender = emailSender;
             _emailTemplateService = emailTemplateService;
+            _turnstileService = turnstileService;
         }
 
         /// <summary>
@@ -53,6 +56,15 @@ namespace WebUI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Validate Turnstile token
+            var turnstileToken = Request.Form["cf-turnstile-response"];
+            var turnstileResult = await _turnstileService.ValidateAsync(turnstileToken);
+            if (!turnstileResult.Success)
+            {
+                ModelState.AddModelError("Turnstile", "Human verification failed. Please try again.");
+                return Page();
+            }
+
             if(ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
