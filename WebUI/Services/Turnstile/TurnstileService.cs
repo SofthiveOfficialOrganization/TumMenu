@@ -13,7 +13,7 @@ public class TurnstileService : ITurnstileService
     public TurnstileService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
-        var turnstileConfig = configuration.GetSection("Turnstile");
+        var turnstileConfig = configuration.GetSection("CloudflareTurnstile");
         _secretKey = turnstileConfig["SecretKey"] ?? string.Empty;
         _enabled = turnstileConfig.GetValue<bool>("Enabled", true);
     }

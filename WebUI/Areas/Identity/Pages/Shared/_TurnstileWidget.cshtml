@@ -2,8 +2,8 @@
 @inject IConfiguration Configuration
 
 @{
-    var siteKey = Configuration["Turnstile:SiteKey"];
-    var enabled = Configuration.GetValue<bool>("Turnstile:Enabled", true);
+    var siteKey = Configuration["CloudflareTurnstile:SiteKey"];
+    var enabled = Configuration.GetValue<bool>("CloudflareTurnstile:Enabled", true);
 }
 
 @if (enabled)
