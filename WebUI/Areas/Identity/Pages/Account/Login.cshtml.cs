@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using WebUI.Services.Turnstile;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -17,12 +18,14 @@ namespace WebUI.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITurnstileService _turnstileService;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, ITurnstileService turnstileService)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _turnstileService = turnstileService;
         }
 
         /// <summary>
@@ -103,6 +106,15 @@ namespace WebUI.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // Validate Turnstile token
+            var turnstileToken = Request.Form["cf-turnstile-response"];
+            var turnstileResult = await _turnstileService.ValidateAsync(turnstileToken);
+            if (!turnstileResult.Success)
+            {
+                ModelState.AddModelError("Turnstile", "Human verification failed. Please try again.");
+                return Page();
+            }
 
             if(ModelState.IsValid)
             {
