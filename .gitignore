@@ -8,6 +8,9 @@
 # Claued
 .superpowers
 .claude
+
+# Production secrets — contains real credentials, never commit
+web.config
 .worktrees
 DOCS/superpowers
 

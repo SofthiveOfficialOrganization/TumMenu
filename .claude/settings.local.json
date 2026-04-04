@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code needs your attention\" --sound"
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
           }
         ]
       }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Main Claude code finished\" --sound"
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
           }
         ]
       }
@@ -42,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code subagent finished\" --sound"
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('DONE', 'Claude Code')\""
           }
         ]
       }
