@@ -11,5 +11,43 @@
       "Bash(pwd:*)",
       "Bash(git:*)"
     ]
+  },
+  
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code needs your attention\" --sound"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Main Claude code finished\" --sound"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code subagent finished\" --sound"
+          }
+        ]
+      }
+    ]
   }
 }
+
+

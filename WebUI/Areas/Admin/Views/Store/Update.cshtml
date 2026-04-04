@@ -223,8 +223,8 @@
             width: '100%'
         });
 
-        const initialCityId = '@(Model.Address?.CityId?.ToString() ?? "")';
-        const initialDistrictId = '@(Model.Address?.DistrictId?.ToString() ?? "")';
+        const initialCityId = '@(Model.Address?.CityId?.ToString() ?? "")'.toLowerCase();
+        const initialDistrictId = '@(Model.Address?.DistrictId?.ToString() ?? "")'.toLowerCase();
         const initialLat = @(Model.Address?.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
         const initialLng = @(Model.Address?.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
         // Flag: stop city/district change handlers from overwriting coords on first load
@@ -237,10 +237,17 @@
                     value: p.id,
                     text: p.name,
                     'data-lat': p.latitude,
-                    'data-lng': p.longitude,
-                    selected: initialCityId === p.id
+                    'data-lng': p.longitude
                 }));
             });
+
+            if (initialCityId) {
+                citySelect.val(initialCityId).trigger('change.select2');
+                const selectedOpt = citySelect.find('option:selected');
+                if (selectedOpt.val()) {
+                    cityNameInput.val(selectedOpt.text());
+                }
+            }
 
             // If we have saved coords, initialize the map to them immediately
             if (initialLat && initialLng && initialLat >= -90 && initialLat <= 90) {
@@ -249,8 +256,6 @@
                 initialCoordsLoaded = true;
             }
 
-            citySelect.trigger('change');
-            
             if (initialCityId) {
                 loadDistricts(initialCityId, initialDistrictId);
             }
@@ -259,24 +264,32 @@
         function loadDistricts(provinceId, selectedDistrictId = null) {
             districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
             districtSelect.prop('disabled', false);
-            
+
             $.get(`/api/location/districts/${provinceId}`, function(data) {
                 data.forEach(d => {
                     districtSelect.append($('<option>', {
                         value: d.id,
-                        text: d.name,
-                        selected: selectedDistrictId === d.id
+                        text: d.name
                     }));
                 });
-                 districtSelect.trigger('change');
-                
-                // Show map overlay if empty
-                if (!$('#districtSelect').val()) {
+
+                if (selectedDistrictId) {
+                    districtSelect.val(selectedDistrictId).trigger('change.select2');
+                    const selectedOpt = districtSelect.find('option:selected');
+                    if (selectedOpt.val()) {
+                        districtNameInput.val(selectedOpt.text());
+                    }
+                }
+
+                districtSelect.trigger('change');
+
+                // Show map overlay if empty and no saved coords
+                if (!$('#districtSelect').val() && !initialCoordsLoaded) {
                     $('#mapOverlay').show();
                 } else {
                     $('#mapOverlay').hide();
                 }
-                
+
                 if(map) {
                     setTimeout(function () {
                         map.invalidateSize();
@@ -436,75 +449,7 @@
             }
         });
 
-            
-            $.get(url, function(data) {
-                if (data && data.length > 0) {
-                    const lat = parseFloat(data[0].lat);
-                    const lng = parseFloat(data[0].lon);
-                    // Only reposition to district if no saved coords (first load)
-                    if (!initialCoordsLoaded) {
-                        cityLatInput.val(lat.toFixed(6).replace('.', ','));
-                        cityLngInput.val(lng.toFixed(6).replace('.', ','));
-                        $('#mapOverlay').hide();
-                        if (map) {
-                            map.setView([lat, lng], 13);
-                            if (marker) marker.setLatLng([lat, lng]);
-                        } else {
-                            initMap(lat, lng, 13);
-                        }
-                    } else {
-                        // Coords already loaded from DB — just show the map overlay off
-                        $('#mapOverlay').hide();
-                        // After initial load, mark flag as done so user changes work normally
-                        initialCoordsLoaded = false;
-                    }
-                }
-            });
-         }
-         
-     } else {
-         districtNameInput.val('');
-     }
-});
-
-// Form submit log
-$('form').on('submit', function() {
-    console.log('=== FORM GÖNDERİLİYOR ===')
-    console.log('Latitude:', cityLatInput.val());
-    console.log('Longitude:', cityLngInput.val());
-    console.log('CityId:', citySelect.val());
-    console.log('DistrictId:', districtSelect.val());
-});
-
-// Buraya odakla butonu
-$('#centerMapBtn').on('click', function() {
-    if (map) {
-        const center = map.getCenter();
-        const lat = center.lat;
-        const lng = center.lng;
-        
-        // Pin'i haritanın merkezine taşı
-        if (marker) {
-            marker.setLatLng([lat, lng]);
-        } else {
-            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-            marker.on('dragend', function(e) {
-                const pos = e.target.getLatLng();
-                cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
-                cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
-            });
-        }
-        
-        // Koordinatları inputlara yaz
-        cityLatInput.val(lat.toFixed(6).replace('.', ','));
-        cityLngInput.val(lng.toFixed(6).replace('.', ','));
-        
-        // Overlay'i gizle
-        $('#mapOverlay').hide();
-    }
-});
-
-// Konumu kullan butonu
+        // Konumu kullan butonu
 $('#useMyLocationBtn').on('click', function() {
     const btn = $(this);
     const originalContent = btn.html();
@@ -532,11 +477,12 @@ $('#useMyLocationBtn').on('click', function() {
         },
         onError: function (err, message) {
             console.warn('Geolocation error:', err);
-            alert('Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.');
+            if (err && err.code !== 1) {
+                alert('Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.');
+            }
         }
     }).catch(function(error) {
         console.warn('Location request failed:', error);
-        alert('Tarayıcınız konum özelliğini desteklemiyor.');
     });
 });
 });
