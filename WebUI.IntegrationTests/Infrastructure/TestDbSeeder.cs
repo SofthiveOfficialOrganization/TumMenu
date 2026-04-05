@@ -59,11 +59,18 @@ public class TestDbSeeder
         var owner = db.Owners.FirstOrDefault(o => o.ApplicationUserId == ownerUser.Id);
         if (owner == null)
         {
-            owner = new Owner { ApplicationUserId = ownerUser.Id };
+            owner = new Owner { ApplicationUserId = ownerUser.Id, WizardCompleted = true };
             db.Owners.Add(owner);
             await db.SaveChangesAsync();
         }
         OwnerId = owner.Id;
+
+        // Ensure wizard is marked complete so EnsureCompanyExistsFilter doesn't redirect
+        if (!owner.WizardCompleted)
+        {
+            owner.WizardCompleted = true;
+            await db.SaveChangesAsync();
+        }
 
         // Add owner claim to user
         var claims = await userManager.GetClaimsAsync(ownerUser);
