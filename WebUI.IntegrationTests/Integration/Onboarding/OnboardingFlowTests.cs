@@ -45,6 +45,9 @@ public class OnboardingFlowTests : IClassFixture<TumMenuWebAppFactory>
         var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
         client.DefaultRequestHeaders.Accept.Add(
             new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        // Include antiforgery token in header for JSON posts (AutoValidateAntiforgeryToken is global)
+        var token = await AntiforgeryHelper.GetTokenAsync(client, "/Admin/Menu/Index");
+        client.DefaultRequestHeaders.Add("RequestVerificationToken", token);
         var response = await client.PostAsJsonAsync("/admin/Onboarding/company", new
         {
             title = "Another Company",
@@ -57,6 +60,9 @@ public class OnboardingFlowTests : IClassFixture<TumMenuWebAppFactory>
     public async Task CreateMenu_WithValidStoreId_Returns200()
     {
         var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
+        // Include antiforgery token in header for JSON posts (AutoValidateAntiforgeryToken is global)
+        var token = await AntiforgeryHelper.GetTokenAsync(client, "/Admin/Menu/Index");
+        client.DefaultRequestHeaders.Add("RequestVerificationToken", token);
         var response = await client.PostAsJsonAsync("/admin/Onboarding/menu", new
         {
             title = "New Test Menu",

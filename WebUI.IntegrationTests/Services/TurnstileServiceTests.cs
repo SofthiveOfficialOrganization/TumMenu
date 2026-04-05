@@ -22,15 +22,15 @@ public class TurnstileServiceTests
     {
         var inMemorySettings = new Dictionary<string, string?>
         {
-            { "Turnstile:SecretKey", secretKey },
-            { "Turnstile:Enabled", enabled.ToString() }
+            { "CloudflareTurnstile:SecretKey", secretKey },
+            { "CloudflareTurnstile:Enabled", enabled.ToString() }
         };
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        return config.GetSection("Turnstile");
+        return config.GetSection("CloudflareTurnstile");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class TurnstileServiceTests
     {
         // Arrange
         var turnstileSection = CreateConfigurationSection("test-secret", true);
-        _mockConfiguration.Setup(x => x.GetSection("Turnstile")).Returns(turnstileSection);
+        _mockConfiguration.Setup(x => x.GetSection("CloudflareTurnstile")).Returns(turnstileSection);
 
         var service = new TurnstileService(_mockHttpClientFactory.Object, _mockConfiguration.Object);
 
@@ -55,7 +55,7 @@ public class TurnstileServiceTests
     {
         // Arrange
         var turnstileSection = CreateConfigurationSection("test-secret", false);
-        _mockConfiguration.Setup(x => x.GetSection("Turnstile")).Returns(turnstileSection);
+        _mockConfiguration.Setup(x => x.GetSection("CloudflareTurnstile")).Returns(turnstileSection);
 
         var service = new TurnstileService(_mockHttpClientFactory.Object, _mockConfiguration.Object);
 
@@ -71,7 +71,7 @@ public class TurnstileServiceTests
     {
         // Arrange
         var turnstileSection = CreateConfigurationSection("test-secret-key", true);
-        _mockConfiguration.Setup(x => x.GetSection("Turnstile")).Returns(turnstileSection);
+        _mockConfiguration.Setup(x => x.GetSection("CloudflareTurnstile")).Returns(turnstileSection);
 
         var mockResponse = new HttpResponseMessage
         {
@@ -105,7 +105,7 @@ public class TurnstileServiceTests
     {
         // Arrange
         var turnstileSection = CreateConfigurationSection("test-secret", true);
-        _mockConfiguration.Setup(x => x.GetSection("Turnstile")).Returns(turnstileSection);
+        _mockConfiguration.Setup(x => x.GetSection("CloudflareTurnstile")).Returns(turnstileSection);
 
         var mockHandler = new Mock<HttpMessageHandler>();
         mockHandler.Protected()
