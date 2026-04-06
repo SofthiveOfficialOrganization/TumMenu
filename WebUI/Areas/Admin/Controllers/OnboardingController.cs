@@ -12,7 +12,6 @@ namespace WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize]
-[IgnoreAntiforgeryToken] // Debugging: Disable CSRF to rule it out for 400 Bad Request
 [Route("admin/Onboarding")]
 public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingController> logger) : Controller
 {

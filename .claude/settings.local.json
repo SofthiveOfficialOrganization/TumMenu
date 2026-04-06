@@ -13,14 +13,14 @@
     ]
   },
   
-  "hooks": {
+"hooks": {
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code needs your attention\" --sound"
           }
         ]
       }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Main Claude code finished\" --sound"
           }
         ]
       }
@@ -42,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('DONE', 'Claude Code')\""
+            "command": "npx node-notifier-cli --title \"Claude Code\" --message \"Claude code subagent finished\" --sound"
           }
         ]
       }
