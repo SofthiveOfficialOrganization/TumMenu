@@ -40,3 +40,31 @@ public record AdRevenueImportDTO
     public string Currency { get; init; } = "TRY";
     public string? SourceFile { get; init; }
 }
+
+public record DailyStatDTO
+{
+    public DateOnly Date { get; init; }
+    public int Impressions { get; init; }
+    public int Clicks { get; init; }
+}
+
+public record PlacementStatDTO
+{
+    public Guid PlacementId { get; init; }
+    public string SlotKey { get; init; } = null!;
+    public string CreativeType { get; init; } = null!;
+    public int Impressions { get; init; }
+    public int Clicks { get; init; }
+    public decimal Ctr { get; init; }
+    public bool IsActive { get; init; }
+}
+
+public record AdAnalyticsDTO
+{
+    public int TotalImpressions { get; init; }
+    public int TotalClicks { get; init; }
+    public decimal AverageCtr { get; init; }
+    public int ActivePlacementCount { get; init; }
+    public List<DailyStatDTO> DailyStats { get; init; } = new();
+    public List<PlacementStatDTO> PlacementStats { get; init; } = new();
+}
