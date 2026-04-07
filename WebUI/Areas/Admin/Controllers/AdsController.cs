@@ -50,6 +50,7 @@ public class AdsController(IMediator mediator) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ImportRevenue(IFormFile file)
     {
         if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))

@@ -5,6 +5,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace WebUI.Areas.Admin.Controllers;
 
@@ -40,6 +41,18 @@ public sealed class MediaController(IMediator mediator) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload(IFormFile file, CancellationToken ct)
     {
+        if (file == null || file.Length == 0)
+            return BadRequest("Dosya boş.");
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(ext))
+            return BadRequest("Geçersiz dosya türü. İzin verilen: jpg, jpeg, png, gif, webp.");
+
+        const long maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.Length > maxSize)
+            return BadRequest("Dosya boyutu 5MB'ı geçemez.");
+
         var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
         if (company == null) return Forbid();
 

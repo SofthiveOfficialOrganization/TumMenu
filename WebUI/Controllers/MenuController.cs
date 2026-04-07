@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebUI.Controllers;
 
 [AllowAnonymous]
-public class MenuController(ISender sender, IServiceScopeFactory scopeFactory) : Controller
+public class MenuController(ISender sender, IServiceScopeFactory scopeFactory, ILogger<MenuController> logger) : Controller
 {
 	// GET /{companySlug}/{storeSlug}
 	public async Task<IActionResult> Index(string companySlug, string storeSlug, [FromQuery] bool isQr = false)
@@ -35,7 +35,7 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory) :
                 var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
                 await mediator.Send(new RecordCategoryViewCommand { CategoryId = categoryId, UserAgent = userAgent, IpAddress = remoteIp });
             }
-            catch { /* Silent */ }
+            catch (Exception ex) { logger.LogWarning(ex, "Category view recording failed for CategoryId={CategoryId}", categoryId); }
         });
 
 		return View(model);
@@ -58,7 +58,7 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory) :
                 var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
                 await mediator.Send(new RecordProductViewCommand { ProductId = productId, UserAgent = userAgent, IpAddress = remoteIp });
             }
-            catch { /* Silent */ }
+            catch (Exception ex) { logger.LogWarning(ex, "Product view recording failed for ProductId={ProductId}", productId); }
         });
 
 		return View(model);
