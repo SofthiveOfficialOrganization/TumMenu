@@ -40,6 +40,33 @@ public class AdsController(IMediator mediator) : Controller
         return View(summary);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Analytics(int days = 30)
+    {
+        if (days != 7 && days != 30 && days != 90) days = 30;
+        var analytics = await mediator.Send(new GetAdAnalyticsQuery(days));
+        ViewBag.Days = days;
+        return View(analytics);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ImportRevenue(IFormFile file)
+    {
+        if (file == null || !file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            TempData["Error"] = "Lütfen geçerli bir .csv dosyası seçin.";
+            return RedirectToAction(nameof(Revenue));
+        }
+        if (file.Length > 2 * 1024 * 1024)
+        {
+            TempData["Error"] = "Dosya boyutu 2MB'ı geçemez.";
+            return RedirectToAction(nameof(Revenue));
+        }
+        var result = await mediator.Send(new ImportAdRevenueCommand { File = file });
+        TempData["Success"] = $"{result.ImportedCount} satır içe aktarıldı, {result.SkippedCount} satır atlandı.";
+        return RedirectToAction(nameof(Revenue));
+    }
+
     #region AdSlot Actions
     [HttpGet]
     public IActionResult CreateSlot() => View();
