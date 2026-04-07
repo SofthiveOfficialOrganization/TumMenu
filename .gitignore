@@ -12,6 +12,9 @@
 ruflo.json
 ruflo-*.log
 .claude-flow/
+.mcp.json
+.swarm/
+CLAUDE.md
 
 # Production secrets — contains real credentials, never commit
 web.config
