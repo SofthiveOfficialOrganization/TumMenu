@@ -1,0 +1,166 @@
+@using Application.Ads.DTOs
+@model AdAnalyticsDTO
+@{
+    ViewData["Title"] = "Reklam Analitiği";
+    int days = (int)(ViewBag.Days ?? 30);
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="horizon-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Reklam Analitiği</h4>
+                    <p class="text-secondary small mb-0">Gösterim, tıklama ve CTR istatistikleri.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-action="Analytics" asp-route-days="7"
+                       class="btn btn-sm @(days == 7 ? "btn-primary" : "btn-outline-secondary")">Son 7 Gün</a>
+                    <a asp-action="Analytics" asp-route-days="30"
+                       class="btn btn-sm @(days == 30 ? "btn-primary" : "btn-outline-secondary")">Son 30 Gün</a>
+                    <a asp-action="Analytics" asp-route-days="90"
+                       class="btn btn-sm @(days == 90 ? "btn-primary" : "btn-outline-secondary")">Son 90 Gün</a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-2">
+                        <i class="fas fa-arrow-left me-1"></i> Slotlara Dön
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="p-4 rounded-4 bg-success-soft border border-success-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Toplam Gösterim</p>
+                        <h3 class="fw-bold mb-0">@Model.TotalImpressions.ToString("N0")</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 rounded-4 bg-primary-soft border border-primary-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Toplam Tıklama</p>
+                        <h3 class="fw-bold mb-0">@Model.TotalClicks.ToString("N0")</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 rounded-4 bg-warning-soft border border-warning-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Ort. CTR</p>
+                        <h3 class="fw-bold mb-0">@Model.AverageCtr.ToString("N2")%</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-4 rounded-4 bg-info-soft border border-info-light">
+                        <p class="text-secondary small text-uppercase fw-bold mb-2">Aktif Yerleşim</p>
+                        <h3 class="fw-bold mb-0">@Model.ActivePlacementCount</h3>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.DailyStats.Any())
+            {
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Günlük Gösterim & Tıklama</h6>
+                    <canvas id="dailyChart" height="80"></canvas>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4 text-secondary mb-4">
+                    <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                    <p class="small">Seçilen dönemde veri bulunamadı.</p>
+                </div>
+            }
+        </div>
+
+        <div class="horizon-card">
+            <h5 class="fw-bold mb-3">Yerleşim Bazlı Performans</h5>
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle table-hover">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase border-bottom">
+                            <th class="ps-3">Slot</th>
+                            <th>İçerik Türü</th>
+                            <th class="text-end">Gösterim</th>
+                            <th class="text-end">Tıklama</th>
+                            <th class="text-end">CTR</th>
+                            <th class="text-center">Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.PlacementStats.Any())
+                        {
+                            foreach (var p in Model.PlacementStats)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-bold">@p.SlotKey</td>
+                                    <td class="text-secondary">@p.CreativeType</td>
+                                    <td class="text-end">@p.Impressions.ToString("N0")</td>
+                                    <td class="text-end">@p.Clicks.ToString("N0")</td>
+                                    <td class="text-end fw-bold @(p.Ctr >= 2 ? "text-success" : "text-secondary")">
+                                        @p.Ctr.ToString("N2")%
+                                    </td>
+                                    <td class="text-center">
+                                        @if (p.IsActive)
+                                        {
+                                            <span class="badge bg-success-soft text-success">Aktif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger-soft text-danger">Pasif</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-secondary">
+                                    <h5>Henüz yerleşim verisi yok</h5>
+                                    <p class="small">Reklam yerleşimleriniz aktif hale gelince burada görüntülenir.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@if (Model.DailyStats.Any())
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        (function () {
+            var labels = [@Html.Raw(string.Join(",", Model.DailyStats.Select(d => $"'{d.Date:yyyy-MM-dd}'")))];
+            var impressions = [@string.Join(",", Model.DailyStats.Select(d => d.Impressions))];
+            var clicks = [@string.Join(",", Model.DailyStats.Select(d => d.Clicks))];
+
+            new Chart(document.getElementById('dailyChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Gösterim',
+                            data: impressions,
+                            backgroundColor: 'rgba(99,102,241,0.6)',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Tıklama',
+                            data: clicks,
+                            backgroundColor: 'rgba(52,211,153,0.7)',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+                }
+            });
+        })();
+    </script>
+}
