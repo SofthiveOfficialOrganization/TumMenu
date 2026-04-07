@@ -1,0 +1,30 @@
+@using Application.BlogPosts.DTOs
+@using Application.Common.Base.DTOs
+@model PaginatedListDTO<BlogPostListDTO>
+@{
+    var tag = ViewBag.Tag as string;
+    ViewData["Title"] = $"{tag} — Blog";
+}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Etiket: @tag</h1>
+        <div class="blog-grid">
+            @foreach (var post in Model.Items)
+            {
+                <article class="blog-card">
+                    <div class="blog-card__body">
+                        <h2 class="blog-card__title">
+                            <a href="/blog/@post.Slug">@post.Title</a>
+                        </h2>
+                        <p class="blog-card__summary">@post.Summary</p>
+                        <time datetime="@post.PublishedAt.ToString("yyyy-MM-dd")">
+                            @post.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                        </time>
+                    </div>
+                </article>
+            }
+        </div>
+        <a href="/blog" class="btn btn--secondary">← Tüm Yazılar</a>
+    </div>
+</section>

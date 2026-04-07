@@ -1,0 +1,54 @@
+@using Application.BlogPosts.DTOs
+@using Application.Common.Base.DTOs
+@model PaginatedListDTO<BlogPostListDTO>
+@{
+    ViewData["Title"] = "Blog";
+    ViewData["Description"] = "Restoran, QR menü ve yemek kültürü hakkında faydalı yazılar.";
+}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Blog</h1>
+        <p class="section-lead">Restoran işletmeciliği, dijital menü ve yemek kültürü hakkında yazılar.</p>
+
+        <div class="blog-grid">
+            @foreach (var post in Model.Items)
+            {
+                <article class="blog-card">
+                    @if (!string.IsNullOrEmpty(post.CoverImageUrl))
+                    {
+                        <img src="@post.CoverImageUrl" alt="@post.Title" class="blog-card__image" />
+                    }
+                    <div class="blog-card__body">
+                        <h2 class="blog-card__title">
+                            <a href="/blog/@post.Slug">@post.Title</a>
+                        </h2>
+                        <p class="blog-card__summary">@post.Summary</p>
+                        <time class="blog-card__date" datetime="@post.PublishedAt.ToString("yyyy-MM-dd")">
+                            @post.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                        </time>
+                        @if (!string.IsNullOrEmpty(post.Tags))
+                        {
+                            <div class="blog-card__tags">
+                                @foreach (var tag in post.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <a href="/blog/etiket/@tag.Trim()" class="blog-tag">@tag.Trim()</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+
+        @if (Model.Pages > 1)
+        {
+            <nav class="pagination">
+                @for (int i = 1; i <= Model.Pages; i++)
+                {
+                    <a href="/blog?page=@i" class="pagination__item @(i == Model.Index ? "pagination__item--active" : "")">@i</a>
+                }
+            </nav>
+        }
+    </div>
+</section>

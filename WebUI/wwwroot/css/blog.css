@@ -1,0 +1,114 @@
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.blog-card {
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-card__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.blog-card__body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.blog-card__title a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.blog-card__summary {
+    color: var(--color-muted, #6b7280);
+    font-size: 0.95rem;
+}
+
+.blog-card__date {
+    font-size: 0.85rem;
+    color: var(--color-muted, #6b7280);
+}
+
+.blog-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+}
+
+.blog-tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--color-primary-light, #eff6ff);
+    color: var(--color-primary, #2563eb);
+    border-radius: 9999px;
+    text-decoration: none;
+}
+
+.blog-post__container {
+    max-width: 780px;
+}
+
+.blog-post__header {
+    margin-bottom: 1.5rem;
+}
+
+.blog-post__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.blog-post__cover {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.blog-post__content {
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+}
+
+.blog-post__content h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; }
+.blog-post__content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+.blog-post__content p { margin-bottom: 1rem; }
+.blog-post__content ul, .blog-post__content ol { margin: 1rem 0 1rem 1.5rem; }
+
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.pagination__item {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 0.4rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.pagination__item--active {
+    background: var(--color-primary, #2563eb);
+    color: #fff;
+    border-color: var(--color-primary, #2563eb);
+}

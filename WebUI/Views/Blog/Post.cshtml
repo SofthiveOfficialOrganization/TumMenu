@@ -1,0 +1,46 @@
+@using Application.BlogPosts.DTOs
+@model BlogPostDTO
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["Description"] = Model.Summary;
+}
+
+@section Head {
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "Article",
+      "headline": "@Model.Title",
+      "description": "@Model.Summary",
+      "datePublished": "@Model.PublishedAt.ToString("yyyy-MM-dd")"
+    }
+    </script>
+}
+
+<article class="blog-post section">
+    <div class="container blog-post__container">
+        <header class="blog-post__header">
+            <h1 class="blog-post__title">@Model.Title</h1>
+            <time datetime="@Model.PublishedAt.ToString("yyyy-MM-dd")">
+                @Model.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+            </time>
+            @if (!string.IsNullOrEmpty(Model.Tags))
+            {
+                <div class="blog-card__tags">
+                    @foreach (var tag in Model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <a href="/blog/etiket/@tag.Trim()" class="blog-tag">@tag.Trim()</a>
+                    }
+                </div>
+            }
+        </header>
+        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+        {
+            <img src="@Model.CoverImageUrl" alt="@Model.Title" class="blog-post__cover" />
+        }
+        <div class="blog-post__content">
+            @Html.Raw(Model.Content)
+        </div>
+        <a href="/blog" class="btn btn--secondary">← Tüm Yazılar</a>
+    </div>
+</article>

@@ -1,0 +1,44 @@
+@using Application.BlogPosts.DTOs
+@using Application.Common.Base.DTOs
+@model PaginatedListDTO<BlogPostListDTO>
+@{
+    ViewData["Title"] = "Blog Yazıları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Blog Yazıları</h1>
+        <a asp-action="Create" class="btn btn-primary">+ Yeni Yazı</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Başlık</th>
+                <th>Yayın Tarihi</th>
+                <th>Durum</th>
+                <th>Etiketler</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model.Items)
+            {
+                <tr>
+                    <td><a href="/blog/@post.Slug" target="_blank">@post.Title</a></td>
+                    <td>@post.PublishedAt.ToString("dd.MM.yyyy")</td>
+                    <td>@(post.IsPublished ? "Yayında" : "Taslak")</td>
+                    <td>@post.Tags</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-outline-secondary">Düzenle</a>
+                        <form asp-action="Delete" asp-route-id="@post.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

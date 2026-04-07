@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true" />
 
     @RenderSection("Head", required: false)
     
@@ -81,6 +82,7 @@
                 <a href="/ne-yesem" class="site-header__nav-link">Ne yesem?</a>
                 <a href="/restoranlar" class="site-header__nav-link">Restoranlar</a>
                 <a href="/fiyatlandirma" class="site-header__nav-link">Fiyatlandırma</a>
+                <a href="/blog" class="site-header__nav-link">Blog</a>
             
             </nav>
 
@@ -109,6 +111,7 @@
                 <a class="site-header__mobile-link" href="/ne-yesem">Ne yesem?</a>
                 <a class="site-header__mobile-link" href="/restoranlar">Restoranlar</a>
                 <a class="site-header__mobile-link" href="/fiyatlandirma">Fiyatlandırma</a>
+                <a class="site-header__mobile-link" href="/blog">Blog</a>
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {
                     <a class="site-header__mobile-link" href="/qr-kod">QR'lı Ol</a>

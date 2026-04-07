@@ -1,0 +1,41 @@
+@using Application.BlogPosts.Commands
+@model UpdateBlogPostCommand
+@{
+    ViewData["Title"] = "Blog Yazısını Düzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4" style="max-width:900px">
+    <h1>Blog Yazısını Düzenle</h1>
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="Id" type="hidden" />
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Başlık</label>
+            <input asp-for="Title" class="form-control" required />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Summary" class="form-label">Özet</label>
+            <textarea asp-for="Summary" class="form-control" rows="3" maxlength="500"></textarea>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Content" class="form-label">İçerik (HTML)</label>
+            <textarea asp-for="Content" class="form-control" rows="20"></textarea>
+        </div>
+        <div class="mb-3">
+            <label asp-for="CoverImageUrl" class="form-label">Kapak Görseli URL</label>
+            <input asp-for="CoverImageUrl" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Tags" class="form-label">Etiketler</label>
+            <input asp-for="Tags" class="form-control" />
+        </div>
+        <div class="mb-3 form-check">
+            <input asp-for="IsPublished" class="form-check-input" type="checkbox" />
+            <label asp-for="IsPublished" class="form-check-label">Yayında</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

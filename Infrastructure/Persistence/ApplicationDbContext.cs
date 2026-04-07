@@ -70,6 +70,9 @@ namespace Infrastructure.Persistence
 		public DbSet<AdClick> AdClicks => Set<AdClick>();
 		public DbSet<AdRevenueImport> AdRevenueImports => Set<AdRevenueImport>();
 
+		// Blog
+		public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
+
 		// Misc
 		public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 		public DbSet<Notification> Notifications => Set<Notification>();
