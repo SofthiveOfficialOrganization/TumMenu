@@ -4,27 +4,59 @@
 @{
     var tag = ViewBag.Tag as string;
     ViewData["Title"] = $"{tag} — Blog";
+    ViewData["Description"] = $"{tag} etiketi altındaki blog yazıları.";
 }
 
-<section class="section">
-    <div class="container">
-        <h1 class="section-title">Etiket: @tag</h1>
-        <div class="blog-grid">
-            @foreach (var post in Model.Items)
-            {
-                <article class="blog-card">
-                    <div class="blog-card__body">
-                        <h2 class="blog-card__title">
-                            <a href="/blog/@post.Slug">@post.Title</a>
-                        </h2>
-                        <p class="blog-card__summary">@post.Summary</p>
-                        <time datetime="@post.PublishedAt.ToString("yyyy-MM-dd")">
-                            @post.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
-                        </time>
-                    </div>
-                </article>
-            }
-        </div>
-        <a href="/blog" class="btn btn--secondary">← Tüm Yazılar</a>
+<section class="blog-hero blog-hero--compact" aria-labelledby="blog-tag-hero-heading">
+    <div class="container blog-hero__inner">
+        <header>
+            <p class="blog-hero__eyebrow">Etiket Görünümü</p>
+            <h1 id="blog-tag-hero-heading" class="blog-hero__title">Etiket: @tag</h1>
+            <p class="section__subtitle blog-hero__subtitle">Bu etikete ait tüm içerikler aşağıda listelenmiştir.</p>
+        </header>
     </div>
 </section>
+
+<section class="section blog-content-section">
+    <div class="container blog-page">
+        @if (Model.Items.Any())
+        {
+            <div class="blog-grid">
+                @foreach (var post in Model.Items)
+                {
+                    <article class="blog-card">
+                        <img src="@(string.IsNullOrEmpty(post.CoverImageUrl) ? "/images/hero-illustration-customer.png" : post.CoverImageUrl)" alt="@post.Title" class="blog-card__image" />
+                        <div class="blog-card__body">
+                            <h2 class="blog-card__title">@post.Title</h2>
+                            <p class="blog-card__summary">@post.Summary</p>
+                            <time class="blog-card__date" datetime="@post.PublishedAt.ToString("yyyy-MM-dd")">
+                                @post.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                            </time>
+                        </div>
+                        <a href="/blog/@post.Slug" class="blog-card__hit" aria-label="@post.Title"></a>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="blog-empty">
+                <h2>Bu etikette henüz yazı yok</h2>
+                <p>Farklı etiketleri inceleyebilir veya tüm blog yazılarına dönebilirsiniz.</p>
+            </div>
+        }
+
+        @if (Model.Pages > 1)
+        {
+            <nav class="pagination" aria-label="Etiket sayfalandırma">
+                @for (int i = 1; i <= Model.Pages; i++)
+                {
+                    <a href="/blog/etiket/@tag?page=@i" class="pagination__item @(i == Model.Index ? "pagination__item--active" : "")">@i</a>
+                }
+            </nav>
+        }
+
+        <a href="/blog" class="btn btn--ghost blog-back-link">← Tüm Yazılar</a>
+    </div>
+</section>
+

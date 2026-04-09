@@ -112,7 +112,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             var turnstileResult = await _turnstileService.ValidateAsync(turnstileToken);
             if (!turnstileResult.Success)
             {
-                ModelState.AddModelError("Turnstile", "Human verification failed. Please try again.");
+                ModelState.AddModelError(string.Empty, "İnsan doğrulaması başarısız. Lütfen tekrar deneyin.");
                 return Page();
             }
 

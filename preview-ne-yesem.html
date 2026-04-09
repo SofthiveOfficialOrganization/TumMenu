@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ne Yesem Preview</title>
+    <link rel="stylesheet" href="WebUI/wwwroot/css/global.css" />
+    <link rel="stylesheet" href="WebUI/wwwroot/css/footer-header.css" />
+    <link rel="stylesheet" href="WebUI/wwwroot/css/site.css" />
+    <link rel="stylesheet" href="WebUI/wwwroot/css/WhatToEat.css" />
+</head>
+<body class="app-shell">
+    <main id="main-content">
+        <div class="wte-page">
+            <section class="wte-hero" aria-labelledby="wte-hero-heading">
+                <div class="container wte-hero__inner">
+                    <div class="wte-hero__content">
+                        <p class="wte-hero__eyebrow">Karar destek araci</p>
+                        <h1 id="wte-hero-heading" class="wte-hero__title">Bugun ne yesem sorusunu hizli cozelim.</h1>
+                        <p class="wte-hero__subtitle">
+                            Ruh haline, hizina ve butcene gore daha net bir secim yap. Restoranlar sayfasindaki
+                            arama mantigini tamamlayan sade bir karar deneyimi.
+                        </p>
+
+                        <div class="wte-hero__actions">
+                            <button class="wte-btn wte-btn--primary" id="wte-quick-suggest" type="button">Hemen oner</button>
+                            <button class="wte-btn wte-btn--secondary" id="wte-custom-flow" type="button">Tercihlerimi sec</button>
+                        </div>
+
+                        <div class="wte-hero__meta" aria-label="Sayfa avantajlari">
+                            <div class="wte-meta-card">
+                                <strong>3 adim</strong>
+                                <span>Tercih sec, oneriyi al, alternatifi karsilastir.</span>
+                            </div>
+                            <div class="wte-meta-card">
+                                <strong>Dengeli ton</strong>
+                                <span>Abartili animasyonlar yerine net ve hizli karar akisi.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="wte-hero__panel" aria-label="Karar ozeti">
+                        <div class="wte-panel">
+                            <p class="wte-panel__label">Bugunku akisin</p>
+                            <ol class="wte-panel__steps">
+                                <li>Tercih etiketlerini sec.</li>
+                                <li>Secimi calistir.</li>
+                                <li>Uc oneriden birini karar listene al.</li>
+                            </ol>
+                            <div class="wte-panel__highlight">
+                                <span class="wte-panel__highlight-label">Secim modu</span>
+                                <strong id="wte-fun-text">Standart oneriler hazir.</strong>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="wte-section wte-preferences" id="wte-chips-area" aria-labelledby="wte-chips-heading">
+                <div class="container">
+                    <div class="wte-section-heading">
+                        <p class="wte-section-heading__eyebrow">Tercihler</p>
+                        <h2 id="wte-chips-heading" class="wte-section-heading__title">Bugun nasil bir secim istiyorsun?</h2>
+                    </div>
+                    <div class="wte-preferences__card">
+                        <div class="wte-chips__wrap" id="wte-chips-wrap">
+                            <button class="wte-chip" data-tag="hafif" type="button">Hafif</button>
+                            <button class="wte-chip" data-tag="aci" type="button">Acili</button>
+                            <button class="wte-chip" data-tag="tatli" type="button">Tatli</button>
+                            <button class="wte-chip" data-tag="vegan" type="button">Vegan</button>
+                            <button class="wte-chip" data-tag="hizli" type="button">Hizli</button>
+                            <button class="wte-chip" data-tag="ekonomik" type="button">Ekonomik</button>
+                            <button class="wte-chip" data-tag="protein" type="button">Protein agirlikli</button>
+                        </div>
+                        <p class="wte-preferences__hint">Bir veya birden fazla tercih secerek onerileri daraltabilirsin.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wte-section wte-decision" id="wte-wheel-area" aria-labelledby="wte-wheel-heading">
+                <div class="container wte-decision__layout">
+                    <div class="wte-decision__wheel-card">
+                        <div class="wte-section-heading">
+                            <p class="wte-section-heading__eyebrow">Hizli karar</p>
+                            <h2 id="wte-wheel-heading" class="wte-section-heading__title">Kararsiz kaldiginda secimi sistem yapsin.</h2>
+                        </div>
+                        <div class="wte-wheel-container">
+                            <div class="wte-wheel__pointer"></div>
+                            <div class="wte-wheel" id="wte-wheel">
+                                <div class="wte-wheel__face">
+                                    <span class="wte-wheel__label">Pizza</span>
+                                    <span class="wte-wheel__label">Salata</span>
+                                    <span class="wte-wheel__label">Burger</span>
+                                    <span class="wte-wheel__label">Corba</span>
+                                    <span class="wte-wheel__label">Durum</span>
+                                    <span class="wte-wheel__label">Sushi</span>
+                                    <span class="wte-wheel__label">Guvec</span>
+                                    <span class="wte-wheel__label">Makarna</span>
+                                </div>
+                                <div class="wte-wheel__center">TM</div>
+                            </div>
+                        </div>
+                        <button class="wte-spin-btn" id="wte-spin-btn" type="button">Onerileri getir</button>
+                    </div>
+
+                    <aside class="wte-decision__info-card" aria-label="Karar notlari">
+                        <div class="wte-note-card">
+                            <h3 class="wte-note-card__title">Bu alan ne yapiyor?</h3>
+                            <p class="wte-note-card__text">Secili etiketlere gore havuzu daraltir, sonra sana uc guclu alternatif cikarir.</p>
+                        </div>
+                        <div class="wte-note-card">
+                            <h3 class="wte-note-card__title">Karar prensibi</h3>
+                            <ul class="wte-note-card__list">
+                                <li>Net ve tekrar etmeyen oneriler</li>
+                                <li>Butceye gore ikinci bir filtre</li>
+                                <li>Markanin genel tasarim diliyle uyumlu, sakin arayuz</li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="wte-section wte-results" id="wte-results" aria-labelledby="wte-results-heading">
+                <div class="container">
+                    <div class="wte-results__header">
+                        <div>
+                            <p class="wte-section-heading__eyebrow">Oneriler</p>
+                            <h2 id="wte-results-heading" class="wte-results__title">Bugun icin secilmis alternatifler</h2>
+                        </div>
+                        <p class="wte-results__fun" id="wte-results-fun">Secim listesi hazir.</p>
+                    </div>
+
+                    <div class="wte-results__grid" id="wte-results-grid">
+                        <div class="wte-result-card is-visible">
+                            <div class="wte-result-card__top">
+                                <span class="wte-result-card__emoji">🍕</span>
+                                <div>
+                                    <h3 class="wte-result-card__name">Margarita Pizza</h3>
+                                    <span class="wte-result-card__label">onerilen secim</span>
+                                </div>
+                            </div>
+                            <p class="wte-result-card__reason"><strong>Neden uygun?</strong> Klasik, hizli ve risksiz bir secim.</p>
+                            <div class="wte-result-card__actions">
+                                <button class="wte-btn wte-btn--ghost" type="button">Alternatif getir</button>
+                                <button class="wte-btn wte-btn--ghost" type="button">Paylas</button>
+                            </div>
+                        </div>
+
+                        <div class="wte-result-card is-visible">
+                            <div class="wte-result-card__top">
+                                <span class="wte-result-card__emoji">🥗</span>
+                                <div>
+                                    <h3 class="wte-result-card__name">Caesar Salata</h3>
+                                    <span class="wte-result-card__label">onerilen secim</span>
+                                </div>
+                            </div>
+                            <p class="wte-result-card__reason"><strong>Neden uygun?</strong> Daha hafif ama doygunluk hissi veren bir alternatif.</p>
+                            <div class="wte-result-card__actions">
+                                <button class="wte-btn wte-btn--ghost" type="button">Alternatif getir</button>
+                                <button class="wte-btn wte-btn--ghost" type="button">Paylas</button>
+                            </div>
+                        </div>
+
+                        <div class="wte-result-card is-visible">
+                            <div class="wte-result-card__top">
+                                <span class="wte-result-card__emoji">🌯</span>
+                                <div>
+                                    <h3 class="wte-result-card__name">Tavuk Durum</h3>
+                                    <span class="wte-result-card__label">onerilen secim</span>
+                                </div>
+                            </div>
+                            <p class="wte-result-card__reason"><strong>Neden uygun?</strong> Hizli, pratik ve gun ortasi icin kuvvetli bir secim.</p>
+                            <div class="wte-result-card__actions">
+                                <button class="wte-btn wte-btn--ghost" type="button">Alternatif getir</button>
+                                <button class="wte-btn wte-btn--ghost" type="button">Paylas</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wte-section wte-extras" aria-labelledby="wte-extras-heading">
+                <div class="container">
+                    <div class="wte-section-heading">
+                        <p class="wte-section-heading__eyebrow">Ek filtreler</p>
+                        <h2 id="wte-extras-heading" class="wte-section-heading__title">Karari biraz daha keskinlestir.</h2>
+                    </div>
+                    <div class="wte-extras__grid">
+                        <div class="wte-extra-card">
+                            <div class="wte-extra-card__header">
+                                <span class="wte-extra-card__icon">01</span>
+                                <h3 class="wte-extra-card__title">One cikan tabaklar</h3>
+                            </div>
+                            <ul class="wte-trend-list">
+                                <li class="wte-trend-item"><span class="wte-trend-item__rank">01</span><span>Margarita Pizza</span></li>
+                                <li class="wte-trend-item"><span class="wte-trend-item__rank">02</span><span>Tavuk Durum</span></li>
+                                <li class="wte-trend-item"><span class="wte-trend-item__rank">03</span><span>Cheese Burger</span></li>
+                                <li class="wte-trend-item"><span class="wte-trend-item__rank">04</span><span>Mercimek Corbasi</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="wte-extra-card">
+                            <div class="wte-extra-card__header">
+                                <span class="wte-extra-card__icon">MS</span>
+                                <h3 class="wte-extra-card__title">Mevsime gore</h3>
+                            </div>
+                            <div class="wte-season-card" id="wte-season-card">
+                                <div class="wte-season-item"><span class="wte-season-item__icon">K</span><span>Kis: sicak corba ve guvec</span></div>
+                                <div class="wte-season-item is-highlighted"><span class="wte-season-item__icon">I</span><span>Ilkbahar: salata ve wrap</span></div>
+                                <div class="wte-season-item"><span class="wte-season-item__icon">Y</span><span>Yaz: hafif tabaklar ve smoothie</span></div>
+                                <div class="wte-season-item"><span class="wte-season-item__icon">S</span><span>Sonbahar: firin yemekleri</span></div>
+                            </div>
+                        </div>
+
+                        <div class="wte-extra-card">
+                            <div class="wte-extra-card__header">
+                                <span class="wte-extra-card__icon">₺</span>
+                                <h3 class="wte-extra-card__title">Butce araligi</h3>
+                            </div>
+                            <div class="wte-budget__display">
+                                <span class="wte-budget__amount">₺100</span>
+                                <span class="wte-budget__label">kisi basi ortalama</span>
+                            </div>
+                            <input type="range" class="wte-budget__slider" min="30" max="500" value="100" />
+                            <div class="wte-budget__range-labels"><span>₺30</span><span>₺500+</span></div>
+                            <div class="wte-budget__suggestions">
+                                <div class="wte-budget__suggestion"><span>🍕</span><span style="flex:1">Pizza</span><span>₺80</span></div>
+                                <div class="wte-budget__suggestion"><span>🌯</span><span style="flex:1">Tavuk Durum</span><span>₺75</span></div>
+                                <div class="wte-budget__suggestion"><span>🍝</span><span style="flex:1">Makarna</span><span>₺65</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

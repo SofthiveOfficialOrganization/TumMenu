@@ -21,6 +21,8 @@
     const filterPanel = document.getElementById('filterPanel');
     const filterToggle = document.getElementById('filterToggle');
     const locReqEl = document.getElementById('locationRequiredState');
+    const mapPermissionWarningEl = document.getElementById('restMapPermissionWarning');
+    const mapPermissionWarningDismissBtn = document.getElementById('restMapPermissionWarningDismiss');
 
     // ── Map State ──
     let restMap = null;
@@ -124,6 +126,20 @@
         }
     }
 
+    function showMapPermissionWarning() {
+        if (mapPermissionWarningEl) {
+            mapPermissionWarningEl.classList.add('is-visible');
+            mapPermissionWarningEl.hidden = false;
+        }
+    }
+
+    function hideMapPermissionWarning() {
+        if (mapPermissionWarningEl) {
+            mapPermissionWarningEl.classList.remove('is-visible');
+            mapPermissionWarningEl.hidden = true;
+        }
+    }
+
     function renderSelectedCategories() {
         const $select = $('#categoryInput');
         const $container = $('#selectedCategories');
@@ -172,6 +188,7 @@
 
             restMap.on('click', function(e) {
                 const pos = e.latlng;
+                hideMapPermissionWarning();
                 if (!restMarker) {
                     restMarker = L.marker([pos.lat, pos.lng], { draggable: true }).addTo(restMap);
                     bindMarkerDrag();
@@ -215,6 +232,7 @@
     }
 
     function updateLocationFromMarker(lat, lng) {
+        hideMapPermissionWarning();
         state.userLat = lat;
         state.userLng = lng;
         
@@ -282,6 +300,12 @@
             state.page = 0;
             doSearch(false);
         });
+
+        if (mapPermissionWarningDismissBtn) {
+            mapPermissionWarningDismissBtn.addEventListener('click', function () {
+                hideMapPermissionWarning();
+            });
+        }
 
         // Category Select2
         $('#categoryInput').on('change', function () {
@@ -398,6 +422,7 @@
         }
 
         cityInput.addEventListener('change', function() {
+            hideMapPermissionWarning();
             var selectedOpt = cityInput.options[cityInput.selectedIndex];
             state.cityId = selectedOpt.value;
             state.cityName = selectedOpt.dataset.name || '';
@@ -436,6 +461,7 @@
         });
 
         districtInput.addEventListener('change', function() {
+            hideMapPermissionWarning();
             var selectedOpt = districtInput.options[districtInput.selectedIndex];
             state.districtId = selectedOpt.value;
             state.districtName = selectedOpt.dataset.name || '';
@@ -513,6 +539,7 @@
                     buttonId: 'useMapLocationBtn',
                     showErrorPopup: false, // Popup gösterme, sadece log yap
                     onSuccess: function (position) {
+                        hideMapPermissionWarning();
                         state.userLat = position.coords.latitude;
                         state.userLng = position.coords.longitude;
                         
@@ -531,13 +558,12 @@
                     },
                     onError: function (error, message) {
                         console.warn('Geolocation error:', { code: error.code, message: error.message });
-                        
-                        // Sadece ciddi hatalarda ve elimizde konum yoksa popup göster
-                        if ((error.code === 1 || error.code === 2) && !state.userLat) {
-                            window.locationService.showErrorPopup(message);
+                        if (error && error.code === 1) {
+                            showMapPermissionWarning();
                         }
-                        
-                        if (!state.cityId && !state.userLat) {
+
+                        // Ana sayfadaki davranışla aynı: popup yok, yalnızca gerçekten konum yoksa boş durum.
+                        if (!state.cityId && !state.userLat && !state.userLng) {
                             showLocationRequiredState();
                         }
                     }
@@ -579,6 +605,7 @@
 
         // Clear all
         clearBtn.addEventListener('click', function () {
+            hideMapPermissionWarning();
             searchInput.value = '';
             cityInput.value = '';
             districtInput.value = '';
@@ -700,6 +727,7 @@
                 enableHighAccuracy: true,
                 showErrorPopup: false, // Hataları manuel handle et
                 onSuccess: function (position) {
+                    hideMapPermissionWarning();
                     state.userLat = position.coords.latitude;
                     state.userLng = position.coords.longitude;
                     
@@ -726,27 +754,22 @@
                 },
                 onError: function (error, message) {
                     console.warn('Geolocation error:', { code: error.code, message: error.message });
-                    
-                    // Sadece ciddi hatalarda popup göster - timeout ve geçici hatalarda gösterme
-                    if (forcePrompt && error.code === 1 && !state.userLat) { // Sadece permission denied ve konum yoksa
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Konum İzni Gerekli',
-                            text: 'Konumunuzu kullanabilmemiz için tarayıcı ayarlarından izin vermeniz gerekmektedir.',
-                            timer: 4000,
-                            showConfirmButton: false
-                        });
+                    if (error && error.code === 1) {
+                        showMapPermissionWarning();
                     }
-                    
-                    // Diğer hatalarda sessizce devam et veya state'i temizle
-                    if (!state.cityId && !state.userLat) {
+
+                    // Restoran sayfasında hata popup'ı göstermeyelim; yalnızca konum yoksa boş durum göster.
+                    if (!state.cityId && !state.userLat && !state.userLng) {
                         showLocationRequiredState();
                     }
                     if (callback) callback();
                 }
             }).catch(function(error) {
                 console.warn('Location request failed:', error);
-                if (!state.cityId && !state.userLat) {
+                if (error && error.code === 1) {
+                    showMapPermissionWarning();
+                }
+                if (!state.cityId && !state.userLat && !state.userLng) {
                     showLocationRequiredState();
                 }
                 if (callback) callback();

@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = Model.Title;
     ViewData["Description"] = Model.Summary;
+    var plainText = System.Text.RegularExpressions.Regex.Replace(Model.Content ?? string.Empty, "<.*?>", " ");
+    var wordCount = plainText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+    var readMinutes = Math.Max(1, (int)Math.Ceiling(wordCount / 220.0));
 }
 
 @section Head {
@@ -19,14 +22,21 @@
 
 <article class="blog-post section">
     <div class="container blog-post__container">
-        <header class="blog-post__header">
+        <a href="/blog" class="btn btn--ghost blog-back-link">← Tüm Yazılar</a>
+
+        <header class="blog-post__hero">
+            <p class="blog-post__eyebrow">TumMenu Blog</p>
             <h1 class="blog-post__title">@Model.Title</h1>
-            <time datetime="@Model.PublishedAt.ToString("yyyy-MM-dd")">
-                @Model.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
-            </time>
+            <p class="blog-post__lead">@Model.Summary</p>
+            <div class="blog-post__meta">
+                <time class="blog-post__meta-pill" datetime="@Model.PublishedAt.ToString("yyyy-MM-dd")">
+                    @Model.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
+                </time>
+                <span class="blog-post__meta-pill">@readMinutes dk okuma</span>
+            </div>
             @if (!string.IsNullOrEmpty(Model.Tags))
             {
-                <div class="blog-card__tags">
+                <div class="blog-card__tags blog-post__tags">
                     @foreach (var tag in Model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
                     {
                         <a href="/blog/etiket/@tag.Trim()" class="blog-tag">@tag.Trim()</a>
@@ -34,13 +44,19 @@
                 </div>
             }
         </header>
-        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-        {
-            <img src="@Model.CoverImageUrl" alt="@Model.Title" class="blog-post__cover" />
-        }
-        <div class="blog-post__content">
-            @Html.Raw(Model.Content)
+
+        <div class="blog-post__cover-wrap">
+            <img src="@(string.IsNullOrEmpty(Model.CoverImageUrl) ? "/images/hero-illustration.png" : Model.CoverImageUrl)" alt="@Model.Title" class="blog-post__cover" />
         </div>
-        <a href="/blog" class="btn btn--secondary">← Tüm Yazılar</a>
+
+        <section class="blog-post__content">
+            @Html.Raw(Model.Content)
+        </section>
+
+        <div class="blog-post__footer">
+            <p>Bu yazıyı faydalı bulduysan diğer rehberlere de göz atabilirsin.</p>
+            <a href="/blog" class="btn btn--primary">Diğer Yazılar</a>
+        </div>
     </div>
 </article>
+

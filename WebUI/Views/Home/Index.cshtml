@@ -19,6 +19,56 @@
             border-radius: 12px;
             z-index: 1;
         }
+
+        .home-map-permission-warning {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 1010;
+            max-width: min(360px, calc(100% - 24px));
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(187, 15, 15, 0.25);
+            background: rgba(255, 248, 248, 0.94);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            color: #7b1111;
+        }
+
+        .home-map-permission-warning.is-visible {
+            display: flex;
+        }
+
+        .home-map-permission-warning strong {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .home-map-permission-warning span {
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .home-map-permission-warning__dismiss {
+            align-self: flex-start;
+            margin-top: 4px;
+            border: 1px solid rgba(123, 17, 17, 0.35);
+            background: #fff;
+            color: #7b1111;
+            border-radius: 9px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .home-map-permission-warning__dismiss:hover {
+            background: rgba(123, 17, 17, 0.08);
+        }
     </style>
 }
 
@@ -113,6 +163,11 @@
 
         <div class="search-layout__map">
             <div class="map-card" style="height: 350px; position: relative;">
+                <div id="homeMapPermissionWarning" class="home-map-permission-warning" hidden>
+                    <strong>Konum izni kapalı</strong>
+                    <span>Tarayıcı ayarlarından izin verip tekrar "Konumumu Bul" butonuna basın.</span>
+                    <button id="homeMapPermissionWarningDismiss" type="button" class="home-map-permission-warning__dismiss">Tamam</button>
+                </div>
                 <div id="homeRestMap"></div>
                 <button id="homeUseMyLocation" type="button" style="position: absolute; bottom: 20px; right: 12px; z-index: 1000; background: #fff; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-primary); transition: all 0.2s;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -491,6 +546,28 @@
           let homeMap = null;
           let homeUserMarker = null;
           let homeStoreLayerGroup = null;
+          const homePermissionWarningEl = document.getElementById('homeMapPermissionWarning');
+          const homePermissionWarningDismissBtn = document.getElementById('homeMapPermissionWarningDismiss');
+
+          function showHomePermissionWarning() {
+            if (homePermissionWarningEl) {
+              homePermissionWarningEl.classList.add('is-visible');
+              homePermissionWarningEl.hidden = false;
+            }
+          }
+
+          function hideHomePermissionWarning() {
+            if (homePermissionWarningEl) {
+              homePermissionWarningEl.classList.remove('is-visible');
+              homePermissionWarningEl.hidden = true;
+            }
+          }
+
+          if (homePermissionWarningDismissBtn) {
+            homePermissionWarningDismissBtn.addEventListener('click', function () {
+              hideHomePermissionWarning();
+            });
+          }
 
           function initHomeCategorySelect2() {
             if ($('#homeCategoryInput').length) {
@@ -559,6 +636,7 @@
                     homeUserMarker = L.marker([lat, lng], { draggable: true }).addTo(homeMap);
                     homeUserMarker.on('dragend', function() {
                         const pos = homeUserMarker.getLatLng();
+                        hideHomePermissionWarning();
                         fetchNearbyStores(pos.lat, pos.lng);
                     });
                 }
@@ -569,11 +647,13 @@
                         homeUserMarker = L.marker([pos.lat, pos.lng], { draggable: true }).addTo(homeMap);
                         homeUserMarker.on('dragend', function() {
                             const pos = homeUserMarker.getLatLng();
+                            hideHomePermissionWarning();
                             fetchNearbyStores(pos.lat, pos.lng);
                         });
                     } else {
                         homeUserMarker.setLatLng(pos);
                     }
+                    hideHomePermissionWarning();
                     fetchNearbyStores(pos.lat, pos.lng);
                 });
             } else {
@@ -583,6 +663,7 @@
                         homeUserMarker = L.marker([lat, lng], { draggable: true }).addTo(homeMap);
                         homeUserMarker.on('dragend', function() {
                            const pos = homeUserMarker.getLatLng();
+                           hideHomePermissionWarning();
                            fetchNearbyStores(pos.lat, pos.lng);
                         });
                     } else {
@@ -668,6 +749,7 @@
                 showErrorPopup: false, // Handle errors manually
                 onSuccess: function (position) {
                     if (btn) btn.innerHTML = originalContent;
+                    hideHomePermissionWarning();
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     initHomeMap(lat, lng, 13);
@@ -676,6 +758,9 @@
                 onError: function (error, message) {
                     console.warn('Geolocation error:', { code: error.code, message: error.message });
                     if (btn) btn.innerHTML = originalContent;
+                    if (error && error.code === 1) {
+                        showHomePermissionWarning();
+                    }
                     
                     // Fallback to default location
                     initHomeMap(41.0082, 28.9784, 12);
@@ -684,6 +769,9 @@
             }).catch(function(error) {
                 console.warn('Location request failed:', error);
                 if (btn) btn.innerHTML = originalContent;
+                if (error && error.code === 1) {
+                    showHomePermissionWarning();
+                }
                 initHomeMap(41.0082, 28.9784, 12);
                 fetchNearbyStores(41.0082, 28.9784);
             });
@@ -691,7 +779,20 @@
 
           function setupHomepage() {
             initHomeCategorySelect2();
-            requestHomeUserLocation();
+
+            // Sayfa açılışında izin isteme: varsa cache konumu kullan, yoksa default konuma düş.
+            const cachedPosition = window.locationService?.getCachedPosition?.();
+            if (cachedPosition?.coords?.latitude && cachedPosition?.coords?.longitude) {
+                const lat = cachedPosition.coords.latitude;
+                const lng = cachedPosition.coords.longitude;
+                initHomeMap(lat, lng, 13);
+                fetchNearbyStores(lat, lng);
+            } else {
+                const defaultLat = 41.0082;
+                const defaultLng = 28.9784;
+                initHomeMap(defaultLat, defaultLng, 12);
+                fetchNearbyStores(defaultLat, defaultLng);
+            }
           }
 
           // Initial setup

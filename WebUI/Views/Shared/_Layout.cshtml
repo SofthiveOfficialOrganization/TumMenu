@@ -1,6 +1,7 @@
 @{
     var pageTitle = ViewData["Title"] as string ?? "Tüm Menü";
     var fullTitle = $"{pageTitle} | Tüm Menü";
+    var bodyClass = ViewData["BodyClass"] as string ?? string.Empty;
 
     var description = ViewData["Description"] as string
         ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
@@ -67,7 +68,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </head>
-<body class="app-shell @RenderSection("BodyClass", required: false)">
+<body class="app-shell @bodyClass">
     <!-- HEADER -->
     <header class="site-header" role="banner">
         <div class="container site-header__inner">
@@ -81,7 +82,7 @@
             <nav class="site-header__nav" aria-label="Ana menü">
                 <a href="/ne-yesem" class="site-header__nav-link">Ne yesem?</a>
                 <a href="/restoranlar" class="site-header__nav-link">Restoranlar</a>
-                <a href="/fiyatlandirma" class="site-header__nav-link">Fiyatlandırma</a>
+                @* <a href="/fiyatlandirma" class="site-header__nav-link">Fiyatlandırma</a> *@
                 <a href="/blog" class="site-header__nav-link">Blog</a>
             
             </nav>
@@ -110,7 +111,7 @@
             <div class="site-header__mobile-inner">
                 <a class="site-header__mobile-link" href="/ne-yesem">Ne yesem?</a>
                 <a class="site-header__mobile-link" href="/restoranlar">Restoranlar</a>
-                <a class="site-header__mobile-link" href="/fiyatlandirma">Fiyatlandırma</a>
+                @* <a class="site-header__mobile-link" href="/fiyatlandirma">Fiyatlandırma</a> *@
                 <a class="site-header__mobile-link" href="/blog">Blog</a>
                 @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
                 {
@@ -150,7 +151,7 @@
                     <ul class="site-footer__links">
                         <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
                         <li><a href="/qr-kod">QR'lı Ol</a></li>
-                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
+                        @* <li><a href="/fiyatlandirma">Fiyatlandırma</a></li> *@
                     </ul>
                 </div>
 
@@ -185,7 +186,7 @@
                     <ul class="site-footer__links">
                         <li><a asp-area="Identity" asp-page="/Account/Login">Hesabım</a></li>
                         <li><a href="/qr-kod">QR'lı Ol</a></li>
-                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
+                        @* <li><a href="/fiyatlandirma">Fiyatlandırma</a></li> *@
                     </ul>
                 </details>
 

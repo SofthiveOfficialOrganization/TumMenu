@@ -1,32 +1,25 @@
-// ══════════════════════════════════════════════
-//  NE YESEM – whattoeat.js
-//  Çark, chip, konfeti, shake, bütçe
-// ══════════════════════════════════════════════
-
 (function () {
     'use strict';
 
-    // ── Yemek veritabanı ──
     const FOODS = [
-        { name: 'Margarita Pizza', emoji: '🍕', tags: ['hizli'], reason: 'Klasik bir seçim, herkesi mutlu eder!', alt: 'Sucuklu Pide' },
+        { name: 'Margherita Pizza', emoji: '🍕', tags: ['hizli'], reason: 'Klasik bir seçim, herkesi mutlu eder!', alt: 'Sucuklu Pide' },
         { name: 'Mercimek Çorbası', emoji: '🍜', tags: ['hafif', 'vegan', 'ekonomik'], reason: 'Sıcacık, doyurucu ve bütçe dostu.', alt: 'Domates Çorbası' },
         { name: 'Tavuk Dürüm', emoji: '🌯', tags: ['protein', 'hizli'], reason: 'Hızlı ve protein dolu bir öğün.', alt: 'Adana Dürüm' },
-        { name: 'Caesar Salata', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Hafif ama doyurucu, mükemmel denge.', alt: 'Ton Balıklı Salata' },
-        { name: 'Cheese Burger', emoji: '🍔', tags: ['protein'], reason: 'Günün stresini bu çözer 😌', alt: 'Veggie Burger' },
+        { name: 'Sezar Salata', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Hafif ama doyurucu, mükemmel denge.', alt: 'Ton Balıklı Salata' },
+        { name: 'Peynirli Burger', emoji: '🍔', tags: ['protein'], reason: 'Günün stresini bu çözer.', alt: 'Sebzeli Burger' },
         { name: 'Falafel Wrap', emoji: '🧆', tags: ['vegan', 'ekonomik'], reason: 'Vegan dostu, lezzet dolu!', alt: 'Humus Tabağı' },
         { name: 'Karnıyarık', emoji: '🍆', tags: ['protein'], reason: 'Ev yemeği özlemi? İşte burada.', alt: 'İmam Bayıldı' },
-        { name: 'Sushi Set', emoji: '🍣', tags: [], reason: 'Farklı bir şey deneyelim bugün!', alt: 'Poke Bowl' },
+        { name: 'Suşi Tabağı', emoji: '🍣', tags: [], reason: 'Farklı bir şey deneyelim bugün!', alt: 'Poké Kasesi' },
         { name: 'Makarna', emoji: '🍝', tags: ['hizli', 'ekonomik'], reason: '10 dakikada hazır, her zaman güzel.', alt: 'Lazanya' },
         { name: 'Güveç', emoji: '🥘', tags: ['protein'], reason: 'Yavaş pişmiş, derin tat.', alt: 'Türlü' },
         { name: 'Acılı Tavuk', emoji: '🌶️', tags: ['aci', 'protein'], reason: 'Biraz ateş lazım bugün 🔥', alt: 'Acılı Kanat' },
         { name: 'Waffle', emoji: '🧇', tags: ['tatli', 'hizli'], reason: 'Tatlı krizine birebir!', alt: 'Krep' },
         { name: 'Brownie', emoji: '🍫', tags: ['tatli'], reason: 'Çikolata her şeyi çözer.', alt: 'Sufle' },
-        { name: 'Smoothie Bowl', emoji: '🫐', tags: ['hafif', 'vegan'], reason: 'Sağlıklı ama lezzetli!', alt: 'Açai Bowl' },
+        { name: 'Smoothie Kasesi', emoji: '🫐', tags: ['hafif', 'vegan'], reason: 'Sağlıklı ama lezzetli!', alt: 'Açai Kasesi' },
         { name: 'Mercimek Köftesi', emoji: '🌿', tags: ['vegan', 'ekonomik', 'hafif'], reason: 'Hafif, sağlıklı, ekonomik üçlüsü.', alt: 'Kısır' },
         { name: 'Tantuni', emoji: '🌮', tags: ['aci', 'hizli', 'protein'], reason: 'Acılı, hızlı, doyurucu. Ne istersin?', alt: 'Çiğ Köfte Dürüm' },
         { name: 'Künefe', emoji: '🧀', tags: ['tatli'], reason: 'Sıcak peynirli, şerbetli mutluluk.', alt: 'Katmer' },
         { name: 'Menemen', emoji: '🍳', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Sabah akşam her zaman iyi gider.', alt: 'Omlet' },
-        // ── Yeni eklenen yemekler ──
         { name: 'Lahmacun', emoji: '🫓', tags: ['hizli', 'ekonomik'], reason: 'İnce hamur, bolca lezzet. Klasiklerin klasiği.', alt: 'Etli Ekmek' },
         { name: 'Döner', emoji: '🥙', tags: ['protein', 'hizli'], reason: 'Her zaman, her yerde güzel!', alt: 'İskender' },
         { name: 'İskender Kebap', emoji: '🥩', tags: ['protein'], reason: 'Tereyağlı, yoğurtlu bir şölen.', alt: 'Döner' },
@@ -48,7 +41,7 @@
         { name: 'Noodle', emoji: '🍜', tags: ['hizli'], reason: 'Asya esintili, hızlı ve doyurucu.', alt: 'Ramen' },
         { name: 'Ramen', emoji: '🍜', tags: ['protein'], reason: 'Derin tat, zengin et suyu.', alt: 'Noodle' },
         { name: 'Taco', emoji: '🌮', tags: ['aci', 'hizli'], reason: 'Meksika esintisi, eğlenceli yemek!', alt: 'Burrito' },
-        { name: 'Poké Bowl', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Taze, renkli ve sağlıklı.', alt: 'Sushi Set' },
+        { name: 'Poké Kasesi', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Taze, renkli ve sağlıklı.', alt: 'Suşi Tabağı' },
         { name: 'Simit', emoji: '🥯', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Çay yanında efsane ikili.', alt: 'Poğaça' },
         { name: 'Baklava', emoji: '🍯', tags: ['tatli'], reason: 'Antep fıstıklı, şerbetli mükemmellik.', alt: 'Künefe' },
         { name: 'Dondurma', emoji: '🍦', tags: ['tatli', 'hizli'], reason: 'Her mevsim, her zaman tatlı kriz ilacı.', alt: 'Profiterol' },
@@ -60,23 +53,14 @@
         { name: 'Sarma', emoji: '🥬', tags: ['hafif', 'ekonomik'], reason: 'Zeytinyağlı, soğuk ya da sıcak muhteşem.', alt: 'Biber Dolma' },
     ];
 
-    // ── Eğlence metinleri ──
     const FUN_TEXTS = [
-        'Tam senlik bir şey buldum 😌',
-        'Bunu seçersen günün toparlanır.',
-        'Kararsızlık level: efsane. Hallediyoruz.',
-        'Sürprize açık mısın? 🎲',
-        'Bugün şansın açık! 🍀',
-        'Bu üçlü seni hayal kırıklığına uğratmaz 💯',
-        'Midene güveniyoruz 😎',
-        'Hadi bakalım, karar zamanı! 🚀',
-        'Bu sefer farklı bir şey var 🎯',
-        'Damak tadına güvendik 🤌',
-        'Yemek ruhu seninle olsun 🧘',
-        'Her çevirişte yeni bir macera! 🎢',
+        'Standart öneriler hazır.',
+        'Seçim havuzu güncellendi.',
+        'Karar seti daha net hale geliyor.',
+        'Tercihlerine uygun alternatifler hazır.',
+        'Bugün için dengeli bir seçim listesi çıkıyor.',
     ];
 
-    // ── Bütçe önerileri ──
     const BUDGET_SUGGESTIONS = [
         {
             max: 50, items: [
@@ -87,28 +71,49 @@
         },
         {
             max: 100, items: [
-                { emoji: '🍕', name: 'Pizza', price: '₺80' },
+                { emoji: '🍕', name: 'Margherita Pizza', price: '₺80' },
                 { emoji: '🌯', name: 'Tavuk Dürüm', price: '₺75' },
                 { emoji: '🍝', name: 'Makarna', price: '₺65' },
             ]
         },
         {
             max: 200, items: [
-                { emoji: '🍔', name: 'Cheese Burger', price: '₺120' },
+                { emoji: '🍔', name: 'Peynirli Burger', price: '₺120' },
                 { emoji: '🥘', name: 'Güveç', price: '₺110' },
-                { emoji: '🍣', name: 'Sushi Set', price: '₺180' },
+                { emoji: '🍣', name: 'Suşi Tabağı', price: '₺180' },
             ]
         },
         {
             max: Infinity, items: [
-                { emoji: '🥩', name: 'Steak', price: '₺350' },
-                { emoji: '🍣', name: 'Omakase Sushi', price: '₺450' },
+                { emoji: '🥩', name: 'Bonfile', price: '₺350' },
+                { emoji: '🍣', name: 'Omakase Suşi', price: '₺450' },
                 { emoji: '🦞', name: 'Deniz Mahsulleri', price: '₺400' },
             ]
         },
     ];
 
-    // ── DOM ──
+    const WHEEL_ARTWORKS = {
+        burger: '/images/wte/burger.svg',
+        pizza: '/images/wte/pizza.svg',
+        durum: '/images/wte/durum.svg',
+        corba: '/images/wte/corba.svg',
+        salata: '/images/wte/salata.svg',
+        sushi: '/images/wte/sushi.svg',
+        guvec: '/images/wte/guvec.svg',
+        makarna: '/images/wte/makarna.svg',
+        tatli: '/images/wte/tatli.svg',
+    };
+
+    const TAG_LABELS = {
+        hafif: 'Hafif',
+        aci: 'Acılı',
+        tatli: 'Tatlı',
+        vegan: 'Vegan',
+        hizli: 'Hızlı',
+        ekonomik: 'Ekonomik',
+        protein: 'Protein ağırlıklı',
+    };
+
     const chipWrap = document.getElementById('wte-chips-wrap');
     const wheel = document.getElementById('wte-wheel');
     const spinBtn = document.getElementById('wte-spin-btn');
@@ -117,7 +122,6 @@
     const resultsGrid = document.getElementById('wte-results-grid');
     const resultsFun = document.getElementById('wte-results-fun');
     const refreshBtn = document.getElementById('wte-refresh-btn');
-    const confettiCanvas = document.getElementById('wte-confetti-canvas');
     const budgetSlider = document.getElementById('wte-budget-slider');
     const budgetAmount = document.getElementById('wte-budget-amount');
     const budgetSuggestions = document.getElementById('wte-budget-suggestions');
@@ -125,12 +129,151 @@
     let activeTags = new Set();
     let currentRotation = 0;
     let isSpinning = false;
-    let lastPicks = new Set(); // Son gösterilen yemekleri takip et
+    let lastPicks = new Set();
     const wheelFace = document.querySelector('.wte-wheel__face');
 
-    // ═══════════════════
-    //  CHIP SEÇİMİ
-    // ═══════════════════
+    function getCurrentBudget() {
+        return budgetSlider ? parseInt(budgetSlider.value, 10) : 100;
+    }
+
+    function getCurrentSeason() {
+        const month = new Date().getMonth();
+        if (month >= 2 && month <= 4) return 'spring';
+        if (month >= 5 && month <= 7) return 'summer';
+        if (month >= 8 && month <= 10) return 'autumn';
+        return 'winter';
+    }
+
+    function estimateFoodPrice(food) {
+        const name = normalizeText(food.name);
+        let price = 110;
+
+        if (food.tags.includes('ekonomik')) price -= 35;
+        if (food.tags.includes('protein')) price += 20;
+        if (food.tags.includes('hizli')) price -= 8;
+        if (food.tags.includes('tatli')) price -= 15;
+
+        if (name.includes('pizza') || name.includes('burger') || name.includes('sushi') || name.includes('susi')) price += 35;
+        if (name.includes('kebap') || name.includes('bonfile') || name.includes('iskender')) price += 70;
+        if (name.includes('corba') || name.includes('menemen') || name.includes('simit') || name.includes('borek')) price -= 25;
+        if (name.includes('lahmacun') || name.includes('tost') || name.includes('durum') || name.includes('tantuni')) price -= 10;
+
+        return Math.max(30, price);
+    }
+
+    function getSeasonScore(food) {
+        const season = getCurrentSeason();
+        const name = normalizeText(food.name);
+
+        if (season === 'winter' && (name.includes('corba') || name.includes('guvec') || name.includes('ramen') || name.includes('makarna'))) return 24;
+        if (season === 'spring' && (name.includes('salata') || name.includes('durum') || name.includes('wrap') || name.includes('mercimek koftesi'))) return 24;
+        if (season === 'summer' && (name.includes('salata') || name.includes('poke') || name.includes('sushi') || name.includes('susi') || name.includes('dondurma'))) return 24;
+        if (season === 'autumn' && (name.includes('guvec') || name.includes('makarna') || name.includes('kebap') || name.includes('karniyarik'))) return 24;
+
+        return 0;
+    }
+
+    function rankFoods() {
+        const selectedTags = [...activeTags];
+        const budget = getCurrentBudget();
+
+        return FOODS.map(food => {
+            const matches = food.tags.filter(tag => activeTags.has(tag));
+            const estimatedPrice = estimateFoodPrice(food);
+            const budgetGap = Math.abs(estimatedPrice - budget);
+            let score = 0;
+
+            score += matches.length * 38;
+            score += getSeasonScore(food);
+            score += Math.max(-30, 28 - (budgetGap / 6));
+
+            if (selectedTags.length > 0) {
+                const coverage = matches.length / selectedTags.length;
+                score += coverage * 42;
+
+                if (matches.length === selectedTags.length) score += 22;
+                else if (selectedTags.length > 1 && matches.length === selectedTags.length - 1) score += 10;
+                else if (matches.length === 0) score -= 65;
+            }
+
+            if (food.tags.includes('ekonomik') && budget <= 90) score += 12;
+            if (food.tags.includes('protein') && activeTags.has('protein')) score += 10;
+            if (food.tags.includes('hafif') && activeTags.has('hafif')) score += 10;
+            if (lastPicks.has(food.name)) score -= 18;
+
+            return { food, score, matches, estimatedPrice };
+        }).sort((a, b) => b.score - a.score);
+    }
+
+    function getRecommendationPool(limit) {
+        const ranked = rankFoods();
+        const selectedCount = activeTags.size;
+
+        if (selectedCount === 0) {
+            return ranked.slice(0, Math.max(limit * 2, 10));
+        }
+
+        const minMatches = selectedCount === 1 ? 1 : Math.max(1, Math.ceil(selectedCount / 2));
+        let pool = ranked.filter(item => item.matches.length >= minMatches);
+
+        if (pool.length < limit) {
+            pool = ranked.filter(item => item.matches.length >= 1);
+        }
+
+        if (pool.length < limit) {
+            pool = ranked;
+        }
+
+        return pool.slice(0, Math.max(limit * 2, 10));
+    }
+
+    function pickRecommendations(limit) {
+        return getRecommendationPool(limit)
+            .map(item => ({ ...item, score: item.score + (Math.random() * 6) }))
+            .sort((a, b) => b.score - a.score)
+            .slice(0, limit);
+    }
+
+    function pickWheelRecommendations(limit) {
+        const pool = getRecommendationPool(limit * 3);
+        const selected = [];
+        const usedIllustrations = new Set();
+
+        for (const item of pool) {
+            const illustrationPath = resolveWheelIllustration(item.food.name);
+            if (usedIllustrations.has(illustrationPath)) continue;
+
+            selected.push(item);
+            usedIllustrations.add(illustrationPath);
+
+            if (selected.length === limit) return selected;
+        }
+
+        for (const item of pool) {
+            if (selected.length === limit) break;
+            if (!selected.includes(item)) selected.push(item);
+        }
+
+        return selected.slice(0, limit);
+    }
+
+    function getMatchSummary(matches) {
+        if (!matches.length) return '';
+        return matches.map(tag => TAG_LABELS[tag] || tag).join(', ');
+    }
+
+    function buildRecommendationReason(food, meta) {
+        const details = [food.reason];
+
+        if (meta.matches.length) {
+            details.push(`Seçtiğin tercihlerle uyumlu: ${getMatchSummary(meta.matches)}.`);
+        }
+
+        details.push(`Tahmini fiyat: yaklaşık ₺${meta.estimatedPrice}.`);
+
+        return details.join(' ');
+    }
+
     if (chipWrap) {
         chipWrap.addEventListener('click', (e) => {
             const chip = e.target.closest('.wte-chip');
@@ -145,82 +288,49 @@
                 activeTags.add(tag);
             }
 
-            // Pop animasyonu
             chip.style.animation = 'none';
-            chip.offsetHeight; // reflow
+            chip.offsetHeight;
             chip.style.animation = '';
 
-            // Çarktaki etiketleri güncelle
             updateWheelLabels();
         });
     }
 
-    // ═══════════════════
-    //  ÇARK ETİKETLERİNİ GÜNCELLE
-    // ═══════════════════
     function updateWheelLabels() {
         if (!wheelFace) return;
+        const items = pickWheelRecommendations(8);
 
-        let pool = [...FOODS];
-
-        // Aktif tag'lara göre filtrele
-        if (activeTags.size > 0) {
-            const filtered = pool.filter(f =>
-                f.tags.some(t => activeTags.has(t))
-            );
-            if (filtered.length >= 8) {
-                pool = filtered;
-            } else if (filtered.length > 0) {
-                // Filtrelenen yeterli değilse, filtrelenenleri öne al, geri kalanıyla tamamla
-                const rest = FOODS.filter(f => !filtered.includes(f));
-                shuffle(rest);
-                pool = [...filtered, ...rest];
-            }
-        }
-
-        shuffle(pool);
-        const items = pool.slice(0, 8);
-
-        // Mevcut etiketleri güncelle
         const labels = wheelFace.querySelectorAll('.wte-wheel__label');
         labels.forEach((label, i) => {
             if (items[i]) {
-                // Kısa bir fade efekti
                 label.style.opacity = '0';
                 label.style.transition = 'opacity 0.25s ease';
                 setTimeout(() => {
-                    // Uzun isimleri kısalt (çarkta max 14 karakter)
-                    const shortName = items[i].name.length > 14
-                        ? items[i].name.substring(0, 14) + '…'
-                        : items[i].name;
-                    label.textContent = `${items[i].emoji} ${shortName}`;
+                    label.setAttribute('aria-label', items[i].food.name);
+                    label.innerHTML = getWheelIllustrationMarkup(items[i].food);
                     label.style.opacity = '1';
                 }, 250);
             }
         });
     }
 
-    // ═══════════════════
-    //  ÇARK ÇEVİRME
-    // ═══════════════════
     function spinWheel() {
-        if (isSpinning) return;
+        if (isSpinning || !spinBtn || !wheel) return;
         isSpinning = true;
 
         spinBtn.classList.add('is-disabled');
         wheel.classList.add('is-spinning');
 
-        // Eğlence metni değiştir
-        funTextEl.textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
+        if (funTextEl) {
+            funTextEl.textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
+        }
 
-        // Rastgele döndür (en az 5 tur + rastgele açı)
         const extraDeg = Math.floor(Math.random() * 360);
         const totalDeg = currentRotation + 1800 + extraDeg;
         currentRotation = totalDeg;
 
         wheel.style.transform = `rotate(${totalDeg}deg)`;
 
-        // Döndürme bitince sonuçları göster
         setTimeout(() => {
             isSpinning = false;
             spinBtn.classList.remove('is-disabled');
@@ -233,61 +343,44 @@
         spinBtn.addEventListener('click', spinWheel);
     }
 
-    // ═══════════════════
-    //  SONUÇLARI GÖSTER
-    // ═══════════════════
     function showResults() {
-        let pool = [...FOODS];
+        if (!resultsSection || !resultsGrid) return;
 
-        // Aktif tag'lara göre filtrele
-        if (activeTags.size > 0) {
-            const filtered = pool.filter(f =>
-                f.tags.some(t => activeTags.has(t))
-            );
-            if (filtered.length >= 3) pool = filtered;
-        }
-
-        // Daha önce gösterilenleri çıkar (tekrar yapmamak için)
-        let freshPool = pool.filter(f => !lastPicks.has(f.name));
-        // Eğer yeterli yemek kalmadıysa, listeyi sıfırla
-        if (freshPool.length < 3) {
+        let picks = pickRecommendations(3);
+        if (picks.length < 3) {
             lastPicks.clear();
-            freshPool = pool;
+            picks = pickRecommendations(3);
         }
 
-        // Karıştır ve 3 seç
-        shuffle(freshPool);
-        const picks = freshPool.slice(0, 3);
+        picks.forEach(p => lastPicks.add(p.food.name));
 
-        // Seçilenleri son gösterilenler listesine ekle
-        picks.forEach(p => lastPicks.add(p.name));
+        if (resultsFun) {
+            resultsFun.textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
+        }
 
-        // Fun metin
-        resultsFun.textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
-
-        // Grid doldur
-        resultsGrid.innerHTML = picks.map((food, i) => `
+        resultsGrid.innerHTML = picks.map((item, i) => `
             <div class="wte-result-card" style="transition-delay: ${i * 0.15}s">
-                <span class="wte-result-card__emoji">${food.emoji}</span>
-                <h3 class="wte-result-card__name">${food.name}</h3>
-                <p class="wte-result-card__reason">
-                    <strong>Neden bunu seçtin?</strong><br>${food.reason}
-                </p>
+                <div class="wte-result-card__top">
+                    <span class="wte-result-card__emoji">${item.food.emoji}</span>
+                    <div>
+                        <h3 class="wte-result-card__name">${item.food.name}</h3>
+                        <span class="wte-result-card__label">önerilen seçim</span>
+                    </div>
+                </div>
+                <p class="wte-result-card__reason"><strong>Neden uygun?</strong> ${buildRecommendationReason(item.food, item)}</p>
                 <div class="wte-result-card__actions">
-                    <button class="wte-btn wte-btn--ghost" onclick="swapCard(this, '${food.alt}')">
-                        🔄 Alternatif: ${food.alt}
+                    <button class="wte-btn wte-btn--ghost" onclick="swapCard(this, '${item.food.alt}')">
+                        Alternatif getir
                     </button>
-                    <button class="wte-btn wte-btn--ghost" onclick="shareFood('${food.emoji} ${food.name}')">
-                        📤 Arkadaşa Gönder
+                    <button class="wte-btn wte-btn--ghost" onclick="shareFood('${item.food.emoji} ${item.food.name}')">
+                        Paylaş
                     </button>
                 </div>
             </div>
         `).join('');
 
-        // Göster
         resultsSection.classList.remove('is-hidden');
 
-        // Kartları canlandır
         requestAnimationFrame(() => {
             const cards = resultsGrid.querySelectorAll('.wte-result-card');
             cards.forEach((card, i) => {
@@ -295,29 +388,28 @@
             });
         });
 
-        // Konfeti patlat
-        fireConfetti();
-
-        // Sonuçlara scroll et
         setTimeout(() => {
             resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
     }
 
-    // Kart değiştir
     window.swapCard = function (btn, altName) {
         const card = btn.closest('.wte-result-card');
         const altFood = FOODS.find(f => f.name === altName) || FOODS[Math.floor(Math.random() * FOODS.length)];
+        const altMeta = {
+            matches: altFood.tags.filter(tag => activeTags.has(tag)),
+            estimatedPrice: estimateFoodPrice(altFood),
+        };
 
         card.classList.remove('is-visible');
         setTimeout(() => {
             card.querySelector('.wte-result-card__emoji').textContent = altFood.emoji;
             card.querySelector('.wte-result-card__name').textContent = altFood.name;
             card.querySelector('.wte-result-card__reason').innerHTML =
-                `<strong>Neden bunu seçtin?</strong><br>${altFood.reason}`;
+                `<strong>Neden uygun?</strong> ${buildRecommendationReason(altFood, altMeta)}`;
 
             const btns = card.querySelectorAll('.wte-btn--ghost');
-            btns[0].innerHTML = `🔄 Alternatif: ${altFood.alt}`;
+            btns[0].innerHTML = 'Alternatif getir';
             btns[0].setAttribute('onclick', `swapCard(this, '${altFood.alt}')`);
             btns[1].setAttribute('onclick', `shareFood('${altFood.emoji} ${altFood.name}')`);
 
@@ -325,10 +417,9 @@
         }, 300);
     };
 
-    // Paylaşım
     window.shareFood = function (text) {
         const shareData = {
-            title: 'Ne Yesem? 🍽️',
+            title: 'Ne Yesem?',
             text: `Bugün bana önerilen: ${text}\nSen de dene → `,
             url: window.location.href,
         };
@@ -337,12 +428,11 @@
             navigator.share(shareData).catch(() => { });
         } else {
             navigator.clipboard.writeText(`${shareData.text}${shareData.url}`).then(() => {
-                showToast('📋 Kopyalandı!');
+                showToast('Seçim panoya kopyalandı.');
             });
         }
     };
 
-    // Basit toast
     function showToast(msg) {
         const toast = document.createElement('div');
         toast.textContent = msg;
@@ -351,7 +441,7 @@
             bottom: '30px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: '#333',
+            background: '#4B3A2D',
             color: '#fff',
             padding: '12px 24px',
             borderRadius: '999px',
@@ -364,7 +454,6 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // Yenile
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
             refreshBtn.classList.add('wte-shake');
@@ -373,149 +462,34 @@
         });
     }
 
-    // ═══════════════════
-    //  KONFETİ
-    // ═══════════════════
-    function fireConfetti() {
-        const ctx = confettiCanvas.getContext('2d');
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-
-        const colors = ['#FF6B4A', '#2DD4BF', '#A855F7', '#FACC15', '#F9A8D4', '#60A5FA'];
-        const pieces = [];
-
-        for (let i = 0; i < 120; i++) {
-            pieces.push({
-                x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 300,
-                y: confettiCanvas.height / 2,
-                vx: (Math.random() - 0.5) * 12,
-                vy: -Math.random() * 16 - 4,
-                w: Math.random() * 8 + 4,
-                h: Math.random() * 6 + 3,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                rotation: Math.random() * 360,
-                rotSpeed: (Math.random() - 0.5) * 10,
-                gravity: 0.25 + Math.random() * 0.15,
-                opacity: 1,
-            });
-        }
-
-        let frame = 0;
-        const maxFrames = 120;
-
-        function animate() {
-            if (frame > maxFrames) {
-                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-                return;
-            }
-
-            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-
-            pieces.forEach(p => {
-                p.x += p.vx;
-                p.vy += p.gravity;
-                p.y += p.vy;
-                p.rotation += p.rotSpeed;
-                p.opacity = Math.max(0, 1 - frame / maxFrames);
-
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate((p.rotation * Math.PI) / 180);
-                ctx.globalAlpha = p.opacity;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-                ctx.restore();
-            });
-
-            frame++;
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-    }
-
-    // ═══════════════════
-    //  BÜTÇE SLIDER
-    // ═══════════════════
     function updateBudget() {
+        if (!budgetSlider || !budgetAmount || !budgetSuggestions) return;
+
         const val = parseInt(budgetSlider.value);
         budgetAmount.textContent = `₺${val}`;
 
         const tier = BUDGET_SUGGESTIONS.find(t => val <= t.max);
-        if (tier && budgetSuggestions) {
+        if (tier) {
             budgetSuggestions.innerHTML = tier.items.map(item => `
                 <div class="wte-budget__suggestion">
                     <span>${item.emoji}</span>
                     <span style="flex:1">${item.name}</span>
-                    <span style="font-weight:800; color: var(--wte-turquoise)">${item.price}</span>
+                    <span style="font-weight:800; color: var(--color-primary-dark)">${item.price}</span>
                 </div>
             `).join('');
         }
     }
 
     if (budgetSlider) {
-        budgetSlider.addEventListener('input', updateBudget);
+        budgetSlider.addEventListener('input', () => {
+            updateBudget();
+            updateWheelLabels();
+        });
         updateBudget();
     }
 
-    // ═══════════════════
-    //  TELEFONU SALLA
-    // ═══════════════════
-    let shakeThreshold = 15;
-    let lastX, lastY, lastZ;
-    let lastShakeTime = 0;
-
-    function handleMotion(event) {
-        const acc = event.accelerationIncludingGravity;
-        if (!acc) return;
-
-        const now = Date.now();
-        if (now - lastShakeTime < 2000) return; // 2sn cooldown
-
-        if (lastX !== undefined) {
-            const dx = Math.abs(acc.x - lastX);
-            const dy = Math.abs(acc.y - lastY);
-            const dz = Math.abs(acc.z - lastZ);
-
-            if (dx + dy + dz > shakeThreshold) {
-                lastShakeTime = now;
-                spinWheel();
-            }
-        }
-
-        lastX = acc.x;
-        lastY = acc.y;
-        lastZ = acc.z;
-    }
-
-    if (window.DeviceMotionEvent) {
-        // iOS 13+ permisyon kontrolü
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-            document.addEventListener('click', function enableShake() {
-                DeviceMotionEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('devicemotion', handleMotion);
-                        }
-                    })
-                    .catch(() => { });
-                document.removeEventListener('click', enableShake);
-            }, { once: true });
-        } else {
-            window.addEventListener('devicemotion', handleMotion);
-        }
-    }
-
-    // ═══════════════════
-    //  MEVSIM HİGHLIGHT
-    // ═══════════════════
     function highlightSeason() {
-        const month = new Date().getMonth(); // 0-11
-        let season;
-        if (month >= 2 && month <= 4) season = 'spring';
-        else if (month >= 5 && month <= 7) season = 'summer';
-        else if (month >= 8 && month <= 10) season = 'autumn';
-        else season = 'winter';
+        const season = getCurrentSeason();
 
         const seasonCard = document.getElementById('wte-season-card');
         if (!seasonCard) return;
@@ -523,19 +497,65 @@
         const items = seasonCard.querySelectorAll('.wte-season-item');
         items.forEach(item => {
             if (item.classList.contains(`wte-season-item--${season}`)) {
-                item.style.transform = 'scale(1.05)';
-                item.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                item.classList.add('is-highlighted');
             } else {
-                item.style.opacity = '0.6';
+                item.classList.remove('is-highlighted');
             }
         });
     }
 
     highlightSeason();
 
-    // ═══════════════════
-    //  UTILITY
-    // ═══════════════════
+    function getWheelIllustrationMarkup(food) {
+        const illustrationPath = resolveWheelIllustration(food.name);
+        return `<img class="wte-wheel__icon" src="${illustrationPath}" alt="">`;
+    }
+
+    function resolveWheelIllustration(foodName) {
+        const name = normalizeText(foodName);
+
+        if (name.includes('pizza') || name.includes('lahmacun') || name.includes('pide') || name.includes('etli ekmek')) {
+            return WHEEL_ARTWORKS.pizza;
+        }
+        if (name.includes('corba') || name.includes('ramen') || name.includes('noodle') || name.includes('menemen')) {
+            return WHEEL_ARTWORKS.corba;
+        }
+        if (name.includes('durum') || name.includes('wrap') || name.includes('tantuni') || name.includes('taco') || name.includes('doner') || name.includes('kokorec')) {
+            return WHEEL_ARTWORKS.durum;
+        }
+        if (name.includes('burger') || name.includes('kofte ekmek') || name.includes('tost')) {
+            return WHEEL_ARTWORKS.burger;
+        }
+        if (name.includes('salata') || name.includes('bowl') || name.includes('kasir') || name.includes('kisir') || name.includes('mercimek koftesi') || name.includes('sarma')) {
+            return WHEEL_ARTWORKS.salata;
+        }
+        if (name.includes('sushi') || name.includes('susi') || name.includes('poke')) {
+            return WHEEL_ARTWORKS.sushi;
+        }
+        if (name.includes('guvec') || name.includes('karniyarik') || name.includes('kebap') || name.includes('tavuk') || name.includes('fasulye') || name.includes('nohut')) {
+            return WHEEL_ARTWORKS.guvec;
+        }
+        if (name.includes('makarna') || name.includes('manti') || name.includes('lazanya')) {
+            return WHEEL_ARTWORKS.makarna;
+        }
+        if (name.includes('kunefe') || name.includes('baklava') || name.includes('brownie') || name.includes('waffle') || name.includes('profiterol') || name.includes('dondurma')) {
+            return WHEEL_ARTWORKS.tatli;
+        }
+
+        return WHEEL_ARTWORKS.pizza;
+    }
+
+    function normalizeText(text) {
+        return text
+            .toLocaleLowerCase('tr-TR')
+            .replace(/ç/g, 'c')
+            .replace(/ğ/g, 'g')
+            .replace(/ı/g, 'i')
+            .replace(/ö/g, 'o')
+            .replace(/ş/g, 's')
+            .replace(/ü/g, 'u');
+    }
+
     function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -544,9 +564,6 @@
         return arr;
     }
 
-    // ═══════════════════
-    //  EĞLENCELİ METİN DÖNGÜSÜ
-    // ═══════════════════
     let funTextIdx = 0;
     setInterval(() => {
         if (isSpinning) return;
@@ -560,12 +577,21 @@
         }
     }, 4000);
 
-    // "Hızlı öner" butonu – tek tıkla direkt çarkı çevir
     const quickBtn = document.getElementById('wte-quick-suggest');
     if (quickBtn) {
         quickBtn.addEventListener('click', () => {
-            setTimeout(spinWheel, 600);
+            document.getElementById('wte-wheel-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(spinWheel, 300);
         });
     }
+
+    const customBtn = document.getElementById('wte-custom-flow');
+    if (customBtn) {
+        customBtn.addEventListener('click', () => {
+            document.getElementById('wte-chips-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    updateWheelLabels();
 
 })();

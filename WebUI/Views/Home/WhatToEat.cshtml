@@ -1,214 +1,265 @@
 @{
     ViewData["Title"] = "Ne Yesem?";
-    ViewData["Description"] = "Bugün ne yesem diye düşünmeyi bırak! 3 dokunuşta sana en uygun yemeği buluyoruz. Çarkı çevir, chip'leri seç, kararını ver.";
+    ViewData["Description"] = "Bugün ne yiyeceğine daha hızlı karar ver. Tercihlerini seç, önerileri gör, bütçene uygun seçenekleri karşılaştır.";
+    ViewData["BodyClass"] = "wte-shell";
 }
 
 @section Head {
-    <link rel="stylesheet" href="~/css/WhatToEat.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/WhatToEatRedesign.css" asp-append-version="true" />
 }
 
 <div class="wte-page">
-
-    <!-- ═══════════════════════════════════
-         1) HERO SECTION
-         ═══════════════════════════════════ -->
-    <section class="wte-section wte-hero" aria-labelledby="wte-hero-heading">
-        <div class="container wte-hero__inner">
-            <span class="wte-hero__icon" aria-hidden="true"><i data-lucide="utensils"></i></span>
-            <h1 id="wte-hero-heading" class="wte-hero__title">Bugün ne yesem?</h1>
-            <p class="wte-hero__subtitle">Karar vermene yardımcı oluyoruz. ✨</p>
-            <div class="wte-hero__ctas">
-                <button class="wte-btn wte-btn--primary" id="wte-quick-suggest" onclick="document.getElementById('wte-wheel-area').scrollIntoView({behavior:'smooth'})">
-                    ⚡ Hızlı öner
-                </button>
-                <button class="wte-btn wte-btn--secondary" id="wte-custom-flow" onclick="document.getElementById('wte-chips-area').scrollIntoView({behavior:'smooth'})">
-                    🎯 Kendime göre seç
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════════════════════════════
-         2) CHIP BARI
-         ═══════════════════════════════════ -->
-    <section class="wte-section wte-chips" id="wte-chips-area" aria-labelledby="wte-chips-heading">
+    <section class="wte-hero" aria-labelledby="wte-hero-heading">
         <div class="container">
-            <p class="wte-chips__title" id="wte-chips-heading">🎨 Bugün ne moddasın?</p>
-            <div class="wte-chips__wrap" id="wte-chips-wrap">
-                <button class="wte-chip" data-tag="hafif"><i data-lucide="leaf"></i> Hafif</button>
-                <button class="wte-chip" data-tag="aci"><i data-lucide="flame"></i> Acı</button>
-                <button class="wte-chip" data-tag="tatli"><i data-lucide="cake"></i> Tatlı</button>
-                <button class="wte-chip" data-tag="vegan"><i data-lucide="sprout"></i> Vegan</button>
-                <button class="wte-chip" data-tag="hizli"><i data-lucide="timer"></i> 10 dk</button>
-                <button class="wte-chip" data-tag="ekonomik"><i data-lucide="banknote"></i> Ekonomik</button>
-                <button class="wte-chip" data-tag="protein"><i data-lucide="dumbbell"></i> Protein</button>
-            </div>
-        </div>
-    </section>
+            <div class="wte-hero__grid">
+                <div class="wte-hero__copy">
+                    <p class="wte-hero__eyebrow">Ne yesem?</p>
+                    <h1 id="wte-hero-heading" class="wte-hero__title">
+                        <span>Bugün ne yesem</span>
+                        sorusunu hızlı çözelim.
+                    </h1>
+                    <p class="wte-hero__subtitle">
+                        Yakınındaki restoranlardan menüleri incele, bütçene ve moduna uyan seçimi
+                        bul, kararsız kaldığında da sistemi devreye sok.
+                    </p>
 
-    <!-- ═══════════════════════════════════
-         3) ÇARK / İNTERAKSİYON ALANI
-         ═══════════════════════════════════ -->
-    <section class="wte-section wte-wheel-section" id="wte-wheel-area" aria-labelledby="wte-wheel-heading">
-        <div class="container">
-            <div class="wte-wheel__inner">
-                <p class="wte-fun-text" id="wte-fun-text">Sürprize açık mısın? 🎲</p>
-
-                <div class="wte-wheel-container">
-                    <div class="wte-wheel__pointer"></div>
-                    <div class="wte-wheel" id="wte-wheel">
-                        <div class="wte-wheel__face">
-                            <span class="wte-wheel__label">Pizza</span>
-                            <span class="wte-wheel__label">Salata</span>
-                            <span class="wte-wheel__label">Burger</span>
-                            <span class="wte-wheel__label">Çorba</span>
-                            <span class="wte-wheel__label">Dürüm</span>
-                            <span class="wte-wheel__label">Sushi</span>
-                            <span class="wte-wheel__label">Güveç</span>
-                            <span class="wte-wheel__label">Makarna</span>
-                        </div>
-                        <div class="wte-wheel__center"><i data-lucide="dices"></i></div>
+                    <div class="wte-hero__actions">
+                        <button class="wte-btn wte-btn--primary" id="wte-quick-suggest" type="button">
+                            Hemen öner
+                        </button>
+                        <button class="wte-btn wte-btn--secondary" id="wte-custom-flow" type="button">
+                            Tercihlerimi seç
+                        </button>
                     </div>
                 </div>
 
-                <button class="wte-spin-btn" id="wte-spin-btn">
-                    🎡 Çarkı Çevir!
-                </button>
+                <div class="wte-hero__visual" aria-hidden="true">
+                    <div class="wte-hero__orb"></div>
 
-                <p class="wte-shake-hint">📱 Telefonunu salla → yeni öneri!</p>
+                    <div class="wte-map-card">
+                        <div class="wte-map-card__surface">
+                            <span class="wte-map-card__road wte-map-card__road--one"></span>
+                            <span class="wte-map-card__road wte-map-card__road--two"></span>
+                            <span class="wte-map-card__road wte-map-card__road--three"></span>
+                            <span class="wte-map-card__road wte-map-card__road--four"></span>
+                            <span class="wte-map-card__park wte-map-card__park--one"></span>
+                            <span class="wte-map-card__park wte-map-card__park--two"></span>
+                            <span class="wte-map-card__water"></span>
+
+                            <span class="wte-map-card__pin wte-map-card__pin--one">
+                                <img src="~/images/pin-exact.png" alt="" />
+                            </span>
+                            <span class="wte-map-card__pin wte-map-card__pin--two">
+                                <img src="~/images/pin-exact.png" alt="" />
+                            </span>
+                            <span class="wte-map-card__pin wte-map-card__pin--three">
+                                <img src="~/images/pin-exact.png" alt="" />
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="wte-phone-card">
+                        <span class="wte-phone-card__notch"></span>
+                        <div class="wte-phone-card__screen">
+                            <div class="wte-phone-card__header">
+                                <strong>Restoranlar</strong>
+                                <span>yakında</span>
+                            </div>
+                            <div class="wte-phone-card__item">
+                                <span class="wte-phone-card__emoji">🍔</span>
+                                <div>
+                                    <strong>Peynirli Burger</strong>
+                                    <span>15 dk</span>
+                                </div>
+                            </div>
+                            <div class="wte-phone-card__item">
+                                <span class="wte-phone-card__emoji">🍕</span>
+                                <div>
+                                    <strong>Margarita Pizza</strong>
+                                    <span>21 dk</span>
+                                </div>
+                            </div>
+                            <div class="wte-phone-card__item">
+                                <span class="wte-phone-card__emoji">🌯</span>
+                                <div>
+                                    <strong>Tavuk Dürüm</strong>
+                                    <span>11 dk</span>
+                                </div>
+                            </div>
+                            <div class="wte-phone-card__item">
+                                <span class="wte-phone-card__emoji">🥗</span>
+                                <div>
+                                    <strong>Sezar Salata</strong>
+                                    <span>17 dk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════
-         4) SONUÇ KARTLARI
-         ═══════════════════════════════════ -->
+    <section class="wte-section wte-preferences" id="wte-chips-area" aria-labelledby="wte-chips-heading">
+        <div class="container">
+            <div class="wte-preferences__inner">
+                <div class="wte-section-heading">
+                    <p class="wte-section-heading__eyebrow">Tercihler</p>
+                    <h2 id="wte-chips-heading" class="wte-section-heading__title">Bugün nasıl bir seçim istiyorsun?</h2>
+                </div>
+
+                <div class="wte-chips__wrap" id="wte-chips-wrap">
+                    <button class="wte-chip" data-tag="hafif" type="button"><span class="wte-chip__emoji">🥬</span> Hafif</button>
+                    <button class="wte-chip" data-tag="aci" type="button"><span class="wte-chip__emoji">🌶️</span> Acılı</button>
+                    <button class="wte-chip" data-tag="tatli" type="button"><span class="wte-chip__emoji">🧁</span> Tatlı</button>
+                    <button class="wte-chip" data-tag="vegan" type="button"><span class="wte-chip__emoji">🌱</span> Vegan</button>
+                    <button class="wte-chip" data-tag="hizli" type="button"><span class="wte-chip__emoji">⏱️</span> Hızlı</button>
+                    <button class="wte-chip" data-tag="ekonomik" type="button"><span class="wte-chip__emoji">💰</span> Ekonomik</button>
+                    <button class="wte-chip" data-tag="protein" type="button"><span class="wte-chip__emoji">🥩</span> Protein ağırlıklı</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wte-section wte-decision" id="wte-wheel-area" aria-labelledby="wte-wheel-heading">
+        <div class="container">
+            <div class="wte-decision__intro">
+                <p class="wte-section-heading__eyebrow">Kararsız kaldığında</p>
+                <h2 id="wte-wheel-heading" class="wte-decision__title">Seçimini sistem yapsın.</h2>
+                <p class="wte-decision__subtitle">Filtrelerini kullan, çarkı çevir, sonra çıkana göre restoranlara geç.</p>
+                <div class="wte-stage__status">
+                    <span class="wte-stage__status-label">Canlı seçim modu</span>
+                    <strong id="wte-fun-text">Standart öneriler hazır.</strong>
+                </div>
+            </div>
+
+            <div class="wte-wheel-container">
+                <div class="wte-wheel__pointer" aria-hidden="true"></div>
+                <div class="wte-wheel" id="wte-wheel" aria-label="Yemek seçim çarkı">
+                    <div class="wte-wheel__face">
+                        <span class="wte-wheel__label" aria-label="Pizza"><img class="wte-wheel__icon" src="~/images/wte/pizza.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Dürüm"><img class="wte-wheel__icon" src="~/images/wte/durum.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Burger"><img class="wte-wheel__icon" src="~/images/wte/burger.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Çorba"><img class="wte-wheel__icon" src="~/images/wte/corba.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Salata"><img class="wte-wheel__icon" src="~/images/wte/salata.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Suşi"><img class="wte-wheel__icon" src="~/images/wte/sushi.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Güveç"><img class="wte-wheel__icon" src="~/images/wte/guvec.svg" alt="" /></span>
+                        <span class="wte-wheel__label" aria-label="Makarna"><img class="wte-wheel__icon" src="~/images/wte/makarna.svg" alt="" /></span>
+                    </div>
+                    <div class="wte-wheel__center">🍽️</div>
+                </div>
+            </div>
+
+            <div class="wte-decision__actions">
+                <button class="wte-spin-btn" id="wte-spin-btn" type="button">Seçimi yap</button>
+                <div class="wte-stage__footer">
+                    <span>1. Tercihlerini seç</span>
+                    <span>2. Çarkı çevir</span>
+                    <span>3. Üç seçimi karşılaştır</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="wte-section wte-results is-hidden" id="wte-results" aria-labelledby="wte-results-heading">
-        <div class="container wte-results__inner">
+        <div class="container">
             <div class="wte-results__header">
-                <h2 id="wte-results-heading" class="wte-results__title">İşte sana öneriler! 🎉</h2>
-                <p class="wte-results__fun" id="wte-results-fun">Tam senlik bir şey buldum 😌</p>
+                <div>
+                    <p class="wte-section-heading__eyebrow">Öneriler</p>
+                    <h2 id="wte-results-heading" class="wte-results__title">Bugün için seçilmiş alternatifler</h2>
+                </div>
+                <p class="wte-results__fun" id="wte-results-fun">Seçim listesi hazır.</p>
             </div>
 
-            <div class="wte-results__grid" id="wte-results-grid">
-                <!-- JS ile doldurulacak -->
-            </div>
-
-            <div style="text-align:center; margin-top:28px;">
-                <button class="wte-btn wte-btn--purple" id="wte-refresh-btn">
-                    🔄 Tekrar Dene
-                </button>
-            </div>
+            <div class="wte-results__grid" id="wte-results-grid"></div>
         </div>
     </section>
 
-    <!-- Konfeti canvas -->
-    <canvas class="wte-confetti-canvas" id="wte-confetti-canvas"></canvas>
-
-    <!-- ═══════════════════════════════════
-         5) ALT BÖLÜM: "Kararsızlara Özel"
-         ═══════════════════════════════════ -->
     <section class="wte-section wte-extras" aria-labelledby="wte-extras-heading">
         <div class="container">
-            <h2 id="wte-extras-heading" class="wte-extras__title">Kararsızlara Özel 🤔</h2>
-            <p class="wte-extras__subtitle">Hâlâ karar veremeyen varsa…</p>
+            <div class="wte-section-heading">
+                <p class="wte-section-heading__eyebrow">Ek filtreler</p>
+                <h2 id="wte-extras-heading" class="wte-section-heading__title">Seçimini son bir kez daralt.</h2>
+            </div>
 
             <div class="wte-extras__grid">
-
-                <!-- Bugün Trend -->
                 <div class="wte-extra-card">
                     <div class="wte-extra-card__header">
-                        <span class="wte-extra-card__icon"><i data-lucide="trending-up"></i></span>
-                        <h3 class="wte-extra-card__title">Bugün Trend</h3>
+                        <h3 class="wte-extra-card__title">Öne çıkan tabaklar</h3>
                     </div>
                     <ul class="wte-trend-list">
                         <li class="wte-trend-item">
-                            <span class="wte-trend-item__rank">1</span>
-                            <span class="wte-trend-item__icon"><i data-lucide="utensils-crossed"></i></span>
+                            <span class="wte-trend-item__icon">🍕</span>
                             <span>Margarita Pizza</span>
                         </li>
                         <li class="wte-trend-item">
-                            <span class="wte-trend-item__rank">2</span>
-                            <span class="wte-trend-item__icon"><i data-lucide="utensils-crossed"></i></span>
+                            <span class="wte-trend-item__icon">🌯</span>
                             <span>Tavuk Dürüm</span>
                         </li>
                         <li class="wte-trend-item">
-                            <span class="wte-trend-item__rank">3</span>
-                            <span class="wte-trend-item__icon"><i data-lucide="utensils-crossed"></i></span>
-                            <span>Cheese Burger</span>
+                            <span class="wte-trend-item__icon">🍔</span>
+                            <span>Peynirli Burger</span>
                         </li>
                         <li class="wte-trend-item">
-                            <span class="wte-trend-item__rank">4</span>
-                            <span class="wte-trend-item__icon"><i data-lucide="utensils-crossed"></i></span>
-                            <span>Mercimek Çorba</span>
+                            <span class="wte-trend-item__icon">🥩</span>
+                            <span>Protein ağırlıklı</span>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Mevsim Önerisi -->
                 <div class="wte-extra-card">
                     <div class="wte-extra-card__header">
-                        <span class="wte-extra-card__icon"><i data-lucide="leaf"></i></span>
-                        <h3 class="wte-extra-card__title">Mevsim Önerisi</h3>
+                        <h3 class="wte-extra-card__title">Mevsime göre</h3>
                     </div>
                     <div class="wte-season-card" id="wte-season-card">
                         <div class="wte-season-item wte-season-item--winter">
-                            <span class="wte-season-item__icon"><i data-lucide="snowflake"></i></span>
-                            <span>Kış → Sıcak çorba & güveç</span>
+                            <span class="wte-season-item__icon">❄️</span>
+                            <span>Kış: sıcak çorba ve güveç</span>
                         </div>
                         <div class="wte-season-item wte-season-item--spring">
-                            <span class="wte-season-item__icon"><i data-lucide="flower-2"></i></span>
-                            <span>İlkbahar → Taze salata & wrap</span>
+                            <span class="wte-season-item__icon">🌼</span>
+                            <span>İlkbahar: taze salata ve dürüm</span>
                         </div>
                         <div class="wte-season-item wte-season-item--summer">
-                            <span class="wte-season-item__icon"><i data-lucide="sun"></i></span>
-                            <span>Yaz → Hafif salata & smoothie</span>
+                            <span class="wte-season-item__icon">☀️</span>
+                            <span>Yaz: hafif tabaklar ve soğuk kaseler</span>
                         </div>
                         <div class="wte-season-item wte-season-item--autumn">
-                            <span class="wte-season-item__icon"><i data-lucide="cloud-rain"></i></span>
-                            <span>Sonbahar → Fırın yemekleri</span>
+                            <span class="wte-season-item__icon">🍂</span>
+                            <span>Sonbahar: fırın yemekleri ve makarna</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bütçene Göre -->
                 <div class="wte-extra-card">
                     <div class="wte-extra-card__header">
-                        <span class="wte-extra-card__icon"><i data-lucide="wallet"></i></span>
-                        <h3 class="wte-extra-card__title">Bütçene Göre</h3>
+                        <h3 class="wte-extra-card__title">Bütçe aralığı</h3>
+                    </div>
+                    <div class="wte-budget__slider-wrap">
+                        <div class="wte-budget__range-labels">
+                            <span>₺100</span>
+                            <span>₺500</span>
+                        </div>
+                        <input
+                            type="range"
+                            class="wte-budget__slider"
+                            id="wte-budget-slider"
+                            min="30"
+                            max="500"
+                            value="100"
+                            step="10" />
                     </div>
                     <div class="wte-budget__display">
                         <span class="wte-budget__amount" id="wte-budget-amount">₺100</span>
-                        <span class="wte-budget__label">kişi başı bütçe</span>
+                        <span class="wte-budget__label">kişi başı ortalama</span>
                     </div>
-                    <input
-                        type="range"
-                        class="wte-budget__slider"
-                        id="wte-budget-slider"
-                        min="30"
-                        max="500"
-                        value="100"
-                        step="10"
-                    />
-                    <div class="wte-budget__range-labels">
-                        <span>₺30</span>
-                        <span>₺500</span>
-                    </div>
-                    <div class="wte-budget__suggestions" id="wte-budget-suggestions">
-                        <!-- JS ile doldurulacak -->
-                    </div>
+                    <div class="wte-budget__suggestions" id="wte-budget-suggestions"></div>
                 </div>
-
             </div>
         </div>
     </section>
-
 </div>
 
 @section Scripts {
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="~/js/whattoeat.js" asp-append-version="true"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 }
