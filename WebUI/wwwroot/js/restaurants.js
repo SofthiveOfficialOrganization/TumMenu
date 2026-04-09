@@ -175,9 +175,7 @@
     function initRestMap(lat, lng, zoom = 10, addMarker = true) {
         if (!restMap) {
             restMap = L.map('restMap', { attributionControl: false }).setView([lat, lng], zoom);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(restMap);
+            window.TumMenuMapBaseLayer.addTo(restMap);
 
             storeLayerGroup = L.layerGroup().addTo(restMap);
 
@@ -229,6 +227,61 @@
             const pos = restMarker.getLatLng();
             updateLocationFromMarker(pos.lat, pos.lng);
         });
+    }
+
+    function applyLocationSelection(lat, lng, zoom) {
+        state.userLat = lat;
+        state.userLng = lng;
+        initRestMap(lat, lng, zoom);
+        state.page = 0;
+        doSearch(false);
+    }
+
+    function geocodeProvinceByName(zoom = 10) {
+        if (!state.cityName) {
+            return;
+        }
+
+        var url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    applyLocationSelection(parseFloat(data[0].lat), parseFloat(data[0].lon), zoom);
+                }
+            })
+            .catch(err => {
+                console.error('Province geocoding error:', err);
+            });
+    }
+
+    function focusProvinceCenter(provinceId, zoom = 10) {
+        if (!provinceId) {
+            return Promise.resolve(false);
+        }
+
+        return fetch('/api/location/provinces/' + provinceId)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Province center not found');
+                }
+                return res.json();
+            })
+            .then(province => {
+                var lat = parseFloat(province.latitude);
+                var lng = parseFloat(province.longitude);
+
+                if (isNaN(lat) || isNaN(lng)) {
+                    return false;
+                }
+
+                applyLocationSelection(lat, lng, zoom);
+                return true;
+            })
+            .catch(err => {
+                console.warn('Province center lookup failed:', err);
+                return false;
+            });
     }
 
     function updateLocationFromMarker(lat, lng) {
@@ -397,6 +450,13 @@
                 });
                 if(state.cityId) {
                     loadDistricts(state.cityId, state.districtName);
+                    if (!state.districtId && !state.userLat && !state.userLng) {
+                        focusProvinceCenter(state.cityId, 10).then(found => {
+                            if (!found) {
+                                geocodeProvinceByName(10);
+                            }
+                        });
+                    }
                 }
             });
 
@@ -431,19 +491,11 @@
             
             if(state.cityId) {
                 loadDistricts(state.cityId);
-
-                // Locate Province Center via Nominatim
-                var url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
-                fetch(url).then(res => res.json()).then(data => {
-                    if (data && data.length > 0) {
-                        state.userLat = parseFloat(data[0].lat);
-                        state.userLng = parseFloat(data[0].lon);
-                        initRestMap(state.userLat, state.userLng, 10);
-                        state.page = 0;
-                        doSearch(false);
+                focusProvinceCenter(state.cityId, 10).then(found => {
+                    if (!found) {
+                        geocodeProvinceByName(10);
                     }
                 });
-
             } else {
                 districtInput.disabled = true;
                 districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
@@ -500,15 +552,9 @@
                 });
             } else {
                  if (!state.districtId && state.cityId) {
-                    // Reset back to city level if district is cleared
-                    var url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
-                    fetch(url).then(res => res.json()).then(data => {
-                        if (data && data.length > 0) {
-                            state.userLat = parseFloat(data[0].lat);
-                            state.userLng = parseFloat(data[0].lon);
-                            initRestMap(state.userLat, state.userLng, 10);
-                            state.page = 0;
-                            doSearch(false);
+                    focusProvinceCenter(state.cityId, 10).then(found => {
+                        if (!found) {
+                            geocodeProvinceByName(10);
                         }
                     });
                  } else {
