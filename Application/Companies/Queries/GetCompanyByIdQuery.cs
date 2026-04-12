@@ -22,7 +22,6 @@ public class GetCompanyByIdHandler(
 	{
 		var company = (await repoCompany.Query()
 			.Where(c => c.Id == req.Id)
-			.Include(c => c.BaseMenu)
 			.Include(c => c.Subscription)
 			.Include(c => c.PaymentMethods)
 			.Include(c => c.Medias)

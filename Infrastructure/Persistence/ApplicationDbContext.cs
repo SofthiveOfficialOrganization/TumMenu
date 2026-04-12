@@ -239,12 +239,19 @@ namespace Infrastructure.Persistence
 
 		private static void ConfigureMenuAndProduct(ModelBuilder builder)
 		{
-			// Company(1) -> BaseMenu(1)
+			// Company(1) -> Menu(n)
 			builder.Entity<Menu>()
 				.HasOne(m => m.Company)
-				.WithOne(c => c.BaseMenu)
-				.HasForeignKey<Menu>(m => m.CompanyId)
+				.WithMany(c => c.Menus)
+				.HasForeignKey(m => m.CompanyId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			// Company(*) -> DefaultMainMenu (optional)
+			builder.Entity<Company>()
+				.HasOne(c => c.DefaultMainMenu)
+				.WithMany()
+				.HasForeignKey(c => c.DefaultMainMenuId)
+				.OnDelete(DeleteBehavior.NoAction);
 
 			// Menu(1) -> Media(n)
 			builder.Entity<Menu>()

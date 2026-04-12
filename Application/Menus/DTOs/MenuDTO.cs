@@ -18,4 +18,5 @@ public sealed class MenuDTO : BaseDTO
 	public string? CompanyName { get; set; }
 	public string? StoreSlug { get; set; }
 	public string? CompanySlug { get; set; }
+	public bool IsDefaultCompanyMenu { get; set; }
 }

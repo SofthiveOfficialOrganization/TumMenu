@@ -28,7 +28,6 @@ public class GetCompaniesPagedByCurrentOwnerHandler(
 			c => (c.Owner != null && c.Owner.ApplicationUserId == applicationUserId) &&
 				 (string.IsNullOrEmpty(req.Search) || c.Title.Contains(req.Search) || c.Slug.Contains(req.Search)),
 			include: q => q
-				.Include(c => c.BaseMenu)
 				.Include(c => c.Subscription)
 				.Include(c => c.PaymentMethods)
 				.Include(c => c.Stores),

@@ -50,7 +50,15 @@
                                             <div class="horizon-avatar bg-light text-primary me-3">
                                                 <i class="fas fa-clipboard-list"></i>
                                             </div>
-                                            <span class="fw-bold text-dark">@item.Title</span>
+                                            <div>
+                                                <span class="fw-bold text-dark d-block">@item.Title</span>
+                                                @if (item.IsDefaultCompanyMenu)
+                                                {
+                                                    <span class="badge bg-warning text-dark mt-1">
+                                                        <i class="fas fa-thumbtack me-1"></i>Varsayılan Ana Menü
+                                                    </span>
+                                                }
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="text-nowrap">

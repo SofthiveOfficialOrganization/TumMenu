@@ -40,7 +40,7 @@ public class DeleteCompanyCommandHandler(
 			repoStore.SoftDelete(store);
 		}
 
-		// Soft delete associated menus (BaseMenu + Store Menus)
+		// Soft delete associated company menus and store menus
 		var menus = await repoMenu.Query(tracked: true)
 			.Where(m => m.CompanyId == company.Id)
 			.ToListAsync(ct);

@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using Application.Common.Exceptions;
 using Application.Menus.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -16,17 +17,17 @@ public class CreateMenuToCompanyCommand : IRequest<MenuDTO>, ITransactionalReque
 
 public class CreateMenuToCompanyCommandHandler(
 	IRepository<Menu> repoMenu,
+	IRepository<Company> repoCompany,
 	IMapper mapper
 ) : IRequestHandler<CreateMenuToCompanyCommand, MenuDTO>
 {
 	public async Task<MenuDTO> Handle(CreateMenuToCompanyCommand req, CancellationToken ct)
 	{
-		// Company menus use MainMenu status — archive any existing ones
-		var existingMainMenus = await repoMenu.Query(tracked: true)
-			.Where(x => x.CompanyId == req.CompanyId && x.Status == MenuStatus.MainMenu)
-			.ToListAsync(ct);
+		var company = await repoCompany.Query(tracked: true)
+			.FirstOrDefaultAsync(x => x.Id == req.CompanyId, ct);
 
-		foreach (var m in existingMainMenus) m.Status = MenuStatus.Archived;
+		if (company is null)
+			throw new NotFoundAppException("Şirket bulunamadı.");
 
 		var menu = new Menu
 		{
@@ -36,7 +37,14 @@ public class CreateMenuToCompanyCommandHandler(
 		};
 
 		await repoMenu.AddAsync(menu, ct);
+
+		if (!company.DefaultMainMenuId.HasValue)
+		{
+			company.DefaultMainMenu = menu;
+		}
+
 		var menuDTO = mapper.Map<MenuDTO>(menu);
+		menuDTO.IsDefaultCompanyMenu = company.DefaultMainMenuId == menu.Id || company.DefaultMainMenu == menu;
 		return menuDTO;
 	}
 }

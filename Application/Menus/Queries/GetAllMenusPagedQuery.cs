@@ -26,7 +26,9 @@ public class GetAllMenusPagedHandler(
 			expression: m => string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search),
 			include: m => m.Include(m => m.Categories).Include(m => m.Medias)
 				.Include(m => m.Store).Include(m => m.Company),
-			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
+			orderBy: m => m
+				.OrderByDescending(x => x.Company != null && x.Company.DefaultMainMenuId == x.Id)
+				.ThenByDescending(x => x.CreatedAt),
 			splitQuery: true,
 			ct: ct
 		);

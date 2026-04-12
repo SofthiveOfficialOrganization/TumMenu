@@ -233,6 +233,23 @@ public sealed class MenuController(IMediator mediator) : Controller
 		await mediator.Send(new SetMenuActiveCommand { Id = id }, ct);
 		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
 	}
+
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> SetDefault(Guid id, CancellationToken ct)
+	{
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			var isOwner = ownerCompany != null && menu.CompanyId == ownerCompany.Id;
+			if (!isOwner) return Forbid();
+		}
+
+		await mediator.Send(new SetDefaultCompanyMenuCommand { Id = id }, ct);
+		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
+	}
 	
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
@@ -338,7 +355,13 @@ public sealed class MenuController(IMediator mediator) : Controller
             OnlyCompanyMenus = true
         }, ct);
 
-        var items = menus.Items.Select(m => new { id = m.Id, title = m.Title, companyName = m.CompanyName });
+        var items = menus.Items.Select(m => new
+        {
+            id = m.Id,
+            title = m.Title,
+            companyName = m.CompanyName,
+            isDefaultCompanyMenu = m.IsDefaultCompanyMenu
+        });
         return Json(new { items, totalCount = menus.Count });
     }
 
@@ -374,7 +397,6 @@ public class CloneMenuToStoreRequest
     public Guid SourceMenuId { get; set; }
     public Guid StoreId { get; set; }
 }
-
 
 
 

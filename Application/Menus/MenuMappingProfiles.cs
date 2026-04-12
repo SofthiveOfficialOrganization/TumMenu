@@ -19,7 +19,8 @@ public class MenuMappingProfiles : IRegister
 			.Map(dest => dest.StoreName, src => src.Store != null ? src.Store.Title : null)
 			.Map(dest => dest.CompanyName, src => src.Company != null ? src.Company.Title : null)
 			.Map(dest => dest.StoreSlug, src => src.Store != null ? src.Store.Slug : null)
-			.Map(dest => dest.CompanySlug, src => (src.Store != null && src.Store.Company != null) ? src.Store.Company.Slug : (src.Company != null ? src.Company.Slug : null));
+			.Map(dest => dest.CompanySlug, src => (src.Store != null && src.Store.Company != null) ? src.Store.Company.Slug : (src.Company != null ? src.Company.Slug : null))
+			.Map(dest => dest.IsDefaultCompanyMenu, src => src.Company != null && src.Company.DefaultMainMenuId == src.Id);
 		config.NewConfig<CreateMenuToCompanyCommand, Menu>();
 		config.NewConfig<CreateMenuToStoreCommand, Menu>();
 		config.NewConfig<CopyMenuCommand, Menu>();

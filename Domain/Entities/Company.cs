@@ -11,11 +11,13 @@ namespace Domain.Entities
 		// TODO: Make it required after implementing example endpoints and services
 		public Guid? OwnerId { get; set; }
 		public Owner? Owner { get; set; }
-		public Menu? BaseMenu { get; set; }
+		public Guid? DefaultMainMenuId { get; set; }
+		public Menu? DefaultMainMenu { get; set; }
 		public Subscription? Subscription { get; set; }
 		public Guid? DefaultPaymentMethodId { get; set; }
 		public ICollection<PaymentMethod> PaymentMethods { get; set; } = [];
 
+		public ICollection<Menu> Menus { get; set; } = [];
 		public ICollection<Store> Stores { get; set; } = [];
 		public ICollection<Media> Medias { get; set; } = [];
 	}

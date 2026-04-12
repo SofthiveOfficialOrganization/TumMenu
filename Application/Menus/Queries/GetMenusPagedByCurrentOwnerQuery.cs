@@ -40,7 +40,9 @@ public class GetMenusPagedByCurrentOwnerHandler(
 			include: m => m.Include(x => x.Categories)
 				.Include(x => x.Store).ThenInclude(x => x!.Company)
 				.Include(x => x.Company),
-			orderBy: m => m.OrderByDescending(m => m.CreatedAt),
+			orderBy: m => m
+				.OrderByDescending(x => x.Company != null && x.Company.DefaultMainMenuId == x.Id)
+				.ThenByDescending(x => x.CreatedAt),
 			splitQuery: true,
 			ct: ct
 		);

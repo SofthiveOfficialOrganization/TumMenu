@@ -43,19 +43,45 @@ public class GetActiveMenuBySlugHandler(
 		if (storeMenu is not null)
 			return BuildMenuDTO(storeMenu, store.Title, store.Company.Title);
 
-		// Fallback: use the company's active main menu
-		var companyMenu = await repoMenu.Query()
-			.AsSplitQuery()
-			.Include(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.CategoryLibraryItem)
-					.ThenInclude(cli => cli.Medias)
-			.Include(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.Products.Where(p => p.IsActive))
-					.ThenInclude(p => p.Medias)
-			.FirstOrDefaultAsync(
-				m => m.CompanyId == store.Company.Id && m.Status == MenuStatus.MainMenu,
-				ct
-			);
+		Menu? companyMenu = null;
+
+		if (store.Company.DefaultMainMenuId.HasValue)
+		{
+			companyMenu = await repoMenu.Query()
+				.AsSplitQuery()
+				.Include(m => m.Company)
+				.Include(m => m.Categories.Where(c => c.IsActive))
+					.ThenInclude(c => c.CategoryLibraryItem)
+						.ThenInclude(cli => cli.Medias)
+				.Include(m => m.Categories.Where(c => c.IsActive))
+					.ThenInclude(c => c.Products.Where(p => p.IsActive))
+						.ThenInclude(p => p.Medias)
+				.FirstOrDefaultAsync(
+					m => m.Id == store.Company.DefaultMainMenuId.Value &&
+						m.CompanyId == store.Company.Id &&
+						m.Status == MenuStatus.MainMenu,
+					ct
+				);
+		}
+
+		// Fallback: use the company's default main menu, then the oldest available main menu
+		if (companyMenu is null)
+		{
+			companyMenu = await repoMenu.Query()
+				.AsSplitQuery()
+				.Include(m => m.Company)
+				.Include(m => m.Categories.Where(c => c.IsActive))
+					.ThenInclude(c => c.CategoryLibraryItem)
+						.ThenInclude(cli => cli.Medias)
+				.Include(m => m.Categories.Where(c => c.IsActive))
+					.ThenInclude(c => c.Products.Where(p => p.IsActive))
+						.ThenInclude(p => p.Medias)
+				.OrderBy(m => m.CreatedAt)
+				.FirstOrDefaultAsync(
+					m => m.CompanyId == store.Company.Id && m.Status == MenuStatus.MainMenu,
+					ct
+				);
+		}
 
 		if (companyMenu is null)
 			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
@@ -74,6 +100,7 @@ public class GetActiveMenuBySlugHandler(
 			Status = menu.Status,
 			StoreName = storeName,
 			CompanyName = companyName,
+			IsDefaultCompanyMenu = menu.Company != null && menu.Company.DefaultMainMenuId == menu.Id,
 			Categories = menu.Categories
 				.Where(c => c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)

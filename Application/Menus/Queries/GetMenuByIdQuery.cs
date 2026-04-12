@@ -23,6 +23,7 @@ public class GetMenuByIdHandler(
 	{
 		var menu = await repoMenu.Query()
 			.AsSplitQuery()
+			.Include(x => x.Company)
 			.Include(x => x.Categories)
 				.ThenInclude(x => x.CategoryLibraryItem)
 					.ThenInclude(cli => cli.Medias)
