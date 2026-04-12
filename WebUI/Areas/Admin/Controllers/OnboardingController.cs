@@ -40,10 +40,10 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
                 ViewBag.StoreId = store.Id;
                 ViewBag.StoreSlug = store.Slug;
 
-                // Check for menus on that store
-                var menus = await mediator.Send(new Application.Menus.Queries.GetMenusPagedByStoreQuery
+                // Check for company main menu
+                var menus = await mediator.Send(new Application.Menus.Queries.GetMenusPagedByCompanyQuery
                 {
-                    StoreId = store.Id,
+                    CompanyId = company.Id,
                     PageSize = 1
                 }, ct);
 
@@ -71,6 +71,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     }
 
     [HttpPost("company")]
+    [IgnoreAntiforgeryToken]
     public async Task<ActionResult<CompanyDTO>> CreateCompany([FromBody] CreateCompanyCommand command, CancellationToken ct)
     {
         try 
@@ -94,6 +95,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     }
 
     [HttpPost("store")]
+    [IgnoreAntiforgeryToken]
     public async Task<ActionResult<StoreDTO>> CreateStore([FromBody] CreateStoreCommand command, CancellationToken ct)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -102,11 +104,29 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     }
 
     [HttpPost("menu")]
-    public async Task<ActionResult<MenuDTO>> CreateMenu([FromBody] CreateMenuToStoreCommand command, CancellationToken ct)
+    [IgnoreAntiforgeryToken]
+    public async Task<ActionResult<MenuDTO>> CreateMenu([FromBody] OnboardingCreateMenuRequest req, CancellationToken ct)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var result = await mediator.Send(command, ct);
-        return Ok(result);
+
+        var companyMenu = await mediator.Send(new CreateMenuToCompanyCommand
+        {
+            Title = req.Title,
+            CompanyId = req.CompanyId
+        }, ct);
+
+        // Also create an empty store menu so the store appears in "Dükkan Menülerim"
+        if (req.StoreId.HasValue && req.StoreId.Value != Guid.Empty)
+        {
+            await mediator.Send(new CreateMenuToStoreCommand
+            {
+                Title = req.Title,
+                StoreId = req.StoreId.Value,
+                Status = Domain.Entities.MenuStatus.Active
+            }, ct);
+        }
+
+        return Ok(companyMenu);
     }
 
     /// <summary>
@@ -160,6 +180,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     /// Remove a category from the menu (by category record Id, not library item Id).
     /// </summary>
     [HttpPost("remove-category/{id:guid}")]
+    [IgnoreAntiforgeryToken]
     public async Task<IActionResult> RemoveCategory(Guid id, CancellationToken ct)
     {
         await mediator.Send(new Application.Menus.Commands.RemoveCategoryFromMenuCommand { Id = id }, ct);
@@ -170,6 +191,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     /// Add an existing CategoryLibraryItem to the menu.
     /// </summary>
     [HttpPost("add-category")]
+    [IgnoreAntiforgeryToken]
     public async Task<IActionResult> AddCategory([FromBody] AddOnboardingCategoryRequest req, CancellationToken ct)
     {
         if (req.MenuId == Guid.Empty || req.CategoryLibraryItemId == Guid.Empty)
@@ -190,6 +212,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     /// Mark the wizard as completed (called when user clicks 'Finish' on the category step).
     /// </summary>
     [HttpPost("complete")]
+    [IgnoreAntiforgeryToken]
     public async Task<IActionResult> CompleteOnboarding(CancellationToken ct)
     {
         await mediator.Send(new Application.Owners.Commands.MarkWizardCompletedCommand(), ct);
@@ -202,5 +225,12 @@ public class AddOnboardingCategoryRequest
     public Guid MenuId { get; set; }
     public Guid CategoryLibraryItemId { get; set; }
     public int SortOrder { get; set; }
+}
+
+public class OnboardingCreateMenuRequest
+{
+    public string Title { get; set; } = string.Empty;
+    public Guid CompanyId { get; set; }
+    public Guid? StoreId { get; set; }
 }
 

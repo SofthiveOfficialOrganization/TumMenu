@@ -30,6 +30,9 @@
     </script>
 </head>
 <body class="horizon-admin">
+    @{
+        var isOwnerPanelUser = User.IsInRole("Owner") && User.HasClaim(c => c.Type == "owner_id");
+    }
     <div class="horizon-layout">
         <!-- Sidebar Overlay -->
         <div class="horizon-sidebar-overlay" id="sidebarOverlay"></div>
@@ -63,6 +66,12 @@
                             <span>Kullanıcı Yönetimi</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "AdminSupport", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminSupport" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-bug"></i></div>
+                            <span>Hata Bildirimleri</span>
+                        </a>
+                    </li>
                 }
 
                 <li class="horizon-menu-item">
@@ -80,13 +89,22 @@
                 </li>
 
                 <li class="horizon-menu-item">
-                    <a href="@Url.Action("Index", "Menu", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Menu" ? "active" : "")">
+                    <a href="@Url.Action("CompanyMenus", "Menu", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Menu" && ViewContext.RouteData.Values["Action"]?.ToString() == "CompanyMenus" ? "active" : "")">
+                        <div class="horizon-menu-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span>@(rolePrefix == "admin" ? "Ana Menüler" : "Ana Menüm")</span>
+                    </a>
+                </li>
+
+                <li class="horizon-menu-item">
+                    <a href="@Url.Action("Index", "Menu", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Menu" && ViewContext.RouteData.Values["Action"]?.ToString() != "CompanyMenus" ? "active" : "")">
                         <div class="horizon-menu-icon">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M16 6.00008V4.2844C16 3.51587 16 3.13161 15.8387 2.88321C15.6976 2.66587 15.4776 2.5118 15.2252 2.45345C14.9366 2.38677 14.5755 2.51809 13.8532 2.78073L6.57982 5.4256C6.01064 5.63257 5.72605 5.73606 5.51615 5.91845C5.33073 6.07956 5.18772 6.28374 5.09968 6.51304C5 6.77264 5 7.07546 5 7.6811V12.0001M9 17.0001H15M9 13.5001H15M9 10.0001H15M8.2 21.0001H15.8C16.9201 21.0001 17.4802 21.0001 17.908 20.7821C18.2843 20.5903 18.5903 20.2844 18.782 19.9081C19 19.4802 19 18.9202 19 17.8001V9.20008C19 8.07997 19 7.51992 18.782 7.0921C18.5903 6.71577 18.2843 6.40981 17.908 6.21807C17.4802 6.00008 16.9201 6.00008 15.8 6.00008H8.2C7.0799 6.00008 6.51984 6.00008 6.09202 6.21807C5.71569 6.40981 5.40973 6.71577 5.21799 7.0921C5 7.51992 5 8.07997 5 9.20008V17.8001C5 18.9202 5 19.4802 5.21799 19.9081C5.40973 20.2844 5.71569 20.5903 6.09202 20.7821C6.51984 21.0001 7.07989 21.0001 8.2 21.0001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <span>@(rolePrefix == "admin" ? "Tüm Menüler" : "Menülerim")</span>
+                        <span>@(rolePrefix == "admin" ? "Dükkan Menüleri" : "Dükkan Menülerim")</span>
                     </a>
                 </li>
                 
@@ -314,6 +332,74 @@
         </div>
     </div>
 
+    @if (isOwnerPanelUser)
+    {
+        <button type="button"
+                class="owner-issue-report-fab"
+                data-bs-toggle="modal"
+                data-bs-target="#ownerIssueReportModal"
+                aria-label="Hata bildir">
+            <i class="fas fa-bug"></i>
+            <span>Hata Bildir</span>
+        </button>
+
+        <div class="modal fade owner-issue-report-modal" id="ownerIssueReportModal" tabindex="-1" aria-labelledby="ownerIssueReportModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div>
+                            <div class="owner-issue-report-eyebrow">Acil Destek</div>
+                            <h5 class="modal-title" id="ownerIssueReportModalLabel">Karşılaştığınız hatayı bize iletin</h5>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="ownerIssueReportForm" action="@Url.Action("ReportIssue", "Support", new { area = "Admin" })" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="CurrentPageTitle" id="ownerIssueCurrentPageTitle" />
+                            <input type="hidden" name="CurrentPageUrl" id="ownerIssueCurrentPageUrl" />
+                            <input type="hidden" name="BrowserInfo" id="ownerIssueBrowserInfo" />
+                            <input type="hidden" name="Viewport" id="ownerIssueViewport" />
+
+                            <div class="mb-3">
+                                <label for="ownerIssueCurrentPageDisplay" class="form-label fw-semibold">Bulunduğunuz sayfa</label>
+                                <input type="text" class="form-control" id="ownerIssueCurrentPageDisplay" readonly />
+                                <div class="owner-issue-report-hint mt-2">Form gönderilirken tam sayfa bağlantısı da destek ekibine iletilir.</div>
+                            </div>
+
+
+
+                            <div class="mb-0">
+                                <label for="ownerIssueAttemptedAction" class="form-label fw-semibold">Yapmak istediğiniz işlem</label>
+                                <textarea class="form-control owner-issue-report-textarea owner-issue-report-textarea--small"
+                                          id="ownerIssueAttemptedAction"
+                                          name="AttemptedAction"
+                                          maxlength="1000"
+                                          placeholder="Örneğin: Yeni menü eklemek, ürün sırasını değiştirmek, görsel yüklemek..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ownerIssueDescription" class="form-label fw-semibold">Karşılaştığınız hata</label>
+                                <textarea class="form-control owner-issue-report-textarea"
+                                          id="ownerIssueDescription"
+                                          name="Description"
+                                          maxlength="2000"
+                                          required
+                                          placeholder="Ne oldu, hangi uyarıyı gördünüz, sistem nasıl davrandı?"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Vazgeç</button>
+                        <button type="submit" class="btn btn-primary" id="ownerIssueReportSubmit" form="ownerIssueReportForm">
+                            <span class="owner-issue-report-submit-text">Gönder</span>
+                            <span class="owner-issue-report-submit-spinner spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -344,6 +430,107 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/tummenu-alerts.js" asp-append-version="true"></script>
+
+    @if (isOwnerPanelUser)
+    {
+        <script>
+            (function () {
+                function initOwnerIssueReport() {
+                    const modalElement = document.getElementById('ownerIssueReportModal');
+                    const form = document.getElementById('ownerIssueReportForm');
+
+                    if (!modalElement || !form || !window.bootstrap) {
+                        return;
+                    }
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                    const titleInput = document.getElementById('ownerIssueCurrentPageTitle');
+                    const urlInput = document.getElementById('ownerIssueCurrentPageUrl');
+                    const displayInput = document.getElementById('ownerIssueCurrentPageDisplay');
+                    const browserInput = document.getElementById('ownerIssueBrowserInfo');
+                    const viewportInput = document.getElementById('ownerIssueViewport');
+                    const submitButton = document.getElementById('ownerIssueReportSubmit');
+                    const submitText = submitButton?.querySelector('.owner-issue-report-submit-text');
+                    const submitSpinner = submitButton?.querySelector('.owner-issue-report-submit-spinner');
+
+                    function getCurrentPageTitle() {
+                        const breadcrumbTitle = document.querySelector('.current-page')?.textContent?.trim();
+                        const documentTitle = document.title.replace(' - TumMenu Admin', '').trim();
+                        return breadcrumbTitle || documentTitle || 'Bilinmeyen sayfa';
+                    }
+
+                    function syncPageContext() {
+                        const pageTitle = getCurrentPageTitle();
+                        const pageUrl = window.location.href;
+                        const pagePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+                        titleInput.value = pageTitle;
+                        urlInput.value = pageUrl;
+                        browserInput.value = navigator.userAgent || '';
+                        viewportInput.value = `${window.innerWidth}x${window.innerHeight}`;
+                        displayInput.value = `${pageTitle} (${pagePath})`;
+                    }
+
+                    function setSubmittingState(isSubmitting) {
+                        if (!submitButton || !submitText || !submitSpinner) {
+                            return;
+                        }
+
+                        submitButton.disabled = isSubmitting;
+                        submitText.textContent = isSubmitting ? 'Gönderiliyor...' : 'Gönder';
+                        submitSpinner.classList.toggle('d-none', !isSubmitting);
+                    }
+
+                    syncPageContext();
+                    modalElement.addEventListener('show.bs.modal', syncPageContext);
+
+                    form.addEventListener('submit', async function (event) {
+                        event.preventDefault();
+                        syncPageContext();
+
+                        if (!form.checkValidity()) {
+                            form.reportValidity();
+                            return;
+                        }
+
+                        const token = form.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        const formData = new FormData(form);
+
+                        setSubmittingState(true);
+
+                        try {
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                headers: token ? { 'RequestVerificationToken': token } : {},
+                                body: formData
+                            });
+
+                            const payload = await response.json().catch(function () { return {}; });
+
+                            if (!response.ok) {
+                                throw new Error(payload.message || 'Bildirim gönderilemedi.');
+                            }
+
+                            modal.hide();
+                            form.reset();
+                            syncPageContext();
+                            TumMenuAlerts.toast('success', payload.message || 'Hata bildiriminiz gönderildi.');
+                        } catch (error) {
+                            TumMenuAlerts.toast('error', error.message || 'Bildirim gönderilirken bir hata oluştu.');
+                        } finally {
+                            setSubmittingState(false);
+                        }
+                    });
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initOwnerIssueReport);
+                } else {
+                    initOwnerIssueReport();
+                }
+            })();
+        </script>
+    }
     
     <script>
         $(document).ready(function() {
@@ -456,4 +643,3 @@
     </script>
 </body>
 </html>
-

@@ -51,10 +51,11 @@
                             </td>
                             <td class="d-none d-lg-table-cell">
                                 @{
-                                    var baseUrl = string.IsNullOrWhiteSpace(item.BaseDomain) 
-                                        ? $"{Context.Request.Scheme}://{Context.Request.Host}" 
+                                    var baseUrl = string.IsNullOrWhiteSpace(item.BaseDomain)
+                                        ? $"{Context.Request.Scheme}://{Context.Request.Host}"
                                         : item.BaseDomain.TrimEnd('/');
                                     var fullUrl = $"{baseUrl}{item.PublicUrl}";
+                                    var previewUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{item.MenuUrl}";
                                 }
                                 <div class="text-truncate text-secondary small" style="max-width: 200px;" title="@fullUrl">
                                     @fullUrl
@@ -72,7 +73,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
-                                    <a href="@fullUrl" target="_blank" class="btn btn-sm btn-outline-secondary" title="Menüyü Gör" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                    <a href="@previewUrl" target="_blank" class="btn btn-sm btn-outline-secondary" title="Menüyü Gör" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
                                         <i class="fas fa-external-link-alt"></i>
                                     </a>
                                     <a href="@Url.Action("StoreDetails", "QRManagement", new { area = "Admin", storeId = item.StoreId })" class="btn btn-sm btn-outline-primary px-3" title="Detay & Tasarım" style="height: 32px; display: flex; align-items: center; justify-content: center;">

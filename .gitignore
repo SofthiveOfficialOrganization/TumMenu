@@ -18,6 +18,7 @@ CLAUDE.md
 
 # Production secrets — contains real credentials, never commit
 web.config
+appsettings.Development.json
 .worktrees
 DOCS/superpowers
 

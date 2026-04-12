@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+using Application.Abstractions;
 using Application.Menus.DTOs;
 using Domain.Entities;
 using MapsterMapper;
@@ -9,10 +9,9 @@ namespace Application.Menus.Commands;
 
 public class CreateMenuToCompanyCommand : IRequest<MenuDTO>, ITransactionalRequest, IAuditableCommand
 {
-	public string ActionName => "Menü oluşturuldu";
+	public string ActionName => "Ana menü oluşturuldu";
 	public string Title { get; set; } = string.Empty;
 	public Guid CompanyId { get; set; }
-	public MenuStatus Status { get; set; } = MenuStatus.Inactive;
 }
 
 public class CreateMenuToCompanyCommandHandler(
@@ -22,25 +21,20 @@ public class CreateMenuToCompanyCommandHandler(
 {
 	public async Task<MenuDTO> Handle(CreateMenuToCompanyCommand req, CancellationToken ct)
 	{
-		bool anyMenuExists = await repoMenu.Query().AnyAsync(x => x.CompanyId == req.CompanyId, ct);
+		// Company menus use MainMenu status — archive any existing ones
+		var existingMainMenus = await repoMenu.Query(tracked: true)
+			.Where(x => x.CompanyId == req.CompanyId && x.Status == MenuStatus.MainMenu)
+			.ToListAsync(ct);
 
-		if (req.Status == MenuStatus.Active)
-		{
-			var activeMenus = await repoMenu.Query(tracked: true)
-				.Where(x => x.CompanyId == req.CompanyId && x.Status == MenuStatus.Active)
-				.ToListAsync(ct);
-			
-			foreach (var m in activeMenus) m.Status = MenuStatus.Inactive;
-		}
-		else
-		{
-			if (!anyMenuExists)
-			{
-				req.Status = MenuStatus.Active;
-			}
-		}
+		foreach (var m in existingMainMenus) m.Status = MenuStatus.Archived;
 
-		var menu = mapper.Map<Menu>(req);
+		var menu = new Menu
+		{
+			Title = req.Title,
+			CompanyId = req.CompanyId,
+			Status = MenuStatus.MainMenu
+		};
+
 		await repoMenu.AddAsync(menu, ct);
 		var menuDTO = mapper.Map<MenuDTO>(menu);
 		return menuDTO;

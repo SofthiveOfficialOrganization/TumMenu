@@ -8,7 +8,8 @@
 
     var featured = Model.Items.FirstOrDefault();
     var restPosts = Model.Items.Skip(1).ToList();
-    var topTags = Model.Items
+
+    var tagGroups = Model.Items
         .Where(x => !string.IsNullOrWhiteSpace(x.Tags))
         .SelectMany(x => x.Tags!.Split(',', StringSplitOptions.RemoveEmptyEntries))
         .Select(x => x.Trim())
@@ -16,132 +17,151 @@
         .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
         .OrderByDescending(g => g.Count())
         .Take(8)
-        .Select(g => g.Key)
         .ToList();
+
+    var topTags = tagGroups.Select(g => g.Key).ToList();
 }
 
-<section class="blog-hero" aria-labelledby="blog-hero-heading">
-    <div class="container blog-hero__inner">
-        <header>
-            <p class="blog-hero__eyebrow">TumMenu İçerik Merkezi</p>
-            <h1 id="blog-hero-heading" class="blog-hero__title">Blog</h1>
-            <p class="section__subtitle blog-hero__subtitle">Restoran işletmeciliği, dijital menü ve yemek kültürü hakkında rehber içerikler.</p>
-            @* <div class="blog-hero__meta">
-                <span>@Model.Items.Count yazı</span>
-                <span>•</span>
-                <span>Her hafta yeni içerik</span>
-            </div> *@
-        </header>
-    </div>
-</section>
-
-<section class="section blog-content-section">
-    <div class="container blog-page">
-        @if (Model.Items.Any())
+<main class="blog-page-main">
+    @if (Model.Items.Any())
+    {
+        @if (featured is not null)
         {
-            <div class="blog-layout">
-                <div class="blog-main">
-                    @if (featured is not null)
-                    {
-                        <article class="blog-featured">
-                            <img src="@(string.IsNullOrEmpty(featured.CoverImageUrl) ? "/images/hero-illustration-business.png" : featured.CoverImageUrl)" alt="@featured.Title" class="blog-featured__image" />
-                            <div class="blog-featured__body">
-                                <p class="blog-featured__label">Öne Çıkan</p>
-                                <h2 class="blog-featured__title">@featured.Title</h2>
-                                <p class="blog-featured__summary">@featured.Summary</p>
-                                <div class="blog-featured__footer">
-                                    <time class="blog-card__date" datetime="@featured.PublishedAt.ToString("yyyy-MM-dd")">
-                                        @featured.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
-                                    </time>
-                                    <span class="btn btn--primary blog-featured__cta">Yazıyı Oku</span>
-                                </div>
-                                @if (!string.IsNullOrEmpty(featured.Tags))
-                                {
-                                    <div class="blog-card__tags">
-                                        @foreach (var tag in featured.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                                        {
-                                            <span class="blog-tag">@tag.Trim()</span>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                            <a href="/blog/@featured.Slug" class="blog-featured__hit" aria-label="@featured.Title"></a>
-                        </article>
-                    }
-
-                    <div class="blog-grid blog-grid--dense">
-                        @foreach (var post in restPosts)
+            <!-- Featured Article Section -->
+            <section class="blog-featured-section" aria-labelledby="blog-featured-title">
+                <div class="blog-featured-grid">
+                    <div class="blog-featured-image-col">
+                        <div class="blog-featured-image-glow"></div>
+                        <div class="blog-featured-image-wrap">
+                            <img src="@(string.IsNullOrEmpty(featured.CoverImageUrl) ? "/images/hero-illustration-business.png" : featured.CoverImageUrl)"
+                                 alt="@featured.Title"
+                                 class="blog-featured-img" />
+                        </div>
+                        <span class="blog-featured-badge">Öne Çıkan</span>
+                    </div>
+                    <div class="blog-featured-body">
+                        @if (!string.IsNullOrEmpty(featured.Tags))
                         {
-                            <article class="blog-card">
-                                <img src="@(string.IsNullOrEmpty(post.CoverImageUrl) ? "/images/hero-illustration-customer.png" : post.CoverImageUrl)" alt="@post.Title" class="blog-card__image" />
-                                <div class="blog-card__body">
-                                    <h2 class="blog-card__title">@post.Title</h2>
-                                    <p class="blog-card__summary">@post.Summary</p>
-                                    <time class="blog-card__date" datetime="@post.PublishedAt.ToString("yyyy-MM-dd")">
-                                        @post.PublishedAt.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))
-                                    </time>
-                                    @if (!string.IsNullOrEmpty(post.Tags))
-                                    {
-                                        <div class="blog-card__tags">
-                                            @foreach (var tag in post.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                                            {
-                                                <span class="blog-tag">@tag.Trim()</span>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                                <a href="/blog/@post.Slug" class="blog-card__hit" aria-label="@post.Title"></a>
-                            </article>
+                            <span class="blog-featured-category">@featured.Tags.Split(',').First().Trim()</span>
                         }
+                        <h1 id="blog-featured-title" class="blog-featured-title">@featured.Title</h1>
+                        <p class="blog-featured-summary">@featured.Summary</p>
+                        <a href="/blog/@featured.Slug" class="blog-featured-cta">
+                            Yazıyı Oku
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
                     </div>
                 </div>
+            </section>
+        }
 
-                <aside class="blog-sidebar" aria-label="Blog Yan Panel">
-                    <section class="blog-panel">
-                        <h3>Hızlı Konular</h3>
-                        @if (topTags.Any())
-                        {
-                            <div class="blog-panel__tags">
-                                @foreach (var tag in topTags)
-                                {
-                                    <a href="/blog/etiket/@tag" class="blog-tag">@tag</a>
-                                }
+        <!-- Content Grid & Sidebar -->
+        <div class="blog-content-grid">
+            <!-- Articles Column -->
+            <div class="blog-articles-col">
+                <div class="blog-articles-heading-row">
+                    <h2 class="blog-articles-heading">Son Yazılar</h2>
+                    <div class="blog-articles-divider"></div>
+                </div>
+                <div class="blog-cards-grid">
+                    @foreach (var post in restPosts.Any() ? restPosts : Model.Items.ToList())
+                    {
+                        <article class="blog-card-new">
+                            <a href="/blog/@post.Slug" class="blog-card-new__hit" aria-label="@post.Title"></a>
+                            <div class="blog-card-new__image-wrap">
+                                <img src="@(string.IsNullOrEmpty(post.CoverImageUrl) ? "/images/hero-illustration-customer.png" : post.CoverImageUrl)"
+                                     alt="@post.Title"
+                                     class="blog-card-new__image" />
                             </div>
-                        }
-                        else
-                        {
-                            <p>Etiketler hazırlanıyor.</p>
-                        }
-                    </section>
-
-                    <section class="blog-panel blog-panel--accent">
-                        <h3>Neler Bulacaksın?</h3>
-                        <ul>
-                            <li>Restoran yönetimi ipuçları</li>
-                            <li>QR menü ve dijitalleşme rehberleri</li>
-                            <li>Müşteri deneyimi ve sadakat fikirleri</li>
-                        </ul>
-                        <a href="/fiyatlandirma" class="btn btn--ghost blog-sidebar__cta">İşletme Çözümlerini İncele</a>
-                    </section>
-                </aside>
+                            <div class="blog-card-new__body">
+                                @if (!string.IsNullOrEmpty(post.Tags))
+                                {
+                                    <span class="blog-card-new__category">@post.Tags.Split(',').First().Trim()</span>
+                                }
+                                <h3 class="blog-card-new__title">@post.Title</h3>
+                                <p class="blog-card-new__summary">@post.Summary</p>
+                                <a href="/blog/@post.Slug" class="blog-card-new__readmore">
+                                    Devamını Oku
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                                </a>
+                            </div>
+                        </article>
+                    }
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="blog-empty">
-                <h2>Henüz içerik yok</h2>
-                <p>İlk blog yazıları hazırlanıyor. Çok yakında burada faydalı içerikler göreceksiniz.</p>
-            </div>
-        }
 
-        @if (Model.Pages > 1)
-        {
-            <nav class="pagination" aria-label="Blog sayfalandırma">
-                @for (int i = 1; i <= Model.Pages; i++)
+            <!-- Sidebar -->
+            <aside class="blog-sidebar-new" aria-label="Blog Yan Panel">
+                <!-- Search -->
+                <div class="blog-panel-new">
+                    <h4 class="blog-panel-new__heading">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                        İçerik Bul
+                    </h4>
+                    <input type="search" class="blog-search-new" placeholder="Yazılarda ara..." />
+                </div>
+
+                <!-- Categories -->
+                @if (tagGroups.Any())
                 {
-                    <a href="/blog?page=@i" class="pagination__item @(i == Model.Index ? "pagination__item--active" : "")">@i</a>
+                    <div class="blog-panel-new blog-panel-new--cats">
+                        <h4 class="blog-panel-new__heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                            Kategoriler
+                        </h4>
+                        @foreach (var g in tagGroups)
+                        {
+                            <a href="/blog/etiket/@g.Key" class="blog-cat-item">
+                                <span>@g.Key</span>
+                                <span class="blog-cat-count">@g.Count()</span>
+                            </a>
+                        }
+                    </div>
                 }
-            </nav>
-        }
-    </div>
-</section>
+
+                <!-- Newsletter -->
+                <div class="blog-panel-new blog-panel-new--newsletter">
+                    <div class="blog-newsletter-glow"></div>
+                    <h4 class="blog-newsletter-title">Bülten</h4>
+                    <p class="blog-newsletter-desc">Yeni içeriklerden haberdar olmak için e-posta adresinizi bırakın.</p>
+                    <input type="email" class="blog-newsletter-input" placeholder="E-posta adresiniz" />
+                    <button class="blog-newsletter-btn">Abone Ol</button>
+                </div>
+
+                <!-- Popular Tags -->
+                @if (topTags.Any())
+                {
+                    <div class="blog-panel-new">
+                        <h4 class="blog-panel-new__heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                            Popüler Etiketler
+                        </h4>
+                        <div class="blog-tags-wrap">
+                            @foreach (var tag in topTags)
+                            {
+                                <a href="/blog/etiket/@tag" class="blog-tag-new">@tag</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </aside>
+        </div>
+    }
+    else
+    {
+        <div class="blog-empty-new">
+            <h2>Henüz içerik yok</h2>
+            <p>İlk blog yazıları hazırlanıyor. Çok yakında burada faydalı içerikler göreceksiniz.</p>
+        </div>
+    }
+
+    @if (Model.Pages > 1)
+    {
+        <nav class="pagination" aria-label="Blog sayfalandırma">
+            @for (int i = 1; i <= Model.Pages; i++)
+            {
+                <a href="/blog?page=@i" class="pagination__item @(i == Model.Index ? "pagination__item--active" : "")">@i</a>
+            }
+        </nav>
+    }
+</main>

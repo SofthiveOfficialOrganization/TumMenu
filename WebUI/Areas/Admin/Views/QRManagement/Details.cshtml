@@ -24,7 +24,7 @@
                     <button class="btn btn-sm btn-outline-primary shadow-sm px-3" onclick="window.print()" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-print me-2"></i> <span class="d-none d-md-inline">Yazdır / İndir</span>
                     </button>
-                    <a href="@(string.IsNullOrWhiteSpace(Model.BaseDomain) ? $"{Context.Request.Scheme}://{Context.Request.Host}" : Model.BaseDomain.TrimEnd('/'))@Model.PublicUrl" target="_blank" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Menüyü Gör" style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Model.MenuUrl}")" target="_blank" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Menüyü Gör" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-external-link-alt me-2"></i> <span class="d-none d-md-inline">Menüyü Gör</span>
                     </a>
                 </div>

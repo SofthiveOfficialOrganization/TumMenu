@@ -2,8 +2,6 @@
     'use strict';
 
     var DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
-    var ATTRIBUTION_HTML = '<a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener noreferrer">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>';
-
     function ensureDependencies() {
         if (!window.L) {
             throw new Error('Leaflet is required before map-base-layer.js');
@@ -27,7 +25,6 @@
         }
 
         if (!map._openFreeMapAttributionApplied) {
-            map.attributionControl.addAttribution(ATTRIBUTION_HTML);
             map._openFreeMapAttributionApplied = true;
         }
     }
@@ -59,7 +56,6 @@
 
     window.TumMenuMapBaseLayer = {
         DEFAULT_STYLE_URL: DEFAULT_STYLE_URL,
-        ATTRIBUTION_HTML: ATTRIBUTION_HTML,
         addTo: addTo,
         createLayer: createLayer,
         ensureAttributionControl: ensureAttributionControl

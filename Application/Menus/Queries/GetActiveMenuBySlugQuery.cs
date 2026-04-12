@@ -13,7 +13,8 @@ public sealed record GetActiveMenuBySlugQuery(
 ) : IRequest<MenuDTO>;
 
 public class GetActiveMenuBySlugHandler(
-	IRepository<Store> repoStore
+	IRepository<Store> repoStore,
+	IRepository<Menu> repoMenu
 ) : IRequestHandler<GetActiveMenuBySlugQuery, MenuDTO>
 {
 	public async Task<MenuDTO> Handle(GetActiveMenuBySlugQuery req, CancellationToken ct)
@@ -37,19 +38,42 @@ public class GetActiveMenuBySlugHandler(
 		if (store is null)
 			throw new NotFoundAppException("Dükkan bulunamadı.");
 
-		var menu = store.Menus.FirstOrDefault();
-		if (menu is null)
+		var storeMenu = store.Menus.FirstOrDefault();
+
+		if (storeMenu is not null)
+			return BuildMenuDTO(storeMenu, store.Title, store.Company.Title);
+
+		// Fallback: use the company's active main menu
+		var companyMenu = await repoMenu.Query()
+			.AsSplitQuery()
+			.Include(m => m.Categories.Where(c => c.IsActive))
+				.ThenInclude(c => c.CategoryLibraryItem)
+					.ThenInclude(cli => cli.Medias)
+			.Include(m => m.Categories.Where(c => c.IsActive))
+				.ThenInclude(c => c.Products.Where(p => p.IsActive))
+					.ThenInclude(p => p.Medias)
+			.FirstOrDefaultAsync(
+				m => m.CompanyId == store.Company.Id && m.Status == MenuStatus.MainMenu,
+				ct
+			);
+
+		if (companyMenu is null)
 			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
 
-		var dto = new MenuDTO
+		return BuildMenuDTO(companyMenu, store.Title, store.Company.Title);
+	}
+
+	private static MenuDTO BuildMenuDTO(Menu menu, string storeName, string companyName)
+	{
+		return new MenuDTO
 		{
 			Id = menu.Id,
 			Title = menu.Title,
 			StoreId = menu.StoreId,
 			CompanyId = menu.CompanyId,
 			Status = menu.Status,
-			StoreName = store.Title,
-			CompanyName = store.Company.Title,
+			StoreName = storeName,
+			CompanyName = companyName,
 			Categories = menu.Categories
 				.Where(c => c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)
@@ -95,7 +119,5 @@ public class GetActiveMenuBySlugHandler(
 				})
 				.ToList()
 		};
-
-		return dto;
 	}
 }

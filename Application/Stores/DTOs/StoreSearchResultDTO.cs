@@ -6,6 +6,7 @@ public sealed class StoreSearchResultDTO
 	public string Title { get; set; } = null!;
 	public string Slug { get; set; } = null!;
 	public string CompanySlug { get; set; } = null!;
+	public string? CompanyName { get; set; }
 	public string? ImageUrl { get; set; }
 	public string? City { get; set; }
 	public string? District { get; set; }

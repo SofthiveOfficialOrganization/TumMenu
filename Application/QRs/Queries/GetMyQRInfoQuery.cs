@@ -16,6 +16,7 @@ public class MyQRDTO
     public string QRKey { get; set; } = null!;
     public string PublicUrl { get; set; } = null!;
     public string? BaseDomain { get; set; }
+    public string MenuUrl { get; set; } = null!;
 }
 
 public class GetMyQRInfoQueryHandler(
@@ -45,7 +46,8 @@ public class GetMyQRInfoQueryHandler(
                 CompanyTitle = store.Company.Title,
                 QRKey = store.QRCode.PublicKey,
                 PublicUrl = $"/q/{store.QRCode.PublicKey}",
-                BaseDomain = store.QRCode.BaseDomain
+                BaseDomain = store.QRCode.BaseDomain,
+                MenuUrl = $"/{store.Company.Slug}/{store.Slug}"
             })
             .ToList();
     }

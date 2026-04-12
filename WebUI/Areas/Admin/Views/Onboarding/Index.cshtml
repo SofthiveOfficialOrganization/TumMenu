@@ -179,26 +179,21 @@
                             </form>
                         </div>
 
-                        <!-- Step 3: Create Menu -->
+                        <!-- Step 3: Create Main Menu -->
                         <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-menu">
                             <div class="text-center mb-5">
                                 <div class="mb-4">
                                     <i class="fas fa-utensils fa-4x text-info animate-shake"></i>
                                 </div>
-                                <h2 class="fs-2 fs-md-1 fw-bold text-info mb-2 mb-md-3">Neredeyse Bitti!</h2>
-                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Menünü oluştur ve müşterilerini etkilemeye başla.</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-info mb-2 mb-md-3">Ana Menünüzü Oluşturun</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Bu menüyü ileride tüm dükkanlarınızda kullanabilirsiniz.</p>
                             </div>
                             <form id="form-menu" class="onboarding-form">
+                                <input type="hidden" id="MenuCompanyId" name="CompanyId">
                                 <input type="hidden" id="MenuStoreId" name="StoreId">
-                                <div class="mb-4">
+                                <div class="mb-5">
                                     <label for="MenuTitle" class="form-label h4 text-body">Menü Adı</label>
                                     <input type="text" class="form-control form-control-xl shadow-sm" id="MenuTitle" name="Title" required placeholder="Örn: Ana Menü">
-                                </div>
-                                <div class="form-check mb-5 ps-5">
-                                    <input class="form-check-input scale-150" type="checkbox" id="MenuStatus" name="Status" value="1" checked>
-                                    <label class="form-check-label h5 ms-2 pt-1" for="MenuStatus">
-                                        Bu menüyü hemen aktif yap
-                                    </label>
                                 </div>
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-info btn-xl text-white shadow-lg hover-scale">
@@ -387,8 +382,9 @@
             const existingCompanyId = '@ViewBag.CompanyId';
             if (existingCompanyId) {
                 $('#StoreCompanyId').val(existingCompanyId);
+                $('#MenuCompanyId').val(existingCompanyId);
             }
-            
+
             const existingStoreId = '@ViewBag.StoreId';
             if (existingStoreId) {
                 $('#MenuStoreId').val(existingStoreId);
@@ -782,6 +778,7 @@
                     success: function(response) {
                         // Response should be CompanyDTO
                         $('#StoreCompanyId').val(response.id);
+                        $('#MenuCompanyId').val(response.id);
                         btn.prop('disabled', false).html(originalText);
                         nextStep();
                     },
@@ -830,7 +827,7 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        // Response should be StoreDTO
+                        // Response should be StoreDTO — capture for menu step
                         $('#MenuStoreId').val(response.id);
                         btn.prop('disabled', false).html(originalText);
                         nextStep();
@@ -850,9 +847,9 @@
                 btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kaydediliyor...');
 
                 const formData = {
-                    StoreId: $('#MenuStoreId').val(),
-                    Title: $('#MenuTitle').val(),
-                    Status: $('#MenuStatus').is(':checked') ? 1 : 0 
+                    CompanyId: $('#MenuCompanyId').val(),
+                    StoreId: $('#MenuStoreId').val() || null,
+                    Title: $('#MenuTitle').val()
                 };
 
                 $.ajax({

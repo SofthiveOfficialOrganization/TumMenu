@@ -3,7 +3,7 @@
 @model PaginatedListDTO<MenuDTO>
 
 @{
-    ViewData["Title"] = "Menülerim";
+    ViewData["Title"] = "Ana Menülerim";
 }
 
 <div class="row">
@@ -11,21 +11,20 @@
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                   <h4 class="fw-bold mb-1">Dükkan Menülerim</h4>
-                   <p class="text-secondary small mb-0">Dükkanlarınıza ait menüleri yönetin.</p>
+                   <h4 class="fw-bold mb-1">Ana Menülerim</h4>
+                   <p class="text-secondary small mb-0">Şirketinize ait ana menüleri yönetin. Bu menüler tüm dükkanlarınızda kullanılabilir.</p>
                 </div>
-                <a asp-action="CreateToStore" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus me-2"></i> Yeni Dükkan Menüsü
+                <a asp-action="CreateToCompany" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-2"></i> Yeni Ana Menü
                 </a>
             </div>
-            
+
             <div class="table-responsive">
                 <table class="table table-borderless align-middle table-hover">
                     <thead>
                         <tr class="text-secondary small text-uppercase border-bottom">
                             <th class="ps-3">İsim</th>
-                            <th>Bağlı Olduğu Şirket / Dükkan</th>
-                            <th>Durum</th>
+                            <th>Şirket</th>
                             <th class="d-none d-md-table-cell">Kategoriler</th>
                             <th class="d-none d-lg-table-cell">Oluşturulma Tarihi</th>
                             <th class="text-center">İşlemler</th>
@@ -44,37 +43,23 @@
                                             </div>
                                             <div>
                                                 <span class="fw-bold text-dark d-block">@item.Title</span>
+                                                <span class="badge bg-primary bg-opacity-10 text-primary mt-1">
+                                                    <i class="fas fa-star me-1"></i>Ana Menü
+                                                </span>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        @if (!string.IsNullOrEmpty(item.StoreName))
+                                        @if (!string.IsNullOrEmpty(item.CompanyName))
                                         {
                                             <div class="d-inline-flex align-items-center p-1 px-2 border rounded bg-light">
-                                                <span class="badge bg-info bg-opacity-10 text-info me-2"><i class="fas fa-store"></i> Dükkan</span>
-                                                <small class="text-dark fw-medium">@item.StoreName</small>
-                                            </div>
-                                        }
-                                        else if (!string.IsNullOrEmpty(item.CompanyName))
-                                        {
-                                            <div class="d-inline-flex align-items-center p-1 px-2 border rounded bg-light">
-                                                <span class="badge bg-primary bg-opacity-10 text-primary me-2"><i class="fas fa-star"></i> Ana Menü</span>
+                                                <i class="fas fa-building text-primary me-2"></i>
                                                 <small class="text-dark fw-medium">@item.CompanyName</small>
                                             </div>
                                         }
                                         else
                                         {
                                             <span class="text-muted small">-</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (item.Status == Domain.Entities.MenuStatus.Active)
-                                        {
-                                            <span class="badge bg-success">AKTİF</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-light text-secondary">PASİF</span>
                                         }
                                     </td>
                                     <td class="text-secondary d-none d-md-table-cell">
@@ -94,38 +79,41 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center py-5 text-secondary">
+                                <td colspan="5" class="text-center py-5 text-secondary">
                                     <div class="mb-3">
                                         <span class="fa-stack fa-2x">
                                             <i class="fas fa-circle fa-stack-2x text-light"></i>
                                             <i class="fas fa-utensils fa-stack-1x text-secondary opacity-50"></i>
                                         </span>
                                     </div>
-                                    <h5>Henüz dükkan menüsü yok</h5>
-                                    <p class="small">Henüz bir dükkan menüsü oluşturmadınız.</p>
+                                    <h5>Henüz ana menü yok</h5>
+                                    <p class="small">Şirketiniz için henüz bir ana menü oluşturmadınız.</p>
+                                    <a asp-action="CreateToCompany" class="btn btn-primary btn-sm mt-2">
+                                        <i class="fas fa-plus me-2"></i> İlk Ana Menünüzü Oluşturun
+                                    </a>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-             <!-- Sayfalama -->
+
             @if (Model != null && Model.Pages > 1)
             {
-                   <div class="d-flex justify-content-center mt-4">
+                <div class="d-flex justify-content-center mt-4">
                     <nav aria-label="Sayfa navigasyonu">
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index - 1)">Önceki</a>
+                                <a class="page-link" asp-action="CompanyMenus" asp-route-page="@(Model.Index - 1)">Önceki</a>
                             </li>
-                             @for (int i = 1; i <= Model.Pages; i++)
+                            @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="Index" asp-route-PageIndex="@i">@i</a>
+                                    <a class="page-link" asp-action="CompanyMenus" asp-route-page="@i">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index + 1)">Sonraki</a>
+                                <a class="page-link" asp-action="CompanyMenus" asp-route-page="@(Model.Index + 1)">Sonraki</a>
                             </li>
                         </ul>
                     </nav>

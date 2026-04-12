@@ -9,5 +9,6 @@ namespace Domain.Entities
 		public Company? Company { get; set; }
 		public List<Invoice> Invoices { get; set; } = [];
 		public bool WizardCompleted { get; set; }
+		public List<OwnerIssueReport> IssueReports { get; set; } = [];
 	}
 }

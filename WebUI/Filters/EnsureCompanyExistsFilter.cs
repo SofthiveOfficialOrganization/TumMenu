@@ -1,7 +1,10 @@
 using Application.Companies.Queries;
+using Application.Common.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace WebUI.Filters;
@@ -9,10 +12,12 @@ namespace WebUI.Filters;
 public class EnsureCompanyExistsFilter : IAsyncActionFilter
 {
     private readonly IMediator _mediator;
+    private readonly IApplicationDbContext _db;
 
-    public EnsureCompanyExistsFilter(IMediator mediator)
+    public EnsureCompanyExistsFilter(IMediator mediator, IApplicationDbContext db)
     {
         _mediator = mediator;
+        _db = db;
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -35,6 +40,14 @@ public class EnsureCompanyExistsFilter : IAsyncActionFilter
         // 1. Check if user is authenticated and is an Owner
         if (user.Identity?.IsAuthenticated == true && user.IsInRole("Owner"))
         {
+            var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                await context.HttpContext.SignOutAsync();
+                context.Result = new RedirectResult("/giris");
+                return;
+            }
+
             // 1.1 exclude API requests from redirection
             if (context.HttpContext.Request.Path.Value?.StartsWith("/api", StringComparison.OrdinalIgnoreCase) == true)
             {
@@ -64,6 +77,19 @@ public class EnsureCompanyExistsFilter : IAsyncActionFilter
             if (string.Equals(action, "CheckSlug", StringComparison.OrdinalIgnoreCase))
             {
                 await next();
+                return;
+            }
+
+            // If the owner record no longer exists (for example the account was deleted by an admin),
+            // the auth cookie can still carry stale "Owner" claims until it is revalidated.
+            var ownerExists = await _db.Owners
+                .AsNoTracking()
+                .AnyAsync(o => o.ApplicationUserId == userId, context.HttpContext.RequestAborted);
+
+            if (!ownerExists)
+            {
+                await context.HttpContext.SignOutAsync();
+                context.Result = new RedirectResult("/giris");
                 return;
             }
             

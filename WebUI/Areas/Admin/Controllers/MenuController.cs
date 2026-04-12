@@ -25,8 +25,27 @@ public sealed class MenuController(IMediator mediator) : Controller
         }
         else
         {
-            var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Search = search, Page = page }, ct);
+            var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Search = search, Page = page, OnlyStoreMenus = true }, ct);
             return View("MyMenus", menus);
+        }
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet]
+    public async Task<IActionResult> CompanyMenus([FromQuery] string? search, int page = 1, CancellationToken ct = default)
+    {
+        if (User.IsInRole("Admin"))
+        {
+            var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Search = search, Page = page, OnlyCompanyMenus = true }, ct);
+            return View("CompanyMenus", menus);
+        }
+        else
+        {
+            var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+            if (company == null) return RedirectToAction("Index", "Onboarding", new { area = "Admin" });
+
+            var menus = await mediator.Send(new GetMenusPagedByCompanyQuery { CompanyId = company.Id, Search = search, Page = page }, ct);
+            return View("CompanyMenus", menus);
         }
     }
 
@@ -288,6 +307,41 @@ public sealed class MenuController(IMediator mediator) : Controller
         return Json(new { items = result.Items, totalCount = result.Count });
     }
 
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CloneToStore([FromForm] CloneMenuToStoreRequest req, CancellationToken ct)
+    {
+        if (req.SourceMenuId == Guid.Empty || req.StoreId == Guid.Empty)
+        {
+            ModelState.AddModelError("", "Kaynak menü ve dükkan seçilmeli.");
+            return View("CreateToStore", new CreateMenuToStoreCommand());
+        }
+
+        var dto = await mediator.Send(new CloneMenuToStoreCommand
+        {
+            SourceMenuId = req.SourceMenuId,
+            StoreId = req.StoreId
+        }, ct);
+        return RedirectToAction(nameof(Details), new { id = dto.Id });
+    }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpGet]
+    public async Task<IActionResult> SearchMainMenus(string? search, int page = 1, int pageSize = 10, CancellationToken ct = default)
+    {
+        var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
+        {
+            Search = search,
+            Page = page,
+            PageSize = pageSize,
+            OnlyCompanyMenus = true
+        }, ct);
+
+        var items = menus.Items.Select(m => new { id = m.Id, title = m.Title, companyName = m.CompanyName });
+        return Json(new { items, totalCount = menus.Count });
+    }
+
     [HttpGet]
     public IActionResult DivideByZeroError()
     {
@@ -300,19 +354,25 @@ public sealed class MenuController(IMediator mediator) : Controller
     [HttpGet]
     public async Task<IActionResult> GetMenusForSelect2(Guid? companyId, Guid? storeId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery 
-        { 
-            Page = page, 
+        var result = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
+        {
+            Page = page,
             PageSize = pageSize,
             Search = search,
             CompanyId = companyId,
             StoreId = storeId
         }, ct);
-        
+
         var items = result.Items.Select(m => new { id = m.Id, text = m.Title });
-        
+
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
+}
+
+public class CloneMenuToStoreRequest
+{
+    public Guid SourceMenuId { get; set; }
+    public Guid StoreId { get; set; }
 }
 
 

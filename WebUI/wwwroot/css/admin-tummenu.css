@@ -1389,6 +1389,31 @@ body.dark-mode .swal2-toast {
         padding-left: 7.5px;
         padding-right: 7.5px;
     }
+
+    .owner-issue-report-fab {
+        right: 16px;
+        bottom: 16px;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .owner-issue-report-fab span {
+        display: none;
+    }
+
+    .owner-issue-report-modal .modal-dialog {
+        margin: 12px;
+    }
+
+    .owner-issue-report-modal .modal-body,
+    .owner-issue-report-modal .modal-header,
+    .owner-issue-report-modal .modal-footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
 }
 
 /* ======================================
@@ -1467,6 +1492,102 @@ body.dark-mode .select2-container--bootstrap-5 .select2-results__option--highlig
 
 .form-feedback.visible {
     display: block;
+}
+
+/* Owner Issue Report */
+.owner-issue-report-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 64px;
+    z-index: 1080;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ff7a18 0%, #ff4d4f 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 18px 45px rgba(255, 90, 79, 0.32);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.owner-issue-report-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 55px rgba(255, 90, 79, 0.4);
+    filter: saturate(1.05);
+}
+
+.owner-issue-report-fab:focus-visible {
+    outline: 3px solid rgba(255, 122, 24, 0.25);
+    outline-offset: 3px;
+}
+
+.owner-issue-report-fab i {
+    font-size: 15px;
+}
+
+.owner-issue-report-modal .modal-content {
+    border: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(22, 28, 45, 0.18);
+}
+
+.owner-issue-report-modal .modal-header {
+    padding: 22px 24px 18px;
+    background: linear-gradient(135deg, #ff7a18 0%, #ff4d4f 100%);
+    color: #ffffff;
+}
+
+.owner-issue-report-modal .modal-title {
+    color: #ffffff !important;
+    font-size: 1.2rem;
+}
+
+.owner-issue-report-modal .modal-body {
+    padding: 24px;
+}
+
+.owner-issue-report-modal .modal-footer {
+    padding: 0 24px 24px;
+}
+
+.owner-issue-report-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+    margin-bottom: 6px;
+}
+
+.owner-issue-report-subtitle {
+    max-width: 420px;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.owner-issue-report-hint {
+    color: var(--horizon-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.owner-issue-report-textarea {
+    min-height: 132px;
+    resize: vertical;
+}
+
+.owner-issue-report-textarea--small {
+    min-height: 112px;
+}
+
+html.dark-mode .owner-issue-report-modal .modal-content,
+body.dark-mode .owner-issue-report-modal .modal-content {
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
 /* Category Container */

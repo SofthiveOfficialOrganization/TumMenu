@@ -73,6 +73,9 @@ namespace Infrastructure.Persistence
 		// Blog
 		public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
 
+		// Support
+		public DbSet<OwnerIssueReport> OwnerIssueReports => Set<OwnerIssueReport>();
+
 		// Misc
 		public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 		public DbSet<Notification> Notifications => Set<Notification>();
@@ -606,6 +609,10 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<Invoice>()
 				.Property(i => i.PaymentStatus)
+				.HasConversion<int>();
+
+			builder.Entity<OwnerIssueReport>()
+				.Property(r => r.Status)
 				.HasConversion<int>();
 		}
 

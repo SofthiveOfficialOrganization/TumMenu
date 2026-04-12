@@ -77,6 +77,7 @@ public class SearchStoresQueryHandler(
 				s.Title,
 				s.Slug,
 				CompanySlug = s.Company.Slug,
+				CompanyName = s.Company.Title,
 				Latitude = s.Address != null ? s.Address.Latitude : null,
 				Longitude = s.Address != null ? s.Address.Longitude : null,
 				FullAddress = s.Address != null ? s.Address.FullAddress : null,
@@ -113,6 +114,7 @@ public class SearchStoresQueryHandler(
 				Title = s.Title,
 				Slug = s.Slug,
 				CompanySlug = s.CompanySlug,
+				CompanyName = s.CompanyName,
 				Latitude = s.Latitude,
 				Longitude = s.Longitude,
 				FullAddress = s.FullAddress,
@@ -184,6 +186,7 @@ public class SearchStoresQueryHandler(
 				Title = match.Title,
 				Slug = match.Slug,
 				CompanySlug = match.CompanySlug,
+				CompanyName = match.CompanyName,
 				ImageUrl = storeImage,
 				City = city,
 				District = district,
@@ -226,6 +229,7 @@ public class SearchStoresQueryHandler(
 		public string Title { get; set; } = null!;
 		public string Slug { get; set; } = null!;
 		public string CompanySlug { get; set; } = null!;
+		public string? CompanyName { get; set; }
 		public double? Latitude { get; set; }
 		public double? Longitude { get; set; }
 		public string? FullAddress { get; set; }

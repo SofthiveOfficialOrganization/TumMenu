@@ -2,7 +2,7 @@
 @model CreateMenuToCompanyCommand
 
 @{
-    ViewData["Title"] = "Şirket İçin Menü Oluştur";
+    ViewData["Title"] = "Ana Menü Oluştur";
 }
 
 @section Scripts {
@@ -91,7 +91,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Şirket İçin Menü Oluştur</h4>
+            <h4 class="fw-bold mb-4">Ana Menü Oluştur</h4>
             
             <form asp-action="CreateToCompany" method="post">
                 <div class="mb-3">
@@ -100,18 +100,6 @@
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Status" class="form-label text-secondary small text-uppercase fw-bold">Durum</label>
-                    <select asp-for="Status" class="form-select">
-                        <option value="Inactive">Pasif (Varsayılan)</option>
-                        <option value="Active">Aktif</option>
-                    </select>
-                    <span asp-validation-for="Status" class="text-danger small"></span>
-                    <div class="form-text text-muted small">
-                        "Aktif" seçilirse, bu şirketin diğer tüm menüleri pasif duruma getirilir.
-                    </div>
-                </div>
-                
                 <div class="mb-4">
                     <label class="form-label text-secondary small text-uppercase fw-bold">Şirket</label>
                     <div class="d-flex gap-2">
@@ -125,7 +113,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
+                    <a asp-action="CompanyMenus" class="btn btn-outline-secondary">
                         <i class="fas fa-times me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

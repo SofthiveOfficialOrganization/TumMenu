@@ -22,6 +22,7 @@ namespace Domain.Entities
 		Active,
 		Inactive,
 		Draft,
-		Archived
+		Archived,
+		MainMenu = 5
 	}
 }

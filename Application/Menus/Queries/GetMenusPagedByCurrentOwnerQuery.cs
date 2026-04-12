@@ -14,6 +14,8 @@ public class GetMenusPagedByCurrentOwnerQuery : PageRequest, IRequest<PaginatedL
     public string? Search { get; set; }
     public Guid? CompanyId { get; set; }
     public Guid? StoreId { get; set; }
+    public bool OnlyStoreMenus { get; set; }
+    public bool OnlyCompanyMenus { get; set; }
 }
 
 public class GetMenusPagedByCurrentOwnerHandler(
@@ -32,7 +34,9 @@ public class GetMenusPagedByCurrentOwnerHandler(
 				(m.StoreId != null && m.Store!.Company.Owner!.ApplicationUserId == applicationUserId)) &&
                 (string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search)) &&
                 (!req.CompanyId.HasValue || m.CompanyId == req.CompanyId.Value) &&
-                (!req.StoreId.HasValue || m.StoreId == req.StoreId.Value),
+                (!req.StoreId.HasValue || m.StoreId == req.StoreId.Value) &&
+                (!req.OnlyStoreMenus || m.StoreId != null) &&
+                (!req.OnlyCompanyMenus || m.CompanyId != null),
 			include: m => m.Include(x => x.Categories)
 				.Include(x => x.Store).ThenInclude(x => x!.Company)
 				.Include(x => x.Company),

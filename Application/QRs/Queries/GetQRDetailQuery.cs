@@ -33,7 +33,8 @@ public class GetQRDetailQueryHandler(
             CompanyTitle = store.Company.Title,
             QRKey = store.QRCode.PublicKey,
             PublicUrl = $"/q/{store.QRCode.PublicKey}",
-            BaseDomain = store.QRCode.BaseDomain
+            BaseDomain = store.QRCode.BaseDomain,
+            MenuUrl = $"/{store.Company.Slug}/{store.Slug}"
         };
     }
 }

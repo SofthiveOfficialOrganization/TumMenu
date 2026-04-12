@@ -30,9 +30,9 @@ public class QRManagementController(IMediator mediator) : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> StoreDetails(Guid id, CancellationToken ct)
+    public async Task<IActionResult> StoreDetails(Guid storeId, CancellationToken ct)
     {
-        var model = await mediator.Send(new GetQRDetailQuery(id), ct);
+        var model = await mediator.Send(new GetQRDetailQuery(storeId), ct);
         if (model == null)
         {
             return NotFound();

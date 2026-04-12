@@ -4,6 +4,8 @@
 (function () {
     'use strict';
 
+    const FIRST_PAGE = 1;
+
     // ── DOM refs ──
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('searchInput');
@@ -41,11 +43,15 @@
         districtName: '',
         userLat: null,
         userLng: null,
-        page: 0,
+        page: FIRST_PAGE,
         pageSize: 12,
         loading: false,
         hasNext: false
     };
+
+    function resetPagination() {
+        state.page = FIRST_PAGE;
+    }
 
     // ── Init ──
     function init() {
@@ -233,7 +239,7 @@
         state.userLat = lat;
         state.userLng = lng;
         initRestMap(lat, lng, zoom);
-        state.page = 0;
+        resetPagination();
         doSearch(false);
     }
 
@@ -298,7 +304,7 @@
         districtInput.disabled = true;
         districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
 
-        state.page = 0;
+        resetPagination();
         doSearch(false);
     }
 
@@ -350,7 +356,7 @@
         searchForm.addEventListener('submit', function (e) {
             e.preventDefault();
             state.searchTerm = searchInput.value.trim();
-            state.page = 0;
+            resetPagination();
             doSearch(false);
         });
 
@@ -364,14 +370,14 @@
         $('#categoryInput').on('change', function () {
             var selected = $(this).val() || [];
             state.categoryIds = selected;
-            state.page = 0;
+            resetPagination();
             doSearch(false);
         });
 
         // Vegan toggle
         veganToggle.addEventListener('change', function () {
             state.isVegan = veganToggle.checked;
-            state.page = 0;
+            resetPagination();
             doSearch(false);
         });
 
@@ -397,7 +403,7 @@
                 state.maxDistanceKm = dist;
             }
 
-            state.page = 0;
+            resetPagination();
             doSearch(false);
         });
 
@@ -420,7 +426,7 @@
                     state.maxDistanceKm = val;
                 }
 
-                state.page = 0;
+                resetPagination();
                 doSearch(false);
             });
 
@@ -499,7 +505,7 @@
             } else {
                 districtInput.disabled = true;
                 districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
-                state.page = 0;
+                resetPagination();
                 
                 if (restMap) {
                     restMap.setView([39.0, 35.0], 5);
@@ -538,16 +544,16 @@
                         state.userLng = parseFloat(data[0].lon);
                         console.log('Haritaya gönderilen koordinat:', state.userLat, state.userLng);
                         initRestMap(state.userLat, state.userLng, 13);
-                        state.page = 0;
+                        resetPagination();
                         doSearch(false);
                     } else {
                         console.warn('Nominatim koordinat bulamadı!');
-                        state.page = 0;
+                        resetPagination();
                         doSearch(false);
                    }
                 }).catch(err => {
                     console.error('Nominatim Hatası:', err);
-                    state.page = 0;
+                    resetPagination();
                     doSearch(false);
                 });
             } else {
@@ -558,7 +564,7 @@
                         }
                     });
                  } else {
-                    state.page = 0;
+                    resetPagination();
                     if (restMap) {
                         restMap.setView([39.0, 35.0], 5);
                         if (restMarker) {
@@ -599,7 +605,7 @@
                         districtInput.innerHTML = '<option value="">Önce İl Seçiniz</option>';
                         
                         initRestMap(state.userLat, state.userLng, 13);
-                        state.page = 0;
+                        resetPagination();
                         doSearch(false);
                     },
                     onError: function (error, message) {
@@ -671,7 +677,7 @@
             state.districtName = '';
             state.userLat = null;
             state.userLng = null;
-            state.page = 0;
+            resetPagination();
             
             if (restMap) {
                restMap.setView([39.0, 35.0], 5); // back to whole country
@@ -690,7 +696,6 @@
 
         // Load more
         loadMoreBtn.addEventListener('click', function () {
-            state.page++;
             doSearch(true);
         });
 
@@ -792,7 +797,7 @@
                     
                     // Sadece forcePrompt ise search yap, yoksa sadece konumu al
                     if (forcePrompt) {
-                        state.page = 0;
+                        resetPagination();
                         doSearch(false);
                     }
 
@@ -843,6 +848,8 @@
             loadMoreWrap.hidden = true;
         }
 
+        var requestedPage = append ? state.page + 1 : FIRST_PAGE;
+
         var params = new URLSearchParams();
         if (state.searchTerm) params.set('SearchTerm', state.searchTerm);
         if (state.categoryIds.length) params.set('CategoryLibraryItemIds', state.categoryIds.join(','));
@@ -850,7 +857,7 @@
         if (state.maxDistanceKm != null) params.set('MaxDistanceKm', state.maxDistanceKm);
         if (state.userLat != null) params.set('UserLatitude', state.userLat);
         if (state.userLng != null) params.set('UserLongitude', state.userLng);
-        params.set('Page', state.page);
+        params.set('Page', requestedPage);
         params.set('PageSize', state.pageSize);
 
         var searchUrl = '/api/stores/search?' + params.toString();
@@ -873,6 +880,8 @@
                 } else {
                     emptyEl.hidden = true;
                 }
+
+                state.page = requestedPage;
 
                 resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu';
 
@@ -980,10 +989,17 @@
         var body = document.createElement('div');
         body.className = 'store-card__body';
 
-        var name = document.createElement('h3');
-        name.className = 'store-card__name';
-        name.textContent = store.title;
-        body.appendChild(name);
+        var companyName = document.createElement('h3');
+        companyName.className = 'store-card__name';
+        companyName.textContent = store.companyName || store.title;
+        body.appendChild(companyName);
+
+        if (store.companyName && store.title !== store.companyName) {
+            var storeName = document.createElement('p');
+            storeName.className = 'store-card__store-name';
+            storeName.textContent = store.title;
+            body.appendChild(storeName);
+        }
 
         // Location
         var location = store.district && store.city
