@@ -34,7 +34,7 @@
         <div class="horizon-card h-100">
             <div class="d-flex align-items-center gap-3 mb-4">
                 <div class="rounded-3 d-flex align-items-center justify-content-center"
-                     style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(104, 135, 69, 0.1); color: #688745;">
+                     style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);">
                     @if (!string.IsNullOrEmpty(Model.CategoryLibraryItem.IconKey))
                     {
                         <i class="@Model.CategoryLibraryItem.IconKey"></i>
@@ -95,10 +95,10 @@
             </div>
 
             <div class="d-grid gap-2">
-                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-outline-success">
+                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-outline-primary">
                     <i class="fas fa-plus me-2"></i>Alt Kategori Ekle
                 </a>
-                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-success border border-success">
+                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
                 </a>
                 <a href="@returnUrl" class="btn btn-outline-secondary">
@@ -140,7 +140,7 @@
                                         }
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm" title="Detaylar" style="color: #666; background-color: transparent; border-color: #666;">
+                                        <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -168,7 +168,7 @@
                     <h5 class="fw-bold mb-1">Ürünler</h5>
                     <p class="text-secondary small mb-0">Bu kategorideki ürünleri yönetin.</p>
                 </div>
-                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm" style="color: #ffffff; background-color: #688745; border-color: #688745;">
+                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
                 </a>
             </div>
@@ -193,24 +193,24 @@
                                             }
                                         </div>
                                         <p class="text-muted small mb-0 d-flex gap-3 mt-1">
-                                            <span class="fw-bold" style="color: #688745;">@product.BasePrice.ToString("C")</span>
+                                            <span class="fw-bold" style="color: var(--horizon-primary);">@product.BasePrice.ToString("C")</span>
                                             @if (product.IsVegan == true)
                                             {
-                                                <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-leaf me-1"></i>Vegan</span>
+                                                <span class="badge" style="background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);"><i class="fas fa-leaf me-1"></i>Vegan</span>
                                             }
                                             @if (product.IsVegetarian == true)
                                             {
-                                                <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-seedling me-1"></i>Vejetaryen</span>
+                                                <span class="badge" style="background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);"><i class="fas fa-seedling me-1"></i>Vejetaryen</span>
                                             }
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm" title="Düzenle" style="color: #688745; background-color: transparent; border-color: #688745;">
+                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
                                             @Html.AntiForgeryToken()
-                                            <button type="button" class="btn btn-sm" style="color: #dc3545; background-color: transparent; border-color: #dc3545;" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>

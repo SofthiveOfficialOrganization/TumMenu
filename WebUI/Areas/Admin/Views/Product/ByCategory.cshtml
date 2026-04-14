@@ -7,7 +7,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>@ViewData["Title"]</h1>
-        <a asp-action="Create" class="btn btn-success">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> Yeni Ürün
         </a>
     </div>
@@ -21,7 +21,7 @@
                     <input type="text" name="Search" class="form-control" placeholder="Ürün ara..." value="@Context.Request.Query["Search"]">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-secondary w-100">Ara</button>
+                    <button type="submit" class="btn btn-primary w-100">Ara</button>
                 </div>
             </form>
         </div>

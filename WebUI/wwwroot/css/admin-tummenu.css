@@ -5,6 +5,7 @@
     --horizon-text-secondary: #A3AED0;
     --horizon-primary: #4318FF;
     --horizon-primary-hover: #3311CC;
+    --horizon-primary-rgb: 67, 24, 255;
     --horizon-border-radius: 20px;
     --horizon-sidebar-width: 290px;
     --sidebar-transition: all 0.3s ease;
@@ -22,6 +23,7 @@ body.dark-mode {
     --horizon-text-secondary: #A3AED0;
     --horizon-primary: #7551FF;
     --horizon-primary-hover: #5E3DFF;
+    --horizon-primary-rgb: 117, 81, 255;
     --horizon-scrollbar-track: rgba(163, 174, 208, 0.18);
     --horizon-scrollbar-thumb: rgba(163, 174, 208, 0.46);
     --horizon-scrollbar-thumb-hover: rgba(163, 174, 208, 0.66);
@@ -868,12 +870,64 @@ body.dark-mode .nav-link {
     justify-content: center;
     gap: 0.25rem;
 }
+
 .btn-primary {
     background-color: var(--horizon-primary) !important;
     border-color: var(--horizon-primary) !important;
+    color: #ffffff !important;
     border-radius: 16px !important;
     padding: 10px 24px !important;
 }
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--horizon-primary-hover) !important;
+    border-color: var(--horizon-primary-hover) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(var(--horizon-primary-rgb), 0.35) !important;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    color: #ffffff !important;
+    opacity: 0.65;
+}
+
+.btn-outline-primary {
+    background-color: transparent !important;
+    color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.show > .btn-outline-primary.dropdown-toggle {
+    background-color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-primary:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(var(--horizon-primary-rgb), 0.3) !important;
+}
+
+.btn-outline-primary:disabled,
+.btn-outline-primary.disabled {
+    color: var(--horizon-primary) !important;
+    border-color: var(--horizon-primary) !important;
+    opacity: 0.65;
+}
+
 .btn-light {
     border-color: var(--horizon-primary) !important;
 }

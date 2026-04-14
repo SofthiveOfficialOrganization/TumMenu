@@ -202,7 +202,7 @@
                                         }
                                     </td>
                                     <td class="text-center text-nowrap">
-                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm btn-outline-success me-1" title="Alt Kategori Ekle">
+                                        <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
                                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary" title="Detaylar">
@@ -335,4 +335,3 @@
         });
     </script>
 }
-
