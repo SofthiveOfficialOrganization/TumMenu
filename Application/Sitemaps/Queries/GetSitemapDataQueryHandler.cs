@@ -8,7 +8,8 @@ namespace Application.Sitemaps.Queries;
 public class GetSitemapDataQueryHandler(
     IRepository<Store> storeRepository,
     IRepository<Category> categoryRepository,
-    IRepository<Product> productRepository) : IRequestHandler<GetSitemapDataQuery, SitemapDataDTO>
+    IRepository<Product> productRepository,
+    IRepository<BlogPost> blogPostRepository) : IRequestHandler<GetSitemapDataQuery, SitemapDataDTO>
 {
     public async Task<SitemapDataDTO> Handle(GetSitemapDataQuery request, CancellationToken ct)
     {
@@ -68,6 +69,19 @@ public class GetSitemapDataQueryHandler(
             .ToListAsync(ct);
 
         result.Items.AddRange(products);
+
+        // 4. Blog Posts
+        var blogPosts = await blogPostRepository.Query(tracked: false)
+            .Where(b => b.IsPublished && !b.IsDeleted)
+            .Select(b => new SitemapItemDTO
+            {
+                BlogSlug = b.Slug,
+                LastModified = b.ModifiedAt ?? b.CreatedAt,
+                Type = SitemapItemType.BlogPost
+            })
+            .ToListAsync(ct);
+
+        result.Items.AddRange(blogPosts);
 
         return result;
     }

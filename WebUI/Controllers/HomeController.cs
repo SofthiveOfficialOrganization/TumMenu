@@ -249,7 +249,8 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/kayit", ChangeFreq = "monthly", Priority = "0.6" },
             new { Url = "/sifremi-unuttum", ChangeFreq = "monthly", Priority = "0.4" },
             new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" },
-            new { Url = "/hesap-aktivasyon", ChangeFreq = "monthly", Priority = "0.3" }
+            new { Url = "/hesap-aktivasyon", ChangeFreq = "monthly", Priority = "0.3" },
+            new { Url = "/blog", ChangeFreq = "daily", Priority = "0.9" }
         };
 
         foreach (var page in staticPages)
@@ -272,6 +273,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
                 Application.Sitemaps.Queries.SitemapItemType.Store => $"/{item.CompanySlug}/{item.StoreSlug}",
                 Application.Sitemaps.Queries.SitemapItemType.Category => $"/{item.CompanySlug}/{item.StoreSlug}/{item.CategorySlug}",
                 Application.Sitemaps.Queries.SitemapItemType.Product => $"/{item.CompanySlug}/{item.StoreSlug}/{item.CategorySlug}/{item.ProductSlug}",
+                Application.Sitemaps.Queries.SitemapItemType.BlogPost => $"/blog/{item.BlogSlug}",
                 _ => string.Empty
             };
 
@@ -282,12 +284,14 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
                 Application.Sitemaps.Queries.SitemapItemType.Store => "0.9",
                 Application.Sitemaps.Queries.SitemapItemType.Category => "0.8",
                 Application.Sitemaps.Queries.SitemapItemType.Product => "0.6",
+                Application.Sitemaps.Queries.SitemapItemType.BlogPost => "0.8",
                 _ => "0.5"
             };
 
             string changefreq = item.Type switch
             {
                 Application.Sitemaps.Queries.SitemapItemType.Store => "daily",
+                Application.Sitemaps.Queries.SitemapItemType.BlogPost => "weekly",
                 _ => "weekly"
             };
 

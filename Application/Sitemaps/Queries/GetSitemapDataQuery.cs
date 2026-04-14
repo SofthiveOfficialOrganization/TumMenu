@@ -15,6 +15,7 @@ public class SitemapItemDTO
     public string StoreSlug { get; set; } = null!;
     public string? CategorySlug { get; set; }
     public string? ProductSlug { get; set; }
+    public string? BlogSlug { get; set; }
     public DateTimeOffset LastModified { get; set; }
     public SitemapItemType Type { get; set; }
 }
@@ -23,5 +24,6 @@ public enum SitemapItemType
 {
     Store,
     Category,
-    Product
+    Product,
+    BlogPost
 }
