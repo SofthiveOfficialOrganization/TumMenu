@@ -1,10 +1,11 @@
 @using Application.Support.DTOs
 @using Domain.Entities
-@model List<OwnerIssueReportDTO>
+@model OwnerIssueReportListDTO
 @{
     ViewData["Title"] = "Hata Bildirimleri";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     var currentStatus = ViewBag.CurrentStatus as IssueReportStatus?;
+    var reports = Model.Reports;
 }
 
 <style>
@@ -54,6 +55,7 @@
     }
     .detail-text-box {
         background: #f8f9fa;
+        border: 1px solid rgba(0,0,0,.06);
         border-radius: 8px;
         padding: 10px 12px;
         font-size: .83rem;
@@ -77,6 +79,45 @@
     .summary-stat { text-align:center; }
     .summary-stat .stat-num { font-size: 1.5rem; font-weight: 700; line-height: 1; }
     .summary-stat .stat-lbl { font-size: .72rem; color: #6c757d; margin-top: 2px; }
+
+    html.dark-mode .issue-card,
+    body.dark-mode .issue-card {
+        border-color: rgba(163, 174, 208, 0.14) !important;
+    }
+
+    html.dark-mode .issue-card .card-top,
+    body.dark-mode .issue-card .card-top,
+    html.dark-mode .issue-card .card-footer-row,
+    body.dark-mode .issue-card .card-footer-row {
+        border-color: rgba(163, 174, 208, 0.12) !important;
+    }
+
+    html.dark-mode .issue-card .card-preview,
+    body.dark-mode .issue-card .card-preview,
+    html.dark-mode .detail-section-title,
+    body.dark-mode .detail-section-title,
+    html.dark-mode .summary-stat .stat-lbl,
+    body.dark-mode .summary-stat .stat-lbl {
+        color: var(--horizon-text-secondary);
+    }
+
+    html.dark-mode .detail-text-box,
+    body.dark-mode .detail-text-box {
+        background: rgba(11, 20, 55, 0.72);
+        border-color: rgba(163, 174, 208, 0.14);
+        color: var(--horizon-text-primary);
+    }
+
+    html.dark-mode .status-tab,
+    body.dark-mode .status-tab {
+        color: var(--horizon-text-secondary);
+    }
+
+    html.dark-mode .status-tab:hover,
+    body.dark-mode .status-tab:hover {
+        background: rgba(117, 81, 255, 0.08);
+        color: var(--horizon-text-primary);
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -88,28 +129,21 @@
             <p class="text-muted small mb-0">Owner'lar tarafından gönderilen hata raporları</p>
         </div>
         <div class="d-flex gap-3 align-items-center">
-            @{
-                var allReports = Model;
-                var statOpen     = allReports.Count(r => r.Status == IssueReportStatus.Open);
-                var statProgress = allReports.Count(r => r.Status == IssueReportStatus.InProgress);
-                var statResolved = allReports.Count(r => r.Status == IssueReportStatus.Resolved);
-                var statClosed   = allReports.Count(r => r.Status == IssueReportStatus.Closed);
-            }
             <div class="card border-0 shadow-sm px-4 py-2 d-flex flex-row gap-4">
                 <div class="summary-stat">
-                    <div class="stat-num text-danger">@statOpen</div>
+                    <div class="stat-num text-danger">@Model.OpenCount</div>
                     <div class="stat-lbl">Yeni</div>
                 </div>
                 <div class="summary-stat">
-                    <div class="stat-num text-warning">@statProgress</div>
+                    <div class="stat-num text-warning">@Model.InProgressCount</div>
                     <div class="stat-lbl">İnceleniyor</div>
                 </div>
                 <div class="summary-stat">
-                    <div class="stat-num text-success">@statResolved</div>
+                    <div class="stat-num text-success">@Model.ResolvedCount</div>
                     <div class="stat-lbl">Çözüldü</div>
                 </div>
                 <div class="summary-stat">
-                    <div class="stat-num text-secondary">@statClosed</div>
+                    <div class="stat-num text-secondary">@Model.ClosedCount</div>
                     <div class="stat-lbl">Hatalı İstek</div>
                 </div>
             </div>
@@ -128,11 +162,18 @@
     <div class="d-flex flex-wrap gap-2 mb-4">
         <a class="status-tab @(currentStatus == null ? "active bg-dark" : "")"
            href="@Url.Action("Index", "AdminSupport", new { area = "Admin" })">
-            Tümü <span class="ms-1 opacity-75">@Model.Count</span>
+            Tümü <span class="ms-1 opacity-75">@Model.TotalCount</span>
         </a>
         @foreach (var s in Enum.GetValues<IssueReportStatus>())
         {
-            var tabCount = Model.Count(r => r.Status == s);
+            var tabCount = s switch
+            {
+                IssueReportStatus.Open => Model.OpenCount,
+                IssueReportStatus.InProgress => Model.InProgressCount,
+                IssueReportStatus.Resolved => Model.ResolvedCount,
+                IssueReportStatus.Closed => Model.ClosedCount,
+                _ => 0
+            };
             <a class="status-tab @(currentStatus == s ? "active " + StatusBgClass(s) : "")"
                href="@Url.Action("Index", "AdminSupport", new { area = "Admin", status = (int)s })">
                 <span class="status-dot @StatusDotClass(s) me-1" style="vertical-align:middle"></span>
@@ -142,7 +183,7 @@
         }
     </div>
 
-    @if (!Model.Any())
+    @if (!reports.Any())
     {
         <div class="text-center py-5 text-muted">
             <i class="fas fa-check-circle fa-3x mb-3 opacity-25"></i>
@@ -152,7 +193,7 @@
     else
     {
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-            @foreach (var r in Model)
+            @foreach (var r in reports)
             {
                 <div class="col">
                     <div class="card shadow-sm issue-card h-100"
@@ -285,7 +326,7 @@
 
 @section Scripts {
 <script>
-    const reports = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(r => new {
+    const reports = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Reports.Select(r => new {
         id          = r.Id,
         ownerName   = r.OwnerName,
         ownerEmail  = r.OwnerEmail,

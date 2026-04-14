@@ -1,7 +1,9 @@
 @page "/kayit"
+@using Application.SystemSettings.DTOs
 @model RegisterModel
 @{
     ViewData["Title"] = "Kayıt Ol";
+    var legalVersions = Model.LegalVersions ?? new LegalVersionSettingsDTO();
 }
 
 @section Head {
@@ -42,6 +44,39 @@
                     </button>
                 </div>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check mb-2">
+                    <input asp-for="Input.AcceptTerms" class="form-check-input" type="checkbox" id="acceptTerms" />
+                    <label class="form-check-label" for="acceptTerms">
+                        <a href="/yasal-bilgiler#section-terms" target="_blank" rel="noopener">Kullanıcı Sözleşmesi</a>
+                        (Sürüm: @legalVersions.TermsVersion) metnini okudum ve kabul ediyorum.
+                    </label>
+                </div>
+                <span asp-validation-for="Input.AcceptTerms" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check mb-2">
+                    <input asp-for="Input.AcceptKvkkNotice" class="form-check-input" type="checkbox" id="acceptKvkkNotice" />
+                    <label class="form-check-label" for="acceptKvkkNotice">
+                        <a href="/yasal-bilgiler#section-kvkk" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>
+                        (Sürüm: @legalVersions.KvkkVersion) kapsamında bilgilendirildiğimi kabul ediyorum.
+                    </label>
+                </div>
+                <span asp-validation-for="Input.AcceptKvkkNotice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check mb-2">
+                    <input asp-for="Input.AcceptPrivacyNotice" class="form-check-input" type="checkbox" id="acceptPrivacyNotice" />
+                    <label class="form-check-label" for="acceptPrivacyNotice">
+                        <a href="/yasal-bilgiler#section-privacy" target="_blank" rel="noopener">Gizlilik Politikası</a>
+                        (Sürüm: @legalVersions.PrivacyVersion) metnini okudum.
+                    </label>
+                </div>
+                <span asp-validation-for="Input.AcceptPrivacyNotice" class="text-danger"></span>
             </div>
 
             <partial name="_TurnstileWidget" />

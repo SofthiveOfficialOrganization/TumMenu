@@ -8,6 +8,10 @@
     --horizon-border-radius: 20px;
     --horizon-sidebar-width: 290px;
     --sidebar-transition: all 0.3s ease;
+    --horizon-scrollbar-track: #EDF1FA;
+    --horizon-scrollbar-thumb: #BDC8E5;
+    --horizon-scrollbar-thumb-hover: #9EACD2;
+    --horizon-scrollbar-thumb-border: #FFFFFF;
 }
 
 html.dark-mode,
@@ -18,6 +22,10 @@ body.dark-mode {
     --horizon-text-secondary: #A3AED0;
     --horizon-primary: #7551FF;
     --horizon-primary-hover: #5E3DFF;
+    --horizon-scrollbar-track: rgba(163, 174, 208, 0.18);
+    --horizon-scrollbar-thumb: rgba(163, 174, 208, 0.46);
+    --horizon-scrollbar-thumb-hover: rgba(163, 174, 208, 0.66);
+    --horizon-scrollbar-thumb-border: #111C44;
 }
 
 html,
@@ -51,8 +59,36 @@ body.horizon-admin {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--horizon-scrollbar-thumb) var(--horizon-scrollbar-track);
     z-index: 1000;
     transition: var(--sidebar-transition);
+}
+
+.horizon-sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.horizon-sidebar::-webkit-scrollbar-track {
+    background: var(--horizon-scrollbar-track);
+    border-radius: 999px;
+}
+
+.horizon-sidebar::-webkit-scrollbar-thumb {
+    background: var(--horizon-scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid var(--horizon-scrollbar-thumb-border);
+}
+
+.horizon-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--horizon-scrollbar-thumb-hover);
+}
+
+.horizon-sidebar::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .horizon-logo {
@@ -283,6 +319,22 @@ body.dark-mode .horizon-navbar {
 
 .horizon-navbar-icon:hover {
     color: var(--horizon-text-primary);
+}
+
+.horizon-site-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.horizon-site-link i {
+    font-size: inherit;
+}
+
+.horizon-site-link:focus-visible {
+    outline: 2px solid var(--horizon-primary);
+    outline-offset: 2px;
 }
 
 .horizon-avatar {

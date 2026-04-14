@@ -81,6 +81,7 @@ namespace Infrastructure.Persistence
 		public DbSet<Notification> Notifications => Set<Notification>();
 		public DbSet<UsageCounter> UsageCounters => Set<UsageCounter>();
 		public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
+		public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
 
 		// Many-to-many join
 		public DbSet<ProductTag> ProductTags => Set<ProductTag>();
@@ -521,6 +522,11 @@ namespace Infrastructure.Persistence
 			builder.Entity<AuditLog>()
 				.HasIndex(a => a.CreatedAt);
 
+			builder.Entity<SystemSetting>()
+				.HasIndex(s => s.Type)
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
+
 			// Product Analytics
 			builder.Entity<ProductViewEvent>(e =>
 			{
@@ -620,6 +626,10 @@ namespace Infrastructure.Persistence
 
 			builder.Entity<OwnerIssueReport>()
 				.Property(r => r.Status)
+				.HasConversion<int>();
+
+			builder.Entity<SystemSetting>()
+				.Property(s => s.Type)
 				.HasConversion<int>();
 		}
 

@@ -21,6 +21,23 @@ namespace Domain.Entities
         public long LastLogin { get; set; }
         public DateTime? BirthDate { get; set; }
 
+        [MaxLength(64)]
+        public string? AcceptedTermsVersion { get; set; }
+
+        [MaxLength(64)]
+        public string? AcceptedKvkkVersion { get; set; }
+
+        [MaxLength(64)]
+        public string? AcceptedPrivacyVersion { get; set; }
+
+        public DateTime? LegalAcceptedAtUtc { get; set; }
+
+        [MaxLength(64)]
+        public string? LegalAcceptedIp { get; set; }
+
+        [MaxLength(512)]
+        public string? LegalAcceptedUserAgent { get; set; }
+
         public Owner? Owner { get; set; }
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; } = new List<IdentityUserClaim<string>>();
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; } = new List<IdentityUserLogin<string>>();

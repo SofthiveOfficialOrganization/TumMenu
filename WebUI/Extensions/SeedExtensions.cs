@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Application.SystemSettings.Queries;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public static class SeedExtensions
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+        await SeedSystemSettingsAsync(db);
         await SeedBlogPostsAsync(db);
 
         string adminEmail = "yonetim@softhive.com";
@@ -63,6 +65,34 @@ public static class SeedExtensions
         if (toAdd.Count > 0)
         {
             db.BlogPosts.AddRange(toAdd);
+            await db.SaveChangesAsync();
+        }
+    }
+
+    private static async Task SeedSystemSettingsAsync(ApplicationDbContext db)
+    {
+        var trackedSettings = await db.SystemSettings
+            .Where(s =>
+                s.Type == SystemSettingType.LegalVersionTerms ||
+                s.Type == SystemSettingType.LegalVersionKvkk ||
+                s.Type == SystemSettingType.LegalVersionPrivacy ||
+                s.Type == SystemSettingType.LegalVersionCookie)
+            .ToListAsync();
+
+        var defaults = GetLegalVersionSettingsQueryHandler.GetDefaults();
+        var toAdd = defaults
+            .Where(d => trackedSettings.All(s => s.Type != d.Type))
+            .Select(d => new SystemSetting
+            {
+                Type = d.Type,
+                Value = d.Value,
+                Description = d.Description
+            })
+            .ToList();
+
+        if (toAdd.Count > 0)
+        {
+            db.SystemSettings.AddRange(toAdd);
             await db.SaveChangesAsync();
         }
     }

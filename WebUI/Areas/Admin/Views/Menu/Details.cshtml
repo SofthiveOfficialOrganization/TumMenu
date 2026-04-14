@@ -1,8 +1,15 @@
+@using Application.Categories.DTOs
 @using Application.Menus.DTOs
 @model MenuDTO
 
 @{
     ViewData["Title"] = "Menü Detayları";
+    var menuDetailsReturnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var allCategories = Model.Categories?.ToList() ?? new List<CategoryDTO>();
+    var rootCategories = allCategories
+        .Where(c => !c.ParentId.HasValue)
+        .OrderBy(c => c.SortOrder)
+        .ToList();
 }
 
 <div class="row">
@@ -150,33 +157,42 @@
             </div>
             
             <div id="category-grid" class="row">
-                @if (Model.Categories != null && Model.Categories.Any())
+                @if (rootCategories.Any())
                 {
-                    foreach (var category in Model.Categories.OrderBy(c => c.SortOrder))
+                    foreach (var category in rootCategories)
                     {
+                        var subCategoryCount = allCategories.Count(c => c.ParentId == category.Id);
+                        var categoryDetailsUrl = Url.Action(
+                            "Details",
+                            "Category",
+                            new { id = category.Id, returnUrl = menuDetailsReturnUrl }
+                        );
+
                         <div class="col-md-6 mb-3 category-item" data-id="@category.Id">
-                            <div class="card h-100 shadow-sm border-0 cursor-move">
+                            <div class="card h-100 shadow-sm border-0 cursor-move category-card" data-details-url="@categoryDetailsUrl">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="me-3 text-secondary handle">
                                         <i class="fas fa-grip-vertical fa-lg"></i>
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="fw-bold text-dark mb-1">
-                                            @category.CategoryLibraryItem.Title
-                                            @if (category.ParentId.HasValue)
-                                            {
-                                                <span class="badge bg-light text-secondary border ms-2 fw-normal" style="font-size: 0.7rem;"><i class="fas fa-level-up-alt fa-rotate-90 me-1"></i> Alt Kategori</span>
-                                            }
+                                            <a href="@categoryDetailsUrl" class="text-dark text-decoration-none">
+                                                @category.CategoryLibraryItem.Title
+                                            </a>
                                         </h6>
                                         <p class="text-muted small mb-0">
                                             Ürün adedi: @category.Products.Count
                                         </p>
+                                        @if (subCategoryCount > 0)
+                                        {
+                                            <p class="text-muted small mb-0">Alt kategori: @subCategoryCount</p>
+                                        }
                                     </div>
                                     <div class="d-flex gap-2 text-nowrap">
                                          <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" asp-route-parentId="@category.Id" class="btn btn-sm btn-outline-success" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id" class="btn btn-sm btn-outline-secondary" title="Ürünler ve Detaylar">
+                                         <a href="@categoryDetailsUrl" class="btn btn-sm btn-outline-secondary" title="Alt Kategoriler ve Ürünler">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" id="deleteCategory-@category.Id">
@@ -195,7 +211,7 @@
                     <div class="col-12">
                         <div class="text-center py-5 text-secondary border rounded bg-light">
                             <i class="fas fa-tags fa-2x mb-3 d-block opacity-50"></i>
-                            <p class="mb-0">Henüz kategori yok. Yukarıdan ekleyebilirsiniz.</p>
+                            <p class="mb-0">Henüz ana kategori yok. Yukarıdan ekleyebilirsiniz.</p>
                         </div>
                     </div>
                 }
@@ -209,6 +225,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var grid = document.getElementById('category-grid');
+            var categoryCards = document.querySelectorAll('.category-card');
+
+            categoryCards.forEach(function (card) {
+                card.addEventListener('click', function (event) {
+                    if (event.target.closest('.handle, a, button, form')) {
+                        return;
+                    }
+
+                    var detailsUrl = card.getAttribute('data-details-url');
+                    if (detailsUrl) {
+                        window.location.href = detailsUrl;
+                    }
+                });
+            });
+
             if (grid) {
                 new Sortable(grid, {
                     animation: 150,

@@ -5,6 +5,52 @@
     ViewData["Title"] = "Dükkan İçin Menü Oluştur";
 }
 
+@section Styles {
+    <style>
+        .menu-mode-option {
+            background: transparent;
+            color: inherit;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .menu-mode-option small {
+            display: block;
+        }
+
+        .menu-mode-option:not(.active) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .menu-mode-option.active {
+            box-shadow: 0 0 0 1px rgba(67, 24, 255, 0.18) inset;
+        }
+
+        html.dark-mode .menu-mode-option,
+        body.dark-mode .menu-mode-option {
+            border-color: rgba(163, 174, 208, 0.18) !important;
+            color: var(--horizon-text-primary);
+        }
+
+        html.dark-mode .menu-mode-option:not(.active),
+        body.dark-mode .menu-mode-option:not(.active) {
+            background: rgba(11, 20, 55, 0.55);
+        }
+
+        html.dark-mode .menu-mode-option.active,
+        body.dark-mode .menu-mode-option.active {
+            background: rgba(117, 81, 255, 0.12) !important;
+            border-color: rgba(117, 81, 255, 0.55) !important;
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.18);
+        }
+
+        html.dark-mode .menu-mode-option small,
+        body.dark-mode .menu-mode-option small {
+            color: var(--horizon-text-secondary) !important;
+        }
+    </style>
+}
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
@@ -151,13 +197,13 @@
             <!-- Mode selector -->
             <div class="d-flex gap-3 mb-4">
                 <button type="button" id="modeScratch"
-                        class="flex-fill p-3 border rounded-3 text-start active border-primary bg-primary bg-opacity-10"
+                        class="menu-mode-option flex-fill p-3 border rounded-3 text-start active border-primary bg-primary bg-opacity-10"
                         style="cursor:pointer; transition: all .15s">
                     <div class="fw-bold mb-1"><i class="fas fa-plus-circle me-2 text-primary"></i>Sıfırdan Oluştur</div>
                     <small class="text-muted">Boş bir menü oluştur, kategorileri kendin ekle</small>
                 </button>
                 <button type="button" id="modeClone"
-                        class="flex-fill p-3 border border-secondary rounded-3 text-start"
+                        class="menu-mode-option flex-fill p-3 border border-secondary rounded-3 text-start"
                         style="cursor:pointer; transition: all .15s">
                     <div class="fw-bold mb-1"><i class="fas fa-copy me-2 text-success"></i>Ana Menüden Kopyala</div>
                     <small class="text-muted">Mevcut bir ana menüyü bu dükkana kopyala</small>

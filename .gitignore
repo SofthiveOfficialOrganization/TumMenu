@@ -16,6 +16,9 @@ ruflo-*.log
 .swarm/
 CLAUDE.md
 
+# GPT Codex
+AGENTS.md
+
 # Production secrets — contains real credentials, never commit
 web.config
 appsettings.Development.json

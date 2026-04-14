@@ -18,6 +18,7 @@ public class CloneMenuToStoreCommandHandler(
 	IRepository<Menu> repoMenu,
 	IRepository<Category> repoCategory,
 	IRepository<Product> repoProduct,
+	IRepository<Store> repoStore,
 	IMapper mapper
 ) : IRequestHandler<CloneMenuToStoreCommand, MenuDTO>
 {
@@ -29,6 +30,9 @@ public class CloneMenuToStoreCommandHandler(
 				.ThenInclude(c => c.Products)
 			.FirstOrDefaultAsync(m => m.Id == req.SourceMenuId, ct)
 			?? throw new KeyNotFoundException("Kaynak menü bulunamadı.");
+		var store = await repoStore.GetByIdAsync(req.StoreId, ct)
+			?? throw new KeyNotFoundException("Dükkan bulunamadı.");
+		var clonedAtTr = DateTime.UtcNow.AddHours(3);
 
 		// Deactivate other active menus for this store
 		var existingActive = await repoMenu.Query(tracked: true)
@@ -38,7 +42,7 @@ public class CloneMenuToStoreCommandHandler(
 
 		var newMenu = new Menu
 		{
-			Title = source.Title,
+			Title = $"{source.Title} - {store.Title} {clonedAtTr:dd-MM-yyyy}",
 			StoreId = req.StoreId,
 			Status = MenuStatus.Active
 		};

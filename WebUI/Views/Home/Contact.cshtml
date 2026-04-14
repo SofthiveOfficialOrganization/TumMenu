@@ -1,7 +1,9 @@
+@using Application.SystemSettings.DTOs
 @model WebUI.Models.ContactViewModel
 @{
     ViewData["Title"] = "İletişim";
     ViewData["Description"] = "Tüm Menü ile iletişime geçin. Sorularınız, önerileriniz veya destek talepleriniz için bize ulaşın.";
+    var legalVersions = ViewBag.LegalVersions as LegalVersionSettingsDTO ?? new LegalVersionSettingsDTO();
 }
 
 @section Head {
@@ -53,6 +55,19 @@
                     <textarea asp-for="Message" class="contact-form__input contact-form__textarea" 
                               rows="5" placeholder="Mesajınızı buraya yazın..."></textarea>
                     <span asp-validation-for="Message" class="contact-form__validation"></span>
+                </div>
+
+                <div class="contact-form__group">
+                    <div class="form-check">
+                        <input asp-for="AcceptContactNotice" class="form-check-input" type="checkbox" id="acceptContactNotice" />
+                        <label class="form-check-label" for="acceptContactNotice">
+                            <a href="/yasal-bilgiler#section-privacy" target="_blank" rel="noopener">Gizlilik Politikası</a>
+                            (Sürüm: @legalVersions.PrivacyVersion) ve
+                            <a href="/yasal-bilgiler#section-kvkk" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>
+                            (Sürüm: @legalVersions.KvkkVersion) kapsamında verilerimin işlenmesine ilişkin bilgilendirildiğimi kabul ediyorum.
+                        </label>
+                    </div>
+                    <span asp-validation-for="AcceptContactNotice" class="contact-form__validation"></span>
                 </div>
 
                 <button type="submit" class="btn btn--primary contact-form__submit" id="contactSubmitBtn">

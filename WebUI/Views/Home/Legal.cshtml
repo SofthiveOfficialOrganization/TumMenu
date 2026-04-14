@@ -1,3 +1,5 @@
+@using Application.SystemSettings.DTOs
+@model LegalVersionSettingsDTO
 @{
     ViewData["Title"] = "Yasal Bilgiler";
     ViewData["Description"] = "Gizlilik politikası, KVKK, çerez politikası ve kullanım koşulları.";
@@ -44,7 +46,7 @@
     <section id="section-privacy" class="legal-section is-active" role="tabpanel" aria-labelledby="tab-privacy">
         <div class="legal-text-block">
             <h2>Gizlilik Politikası</h2>
-            <p><strong>Son Güncelleme:</strong> @DateTime.Now.ToString("dd.MM.yyyy")</p>
+            <p><strong>Sürüm:</strong> @(Model?.PrivacyVersion ?? "v1")</p>
             
             <h3>1. Giriş</h3>
             <p>
@@ -81,6 +83,7 @@
     <section id="section-kvkk" class="legal-section" role="tabpanel" aria-labelledby="tab-kvkk">
         <div class="legal-text-block">
             <h2>Kişisel Verilerin Korunması (KVKK)</h2>
+            <p><strong>Sürüm:</strong> @(Model?.KvkkVersion ?? "v1")</p>
             <p>
                 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, kişisel verileriniz veri sorumlusu sıfatıyla 
                 Tüm Menü tarafından aşağıda açıklanan kapsamda işlenebilecektir.
@@ -106,6 +109,7 @@
     <section id="section-cookie" class="legal-section" role="tabpanel" aria-labelledby="tab-cookie">
         <div class="legal-text-block">
             <h2>Çerez Politikası</h2>
+            <p><strong>Sürüm:</strong> @(Model?.CookieVersion ?? "v1")</p>
             <p>
                 Web sitemizde kullanıcı deneyimini iyileştirmek için çerezler (cookies) kullanmaktayız.
             </p>
@@ -128,6 +132,7 @@
     <section id="section-terms" class="legal-section" role="tabpanel" aria-labelledby="tab-terms">
         <div class="legal-text-block">
             <h2>Kullanıcı Sözleşmesi</h2>
+            <p><strong>Sürüm:</strong> @(Model?.TermsVersion ?? "v1")</p>
             <h3>1. Taraflar</h3>
             <p>
                 İşbu sözleşme, Tüm Menü platformuna üye olan kullanıcı ("Üye") ile Tüm Menü ("Şirket") arasında akdedilmiştir.

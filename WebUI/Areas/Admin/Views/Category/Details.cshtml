@@ -3,39 +3,15 @@
 
 @{
     ViewData["Title"] = "Kategori Detayları";
+    var returnUrl = ViewData["ReturnUrl"] as string
+        ?? Url.Action("Details", "Menu", new { id = Model.MenuId });
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var subCategoryCount = Model.SubCategories?.Count ?? 0;
+    var productCount = Model.Products?.Count ?? 0;
 }
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="horizon-card">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-3 d-flex align-items-center justify-content-center" style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(104, 135, 69, 0.1); color: #688745;">
-                        @if (!string.IsNullOrEmpty(Model.CategoryLibraryItem.IconKey))
-                        {
-                            <i class="@Model.CategoryLibraryItem.IconKey"></i>
-                        }
-                        else
-                        {
-                            <span class="fw-bold fs-4">@Model.CategoryLibraryItem.Title.Substring(0, 1).ToUpper()</span>
-                        }
-                    </div>
-                    <div>
-                        <h4 class="fw-bold text-dark mb-0">@Model.CategoryLibraryItem.Title</h4>
-                        <span class="badge" style="background-color: #F5E6D3; color: #333; border: 1px solid #E5E7EB;" class="font-monospace fw-normal">Sıra: @Model.SortOrder</span>
-                    </div>
-                </div>
-                <div class="d-flex gap-2 flex-shrink-0 text-nowrap">
-                    <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm shadow-sm px-3" title="Alt Kategori Ekle" style="height: 36px; display: flex; align-items: center; justify-content: center; color: #ffffff; background-color: #688745; border-color: #688745;">
-                        <i class="fas fa-plus"></i> <span class="d-none d-md-inline ms-2">Alt Kategori Ekle</span>
-                    </a>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Details", "Menu", new { id = Model.MenuId }))" class="btn btn-sm shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center; color: #666; background-color: transparent; border-color: #666;">
-                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="d-none">
+    @Html.AntiForgeryToken()
 </div>
 
 @if (TempData["Success"] != null)
@@ -54,22 +30,103 @@
 }
 
 <div class="row">
-    <!-- Subcategories Card -->
-    <div class="col-md-12 mb-4">
+    <div class="col-md-4 mb-4">
         <div class="horizon-card h-100">
-             <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="rounded-3 d-flex align-items-center justify-content-center"
+                     style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(104, 135, 69, 0.1); color: #688745;">
+                    @if (!string.IsNullOrEmpty(Model.CategoryLibraryItem.IconKey))
+                    {
+                        <i class="@Model.CategoryLibraryItem.IconKey"></i>
+                    }
+                    else
+                    {
+                        <span class="fw-bold fs-4">@Model.CategoryLibraryItem.Title.Substring(0, 1).ToUpper()</span>
+                    }
+                </div>
+                <div>
+                    <h5 class="fw-bold m-0">Kategori Bilgileri</h5>
+                    <small class="text-secondary">@Model.CategoryLibraryItem.Title</small>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">İsim</label>
+                <div class="p-2 border rounded bg-light text-dark fw-semibold">@Model.CategoryLibraryItem.Title</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Kategori Tipi</label>
+                @if (Model.ParentId.HasValue)
+                {
+                    <span class="badge bg-info bg-opacity-10 text-info border">Alt Kategori</span>
+                }
+                else
+                {
+                    <span class="badge bg-primary bg-opacity-10 text-primary border">Ana Kategori</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Durum</label>
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">AKTİF</span>
+                }
+                else
+                {
+                    <span class="badge bg-light text-secondary border">PASİF</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Sıralama</label>
+                <div class="p-2 border rounded bg-light text-dark fw-semibold">@Model.SortOrder</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Alt Kategori Sayısı</label>
+                <div class="p-2 border rounded bg-light text-dark fw-semibold">@subCategoryCount</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Ürün Sayısı</label>
+                <div class="p-2 border rounded bg-light text-dark fw-semibold">@productCount</div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-outline-success">
+                    <i class="fas fa-plus me-2"></i>Alt Kategori Ekle
+                </a>
+                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-success border border-success">
+                    <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
+                </a>
+                <a href="@returnUrl" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                </a>
+            </div>
+
+            <div class="mt-4 pt-3 border-top text-center text-muted small">
+                Oluşturuldu: @Model.CreatedAt?.ToString("d")
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8 mb-4">
+        <div class="horizon-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h5 class="fw-bold mb-1">Alt Kategoriler</h5>
                     <p class="text-secondary small mb-0">Bu kategorinin altındaki kategorileri yönetin.</p>
                 </div>
             </div>
-            
+
             <div id="subcategory-grid" class="row">
                 @if (Model.SubCategories != null && Model.SubCategories.Any())
                 {
                     foreach (var sub in Model.SubCategories.OrderBy(c => c.SortOrder))
                     {
-                        <div class="col-md-4 mb-3 subcategory-item" data-id="@sub.Id">
+                        <div class="col-md-6 mb-3 subcategory-item" data-id="@sub.Id">
                             <div class="card h-100 shadow-sm border-0 cursor-move">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="me-3 text-secondary handle">
@@ -77,15 +134,13 @@
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="fw-bold text-dark mb-1">@sub.CategoryLibraryItem.Title</h6>
-                                        <div class="d-flex gap-2">
-                                            @if(!sub.IsActive)
-                                            {
-                                                <span class="badge bg-secondary" style="font-size: 0.65em;">PASİF</span>
-                                            }
-                                        </div>
+                                        @if (!sub.IsActive)
+                                        {
+                                            <span class="badge bg-secondary" style="font-size: 0.65em;">PASİF</span>
+                                        }
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-sm" title="Detaylar" style="color: #666; background-color: transparent; border-color: #666;">
+                                        <a asp-controller="Category" asp-action="Details" asp-route-id="@sub.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm" title="Detaylar" style="color: #666; background-color: transparent; border-color: #666;">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>
@@ -97,38 +152,33 @@
                 else
                 {
                     <div class="col-12">
-                        <div class="text-center py-4 text-secondary border rounded" style="background-color: #FAFAF9; border-style: dashed; border-color: #dee2e6;">
-                            <i class="fas fa-layer-group fa-lg mb-2 d-block opacity-50"></i>
-                            <p class="mb-0 small">Alt kategori bulunamadı.</p>
+                        <div class="text-center py-4 border rounded"
+                             style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.88);">
+                            <i class="fas fa-layer-group fa-lg mb-2 d-block" style="color: rgba(255,255,255,0.65);"></i>
+                            <p class="mb-0 small" style="color: rgba(255,255,255,0.88);">Alt kategori bulunamadı.</p>
                         </div>
                     </div>
                 }
             </div>
         </div>
-    </div>
 
-    <!-- Products Card -->
-    <div class="col-md-12 mb-4">
         <div class="horizon-card h-100">
-             <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h5 class="fw-bold mb-1">Ürünler</h5>
                     <p class="text-secondary small mb-0">Bu kategorideki ürünleri yönetin.</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <!-- Ürün Ekle -->
-                    <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm" style="color: #ffffff; background-color: #688745; border-color: #688745;">
-                        <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
-                    </a>
-                </div>
+                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm" style="color: #ffffff; background-color: #688745; border-color: #688745;">
+                    <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
+                </a>
             </div>
-            
+
             <div id="product-grid" class="row">
                 @if (Model.Products != null && Model.Products.Any())
                 {
                     foreach (var product in Model.Products.OrderBy(c => c.SortOrder))
                     {
-                        <div class="col-md-6 mb-3 product-item" data-id="@product.Id">
+                        <div class="col-md-12 mb-3 product-item" data-id="@product.Id">
                             <div class="card h-100 shadow-sm border-0 cursor-move">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="me-3 text-secondary handle">
@@ -137,22 +187,29 @@
                                     <div class="flex-grow-1">
                                         <div class="d-flex align-items-center gap-2">
                                             <h6 class="fw-bold text-dark mb-1">@product.Title</h6>
-                                            @if(!product.IsActive)
+                                            @if (!product.IsActive)
                                             {
                                                 <span class="badge bg-secondary" style="font-size: 0.65em;">PASİF</span>
                                             }
                                         </div>
                                         <p class="text-muted small mb-0 d-flex gap-3 mt-1">
                                             <span class="fw-bold" style="color: #688745;">@product.BasePrice.ToString("C")</span>
-                                            @if(product.IsVegan == true) { <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-leaf me-1"></i>Vegan</span> }
-                                            @if(product.IsVegetarian == true) { <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-seedling me-1"></i>Vejetaryen</span> }
+                                            @if (product.IsVegan == true)
+                                            {
+                                                <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-leaf me-1"></i>Vegan</span>
+                                            }
+                                            @if (product.IsVegetarian == true)
+                                            {
+                                                <span class="badge" style="background-color: rgba(104, 135, 69, 0.1); color: #688745;"><i class="fas fa-seedling me-1"></i>Vejetaryen</span>
+                                            }
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2">
-                                         <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm" title="Düzenle" style="color: #688745; background-color: transparent; border-color: #688745;">
+                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm" title="Düzenle" style="color: #688745; background-color: transparent; border-color: #688745;">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
+                                            @Html.AntiForgeryToken()
                                             <button type="button" class="btn btn-sm" style="color: #dc3545; background-color: transparent; border-color: #dc3545;" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -166,9 +223,10 @@
                 else
                 {
                     <div class="col-12">
-                        <div class="text-center py-5 text-secondary border rounded" style="background-color: #FAFAF9;">
-                            <i class="fas fa-hamburger fa-2x mb-3 d-block opacity-50"></i>
-                            <p class="mb-0">Bu kategoride henüz ürün yok. Yukarıdan ekleyebilirsiniz.</p>
+                        <div class="text-center py-5 border rounded"
+                             style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.88);">
+                            <i class="fas fa-hamburger fa-2x mb-3 d-block" style="color: rgba(255,255,255,0.65);"></i>
+                            <p class="mb-0" style="color: rgba(255,255,255,0.88);">Bu kategoride henüz ürün yok. Yukarıdan ekleyebilirsiniz.</p>
                         </div>
                     </div>
                 }
@@ -181,13 +239,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var requestToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
             var grid = document.getElementById('product-grid');
             if (grid && grid.querySelectorAll('.product-item').length > 0) {
                 new Sortable(grid, {
                     animation: 150,
                     handle: '.handle',
                     ghostClass: 'bg-light',
-                    onEnd: function (evt) {
+                    onEnd: function () {
                         var items = Array.from(grid.querySelectorAll('.product-item'));
                         var itemsData = items.map(function (item, index) {
                             return {
@@ -196,14 +256,17 @@
                             };
                         });
 
-                        var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        var headers = {
+                            'Content-Type': 'application/json'
+                        };
 
-                        fetch(`/admin/Product/UpdateSortOrder`, {
+                        if (requestToken) {
+                            headers.RequestVerificationToken = requestToken;
+                        }
+
+                        fetch('/admin/Product/UpdateSortOrder', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'RequestVerificationToken': token
-                            },
+                            headers: headers,
                             body: JSON.stringify({ items: itemsData })
                         }).then(response => {
                             if (!response.ok) {
@@ -222,7 +285,7 @@
                     animation: 150,
                     handle: '.handle',
                     ghostClass: 'bg-light',
-                    onEnd: function (evt) {
+                    onEnd: function () {
                         var items = Array.from(subgrid.querySelectorAll('.subcategory-item'));
                         var itemsData = items.map(function (item, index) {
                             return {
@@ -231,18 +294,21 @@
                             };
                         });
 
-                        var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-                        
-                        fetch(`/admin/Category/UpdateSortOrder`, {
+                        var headers = {
+                            'Content-Type': 'application/json'
+                        };
+
+                        if (requestToken) {
+                            headers.RequestVerificationToken = requestToken;
+                        }
+
+                        fetch('/admin/Category/UpdateSortOrder', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'RequestVerificationToken': token
-                            },
+                            headers: headers,
                             body: JSON.stringify({ items: itemsData })
                         }).then(response => {
                             if (!response.ok) {
-                                // Potentially show error
+                                console.error('Subcategory sort order update failed');
                             }
                         }).catch(error => {
                             console.error('Error:', error);

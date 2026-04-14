@@ -179,6 +179,12 @@
                             <span>Reklam Yönetimi</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "SystemSettings", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SystemSettings" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-sliders-h"></i></div>
+                            <span>Sistem Ayarları</span>
+                        </a>
+                    </li>
                 }
 
                 <li class="horizon-menu-item">
@@ -225,7 +231,10 @@
                     
                     <i class="far fa-bell horizon-navbar-icon"></i>
                     <i class="far fa-moon horizon-navbar-icon" id="theme-toggle"></i>
-                    <i class="fas fa-info-circle horizon-navbar-icon"></i>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="horizon-site-link horizon-navbar-icon" title="Siteye Git" aria-label="Siteye Git"> 
+                        <i class="fas fa-globe"></i>
+                        
+                    </a>
                     
                     <div class="d-flex align-items-center ms-3">
                          <div class="text-end me-2 d-none d-md-block">

@@ -1,0 +1,138 @@
+@using Application.SystemSettings.Commands
+@model UpdateLegalVersionSettingsCommand
+@{
+    ViewData["Title"] = "Sistem Ayarları";
+}
+
+<div class="row justify-content-center system-settings-page">
+    <div class="col-xl-11">
+        <div class="horizon-card system-settings-shell">
+            <div class="mb-4 mb-md-5">
+                <h4 class="fw-bold mb-1">Sistem Ayarları</h4>
+                <p class="text-secondary small mb-0">Her hukuki metin için sürüm ve açıklama bilgisini ayrı kartlardan düzenleyebilirsiniz.</p>
+            </div>
+
+            <form asp-action="Index" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="system-setting-card h-100">
+                            <h6 class="system-setting-title">Kullanım Koşulları</h6>
+
+                            <div class="mb-3">
+                                <label asp-for="TermsVersion" class="form-label small fw-bold">Sürüm</label>
+                                <input asp-for="TermsVersion" class="form-control" maxlength="64" />
+                                <span asp-validation-for="TermsVersion" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="TermsDescription" class="form-label small fw-bold">Açıklama</label>
+                                <input asp-for="TermsDescription" class="form-control" maxlength="256" />
+                                <span asp-validation-for="TermsDescription" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="system-setting-card h-100">
+                            <h6 class="system-setting-title">KVKK</h6>
+
+                            <div class="mb-3">
+                                <label asp-for="KvkkVersion" class="form-label small fw-bold">Sürüm</label>
+                                <input asp-for="KvkkVersion" class="form-control" maxlength="64" />
+                                <span asp-validation-for="KvkkVersion" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="KvkkDescription" class="form-label small fw-bold">Açıklama</label>
+                                <input asp-for="KvkkDescription" class="form-control" maxlength="256" />
+                                <span asp-validation-for="KvkkDescription" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="system-setting-card h-100">
+                            <h6 class="system-setting-title">Gizlilik Politikası</h6>
+
+                            <div class="mb-3">
+                                <label asp-for="PrivacyVersion" class="form-label small fw-bold">Sürüm</label>
+                                <input asp-for="PrivacyVersion" class="form-control" maxlength="64" />
+                                <span asp-validation-for="PrivacyVersion" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="PrivacyDescription" class="form-label small fw-bold">Açıklama</label>
+                                <input asp-for="PrivacyDescription" class="form-control" maxlength="256" />
+                                <span asp-validation-for="PrivacyDescription" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="system-setting-card h-100">
+                            <h6 class="system-setting-title">Çerez Politikası</h6>
+
+                            <div class="mb-3">
+                                <label asp-for="CookieVersion" class="form-label small fw-bold">Sürüm</label>
+                                <input asp-for="CookieVersion" class="form-control" maxlength="64" />
+                                <span asp-validation-for="CookieVersion" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="CookieDescription" class="form-label small fw-bold">Açıklama</label>
+                                <input asp-for="CookieDescription" class="form-control" maxlength="256" />
+                                <span asp-validation-for="CookieDescription" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4 border-top pt-4">
+                    <button type="submit" class="btn btn-primary btn-sm px-4">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .system-settings-shell {
+            border-radius: 24px;
+        }
+
+        .system-setting-card {
+            background: var(--horizon-card-bg);
+            border: 1px solid rgba(163, 174, 208, 0.24);
+            border-radius: 16px;
+            padding: 1rem 1rem 0.9rem;
+            box-shadow: 0 8px 18px rgba(17, 28, 68, 0.04);
+        }
+
+        .system-setting-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--horizon-text-primary);
+            font-size: 0.98rem;
+            letter-spacing: 0.01em;
+        }
+
+        html.dark-mode .system-setting-card,
+        body.dark-mode .system-setting-card {
+            border-color: rgba(163, 174, 208, 0.2);
+            box-shadow: 0 8px 18px rgba(4, 10, 28, 0.45);
+        }
+
+        @@media (max-width: 768px) {
+            .system-settings-shell {
+                padding: 1rem;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

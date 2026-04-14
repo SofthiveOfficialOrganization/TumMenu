@@ -1,4 +1,5 @@
 using Application.Categories.Queries;
+using Application.SystemSettings.Queries;
 using Application.Stores.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -56,16 +57,20 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
 
     [Route("iletisim")]
     [HttpGet]
-    public IActionResult Contact()
+    public async Task<IActionResult> Contact(CancellationToken ct)
     {
-        return View();
+        await LoadLegalVersionsAsync(ct);
+        return View(new ContactViewModel());
     }
 
     [Route("iletisim")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Contact(ContactViewModel model)
+    public async Task<IActionResult> Contact(ContactViewModel model, CancellationToken ct)
     {
+        var legalVersions = await mediator.Send(new GetLegalVersionSettingsQuery(), ct);
+        ViewBag.LegalVersions = legalVersions;
+
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -73,11 +78,21 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
 
         try
         {
+            var acceptedAtUtc = DateTime.UtcNow;
+            var acceptedIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            var acceptedUserAgent = Request.Headers.UserAgent.ToString();
+
             var htmlMessage = $@"
                 <h3>İletişim Formundan Yeni Mesaj</h3>
                 <p><strong>Ad Soyad:</strong> {model.Name}</p>
                 <p><strong>E-posta:</strong> {model.Email}</p>
                 <p><strong>Konu:</strong> {model.Subject}</p>
+                <p><strong>Aydınlatma Onayı:</strong> Evet</p>
+                <p><strong>Gizlilik Sürümü:</strong> {legalVersions.PrivacyVersion}</p>
+                <p><strong>KVKK Sürümü:</strong> {legalVersions.KvkkVersion}</p>
+                <p><strong>Onay Zamanı (UTC):</strong> {acceptedAtUtc:yyyy-MM-dd HH:mm:ss}</p>
+                <p><strong>IP:</strong> {acceptedIp}</p>
+                <p><strong>User-Agent:</strong> {acceptedUserAgent}</p>
                 <hr />
                 <p><strong>Mesaj:</strong></p>
                 <p>{model.Message}</p>
@@ -93,6 +108,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         {
             // Log error
             TempData["Error"] = "Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.";
+            ViewBag.LegalVersions = legalVersions;
             return View(model);
         }
     }
@@ -144,9 +160,10 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     }
 
     [Route("yasal-bilgiler")]
-    public IActionResult Legal()
+    public async Task<IActionResult> Legal(CancellationToken ct)
     {
-        return View();
+        var legalVersions = await mediator.Send(new GetLegalVersionSettingsQuery(), ct);
+        return View(legalVersions);
     }
 
     [Route("fiyatlandirma")]
@@ -159,6 +176,11 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    private async Task LoadLegalVersionsAsync(CancellationToken ct)
+    {
+        ViewBag.LegalVersions = await mediator.Send(new GetLegalVersionSettingsQuery(), ct);
     }
 
     // 301 Redirects for old URLs

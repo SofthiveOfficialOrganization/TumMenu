@@ -23,4 +23,8 @@ public class ContactViewModel
     [StringLength(2000)]
     [Display(Name = "Mesaj")]
     public string Message { get; set; } = string.Empty;
+
+    [Range(typeof(bool), "true", "true", ErrorMessage = "Devam etmek için aydınlatma metnini onaylamalısınız.")]
+    [Display(Name = "Aydınlatma Onayı")]
+    public bool AcceptContactNotice { get; set; }
 }

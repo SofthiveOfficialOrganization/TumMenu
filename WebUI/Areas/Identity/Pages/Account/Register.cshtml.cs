@@ -3,6 +3,8 @@
 #nullable disable
 
 using Application.Owners.Commands;
+using Application.SystemSettings.DTOs;
+using Application.SystemSettings.Queries;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
@@ -66,6 +68,7 @@ namespace WebUI.Areas.Identity.Pages.Account
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
+        public LegalVersionSettingsDTO LegalVersions { get; private set; } = new();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -111,6 +114,18 @@ namespace WebUI.Areas.Identity.Pages.Account
             [Display(Name = "Şifre Tekrar")]
             [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor.")]
             public string ConfirmPassword { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessage = "Kullanıcı sözleşmesini kabul etmelisiniz.")]
+            [Display(Name = "Kullanıcı sözleşmesini kabul ediyorum")]
+            public bool AcceptTerms { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessage = "KVKK aydınlatma metnini onaylamalısınız.")]
+            [Display(Name = "KVKK aydınlatma metnini onaylıyorum")]
+            public bool AcceptKvkkNotice { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessage = "Gizlilik politikasını okuduğunuzu onaylamalısınız.")]
+            [Display(Name = "Gizlilik politikasını okudum")]
+            public bool AcceptPrivacyNotice { get; set; }
         }
 
 
@@ -118,12 +133,14 @@ namespace WebUI.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            await LoadLegalVersionsAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null, CancellationToken ct = default)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            await LoadLegalVersionsAsync(ct);
 
             // Validate Turnstile token
             var turnstileToken = Request.Form["cf-turnstile-response"];
@@ -136,7 +153,19 @@ namespace WebUI.Areas.Identity.Pages.Account
 
             if(ModelState.IsValid)
             {
+                var acceptedAtUtc = DateTime.UtcNow;
+                var acceptedIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var acceptedUserAgent = Request.Headers.UserAgent.ToString();
+
                 var user = CreateUser();
+                user.AcceptedTermsVersion = LegalVersions.TermsVersion;
+                user.AcceptedKvkkVersion = LegalVersions.KvkkVersion;
+                user.AcceptedPrivacyVersion = LegalVersions.PrivacyVersion;
+                user.LegalAcceptedAtUtc = acceptedAtUtc;
+                user.LegalAcceptedIp = string.IsNullOrWhiteSpace(acceptedIp) ? null : acceptedIp[..Math.Min(64, acceptedIp.Length)];
+                user.LegalAcceptedUserAgent = string.IsNullOrWhiteSpace(acceptedUserAgent)
+                    ? null
+                    : acceptedUserAgent[..Math.Min(512, acceptedUserAgent.Length)];
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -223,6 +252,11 @@ namespace WebUI.Areas.Identity.Pages.Account
                 throw new NotSupportedException("Varsayılan arayüz e-posta desteği olan bir kullanıcı deposu gerektirir.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
+        }
+
+        private async Task LoadLegalVersionsAsync(CancellationToken ct = default)
+        {
+            LegalVersions = await _mediator.Send(new GetLegalVersionSettingsQuery(), ct);
         }
     }
 }
