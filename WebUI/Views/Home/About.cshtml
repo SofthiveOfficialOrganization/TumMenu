@@ -1,74 +1,539 @@
 @{
     ViewData["Title"] = "Hakkımızda";
-    ViewData["Description"] = "Tüm Menü'nün hikayesi, misyonu ve vizyonu hakkında bilgi edinin.";
+    ViewData["Description"] = "TümMenü'nün hikayesi, misyonu, vizyonu ve platformu hakkında her şey. Restoranlar ve kafeler için Türkiye'nin QR dijital menü çözümü.";
 }
 
 @section Head {
     <link rel="stylesheet" href="~/css/about.css" asp-append-version="true" />
+    <style>
+        .about-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .about-icon-wrap svg {
+            width: 26px;
+            height: 26px;
+            stroke: var(--color-primary);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .about-values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .about-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .about-why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+    </style>
 }
 
 <!-- HERO -->
 <section class="about-hero">
     <div class="container about-hero__inner">
         <p class="about-hero__eyebrow">Biz Kimiz?</p>
-        <h1 class="about-hero__title">Restoran Deneyimini Dijitalleştiriyoruz</h1>
+        <h1 class="about-hero__title">Menü Deneyimini Yeniden Tasarlıyoruz</h1>
         <p class="about-hero__lead">
-            Tüm Menü, restoran ve kafe sektörünün dijital dönüşümüne öncülük etmek amacıyla kurulmuş bir teknoloji platformudur.
+            TümMenü; restoran, kafe ve yeme-içme işletmelerinin dijital dönüşümünü kolaylaştırmak,
+            müşterilerin menülere daha hızlı, daha hijyenik ve daha akıllı bir şekilde ulaşmasını sağlamak
+            amacıyla kurulmuş bir teknoloji platformudur. Kağıda, baskıya ve eskiyen fiyat listelerine
+            veda etmenin zamanı geldi.
         </p>
-    </div>
-    <div class="about-hero__image-container">
-        <!-- Placeholder visual -->
-        <div class="about-hero__image-placeholder">
-            <div class="about-hero__icon">🚀</div>
-        </div>
     </div>
 </section>
 
 <!-- MAIN CONTENT -->
 <section class="section about-content">
     <div class="container">
-        
+
+        <!-- HİKAYEMİZ + MİSYON -->
         <div class="about-grid">
-            <!-- Story -->
             <div class="about-card">
                 <div class="about-card__header">
-                    <span class="about-card__icon">📖</span>
+                    <div class="about-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
                     <h2 class="about-card__title">Hikayemiz</h2>
                 </div>
                 <div class="about-card__body">
                     <p>
-                        Yeme-içme sektöründeki "güncel olmayan fiyatlar" ve "yıpranmış menüler" sorununu fark eden 3 arkadaşın bir araya gelmesiyle başlayan yolculuğumuz, bugün yüzlerce işletmeye hizmet veren büyük bir aileye dönüştü.
+                        Her şey basit ama sinir bozucu bir sorunla başladı: Bir restorana giriyorsunuz,
+                        garson menüyü getiriyor, fiyatlar üzerine etiket yapıştırılmış, bazı ürünler üzeri
+                        çizili, bir kısmı tükenmiş ama yazan fiyat hâlâ 2022'den kalma. Hem siz sinirleniyorsunuz
+                        hem de işletmeci bu kaosta para kaybediyor.
                     </p>
                     <p>
-                        2024 yılında "Menüye ulaşmak bu kadar zor olmamalı" diyerek yola çıktık. İşletmelerin kağıt israfını önleyen, müşterilerin hijyenik ve güncel menülere anında ulaşmasını sağlayan bir platform hayal ettik ve Tüm Menü'yü geliştirdik.
+                        İşte bu sahneyi defalarca yaşayan bir ekip olarak 2024'te şu soruyu sorduk:
+                        <strong>"Menüye ulaşmak neden bu kadar karmaşık olmak zorunda?"</strong>
+                    </p>
+                    <p>
+                        Cevabı bulmak uzun sürmedi. Teknoloji çoktan hazırdı; her cep telefonunda bir
+                        kamera, her masada bir QR kodu olabilirdi. Eksik olan tek şey bu teknolojiyi
+                        Türkiye'deki işletmelere gerçekten kullanılabilir, uygun maliyetli ve sade bir
+                        şekilde sunan bir platformdu.
+                    </p>
+                    <p>
+                        Manisa/Turgutlu'da kurulan <strong>SoftHive</strong> ekibi olarak TümMenü'yü geliştirdik.
+                        Küçük bir kafeden büyük bir restoran zincirine kadar her ölçekteki işletmenin
+                        dakikalar içinde dijital menüsünü oluşturabileceği, yönetebileceği ve müşterilerine
+                        sunabileceği bir platform. Sıfır teknik bilgi gerektiriyor, kurulumu beş dakika
+                        sürüyor ve aylık sabit bir ücretle çalışıyor.
                     </p>
                 </div>
             </div>
 
-            <!-- Mission -->
             <div class="about-card about-card--highlight">
                 <div class="about-card__header">
-                    <span class="about-card__icon">🎯</span>
+                    <div class="about-icon-wrap">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
+                    </div>
                     <h2 class="about-card__title">Misyonumuz</h2>
                 </div>
                 <div class="about-card__body">
                     <p>
-                        <strong>Amacımız;</strong> işletmelerin operasyonel verimliliğini artırırken, son kullanıcılar için menü keşfini daha kolay, şeffaf ve keyifli hale getiren yenilikçi teknolojiler geliştirmektir.
+                        Türkiye'deki her yeme-içme işletmesinin, büyüklüğünden bağımsız olarak,
+                        modern ve dijital bir menü deneyimi sunabilmesini sağlamak. Bunu yaparken
+                        işletmeye operasyonel kolaylık, müşteriye ise şeffaf ve keyifli bir menü
+                        keşif deneyimi kazandırmak.
                     </p>
                     <ul class="about-list">
-                        <li>Sıfır kağıt israfı ile çevre dostu çözümler</li>
-                        <li>Anlık güncellenebilen dinamik menüler</li>
-                        <li>Kesintisiz ve hızlı kullanıcı deneyimi</li>
+                        <li>Sıfır baskı maliyetiyle çevre dostu çözüm</li>
+                        <li>Saniyeler içinde güncellenebilen dinamik menüler</li>
+                        <li>Uygulama indirmeye gerek kalmadan erişim</li>
+                        <li>Tüm işletme büyüklüklerine uygun esnek planlar</li>
+                        <li>Müşteri ile işletme arasında şeffaf iletişim</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Vision / Future -->
-        <div class="about-vision">
+        <!-- SORUN VE ÇÖZÜM -->
+        <div class="about-vision" style="margin-top: 3rem;">
+            <h2 class="about-vision__title">Çözdüğümüz Gerçek Problemler</h2>
+            <p class="about-vision__text">
+                Türkiye'de binlerce restoran ve kafe hâlâ kağıt menü kullanıyor. Her fiyat güncellemesinde
+                yeni baskı, her mevsim değişiminde yeni tasarım, her ürün değişikliğinde yazıcı kuyruğu.
+                Sadece küçük bir pizzacı için yılda ortalama 3.000–8.000 TL arasında sadece menü baskısına
+                gidiyor. Üstelik fiziksel menüler ellerde dolaşıyor, aşınıyor, hijyen sorunu yaratıyor.
+                Ve en kritik nokta: müşteri siparişini verene kadar fiyat zaten değişmiş olabiliyor.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                TümMenü bu döngüyü kırıyor. İşletme bir kez QR kodunu masaya koyuyor; sonrasında
+                menüdeki her değişiklik, ekleme ve çıkarma tamamen dijital ortamda,
+                <strong>anında ve ücretsiz</strong> gerçekleşiyor. Müşteri telefonuyla tarayıp
+                güncel, fotoğraflı ve fiyatlı menüye saniyeler içinde ulaşıyor.
+            </p>
+        </div>
+
+        <!-- PLATFORM ÖZELLİKLERİ -->
+        <div style="margin-top: 4rem;">
+            <h2 class="about-vision__title" style="text-align:center; max-width:none; background:none; color:var(--color-secondary-dark); padding:0; border-radius:0; margin-bottom:0.5rem;">Platform Nasıl Çalışır?</h2>
+
+            <div class="about-features-grid">
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        </div>
+                        <h3 class="about-card__title">İşletme Yönetim Paneli</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Tek bir hesap altında birden fazla şirket ve şube açabilirsiniz. Her şubenin
+                            kendine ait menüleri, kategorileri ve ürünleri vardır. İster tek şubeli küçük
+                            bir kafe, ister çok şubeli bir zincir restoran olun; platform tüm yapıyı
+                            düzenli biçimde yönetmenizi sağlar.
+                        </p>
+                        <ul class="about-list">
+                            <li>Çoklu şirket ve şube desteği</li>
+                            <li>Her şubeye özel birden fazla menü</li>
+                            <li>Kategori ve ürün yönetimi</li>
+                            <li>Ürün görseli, açıklama ve fiyat bilgisi</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                        </div>
+                        <h3 class="about-card__title">QR Kod ile Erişim</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Her menü için otomatik olarak bir QR kod oluşturulur. Bu kodu masaya,
+                            duvara veya menü kartına yapıştırmanız yeterli. Müşteriler herhangi bir
+                            uygulama indirmeden, sadece telefonlarının kamerasını açarak menüye anında
+                            erişebilir.
+                        </p>
+                        <ul class="about-list">
+                            <li>Uygulama gerektirmez, kamera yeterli</li>
+                            <li>iOS ve Android tam uyumlu</li>
+                            <li>QR kodu indirip basabilirsiniz</li>
+                            <li>Hızlı yükleme, sade arayüz</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Restoran Keşif Platformu</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            TümMenü yalnızca bir menü aracı değil, aynı zamanda bir keşif platformudur.
+                            Kullanıcılar bölgelerine ya da kategorilerine göre işletmeleri arayabilir,
+                            menülerine önceden bakabilir ve mekân seçimlerini henüz evdeyken yapabilirler.
+                        </p>
+                        <ul class="about-list">
+                            <li>Konum ve kategoriye göre restoran arama</li>
+                            <li>Menüye önceden bakma imkânı</li>
+                            <li>"Ne Yesem?" ilham özelliği</li>
+                            <li>İşletme sayfası ile dijital vitrin</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Anlık Güncelleme</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Fiyat değişti mi? Ürün tükendi mi? Sezona özel yeni bir kategori mi eklemek
+                            istiyorsunuz? Yönetim panelinize girin, değişikliği yapın ve kaydedin.
+                            Müşteri telefonunu bir kez daha yenilediğinde güncel menüyü görür.
+                            Ortalama güncelleme süresi: <strong>5 saniye</strong>.
+                        </p>
+                        <ul class="about-list">
+                            <li>Fiyat güncelleme anlık yansır</li>
+                            <li>Ürün ekleme/çıkarma saniyeler içinde</li>
+                            <li>Görsel değiştirme kolay yükleme ile</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- İŞLETMELERE KATKISI -->
+        <div class="about-vision" style="margin-top: 4rem;">
+            <h2 class="about-vision__title">İşletmelere Somut Katkıları</h2>
+            <p class="about-vision__text">
+                TümMenü'ye geçen işletmeler ortalama <strong>%70 oranında baskı maliyeti tasarrufu</strong>
+                sağladığını bildiriyor. Yıl boyunca tekrarlanan menü baskı, tasarım ve dağıtım maliyetleri
+                tamamen ortadan kalkıyor. Buna ek olarak, menü güncellemelerinde harcanan personel zamanı
+                da sıfırlanıyor.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                Çok şubeli işletmeler için fark daha da büyük. Her şubenin menüsünü ayrı ayrı yönetmek,
+                her şubede farklı fiyat uygulamak ya da bir şubeye özel kampanya ürünü eklemek artık
+                tek bir ekrandan yapılabiliyor.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                Araştırmalar, müşterilerin fotoğraflı dijital menülerde ortalama
+                <strong>%15–20 daha fazla sipariş verdiğini</strong> gösteriyor; çünkü görseller
+                iştah açıyor ve ek ürün keşfini kolaylaştırıyor.
+            </p>
+        </div>
+
+        <!-- DEĞERLER -->
+        <div style="margin-top: 4rem;">
+            <h2 class="about-vision__title" style="text-align:center; max-width:none; background:none; color:var(--color-secondary-dark); padding:0; border-radius:0; margin-bottom:0.5rem;">Değerlerimiz</h2>
+
+            <div class="about-values-grid">
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><circle cx="12" cy="15" r="1" fill="currentColor" stroke="none" style="fill:var(--color-primary)"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Sürdürülebilirlik</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Her yıl Türkiye'de restoran sektöründe yüz binlerce menü basılıp çöpe
+                            gidiyor. TümMenü bu kağıt israfını sıfıra indirmeyi hedefliyor. Dijital
+                            menüye geçen her işletme, hem cebini hem çevreyi koruyan bir tercih
+                            yapıyor. Çevre dostu teknoloji bizim için bir slogan değil, ürünümüzün
+                            özünde var olan bir gerçeklik.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Erişilebilirlik</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Dijital dönüşüm yalnızca büyük zincirlerin hakkı değil. Manisa'daki küçük
+                            bir esnafın da İstanbul'daki büyük bir restoranın kullandığı teknolojiyi
+                            kullanabilmesi gerekiyor. Bu yüzden ücretsiz planımızda bile temel
+                            özellikleri tam anlamıyla sunuyoruz. Teknoloji engel değil, fırsat olmalı.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Şeffaflık ve Güven</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Gizli ücret yok, sürpriz fiyat artışı yok. Fiyatlandırma sayfamız
+                            açık, yasal metinlerimiz güncel ve anlaşılır. Kişisel verilerinizi
+                            koruma konusundaki taahhüdümüzü KVKK uyumlu politikalarımızla
+                            destekliyoruz. Güvene dayalı bir ilişki kurmadan büyümenin mümkün
+                            olmadığına inanıyoruz.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="11" y2="18"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Sadelik</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            En iyi teknoloji, kullanmayı öğrenmek zorunda kalmadığınız teknolojidir.
+                            TümMenü'de teknik bilgisi olmayan bir esnaf da profesyonel dijital menüsünü
+                            beş dakikada hazırlayabiliyor. Karmaşık kurulumlar, uzun eğitimler ve
+                            teknik destek bağımlılığı olmadan çalışan bir platform yapmak için
+                            her özelliği tasarımdan geçiriyoruz.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Sürekli Gelişim</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Platform bugün olduğu hâliyle bitmedi. Kullanıcı geri bildirimleri,
+                            sektördeki ihtiyaçlar ve teknolojik gelişmeler doğrultusunda TümMenü
+                            her gün büyüyor. Yeni özellikler, iyileştirilen arayüzler ve daha akıllı
+                            yönetim araçları yol haritamızın merkezinde yer alıyor.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Kullanıcı Odaklılık</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Her karar, hem işletme sahibinin hem de menüyü okuyan müşterinin
+                            perspektifinden alınıyor. İşletme kolaylık istiyor; biz kolaylık
+                            tasarlıyoruz. Müşteri netlik istiyor; biz netlik sunuyoruz.
+                            Platforma gelen her öneri okunuyor ve değerlendiriliyor.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLANLAR -->
+        <div class="about-vision" style="margin-top: 4rem;">
+            <h2 class="about-vision__title">Herkes İçin Bir Plan</h2>
+            <p class="about-vision__text">
+                TümMenü'de iki plan var; ikisi de ne söylediğini söylüyor.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                <strong>Ücretsiz Plan</strong> ile hiçbir kredi kartı bilgisi girmeden hemen başlayabilirsiniz.
+                1 şirket, 3 şube ve 5 menü ile küçük bir işletmenin ihtiyaçlarını karşılamak için
+                yeterli. Temel destek dahil.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                <strong>Premium Plan</strong> (aylık 199 TL) ise büyüyen işletmeler için sınır tanımıyor:
+                sınırsız şirket, sınırsız şube, sınırsız menü. Gelişmiş analitik paneli ile hangi
+                menünün ne zaman, ne kadar görüntülendiğini takip edebilirsiniz.
+                7/24 öncelikli destek ve tamamen reklamsız bir deneyim de Premium'a dahil.
+            </p>
+        </div>
+
+        <!-- SOFTIVE EKİBİ -->
+        <div style="margin-top: 4rem;">
+            <div class="about-card">
+                <div class="about-card__header">
+                    <div class="about-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h2 class="about-card__title">Arkamızdaki Ekip: SoftHive</h2>
+                </div>
+                <div class="about-card__body">
+                    <p>
+                        TümMenü, Manisa/Turgutlu merkezli yazılım şirketi <strong>SoftHive</strong>
+                        tarafından geliştirilmektedir. SoftHive; web ve mobil uygulama geliştirme,
+                        dijital ürün tasarımı ve iş süreçlerini teknoloji ile dönüştürme alanında
+                        faaliyet gösteren genç ve dinamik bir ekiptir.
+                    </p>
+                    <p>
+                        TümMenü, SoftHive'ın kendi ihtiyaçlarından doğan bir ürün değil; sahada gözlemlenen,
+                        gerçek işletme sahipleriyle konuşularak şekillenen ve her özelliği gerçek bir
+                        problemi çözmek için tasarlanan bir platformdur.
+                    </p>
+                    <p>
+                        Küçük ölçekli bir ekip olmanın avantajını kullanıyoruz: hızlı karar alma,
+                        kullanıcıyla doğrudan iletişim ve gerçek sorunları hızla çözme.
+                        Bugün Manisa'dan, yarın Türkiye'nin her iline ulaşmayı hedefliyoruz.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VİZYON -->
+        <div class="about-vision" style="margin-top: 4rem;">
             <h2 class="about-vision__title">Gelecek Vizyonumuz</h2>
             <p class="about-vision__text">
-                Sadece bir QR menü sağlayıcısı olmak değil; restoranların tüm dijital ihtiyaçlarını karşılayan, müşteri sadakat programsı ve sipariş yönetimi özellikleriyle de entegre çalışan uçtan uca bir ekosistem olmayı hedefliyoruz.
+                Bugün TümMenü, işletmelere dijital menü sunuyor. Yarın çok daha fazlasını yapacak.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                Kısa vadede; menü analitiğini derinleştirmek, işletmelerin en çok hangi ürünlerinin
+                görüntülendiğini ve hangi saatlerde yoğunluk yaşandığını anlamalarına yardımcı olmak
+                istiyoruz. Orta vadede; işletme ile müşteri arasındaki bağı güçleştirecek bildirim
+                ve kampanya araçlarını platforma entegre etmeyi planlıyoruz.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                Uzun vadeli hedefimiz ise daha kapsamlı: Sadece "menüyü dijitalleştiren" bir araç
+                olmak değil, restoran ve kafe sahipleri için uçtan uca bir dijital iş yönetim
+                ekosistemine dönüşmek.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1rem;">
+                Yol haritamızın merkezinde her zaman aynı soru var:
+                <strong>"Bu, işletme sahibinin işini gerçekten kolaylaştırıyor mu?"</strong>
+            </p>
+        </div>
+
+        <!-- NEDEN TÜMMENU? -->
+        <div style="margin-top: 4rem;">
+            <h2 class="about-vision__title" style="text-align:center; max-width:none; background:none; color:var(--color-secondary-dark); padding:0; border-radius:0; margin-bottom:0.5rem;">Neden TümMenü?</h2>
+
+            <div class="about-why-grid">
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Türkiye'ye Özel</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Yabancı alternatiflerin büyük çoğunluğu Türkçe dil desteği ve yerel
+                            ödeme altyapısıyla gelmez. TümMenü baştan sona Türkçe, Türk mevzuatına
+                            uyumlu (KVKK) ve Türk işletme sahiplerinin ihtiyaçlarına göre
+                            tasarlanmış bir platformdur.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Kurulum Gerektirmez</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Sunucu kurmanıza, domain almanıza, teknik destek tutmanıza gerek yok.
+                            Kayıt olun, işletmenizi ekleyin, menünüzü oluşturun ve QR kodunuzu
+                            indirin. Dakikalar içinde canlıya alabilirsiniz.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Müşteriniz İçin Sıfır Engel</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            Müşterinizin uygulama indirmesi, hesap açması, şifre girmesi
+                            gerekmiyor. Telefonun kamerasıyla QR kodu tarar ve menü açılır.
+                            Teknolojiye yabancı yaşlı bir misafir bile kolayca kullanır.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card__header">
+                        <div class="about-icon-wrap">
+                            <svg viewBox="0 0 24 24"><path d="M1 6s1-1 4-1 5 2 8 2 4-1 4-1V2s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="1" y1="6" x2="1" y2="22"/></svg>
+                        </div>
+                        <h3 class="about-card__title">Keşif Trafiği</h3>
+                    </div>
+                    <div class="about-card__body">
+                        <p>
+                            TümMenü'deki işletmeler yalnızca kendi müşterilerine değil,
+                            platformu kullanan tüm kullanıcılara görünür hale gelir.
+                            Restoranlar keşif sayfası ve "Ne Yesem?" özelliği sayesinde
+                            yeni müşterilere organik olarak ulaşmak mümkün.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- İLETİŞİM CTA -->
+        <div class="about-vision" style="margin-top: 4rem; text-align: center;">
+            <h2 class="about-vision__title">Bizimle İletişime Geçin</h2>
+            <p class="about-vision__text">
+                Platforma dahil olmak ister misiniz? Bir sorunuz mu var? Önerinizi duymak isteriz.
+                Küçük bir ekip olduğumuz için gelen her mesajı bizzat okuyoruz ve yanıtlıyoruz.
+            </p>
+            <p class="about-vision__text" style="margin-top: 1.5rem;">
+                <a href="/iletisim" class="btn btn-primary px-4 py-2" style="text-decoration: none;">İletişime Geç</a>
+                &nbsp;&nbsp;
+                <a href="/fiyatlandirma" class="btn btn-outline-primary px-4 py-2" style="text-decoration: none; color: #fff; border-color: #fff;">Planları İncele</a>
+            </p>
+            <p class="about-vision__text" style="margin-top: 1.5rem; opacity: 0.7; font-size: 0.9rem;">
+                <strong>E-posta:</strong> <a href="mailto:destek@tummenu.com.tr" style="color:inherit;">destek@tummenu.com.tr</a> &nbsp;|&nbsp;
+                <strong>Telefon:</strong> <a href="tel:+905432911453" style="color:inherit;">+90 543 291 14 53</a> &nbsp;|&nbsp;
+                <strong>Konum:</strong> Manisa/Turgutlu
             </p>
         </div>
 

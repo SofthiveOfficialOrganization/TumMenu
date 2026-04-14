@@ -41,67 +41,259 @@
 
 <!-- CONTENT -->
 <div class="container legal-content">
-    
+
     <!-- GİZLİLİK POLİTİKASI -->
     <section id="section-privacy" class="legal-section is-active" role="tabpanel" aria-labelledby="tab-privacy">
         <div class="legal-text-block">
             <h2>Gizlilik Politikası</h2>
-            <p><strong>Sürüm:</strong> @(Model?.PrivacyVersion ?? "v1")</p>
-            
-            <h3>1. Giriş</h3>
+            <p><strong>Sürüm:</strong> @(Model?.PrivacyVersion ?? "v2") &nbsp;|&nbsp; <strong>Yürürlük Tarihi:</strong> 14.04.2026</p>
+
+            <h3>1. Amaç ve Kapsam</h3>
             <p>
-                Tüm Menü ("Şirket") olarak, kullanıcılarımızın gizliliğine saygı duyuyor ve verilerinizi korumaya önem veriyoruz. 
-                Bu Gizlilik Politikası, hizmetlerimizi kullandığınızda topladığımız bilgileri ve bu bilgileri nasıl kullandığımızı açıklar.
+                İşbu Gizlilik Politikası, ticari olarak <strong>TümMenü</strong> markasıyla faaliyet gösteren <strong>SoftHive</strong> ("Şirket") tarafından
+                işletilen <strong>tummenu.com</strong> platformu kapsamında kişisel verilerin hangi çerçevede toplandığını, kullanıldığını, korunduğunu
+                ve paylaşıldığını açıklamak amacıyla hazırlanmıştır.
+            </p>
+            <p>
+                Bu politika; internet sitemizi ziyaret edenleri, platforma üye olan kullanıcıları, işletme hesaplarını,
+                destek talebinde bulunan kişileri ve platform üzerinden bizimle iletişime geçen diğer kişileri kapsar.
             </p>
 
-            <h3>2. Toplanan Bilgiler</h3>
+            <h3>2. Toplayabileceğimiz Bilgiler</h3>
+            <p>Şirket tarafından işlenebilecek veri türleri, kullanılan hizmete göre değişmekle birlikte genel olarak şunlardır:</p>
             <ul>
-                <li><strong>Kişisel Bilgiler:</strong> Ad, e-posta adresi, telefon numarası (kayıt olurken).</li>
-                <li><strong>Kullanım Verileri:</strong> IP adresi, tarayıcı türü, ziyaret edilen sayfalar.</li>
+                <li><strong>Kimlik ve iletişim bilgileri:</strong> ad, soyad, e-posta adresi, telefon numarası, işletme yetkilisi bilgileri.</li>
+                <li><strong>Hesap ve üyelik bilgileri:</strong> kullanıcı adı, şifreye ilişkin güvenli doğrulama kayıtları, üyelik durumu, işletme profili bilgileri.</li>
+                <li><strong>İşletme ve içerik bilgileri:</strong> işletme adı, adres, kategori, menü içerikleri, fiyat bilgileri, ürün görselleri, açıklamalar, QR menü bağlantıları ve kullanıcı tarafından yüklenen diğer içerikler.</li>
+                <li><strong>Teknik kullanım verileri:</strong> IP adresi, cihaz bilgisi, tarayıcı türü, işletim sistemi, oturum kayıtları, hata kayıtları, tarih-saat bilgileri, çerez ve benzeri teknolojilere ilişkin veriler.</li>
+                <li><strong>İletişim ve destek kayıtları:</strong> destek talepleri, e-posta içerikleri, geri bildirimler, çağrı veya mesaj kayıtları.</li>
             </ul>
 
-            <h3>3. Üçüncü Taraf Satıcılar ve Reklamlar</h3>
+            <h3>3. Kişisel Verilerin Kullanım Amaçları</h3>
+            <p>Kişisel verileriniz aşağıdaki amaçlarla işlenebilir:</p>
+            <ul>
+                <li>Platformun kurulması, çalıştırılması ve size sunulması,</li>
+                <li>üyelik oluşturma, oturum açma ve hesap yönetiminin sağlanması,</li>
+                <li>işletme profili ve dijital menülerin yayınlanması ve güncellenmesi,</li>
+                <li>talep, soru, şikâyet ve destek süreçlerinin yürütülmesi,</li>
+                <li>bilgi güvenliğinin sağlanması, kötüye kullanım ve yetkisiz erişimlerin önlenmesi,</li>
+                <li>hizmet kalitesinin ölçülmesi, performans analizi ve ürün geliştirme yapılması,</li>
+                <li>mevzuattan doğan yükümlülüklerin yerine getirilmesi,</li>
+                <li>hukuki süreçlerin takibi ve ispat faaliyetlerinin yürütülmesi,</li>
+                <li>kampanya, duyuru, bilgilendirme ve pazarlama iletişimlerinin gönderilmesi (onayınız dahilinde).</li>
+            </ul>
+
+            <h3>4. Kişisel Verilerin Paylaşılması</h3>
+            <p>Kişisel verileriniz, hizmetin sunulması ve yasal yükümlülüklerin yerine getirilmesi amacıyla sınırlı olarak aşağıdaki alıcı gruplarıyla paylaşılabilir:</p>
+            <ul>
+                <li>altyapı, barındırma, yazılım, bakım, güvenlik ve destek hizmeti sunan tedarikçiler,</li>
+                <li>e-posta, bildirim, analitik ve reklam hizmeti sağlayıcıları,</li>
+                <li>hukuken yetkili kamu kurum ve kuruluşları, mahkemeler, icra daireleri ve düzenleyici otoriteler,</li>
+                <li>hukuki, mali ve teknik danışmanlık alınan profesyonel hizmet sağlayıcılar.</li>
+            </ul>
+            <p>Kişisel verileriniz, gerekli olmadıkça üçüncü kişilere ticari amaçla satılmaz, kiralanmaz veya devredilmez.</p>
+
+            <h3>5. Yurt İçi / Yurt Dışı Aktarım</h3>
             <p>
-                Google dahil üçüncü taraf satıcılar, sitemizi veya internetteki diğer siteleri ziyaretlerinize dayanarak reklam sunmak için çerezleri kullanır. 
-                Google'ın reklam çerezlerini kullanması, kendisinin ve ortaklarının kullanıcılarımıza sitemizi ve/veya internetteki diğer siteleri ziyaretlerine dayanarak reklam sunmasına olanak tanır.
-            </p>
-            <p>
-                Kullanıcılar, <a href="https://www.google.com/settings/ads" target="_blank">Reklam Ayarları</a> sayfasını ziyaret ederek kişiselleştirilmiş reklamcılığı devre dışı bırakabilirler.
+                Şirket, kişisel verilerinizi kural olarak yurt içindeki sistemler ve hizmet sağlayıcılar üzerinden işler.
+                Fiilen yurt dışına kişisel veri aktarımı yapılmamaktadır.
             </p>
 
-            <h3>4. Bilgilerin Kullanımı</h3>
+            <h3>6. Saklama Süresi</h3>
             <p>
-                Topladığımız verileri hizmetlerimizi sağlamak, geliştirmek ve sizinle iletişim kurmak için kullanıyoruz. 
-                Verileriniz yasal zorunluluklar haricinde üçüncü taraflarla paylaşılmaz.
+                Kişisel verileriniz, ilgili mevzuatta öngörülen süre boyunca veya işlendikleri amaç için gerekli olan süre kadar saklanır.
+                Sürenin sona ermesi, işleme amacının ortadan kalkması veya silme/yok etme yükümlülüğünün doğması halinde veriler mevzuata uygun şekilde
+                silinir, yok edilir veya anonim hale getirilir.
             </p>
-            
-            <p>Detaylı bilgi için <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a> adresinden bize ulaşabilirsiniz.</p>
+            <ul>
+                <li>Üyelik ve hesap bilgileri: üyelik ilişkisi devam ettiği sürece ve sona ermesinden sonra <strong>2 yıl</strong>.</li>
+                <li>Destek kayıtları: talebin kapanmasından sonra <strong>2 yıl</strong>.</li>
+                <li>Log ve güvenlik kayıtları: <strong>2 yıl</strong>.</li>
+            </ul>
+
+            <h3>7. Çerezler ve Reklamlar</h3>
+            <p>
+                Platformda, hizmetin çalışması için gerekli çerezler ile tercihleriniz, analiz çalışmaları ve reklam faaliyetleri için çerezler kullanılabilir.
+                Çerezlere ilişkin detaylı bilgi <button class="legal-inline-btn" onclick="switchTab('cookie')">Çerez Politikası</button> içinde yer almaktadır.
+            </p>
+            <p>
+                Google dahil üçüncü taraf reklam sağlayıcıları, bu platforma ve diğer internet sitelerine yapılan ziyaretlere dayanarak reklam sunmak amacıyla
+                çerezlerden veya benzeri teknolojilerden yararlanabilir. Kullanıcılar, kişiselleştirilmiş reklam tercihlerini ilgili sağlayıcıların tercih
+                sayfaları üzerinden yönetebilir.
+            </p>
+
+            <h3>8. Veri Güvenliği</h3>
+            <p>
+                Şirket, kişisel verilerin hukuka aykırı olarak işlenmesini ve erişilmesini önlemek, verilerin muhafazasını sağlamak amacıyla makul ve uygun
+                idari ve teknik tedbirleri almaya çalışır. Buna rağmen internet altyapısının doğası gereği hiçbir sistemin tamamen risksiz olduğu garanti edilemez.
+            </p>
+
+            <h3>9. Haklarınız ve Tercihleriniz</h3>
+            <ul>
+                <li>Hesap bilgilerinizin güncellenmesini talep edebilir,</li>
+                <li>pazarlama iletilerinden çıkabilir,</li>
+                <li>çerez tercihlerinizi panel üzerinden yönetebilir,</li>
+                <li>KVKK kapsamındaki haklarınızı <button class="legal-inline-btn" onclick="switchTab('kvkk')">KVKK Aydınlatma Metni</button>'nde açıklanan usullerle kullanabilirsiniz.</li>
+            </ul>
+
+            <h3>10. Politika Değişiklikleri</h3>
+            <p>
+                Şirket, işbu Gizlilik Politikası'nı mevzuat değişiklikleri, teknik ihtiyaçlar veya hizmet modelindeki güncellemeler doğrultusunda değiştirebilir.
+                Güncel metin yayımlandığı tarihten itibaren geçerli olur.
+            </p>
+
+            <h3>11. İletişim</h3>
+            <p>Gizlilik Politikası'na ilişkin sorularınız için bizimle aşağıdaki kanallardan iletişime geçebilirsiniz:</p>
+            <ul>
+                <li><strong>Şirket:</strong> SoftHive (TümMenü)</li>
+                <li><strong>Adres:</strong> Manisa/Turgutlu</li>
+                <li><strong>E-posta:</strong> <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a></li>
+                <li><strong>Telefon:</strong> <a href="tel:+905432911453">+90 543 291 14 53</a></li>
+            </ul>
         </div>
     </section>
 
     <!-- KVKK -->
     <section id="section-kvkk" class="legal-section" role="tabpanel" aria-labelledby="tab-kvkk">
         <div class="legal-text-block">
-            <h2>Kişisel Verilerin Korunması (KVKK)</h2>
-            <p><strong>Sürüm:</strong> @(Model?.KvkkVersion ?? "v1")</p>
-            <p>
-                6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, kişisel verileriniz veri sorumlusu sıfatıyla 
-                Tüm Menü tarafından aşağıda açıklanan kapsamda işlenebilecektir.
-            </p>
+            <h2>KVKK Aydınlatma Metni</h2>
+            <p><strong>Sürüm:</strong> @(Model?.KvkkVersion ?? "v2") &nbsp;|&nbsp; <strong>Yürürlük Tarihi:</strong> 14.04.2026</p>
 
-            <h3>Veri İşleme Amaçları</h3>
+            <h3>1. Veri Sorumlusunun Kimliği</h3>
             <p>
-                Kişisel verileriniz; hizmetlerimizin sunulması, üyelik işlemlerinin gerçekleştirilmesi, 
-                kampanya ve bildirimlerin iletilmesi amaçlarıyla işlenmektedir.
+                6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, ticari olarak <strong>TümMenü</strong> markasıyla faaliyet gösteren
+                <strong>SoftHive</strong> ("Şirket"), kişisel verileriniz bakımından veri sorumlusudur.
             </p>
-
-            <h3>Haklarınız</h3>
-            <p>KVKK'nın 11. maddesi uyarınca veri sahipleri;</p>
             <ul>
-                <li>Kişisel veri işlenip işlenmediğini öğrenme,</li>
-                <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
-                <li>Verilerin silinmesini veya yok edilmesini isteme haklarına sahiptir.</li>
+                <li><strong>Unvan:</strong> SoftHive (TümMenü)</li>
+                <li><strong>Adres:</strong> Manisa/Turgutlu</li>
+                <li><strong>E-posta:</strong> <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a></li>
+                <li><strong>Telefon:</strong> <a href="tel:+905432911453">+90 543 291 14 53</a></li>
             </ul>
+
+            <h3>2. İşlenen Kişisel Veri Kategorileri</h3>
+            <p>Şirket tarafından, sunulan hizmetin niteliğine göre aşağıdaki kişisel veri kategorileri işlenebilmektedir:</p>
+            <ul>
+                <li>kimlik ve iletişim bilgileri,</li>
+                <li>üyelik ve hesap bilgileri,</li>
+                <li>işletme ve menü içerik bilgileri,</li>
+                <li>işlem güvenliği ve log kayıtları,</li>
+                <li>destek ve iletişim kayıtları,</li>
+                <li>çerez ve kullanım verileri,</li>
+                <li>ticari elektronik ileti izin kayıtları.</li>
+            </ul>
+
+            <h3>3. Kişisel Verilerin İşlenme Amaçları ve Hukuki Sebepleri</h3>
+
+            <h4>a. Üyelik, hesap oluşturma ve platformun sunulması</h4>
+            <p>
+                Ad-soyad, e-posta, telefon, kullanıcı hesabı bilgileri ve işletme profili verileri; üyelik kaydının oluşturulması, oturum açma işlemlerinin
+                yürütülmesi, hesap yönetimi ve platform hizmetlerinin sunulması amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması; gerekli hallerde veri sorumlusunun meşru menfaati.
+            </p>
+
+            <h4>b. İşletme profili ve dijital menülerin yayınlanması</h4>
+            <p>
+                İşletme adı, adres, iletişim bilgileri, menü içerikleri, görseller ve fiyat bilgileri; dijital menülerin oluşturulması, yayımlanması,
+                QR menü hizmetinin sağlanması ve platform deneyiminin yürütülmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması.
+            </p>
+
+            <h4>c. Destek, talep ve iletişim süreçlerinin yürütülmesi</h4>
+            <p>
+                Tarafınıza ait iletişim bilgileri ve başvuru/destek içerikleri; soru, öneri, şikâyet ve teknik destek süreçlerinin yürütülmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması; gerekli hallerde veri sorumlusunun meşru menfaati.
+            </p>
+
+            <h4>d. Bilgi güvenliği, hata takibi ve kötüye kullanımın önlenmesi</h4>
+            <p>
+                IP adresi, cihaz ve tarayıcı bilgileri, oturum ve işlem güvenliği kayıtları, hata ve erişim logları; sistem güvenliğinin sağlanması,
+                yetkisiz erişimlerin önlenmesi, denetim ve risk yönetimi yapılması amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması; bir hakkın tesisi, kullanılması
+                veya korunması için veri işlemenin zorunlu olması; veri sorumlusunun meşru menfaati.
+            </p>
+
+            <h4>e. Hukuki yükümlülüklerin yerine getirilmesi</h4>
+            <p>
+                İlgili mevzuat kapsamında saklanması veya açıklanması gereken kayıtlar; resmi kurum taleplerinin karşılanması, muhasebe, vergi, denetim ve
+                diğer yasal yükümlülüklerin yerine getirilmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> kanunlarda açıkça öngörülmesi; veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması.
+            </p>
+
+            <h4>f. Hukuki süreçlerin takibi ve ispat faaliyetleri</h4>
+            <p>
+                Uyuşmazlık, dava, icra, denetim veya inceleme süreçlerinde gerekli olan veriler; hakların korunması ve ispat faaliyetlerinin yürütülmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> bir hakkın tesisi, kullanılması veya korunması için veri işlemenin zorunlu olması.
+            </p>
+
+            <h4>g. Ürün geliştirme, analiz ve kullanıcı deneyiminin iyileştirilmesi</h4>
+            <p>
+                Kullanım alışkanlıklarına ilişkin istatistiksel veriler, performans ve hata kayıtları; hizmet kalitesinin artırılması, teknik geliştirme yapılması
+                ve kullanıcı deneyiminin iyileştirilmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> veri sorumlusunun meşru menfaati; gerektiği hallerde açık rıza.
+            </p>
+
+            <h4>h. Pazarlama, kampanya ve bilgilendirme iletileri</h4>
+            <p>
+                İletişim bilgileriniz; kampanya, tanıtım, duyuru ve ticari elektronik ileti gönderimi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> açık rızanız/onayınız ve ilgili mevzuatta öngörülen diğer hukuki sebepler.
+            </p>
+
+            <h4>ı. Çerezlerin kullanımı</h4>
+            <p>
+                Çerez ve benzeri teknolojilerden elde edilen veriler; sitenin çalışması, güvenlik, tercihlerin hatırlanması, analiz yapılması ve reklam
+                faaliyetlerinin yürütülmesi amacıyla işlenir.<br />
+                <strong>Hukuki sebep:</strong> kesinlikle gerekli çerezler bakımından ilgili işleme şartları; zorunlu olmayan çerezler bakımından gerektiği ölçüde açık rıza.
+            </p>
+
+            <h3>4. Kişisel Verilerin Aktarılabileceği Taraflar ve Aktarım Amaçları</h3>
+            <p>Kişisel verileriniz, yukarıda belirtilen amaçlarla sınırlı olmak üzere aşağıdaki taraflara aktarılabilir:</p>
+            <ul>
+                <li>barındırma, sunucu, yazılım, bakım, güvenlik ve destek hizmeti alınan tedarikçiler,</li>
+                <li>e-posta, çağrı merkezi, analitik, reklam ve bildirim hizmeti sağlayıcıları,</li>
+                <li>hukuken yetkili kamu kurum ve kuruluşları, düzenleyici otoriteler, mahkemeler ve icra daireleri,</li>
+                <li>avukatlar, mali müşavirler, denetçiler ve danışmanlık alınan profesyonel taraflar.</li>
+            </ul>
+            <p>Kişisel verileriniz yurt içinde bulunan hizmet sağlayıcılara aktarılabilmektedir.</p>
+
+            <h3>5. Kişisel Veri Toplamanın Yöntemi</h3>
+            <p>
+                Kişisel verileriniz; internet sitesi üzerindeki üyelik ve iletişim formları, hesap oluşturma ekranları, destek talepleri, e-posta ve telefon iletişimi,
+                çerezler ve benzeri teknolojiler, sunucu ve güvenlik logları, kullanıcı tarafından platforma yüklenen içerikler ve entegre üçüncü taraf hizmetler
+                aracılığıyla otomatik veya otomatik olmayan yöntemlerle toplanabilmektedir.
+            </p>
+
+            <h3>6. KVKK'nın 11. Maddesi Kapsamındaki Haklarınız</h3>
+            <p>KVKK'nın 11. maddesi uyarınca Şirket'e başvurarak;</p>
+            <ul>
+                <li>kişisel verilerinizin işlenip işlenmediğini öğrenme,</li>
+                <li>işlenmişse buna ilişkin bilgi talep etme,</li>
+                <li>işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+                <li>yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri öğrenme,</li>
+                <li>eksik veya yanlış işlenmiş olması hâlinde düzeltilmesini isteme,</li>
+                <li>silinmesini veya yok edilmesini isteme,</li>
+                <li>yapılan düzeltme, silme veya yok etme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+                <li>münhasıran otomatik sistemler vasıtasıyla analiz edilmesi sonucu aleyhinize bir sonuç doğmasına itiraz etme,</li>
+                <li>kanuna aykırı işlenmesi sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme</li>
+            </ul>
+            <p>haklarına sahipsiniz.</p>
+
+            <h3>7. Başvuru Usulü</h3>
+            <p>Yukarıdaki haklarınıza ilişkin başvurularınızı, ilgili mevzuata uygun şekilde:</p>
+            <ul>
+                <li>yazılı olarak <strong>Manisa/Turgutlu</strong> adresine,</li>
+                <li>veya daha önce tarafımıza bildirdiğiniz ve sistemimizde kayıtlı bulunan e-posta adresiniz aracılığıyla <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a> adresine</li>
+            </ul>
+            <p>
+                iletebilirsiniz. Şirket, talebinizi niteliğine göre en kısa sürede ve en geç otuz gün içinde sonuçlandırır.
+                Başvurunun ayrıca bir maliyet gerektirmesi hâlinde, mevzuatın izin verdiği ölçüde ücret talep edilebilir.
+            </p>
+
+            <h3>8. Son Hüküm</h3>
+            <p>
+                İşbu metin bir <strong>aydınlatma metnidir</strong>. Pazarlama iletileri, kişiselleştirilmiş reklam ve zorunlu olmayan çerezler
+                bakımından gerekli olduğu hallerde ayrıca açık rıza/onay süreci işletilir.
+            </p>
         </div>
     </section>
 
@@ -109,22 +301,92 @@
     <section id="section-cookie" class="legal-section" role="tabpanel" aria-labelledby="tab-cookie">
         <div class="legal-text-block">
             <h2>Çerez Politikası</h2>
-            <p><strong>Sürüm:</strong> @(Model?.CookieVersion ?? "v1")</p>
+            <p><strong>Sürüm:</strong> @(Model?.CookieVersion ?? "v2") &nbsp;|&nbsp; <strong>Yürürlük Tarihi:</strong> 14.04.2026</p>
+
+            <h3>1. Amaç</h3>
             <p>
-                Web sitemizde kullanıcı deneyimini iyileştirmek için çerezler (cookies) kullanmaktayız.
+                Bu Çerez Politikası, <strong>tummenu.com</strong> üzerinde kullanılan çerezler ve benzeri teknolojiler hakkında bilgi vermek,
+                hangi tür çerezlerin hangi amaçlarla kullanıldığını açıklamak ve kullanıcıların tercihlerini nasıl yönetebileceğini göstermek
+                amacıyla hazırlanmıştır.
             </p>
 
-            <h3>Kullandığımız Çerez Türleri</h3>
+            <h3>2. Çerez Nedir?</h3>
+            <p>
+                Çerezler, internet sitesini ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır. Çerezler sayesinde oturumunuzun
+                sürdürülmesi, tercihlerinizin hatırlanması, site performansının ölçülmesi ve reklam faaliyetlerinin yürütülmesi mümkün olabilir.
+            </p>
+
+            <h3>3. Kullandığımız Çerez Türleri</h3>
+            <p><strong>Zorunlu çerezler:</strong><br />
+            Platformun çalışması, oturumun sürdürülmesi, güvenlik kontrolleri, form işlemleri ve temel hizmetlerin sunulması için gerekli çerezlerdir.
+            Bu çerezler olmadan platformun bazı bölümleri düzgün çalışmayabilir.</p>
+
+            <p><strong>İşlevsel çerezler:</strong><br />
+            Dil tercihi, oturum tercihleri ve benzeri kullanıcı ayarlarının hatırlanmasını sağlar.</p>
+
+            <p><strong>Analitik çerezler:</strong><br />
+            Platformun nasıl kullanıldığını anlamamıza, ziyaret ve trafik analizleri yapmamıza, performansı ölçmemize ve hizmeti geliştirmemize
+            yardımcı olur.</p>
+
+            <p><strong>Reklam / pazarlama çerezleri:</strong><br />
+            İlgi alanlarınıza daha uygun reklam sunulması, reklam performansının ölçülmesi, frekans sınırlaması ve raporlama yapılması gibi
+            amaçlarla kullanılabilir.</p>
+
+            <p>Çerezler ayrıca <strong>birinci taraf / üçüncü taraf</strong> çerezler ile <strong>oturum / kalıcı</strong> çerezler olarak da sınıflandırılabilir.</p>
+
+            <h3>4. Çerezlerin Kullanımında Hukuki Dayanak</h3>
+            <p>
+                Kesinlikle gerekli çerezler, hizmetin sunulabilmesi, güvenliğin sağlanması ve platformun çalışması için gerekli olduklarından
+                ilgili mevzuat kapsamındaki uygun işleme şartlarına dayanılarak kullanılabilir.
+            </p>
+            <p>
+                Zorunlu olmayan işlevsel, analitik ve reklam çerezleri ise gerektiği ölçüde <strong>açık rızanıza</strong> dayanılarak kullanılır.
+                Bu çerezler, tercih panelinde onay vermemeniz halinde çalıştırılmaz.
+            </p>
+
+            <h3>5. Çerez Tercihlerinizi Nasıl Yönetebilirsiniz?</h3>
+            <p>Platformu ilk ziyaretinizde karşınıza çıkan çerez paneli üzerinden <strong>"Kabul Et"</strong>, <strong>"Reddet"</strong> veya
+            <strong>"Tercihler"</strong> seçeneklerinden birini kullanarak tercihlerinizi yönetebilirsiniz.</p>
+            <p>
+                Çerez tercihlerinizi dilediğiniz zaman aynı panel üzerinden değiştirebilir, daha önce vermiş olduğunuz onayı geri alabilirsiniz.
+                Ayrıca tarayıcı ayarlarınız üzerinden de bazı çerezleri silebilir veya engelleyebilirsiniz. Bununla birlikte, tarayıcı üzerinden
+                yapılan engellemeler platformun bazı işlevlerini etkileyebilir.
+            </p>
+
+            <h3>6. Üçüncü Taraf Çerezleri ve Reklam Hizmetleri</h3>
+            <p>
+                Platformda Google veya diğer üçüncü taraf reklam sağlayıcıları tarafından yerleştirilen çerezler kullanılabilir. Bu çerezler,
+                kullanıcının bu siteyi ve diğer internet sitelerini ziyaretine bağlı olarak reklam sunulmasına, reklam sıklığının yönetilmesine
+                ve performans ölçümüne hizmet edebilir.
+            </p>
+            <p>
+                Kullanıcılar, ilgili üçüncü taraf sağlayıcıların tercih araçları üzerinden kişiselleştirilmiş reklam ayarlarını değiştirebilir.
+                Üçüncü taraf sağlayıcıların veri işleme faaliyetleri kendi gizlilik politikalarına tabidir.
+            </p>
+            <p>
+                Kişiselleştirilmemiş reklamlarda dahi, reklam hedeflemesi dışında frekans sınırlama ve toplulaştırılmış raporlama amaçlarıyla
+                çerezler veya benzeri tanımlayıcılar kullanılabilir.
+            </p>
+
+            <h3>7. Çerez Saklama Süreleri</h3>
+            <p>
+                Çerezlerin saklama süresi türüne göre değişir. Oturum çerezleri tarayıcı kapatıldığında silinir. Kalıcı çerezler ise
+                amaçlarına göre belirli bir süre cihazınızda kalabilir.
+            </p>
+
+            <h3>8. Güncellemeler</h3>
+            <p>
+                Şirket, kullanılan çerezleri, üçüncü taraf hizmetleri veya mevzuattaki değişiklikleri dikkate alarak bu Çerez Politikası'nı
+                güncelleyebilir. Güncel metin yayımlandığı tarihten itibaren yürürlüğe girer.
+            </p>
+
+            <h3>9. İletişim</h3>
+            <p>Çerezler hakkında sorularınız için bizimle iletişime geçebilirsiniz:</p>
             <ul>
-                <li><strong>Zorunlu Çerezler:</strong> Sitenin çalışması için gereklidir.</li>
-                <li><strong>Analitik Çerezler:</strong> Ziyaretçi sayılarını ve trafiği analiz etmemizi sağlar.</li>
-                <li><strong>İşlevsel Çerezler:</strong> Tercihlerinizi hatırlamamıza yardımcı olur.</li>
-                <li><strong>Reklam Çerezleri:</strong> Google gibi üçüncü taraf satıcılar tarafından reklam sunumu ve performans ölçümü için kullanılır.</li>
+                <li><strong>Şirket:</strong> SoftHive (TümMenü)</li>
+                <li><strong>E-posta:</strong> <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a></li>
+                <li><strong>Adres:</strong> Manisa/Turgutlu</li>
             </ul>
-
-            <p>
-                Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman silebilir veya engelleyebilirsiniz.
-            </p>
         </div>
     </section>
 
@@ -132,26 +394,141 @@
     <section id="section-terms" class="legal-section" role="tabpanel" aria-labelledby="tab-terms">
         <div class="legal-text-block">
             <h2>Kullanıcı Sözleşmesi</h2>
-            <p><strong>Sürüm:</strong> @(Model?.TermsVersion ?? "v1")</p>
-            <h3>1. Taraflar</h3>
+            <p><strong>Sürüm:</strong> @(Model?.TermsVersion ?? "v2") &nbsp;|&nbsp; <strong>Yürürlük Tarihi:</strong> 14.04.2026</p>
+
+            <h3>1. Taraflar ve Sözleşmenin Kabulü</h3>
             <p>
-                İşbu sözleşme, Tüm Menü platformuna üye olan kullanıcı ("Üye") ile Tüm Menü ("Şirket") arasında akdedilmiştir.
+                İşbu Kullanıcı Sözleşmesi ("Sözleşme"), ticari olarak <strong>TümMenü</strong> markasıyla faaliyet gösteren <strong>SoftHive</strong> ("Şirket")
+                ile <strong>tummenu.com</strong>'a erişen, üye olan veya platformu kullanan gerçek ya da tüzel kişi ("Kullanıcı" veya "Üye") arasında akdedilmiştir.
+            </p>
+            <p>Kullanıcı, platforma erişerek veya üye olarak işbu Sözleşme'yi okuduğunu, anladığını ve kabul ettiğini beyan eder.</p>
+
+            <h3>2. Sözleşmenin Konusu</h3>
+            <p>
+                TümMenü; işletmelerin dijital menü oluşturmasına, yayınlamasına ve yönetmesine, ziyaretçilerin ise bu menüleri görüntülemesine imkân sağlayan
+                bir platformdur. İşbu Sözleşme, platformun kullanım koşullarını, tarafların hak ve yükümlülüklerini ve hizmete ilişkin genel esasları düzenler.
             </p>
 
-            <h3>2. Hizmetin Kapsamı</h3>
+            <h3>3. Üyelik ve Hesap Güvenliği</h3>
+            <ul>
+                <li>Üye, kayıt sırasında verdiği bilgilerin doğru, güncel ve eksiksiz olduğunu kabul eder.</li>
+                <li>Tüzel kişi adına işlem yapan kullanıcı, ilgili işletmeyi temsil etmeye yetkili olduğunu beyan eder.</li>
+                <li>Hesap bilgileri ve giriş şifresinin gizliliği Üye'nin sorumluluğundadır. Hesap üzerinden yapılan işlemler kural olarak Üye'ye ait kabul edilir.</li>
+                <li>Şirket, gerekli gördüğü durumlarda üyelik doğrulaması isteyebilir.</li>
+            </ul>
+
+            <h3>4. Kullanım Kuralları</h3>
+            <p>Kullanıcı, platformu yalnızca hukuka uygun amaçlarla kullanacağını kabul eder. Kullanıcı aşağıdaki fiillerde bulunamaz:</p>
+            <ul>
+                <li>hukuka aykırı, yanıltıcı, aldatıcı, saldırgan, ayrımcı veya üçüncü kişilerin haklarını ihlal eden içerik yüklemek,</li>
+                <li>fikrî mülkiyet hakkı, marka hakkı, telif hakkı veya kişilik hakkı ihlaline yol açan içerik kullanmak,</li>
+                <li>platformun güvenliğini zedelemek, yetkisiz erişim sağlamaya çalışmak, zararlı yazılım yaymak,</li>
+                <li>otomatik araçlarla veri çekmek, sistemleri aşırı yüklemek, tersine mühendislik yapmak veya hizmeti kesintiye uğratacak işlemlerde bulunmak,</li>
+                <li>başka bir kullanıcıya ait hesabı izinsiz kullanmak veya hesabını üçüncü kişilere devretmek.</li>
+            </ul>
+
+            <h3>5. Menü İçerikleri ve Üye Sorumluluğu</h3>
+            <p>Platforma yüklenen menü, fiyat, görsel, açıklama, iletişim bilgisi ve diğer tüm içeriklerden ilgili Üye sorumludur. Üye;</p>
+            <ul>
+                <li>yüklediği içeriklerin doğru, güncel ve hukuka uygun olduğunu,</li>
+                <li>görsel, logo, metin ve diğer içerikler üzerinde gerekli kullanım haklarına sahip olduğunu,</li>
+                <li>mevzuat gereği verilmesi gereken bilgilere ilişkin sorumluluğun kendisine ait olduğunu</li>
+            </ul>
+            <p>kabul eder.</p>
             <p>
-                Tüm Menü, işletmelerin dijital menü oluşturmasını ve kullanıcıların bu menüleri görüntülemesini sağlayan bir platformdur.
+                Şirket, hukuka aykırı olduğu değerlendirilen, şikâyete konu olan, üçüncü kişi hakkını ihlal eden veya platform düzenini bozduğu
+                düşünülen içerikleri önceden bildirim yapmaksızın kaldırabilir, erişimi sınırlandırabilir veya üyeliği askıya alabilir.
+            </p>
+            <p>
+                Şirket, platform üzerinde yer alan menü ve işletme bilgilerinin kaynağı olan Üye beyanlarından doğan fiyat, stok, içerik, kampanya,
+                teslimat, iade veya tüketici uyuşmazlıklarının tarafı değildir. Kullanıcı ile işletme arasındaki hukuki ilişki, ilgili taraflar arasında kurulur.
             </p>
 
-            <h3>3. Üyenin Yükümlülükleri</h3>
+            <h3>6. Fikrî Mülkiyet Hakları</h3>
             <p>
-                Üye, siteyi kullanırken yasalara ve genel ahlak kurallarına uygun davranacağını kabul eder.
+                Platformun tasarımı, yazılımı, altyapısı, arayüzü, markaları, logoları ve diğer tüm unsurlar üzerindeki haklar Şirket'e veya lisans verenlerine
+                aittir. Kullanıcıya yalnızca platformu Sözleşme'ye uygun şekilde kullanmak için sınırlı, münhasır olmayan, devredilemez ve geri alınabilir bir
+                kullanım hakkı tanınmaktadır.
+            </p>
+            <p>
+                Üye, platforma yüklediği içeriklerin hizmetin sunulması amacıyla barındırılması, çoğaltılması, görüntülenmesi, işlenmesi ve yayımlanması için
+                Şirket'e sınırlı, ücretsiz ve hizmet süresiyle bağlantılı bir kullanım izni verdiğini kabul eder.
             </p>
 
-            <h3>4. Fesih</h3>
+            <h3>7. Hizmette Değişiklik ve Erişilebilirlik</h3>
             <p>
-                Şirket, işbu sözleşmeye aykırı davranış tespit etmesi halinde üyeliği tek taraflı olarak sonlandırma hakkına sahiptir.
+                Şirket, platformu geliştirmek, güncellemek, bakım yapmak, güvenlik sağlamak veya mevzuata uyum sağlamak amacıyla hizmette değişiklik yapabilir.
+                Bu değişiklikler; yeni özellik eklenmesi, bazı özelliklerin kaldırılması, erişim şeklinin değiştirilmesi veya hizmetin geçici olarak durdurulması
+                şeklinde olabilir.
             </p>
+            <p>
+                Şirket, hizmeti makul özenle sunmayı hedefler; ancak internet altyapısı, üçüncü taraf servisler, bakım çalışmaları, güvenlik riskleri veya
+                mücbir sebepler nedeniyle hizmetin kesintisiz, hatasız ya da sürekli erişilebilir olacağına dair garanti vermez.
+            </p>
+
+            <h3>8. Ücretlendirme</h3>
+            <p>
+                Platformun bazı özellikleri ücretsiz, bazı özellikleri ise ücretli olabilir. Ücretli plan, abonelik veya ek hizmetlerin bulunması hâlinde
+                ücret, ödeme dönemi, kapsam ve koşullar ilgili satın alma/abonelik ekranında ayrıca gösterilir.
+            </p>
+            <p>Süresinde ödenmeyen ücretler nedeniyle Şirket, ilgili hizmeti askıya alma veya sona erdirme hakkını saklı tutar.</p>
+
+            <h3>9. Askıya Alma ve Fesih</h3>
+            <p>
+                Üye, hesabını dilediği zaman <strong>Profilim sayfası</strong> üzerinden veya <a href="mailto:destek@tummenu.com.tr">destek@tummenu.com.tr</a>
+                adresine başvurarak kapatabilir.
+            </p>
+            <p>Şirket aşağıdaki hâllerde üyeliği askıya alabilir veya sona erdirebilir:</p>
+            <ul>
+                <li>işbu Sözleşme'ye aykırılık,</li>
+                <li>hukuka aykırı kullanım şüphesi,</li>
+                <li>üçüncü kişi haklarının ihlali,</li>
+                <li>güvenlik riski oluşması,</li>
+                <li>yasal veya idari kurum talebi,</li>
+                <li>ücretli hizmetlerde ödeme yükümlülüğünün yerine getirilmemesi.</li>
+            </ul>
+            <p>Fesih veya askıya alma hâlinde, mevzuat gereği saklanması gereken kayıtlar saklı kalmak üzere hesaba erişim kısıtlanabilir.</p>
+
+            <h3>10. Sorumluluğun Sınırı</h3>
+            <p>
+                Şirket, kendi ağır kusuru veya kastı bulunmadıkça; üçüncü taraf hizmet sağlayıcılardan, internet erişim problemlerinden, kullanıcı veya
+                işletme içeriklerinden, yanlış fiyat veya içerik bilgilerinden, veri iletimindeki gecikmelerden ya da mücbir sebeplerden kaynaklanan dolaylı
+                veya dolaysız zararlardan sorumlu tutulamaz.
+            </p>
+            <p>Bu hüküm, tüketiciler bakımından emredici mevzuat hükümlerinin uygulanmasına engel olacak şekilde yorumlanmaz.</p>
+
+            <h3>11. Kişisel Veriler ve Gizlilik</h3>
+            <p>
+                Kullanıcıya ait kişisel veriler, <button class="legal-inline-btn" onclick="switchTab('privacy')">Gizlilik Politikası</button>,
+                <button class="legal-inline-btn" onclick="switchTab('kvkk')">KVKK Aydınlatma Metni</button> ve
+                <button class="legal-inline-btn" onclick="switchTab('cookie')">Çerez Politikası</button> çerçevesinde işlenir.
+                Açık rıza gerektiren hâllerde ayrıca kullanıcıdan onay alınır. Kullanıcı, bu metinleri okuyup anladığını kabul eder.
+            </p>
+
+            <h3>12. Sözleşme Değişiklikleri</h3>
+            <p>
+                Şirket, işbu Sözleşme'yi mevzuat, teknik ihtiyaçlar veya iş modeli değişiklikleri doğrultusunda güncelleyebilir. Güncellenmiş metin platformda
+                yayımlandığı tarihte yürürlüğe girer. Kullanıcının platformu kullanmaya devam etmesi, güncel metni kabul ettiği anlamına gelir.
+            </p>
+
+            <h3>13. Uygulanacak Hukuk ve Yetkili Mahkeme</h3>
+            <p>
+                İşbu Sözleşme'ye Türk hukuku uygulanır. Taraflar arasında doğabilecek uyuşmazlıklarda <strong>Manisa</strong> Mahkemeleri ve
+                İcra Daireleri yetkilidir.
+            </p>
+            <p>Tüketici sıfatını haiz kullanıcılar bakımından, zorunlu tüketici mevzuatından kaynaklanan yetki kuralları saklıdır.</p>
+
+            <h3>14. İletişim</h3>
+            <p>Sözleşme ile ilgili her türlü soru ve bildirim için aşağıdaki iletişim kanalları kullanılabilir:</p>
+            <ul>
+                <li><strong>Şirket:</strong> SoftHive (TümMenü)</li>
+                <li><strong>Adres:</strong> Manisa/Turgutlu</li>
+                <li><strong>E-posta:</strong> <a href="mailto:hukuk@tummenu.com.tr">hukuk@tummenu.com.tr</a></li>
+                <li><strong>Telefon:</strong> <a href="tel:+905432911453">+90 543 291 14 53</a></li>
+            </ul>
+
+            <h3>15. Yürürlük</h3>
+            <p>İşbu Sözleşme, 14.04.2026 tarihinde yürürlüğe girmiştir.</p>
         </div>
     </section>
 
@@ -165,7 +542,7 @@
 
             // Hide all sections
             document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('is-active'));
-            
+
             // Deactivate all buttons
             document.querySelectorAll('.legal-tab-btn').forEach(b => {
                 b.classList.remove('is-active');
@@ -174,12 +551,12 @@
 
             // Activate target
             document.getElementById('section-' + tabId).classList.add('is-active');
-            
+
             const btn = document.getElementById('tab-' + tabId);
             if (btn) {
                 btn.classList.add('is-active');
                 btn.setAttribute('aria-selected', 'true');
-                
+
                 // Scroll button into view on mobile
                 btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
@@ -194,7 +571,7 @@
                 switchTab(hash);
             }
         });
-        
+
         // Handle back/forward navigation
         window.addEventListener('hashchange', () => {
              const hash = window.location.hash.replace('#', '');
