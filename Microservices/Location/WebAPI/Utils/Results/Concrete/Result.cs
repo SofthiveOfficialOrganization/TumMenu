@@ -4,7 +4,7 @@ namespace WebAPI.Utils.Results.Concrete;
 
 public class Result : WebAPI.Utils.Results.Abstract.IResult
 {
-    public Result(bool success, string message, BaseProblemDetail errorModel) : this(success)
+    public Result(bool success, string? message, BaseProblemDetail? errorModel) : this(success)
     {
         Message = message;
         ErrorModel = errorModel;
@@ -15,7 +15,7 @@ public class Result : WebAPI.Utils.Results.Abstract.IResult
     }
     public bool Success { get; }
 
-    public string Message { get; }
+    public string? Message { get; }
 
-    public BaseProblemDetail ErrorModel { get; }
+    public BaseProblemDetail? ErrorModel { get; }
 }

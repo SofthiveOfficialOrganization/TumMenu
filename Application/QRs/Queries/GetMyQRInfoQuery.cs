@@ -43,11 +43,11 @@ public class GetMyQRInfoQueryHandler(
             {
                 StoreId = store.Id,
                 StoreTitle = store.Title,
-                CompanyTitle = store.Company.Title,
-                QRKey = store.QRCode.PublicKey,
-                PublicUrl = $"/q/{store.QRCode.PublicKey}",
-                BaseDomain = store.QRCode.BaseDomain,
-                MenuUrl = $"/{store.Company.Slug}/{store.Slug}"
+                CompanyTitle = store.Company!.Title,
+                QRKey = store.QRCode!.PublicKey,
+                PublicUrl = $"/q/{store.QRCode!.PublicKey}",
+                BaseDomain = store.QRCode!.BaseDomain,
+                MenuUrl = $"/{store.Company!.Slug}/{store.Slug}"
             })
             .ToList();
     }

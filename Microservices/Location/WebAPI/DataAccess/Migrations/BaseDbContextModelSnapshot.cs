@@ -15,7 +15,6 @@ namespace WebAPI.DataAccess.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -339,7 +338,6 @@ namespace WebAPI.DataAccess.Migrations
                 {
                     b.Navigation("Districts");
                 });
-#pragma warning restore 612, 618
         }
     }
 }

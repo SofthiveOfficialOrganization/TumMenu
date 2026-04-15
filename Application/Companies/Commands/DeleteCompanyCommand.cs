@@ -17,8 +17,7 @@ public class DeleteCompanyCommand : IRequest<Unit>, ITransactionalRequest, IEnti
 public class DeleteCompanyCommandHandler(
 	IRepository<Company> repoCompany,
 	IRepository<Store> repoStore,
-	IRepository<Menu> repoMenu,
-	IMapper mapper
+	IRepository<Menu> repoMenu
 ) : IRequestHandler<DeleteCompanyCommand, Unit>
 {
 	public async Task<Unit> Handle(DeleteCompanyCommand req, CancellationToken ct)

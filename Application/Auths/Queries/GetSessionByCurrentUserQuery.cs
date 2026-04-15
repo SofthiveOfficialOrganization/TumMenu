@@ -10,8 +10,7 @@ public sealed record GetSessionByCurrentUserQuery : IRequest<SessionDTO>, IAutho
 
 public sealed class GetSesssionByCurrentUserHandler(
     IUserContext userContext,
-    IRepository<Company> repoCompany,
-    IRepository<Store> repoStore
+    IRepository<Company> repoCompany
 ) : IRequestHandler<GetSessionByCurrentUserQuery, SessionDTO>
 {
     public async Task<SessionDTO> Handle(GetSessionByCurrentUserQuery req, CancellationToken ct)

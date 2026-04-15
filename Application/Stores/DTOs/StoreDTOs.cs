@@ -20,7 +20,7 @@ public sealed class StoreDTO : BaseDTO
 	public string PhoneNumber { get; set; } = null!;
 	public Guid CompanyId { get; set; }
 	public CompanyDTO? Company { get; set; }
-	public AddressDTO? Address { get; set; }
+	public AddressDTO Address { get; set; } = new();
 	public List<StaffDTO> Staffs { get; set; } = new List<StaffDTO>();
 	public List<MediaDTO> Medias { get; set; } = [];
 }

@@ -92,7 +92,7 @@ public class ProvinceService(
         var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
         var provinces = JsonSerializer.Deserialize<ProvinceResponse>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        var mappedProvinces = _mapper.Map<ICollection<Province>>(provinces.Data);
+        var mappedProvinces = _mapper.Map<ICollection<Province>>(provinces!.Data);
         
         await _provinceRepository.AddRangeAsync(
             entities: mappedProvinces,

@@ -29,7 +29,7 @@ public class GoogleCloudLocationsController(
     public async Task<IActionResult> GetCoordinates([FromQuery] string address)
     {
         var location = await _googleCloudService.GetCoordinatesAsync(address);
-        return Ok(new SuccessDataResult<LocationData>(data: location));
+        return Ok(new SuccessDataResult<LocationData>(data: location!));
     }
     
     [ProducesResponseType(typeof(SuccessDataResult<List<AddressSuggestionDto>>), StatusCodes.Status200OK)]

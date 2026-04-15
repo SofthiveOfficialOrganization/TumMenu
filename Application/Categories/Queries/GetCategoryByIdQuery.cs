@@ -24,7 +24,7 @@ public sealed class GetCategoryByIdQueryHandler(
 			.Include(c => c.Menu)
 			.Include(c => c.CategoryLibraryItem)
 			.Include(c => c.Parent)
-				.ThenInclude(p => p.CategoryLibraryItem)
+				.ThenInclude(p => p!.CategoryLibraryItem)
 			.Include(c => c.SubCategories)
 				.ThenInclude(sc => sc.CategoryLibraryItem)
 			.Include(c => c.Products) // fetch products

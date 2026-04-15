@@ -9,7 +9,7 @@ public interface IResult
     bool Success { get; }
 
     [JsonProperty("message")]
-    string Message { get; }
+    string? Message { get; }
     [JsonProperty("errorModel")]
-    BaseProblemDetail ErrorModel { get; }
+    BaseProblemDetail? ErrorModel { get; }
 }

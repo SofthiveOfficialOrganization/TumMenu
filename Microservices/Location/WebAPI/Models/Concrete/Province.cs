@@ -10,7 +10,7 @@ public class Province : BaseEntity<Guid>
     public string? GoogleMaps { get; set; }
     public string? OpenStreetMap { get; set; }
 
-    public virtual ICollection<District>? Districts { get; set; }
+    public virtual ICollection<District> Districts { get; set; } = [];
 
     public void Update(
         string name, double latitude, double longitude,

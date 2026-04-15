@@ -32,8 +32,8 @@ public sealed class LoggingAuthorizationMiddlewareResultHandler(
 				.Distinct()
 				.ToArray();
 
-			var userRoles = context.User.FindAll(ClaimTypes.Role).Select(c => c.Value)
-				.Concat(context.User.FindAll("role").Select(c => c.Value))
+			var userRoles = (context.User?.FindAll(ClaimTypes.Role).Select(c => c.Value) ?? [])
+				.Concat(context.User?.FindAll("role").Select(c => c.Value) ?? [])
 				.Distinct()
 				.ToArray();
 

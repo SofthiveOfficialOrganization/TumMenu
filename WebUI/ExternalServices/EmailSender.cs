@@ -24,7 +24,7 @@ namespace WebUI.ExternalServices
         private void EnsureLogDirectoryExists()
         {
             var logDir = Path.GetDirectoryName(_logFilePath);
-            if (!Directory.Exists(logDir))
+            if (!Directory.Exists(logDir) && logDir != null)
             {
                 Directory.CreateDirectory(logDir);
             }
@@ -92,14 +92,14 @@ namespace WebUI.ExternalServices
                 bodyBuilder.HtmlBody = htmlMessage;
                 
                 // Generate plain text version from HTML
-                var plainText = System.Text.RegularExpressions.Regex.Replace(htmlMessage, 
+                var plainText = System.Text.RegularExpressions.Regex.Replace(htmlMessage ?? string.Empty,
                     @"<[^>]*>", string.Empty).Replace("&nbsp;", " ").Replace("&amp;", "&");
                 // Clean up extra whitespace
                 while (plainText.Contains("  "))
                     plainText = plainText.Replace("  ", " ");
                 plainText = System.Web.HttpUtility.HtmlDecode(plainText);
                 
-                bodyBuilder.TextBody = $"TumMenu Hesap Onayı\n\nMerhaba,\n\nHesabınızı aktive etmek için aşağıdaki linke tıklayın:\n\n{GetPlainTextLink(htmlMessage)}\n\nEğer bu e-postayı talep etmediyseniz lütfen dikkate almayın.\n\nTumMenu Destek Ekibi";
+                bodyBuilder.TextBody = $"TumMenu Hesap Onayı\n\nMerhaba,\n\nHesabınızı aktive etmek için aşağıdaki linke tıklayın:\n\n{GetPlainTextLink(htmlMessage ?? string.Empty)}\n\nEğer bu e-postayı talep etmediyseniz lütfen dikkate almayın.\n\nTumMenu Destek Ekibi";
                 
                 emailMessage.Body = bodyBuilder.ToMessageBody();
                 

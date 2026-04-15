@@ -38,7 +38,7 @@ public class TagController(IMediator mediator) : Controller
 
 	[Authorize(Policy = "OwnerOnly")]
 	[HttpGet("[action]/{id}")]
-	public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
+	public IActionResult Edit(Guid id, CancellationToken ct)
 	{
 		return View();
 	}

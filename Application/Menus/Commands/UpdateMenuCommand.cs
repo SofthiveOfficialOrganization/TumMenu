@@ -20,8 +20,7 @@ public sealed record UpdateMenuCommand(
 }
 
 public class UpdateMenuCommandHandler(
-	IRepository<Menu> repoMenu,
-	IMapper mapper
+	IRepository<Menu> repoMenu
 ) : IRequestHandler<UpdateMenuCommand, Menu>
 {
 	public async Task<Menu> Handle(UpdateMenuCommand req, CancellationToken ct)

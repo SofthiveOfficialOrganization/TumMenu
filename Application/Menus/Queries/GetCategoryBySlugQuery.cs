@@ -60,14 +60,14 @@ public class GetCategoryBySlugHandler(
 			.Where(c => c.IsActive && 
 			           c.CategoryLibraryItem.Slug == req.CategorySlug && 
 			           c.Menu.Status == MenuStatus.Active &&
-			           c.Menu.Store.Slug == req.StoreSlug && 
-			           c.Menu.Store.Company.Slug == req.CompanySlug)
+			           c.Menu.Store!.Slug == req.StoreSlug &&
+			           c.Menu.Store!.Company!.Slug == req.CompanySlug)
 			.Select(c => new CategoryPageDTO
 			{
-				CompanySlug = c.Menu.Store.Company.Slug,
-				StoreSlug = c.Menu.Store.Slug,
-				StoreName = c.Menu.Store.Title,
-				CompanyName = c.Menu.Store.Company.Title,
+				CompanySlug = c.Menu.Store!.Company!.Slug,
+				StoreSlug = c.Menu.Store!.Slug,
+				StoreName = c.Menu.Store!.Title,
+				CompanyName = c.Menu.Store!.Company!.Title,
 				CategorySlug = c.CategoryLibraryItem.Slug,
 				CategoryTitle = c.CategoryLibraryItem.Title,
 				CategoryId = c.Id,

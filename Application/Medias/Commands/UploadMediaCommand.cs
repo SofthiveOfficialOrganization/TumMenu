@@ -30,8 +30,7 @@ public class UploadMediaCommandHandler(
     IRepository<CategoryLibraryItem> categoryLibraryRepository,
     IRepository<Company> companyRepository,
     IStorageService storageService,
-    IMapper mapper,
-    IApplicationDbContext dbContext
+    IMapper mapper
     ) : IRequestHandler<UploadMediaCommand, MediaDTO>
 {
     public async Task<MediaDTO> Handle(UploadMediaCommand req, CancellationToken ct)

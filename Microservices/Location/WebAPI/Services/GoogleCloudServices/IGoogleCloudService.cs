@@ -49,7 +49,7 @@ public class GoogleCloudService(
         if (results is null || results.Count == 0)
             throw new NotFoundException(AppMessages.LOCATION_NOT_FOUND);
 
-        var result = results[0];
+        dynamic result = results[0];
         var latitude = result?.geometry?.location?.lat ?? 0;
         var longitude = result?.geometry?.location?.lng ?? 0;
 

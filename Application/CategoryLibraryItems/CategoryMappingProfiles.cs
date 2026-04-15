@@ -11,7 +11,7 @@ public class CategoryMappingProfiles : IRegister
     {
         // Default config ensures CategoryLibraryItem is mapped fully if properties match.
         config.NewConfig<CategoryLibraryItem, CategoryLibraryItemDTO>()
-            .Map(dest => dest.ParentName, src => src.Parent != null ? src.Parent.Title : null);
+            .Map(dest => dest.ParentName, src => src.Parent != null ? src.Parent.Title : null!);
         config.NewConfig<Category, CategoryDTO>()
             .Ignore(dest => dest.Parent);
         

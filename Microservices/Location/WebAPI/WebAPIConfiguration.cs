@@ -2,6 +2,6 @@
 
 public class WebAPIConfiguration
 {
-    public string APIDomain { get; set; }
-    public string[] AllowedOrigins { get; set; }
+    public string APIDomain { get; set; } = null!;
+    public string[] AllowedOrigins { get; set; } = [];
 }

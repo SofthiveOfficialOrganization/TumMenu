@@ -4,7 +4,7 @@ namespace WebAPI.Utils.Results.Concrete;
 
 public class ErrorDataResult<T> : DataResult<T>
 {
-    public ErrorDataResult(T data, BaseProblemDetail errorModel) : base(data, false, default, errorModel)
+    public ErrorDataResult(T data, BaseProblemDetail errorModel) : base(data, false, null, errorModel)
     {
 
     }
@@ -12,11 +12,11 @@ public class ErrorDataResult<T> : DataResult<T>
     {
 
     }
-    public ErrorDataResult(BaseProblemDetail errorModel) : base(default, false, default, errorModel)
+    public ErrorDataResult(BaseProblemDetail errorModel) : base(default!, false, null, errorModel)
     {
 
     }
-    public ErrorDataResult() : base(default, false)
+    public ErrorDataResult() : base(default!, false)
     {
 
     }

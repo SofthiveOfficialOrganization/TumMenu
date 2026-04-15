@@ -21,7 +21,7 @@ public class ExceptionMiddleware(
     {
         try
         {
-            await next(context);
+            await _next(context);
         }
         catch (global::FluentValidation.ValidationException exception)
         {

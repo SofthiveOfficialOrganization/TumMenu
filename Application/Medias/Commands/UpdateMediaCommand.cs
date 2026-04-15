@@ -35,7 +35,7 @@ public class UpdateMediaCommandHandler(
 {
 	public async Task<MediaDTO> Handle(UpdateMediaCommand req, CancellationToken ct)
 	{
-		var media = await mediaRepository.GetByIdAsync(req.Id, ct).EnsureFound("Medya içeriği bulunamadı");
+		var media = (await mediaRepository.GetByIdAsync(req.Id, ct)).EnsureFound("Medya içeriği bulunamadı");
 		mapper.Map(req, media);
 		mediaRepository.Update(media);
 		var mediaDTO = mapper.Map<MediaDTO>(media);

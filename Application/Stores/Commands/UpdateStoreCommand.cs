@@ -23,7 +23,6 @@ public sealed record UpdateStoreCommand
 
 public class UpdateStoreCommandHandler(
 	IRepository<Store> repoStore,
-	IRepository<Address> repoAddress,
 	IMapper mapper
 ) : IRequestHandler<UpdateStoreCommand, Unit>
 {

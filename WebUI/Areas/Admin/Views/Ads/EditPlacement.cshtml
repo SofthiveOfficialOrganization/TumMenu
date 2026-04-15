@@ -26,7 +26,7 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="AdSlotId" class="form-label small fw-bold">Reklam Alanı (Slot)</label>
                         <select asp-for="AdSlotId" class="form-select" required>
-                            @foreach (var slot in (ViewBag.Slots as List<AdSlotDTO>))
+                            @foreach (var slot in (ViewBag.Slots as List<AdSlotDTO>)!)
                             {
                                 <option value="@slot.Id">@slot.Key (@slot.Description)</option>
                             }
@@ -37,7 +37,7 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="AdCreativeId" class="form-label small fw-bold">Reklam İçeriği</label>
                         <select asp-for="AdCreativeId" class="form-select" required>
-                            @foreach (var creative in (ViewBag.Creatives as List<AdCreativeDTO>))
+                            @foreach (var creative in (ViewBag.Creatives as List<AdCreativeDTO>)!)
                             {
                                 <option value="@creative.Id">@creative.Type - @(creative.Content.Length > 30 ? creative.Content.Substring(0, 30) + "..." : creative.Content)</option>
                             }

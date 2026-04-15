@@ -3,7 +3,7 @@
 public class SuccessDataResult<T> : DataResult<T>
 {
 
-    public SuccessDataResult(T data, string message) : base(data, true, message, default)
+    public SuccessDataResult(T data, string message) : base(data, true, message, null)
     {
 
     }
@@ -11,11 +11,11 @@ public class SuccessDataResult<T> : DataResult<T>
     {
 
     }
-    public SuccessDataResult(string message) : base(default, true, message, default)
+    public SuccessDataResult(string message) : base(default!, true, message, null)
     {
 
     }
-    public SuccessDataResult() : base(default, true)
+    public SuccessDataResult() : base(default!, true)
     {
 
     }

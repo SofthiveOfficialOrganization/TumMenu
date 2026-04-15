@@ -16,8 +16,7 @@ public class DeleteMenuCommand : IRequest<Unit>, ITransactionalRequest, IEntityA
 
 public class DeleteMenuCommandHandler(
 	IRepository<Menu> repoMenu,
-	IRepository<Company> repoCompany,
-	IMapper mapper
+	IRepository<Company> repoCompany
 ) : IRequestHandler<DeleteMenuCommand, Unit>
 {
 	public async Task<Unit> Handle(DeleteMenuCommand req, CancellationToken ct)

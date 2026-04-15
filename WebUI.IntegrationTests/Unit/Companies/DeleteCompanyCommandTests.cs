@@ -42,7 +42,7 @@ public class DeleteCompanyCommandTests
         await _db.Companies.AddAsync(company);
         await _db.SaveChangesAsync();
 
-        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>(), _mapper);
+        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>());
         var command = new DeleteCompanyCommand { Id = company.Id };
 
         // Act
@@ -66,7 +66,7 @@ public class DeleteCompanyCommandTests
         await _db.Stores.AddAsync(store);
         await _db.SaveChangesAsync();
 
-        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>(), _mapper);
+        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>());
         var command = new DeleteCompanyCommand { Id = company.Id };
 
         // Act
@@ -82,7 +82,7 @@ public class DeleteCompanyCommandTests
     public async Task Handle_WhenCompanyNotFound_ThrowsNotFoundAppException()
     {
         // Arrange — no company in DB
-        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>(), _mapper);
+        var handler = new DeleteCompanyCommandHandler(Repo<Company>(), Repo<Store>(), Repo<Menu>());
         var command = new DeleteCompanyCommand { Id = Guid.NewGuid() };
 
         // Act

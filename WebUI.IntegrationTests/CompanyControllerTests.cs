@@ -18,7 +18,7 @@ public class CompanyControllerTests : IClassFixture<WebApplicationFactory<Progra
 	}
 
 	[Fact]
-	public async Task Create_ShouldBindCommandPropertiesCorrectly()
+	public Task Create_ShouldBindCommandPropertiesCorrectly()
 	{
 		// Arrange
 		var client = _factory.WithWebHostBuilder(builder =>
@@ -69,6 +69,7 @@ public class CompanyControllerTests : IClassFixture<WebApplicationFactory<Progra
 		// Actually, the user's issue is likely ASP.NET Core binding specific.
 
 		// Let's try to create a test that just validates the class structure first.
+		return Task.CompletedTask;
 	}
 
 	[Fact]

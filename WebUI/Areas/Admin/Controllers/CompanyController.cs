@@ -29,7 +29,7 @@ public sealed class CompanyController(IMediator mediator) : Controller
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet]
-	public async Task<IActionResult> Create(CancellationToken ct)
+	public IActionResult Create(CancellationToken ct)
 	{
 		return View(new CreateCompanyCommand());
 	}

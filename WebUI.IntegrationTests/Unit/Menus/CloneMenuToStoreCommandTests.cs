@@ -75,9 +75,10 @@ public class CloneMenuToStoreCommandTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Title.Should().StartWith("Ana Menü - Kadikoy ");
+        var resultTitle = result!.Title;
+        resultTitle.Should().StartWith("Ana Menü - Kadikoy ");
 
-        var datePart = result.Title.Replace("Ana Menü - Kadikoy ", string.Empty);
+        var datePart = resultTitle!.Replace("Ana Menü - Kadikoy ", string.Empty);
         DateTime.TryParseExact(datePart, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
             .Should().BeTrue();
     }

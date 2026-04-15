@@ -5,7 +5,7 @@ namespace WebAPI.Utils.Results.Concrete;
 
 public class DataResult<T> : Result, IDataResult<T>
 {
-    public DataResult(T data, bool success, string message, BaseProblemDetail errorModel) : base(success, message, errorModel)
+    public DataResult(T data, bool success, string? message, BaseProblemDetail? errorModel) : base(success, message, errorModel)
     {
         Data = data;
     }

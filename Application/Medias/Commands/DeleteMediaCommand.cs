@@ -21,7 +21,7 @@ public class DeleteMediaCommandHandler(
 {
 	public async Task<Unit> Handle(DeleteMediaCommand req, CancellationToken ct)
 	{
-		var media = await mediaRepository.GetByIdAsync(req.Id, ct).EnsureFound("Medya içeriği bulunamadı");
+		var media = (await mediaRepository.GetByIdAsync(req.Id, ct)).EnsureFound("Medya içeriği bulunamadı");
 		mediaRepository.SoftDelete(media);
 		return Unit.Value;
 	}

@@ -8,9 +8,7 @@ public class HttpExceptionHandler : ExceptionHandler
 {
     public HttpResponse Response
     {
-        #pragma warning disable S112 // General or reserved exceptions should never be thrown
         get => _response ?? throw new NullReferenceException(nameof(_response));
-        #pragma warning restore S112 // General or reserved exceptions should never be thrown
         set => _response = value;
     }
 

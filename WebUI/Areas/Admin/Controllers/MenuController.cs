@@ -51,7 +51,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> CreateToStore(CancellationToken ct)
+    public IActionResult CreateToStore(CancellationToken ct)
     {
         return View(new CreateMenuToStoreCommand());
     }

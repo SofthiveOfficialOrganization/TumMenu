@@ -58,7 +58,7 @@ public class AuthController : ControllerBase
 			return Unauthorized("Email veya şifre hatalı");
 
 		var user = await _userManager.FindByEmailAsync(request.Email);
-		var roles = await _userManager.GetRolesAsync(user);
+		var roles = await _userManager.GetRolesAsync(user!);
 
 		if(!roles.Contains("Admin") && !roles.Contains("Owner"))
 		{

@@ -15,10 +15,10 @@ public class DeleteCategoryLibraryItemCommandHandler(
 	IRepository<CategoryLibraryItem> repoCategoryLibItem
 ) : IRequestHandler<DeleteCategoryLibraryItemCommand, Unit>
 {
-	public async Task<Unit> Handle(DeleteCategoryLibraryItemCommand req, CancellationToken ct)
+	public Task<Unit> Handle(DeleteCategoryLibraryItemCommand req, CancellationToken ct)
 	{
 		var category = repoCategoryLibItem.Query(tracked: true).FirstOrDefault(c => c.Id == req.Id).EnsureFound("Kategori bulunamadı");
 		repoCategoryLibItem.SoftDelete(category);
-		return Unit.Value;
+		return Task.FromResult(Unit.Value);
 	}
 }

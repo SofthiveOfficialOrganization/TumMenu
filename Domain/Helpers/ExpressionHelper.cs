@@ -31,10 +31,10 @@ public static class ExpressionHelper
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            Expression newValue;
+            Expression? newValue;
             if(subst.TryGetValue(node, out newValue))
             {
-                return newValue;
+                return newValue!;
             }
             return node;
         }
