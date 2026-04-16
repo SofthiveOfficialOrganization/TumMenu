@@ -65,18 +65,18 @@
                     }
 
                     <div class="pm-product-badges mt-4">
-                        @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
-                        @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Vejeteryan</span> }
+                        @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
+                        @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vejeteryan</span> }
                         @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
                         {
-                            <span class="pm-badge pm-badge-time">⏱ @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
+                            <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
                         }
                     </div>
 
                     @if (!string.IsNullOrEmpty(Model.Allergens))
                     {
                         <div class="pm-allergen-box">
-                            <span class="pm-badge pm-badge-allergen">⚠️ Alerjen Bilgisi</span>
+                            <span class="pm-badge pm-badge-allergen"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg> Alerjen Bilgisi</span>
                             <p class="pm-allergen-text">@Model.Allergens</p>
                         </div>
                     }

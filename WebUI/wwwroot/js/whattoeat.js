@@ -1,56 +1,57 @@
 (function () {
     'use strict';
+    const ICON_SPRITE_PATH = '/assets/icons/tm-sprite.svg';
 
     const FOODS = [
-        { name: 'Margherita Pizza', emoji: '🍕', tags: ['hizli'], reason: 'Klasik bir seçim, herkesi mutlu eder!', alt: 'Sucuklu Pide' },
-        { name: 'Mercimek Çorbası', emoji: '🍜', tags: ['hafif', 'vegan', 'ekonomik'], reason: 'Sıcacık, doyurucu ve bütçe dostu.', alt: 'Domates Çorbası' },
-        { name: 'Tavuk Dürüm', emoji: '🌯', tags: ['protein', 'hizli'], reason: 'Hızlı ve protein dolu bir öğün.', alt: 'Adana Dürüm' },
-        { name: 'Sezar Salata', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Hafif ama doyurucu, mükemmel denge.', alt: 'Ton Balıklı Salata' },
-        { name: 'Peynirli Burger', emoji: '🍔', tags: ['protein'], reason: 'Günün stresini bu çözer.', alt: 'Sebzeli Burger' },
-        { name: 'Falafel Wrap', emoji: '🧆', tags: ['vegan', 'ekonomik'], reason: 'Vegan dostu, lezzet dolu!', alt: 'Humus Tabağı' },
-        { name: 'Karnıyarık', emoji: '🍆', tags: ['protein'], reason: 'Ev yemeği özlemi? İşte burada.', alt: 'İmam Bayıldı' },
-        { name: 'Suşi Tabağı', emoji: '🍣', tags: [], reason: 'Farklı bir şey deneyelim bugün!', alt: 'Poké Kasesi' },
-        { name: 'Makarna', emoji: '🍝', tags: ['hizli', 'ekonomik'], reason: '10 dakikada hazır, her zaman güzel.', alt: 'Lazanya' },
-        { name: 'Güveç', emoji: '🥘', tags: ['protein'], reason: 'Yavaş pişmiş, derin tat.', alt: 'Türlü' },
-        { name: 'Acılı Tavuk', emoji: '🌶️', tags: ['aci', 'protein'], reason: 'Biraz ateş lazım bugün 🔥', alt: 'Acılı Kanat' },
-        { name: 'Waffle', emoji: '🧇', tags: ['tatli', 'hizli'], reason: 'Tatlı krizine birebir!', alt: 'Krep' },
-        { name: 'Brownie', emoji: '🍫', tags: ['tatli'], reason: 'Çikolata her şeyi çözer.', alt: 'Sufle' },
-        { name: 'Smoothie Kasesi', emoji: '🫐', tags: ['hafif', 'vegan'], reason: 'Sağlıklı ama lezzetli!', alt: 'Açai Kasesi' },
-        { name: 'Mercimek Köftesi', emoji: '🌿', tags: ['vegan', 'ekonomik', 'hafif'], reason: 'Hafif, sağlıklı, ekonomik üçlüsü.', alt: 'Kısır' },
-        { name: 'Tantuni', emoji: '🌮', tags: ['aci', 'hizli', 'protein'], reason: 'Acılı, hızlı, doyurucu. Ne istersin?', alt: 'Çiğ Köfte Dürüm' },
-        { name: 'Künefe', emoji: '🧀', tags: ['tatli'], reason: 'Sıcak peynirli, şerbetli mutluluk.', alt: 'Katmer' },
-        { name: 'Menemen', emoji: '🍳', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Sabah akşam her zaman iyi gider.', alt: 'Omlet' },
-        { name: 'Lahmacun', emoji: '🫓', tags: ['hizli', 'ekonomik'], reason: 'İnce hamur, bolca lezzet. Klasiklerin klasiği.', alt: 'Etli Ekmek' },
-        { name: 'Döner', emoji: '🥙', tags: ['protein', 'hizli'], reason: 'Her zaman, her yerde güzel!', alt: 'İskender' },
-        { name: 'İskender Kebap', emoji: '🥩', tags: ['protein'], reason: 'Tereyağlı, yoğurtlu bir şölen.', alt: 'Döner' },
-        { name: 'Köfte Ekmek', emoji: '🍖', tags: ['protein', 'hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin kralı.', alt: 'Kasap Burger' },
-        { name: 'Pide', emoji: '🫓', tags: ['protein'], reason: 'Karadeniz usulü, içi dolu dolu.', alt: 'Lahmacun' },
-        { name: 'Tost', emoji: '🥪', tags: ['hizli', 'ekonomik'], reason: 'Basit ama asla sıradan değil.', alt: 'Kumru' },
-        { name: 'Kokoreç', emoji: '🌯', tags: ['aci', 'protein', 'hizli'], reason: 'Cesurların tercihi, pişman olmayacaksın!', alt: 'Midye Dolma' },
-        { name: 'Mantı', emoji: '🥟', tags: ['protein'], reason: 'Anneannenin mutfağından geldi sanki.', alt: 'Düşes Patates' },
-        { name: 'Çiğ Köfte Dürüm', emoji: '🌱', tags: ['vegan', 'aci', 'hizli', 'ekonomik'], reason: 'Acılı, limonlu, tam kıvamında.', alt: 'Falafel Wrap' },
-        { name: 'Adana Kebap', emoji: '🍢', tags: ['aci', 'protein'], reason: 'Biber acısıyla efsane bir lezzet.', alt: 'Urfa Kebap' },
-        { name: 'Pilav Üstü Kuru Fasulye', emoji: '🍛', tags: ['protein', 'ekonomik'], reason: 'Türkiye\'nin resmi fast food\'u 😄', alt: 'Nohut Yemeği' },
-        { name: 'Balık Ekmek', emoji: '🐟', tags: ['protein', 'hafif'], reason: 'Deniz kenarı havası evine gelsin.', alt: 'Balık Tava' },
-        { name: 'Kumpir', emoji: '🥔', tags: ['protein', 'hizli'], reason: 'İçine ne istersen koyabilirsin!', alt: 'Patates Kızartması' },
-        { name: 'Gözleme', emoji: '🫓', tags: ['ekonomik', 'hafif'], reason: 'Yufka + peynir = mutluluk formülü.', alt: 'Börek' },
-        { name: 'Börek', emoji: '🥧', tags: ['ekonomik'], reason: 'Çıtır çıtır, katkat lezzet.', alt: 'Poğaça' },
-        { name: 'Midye Dolma', emoji: '🦪', tags: ['hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin vazgeçilmezi.', alt: 'Midye Tava' },
-        { name: 'Etli Ekmek', emoji: '🫓', tags: ['protein'], reason: 'Konya usulü, uzun ve doyurucu.', alt: 'Lahmacun' },
-        { name: 'Izgara Tavuk', emoji: '🍗', tags: ['protein', 'hafif'], reason: 'Sağlıklı ve lezzetli protein kaynağı.', alt: 'Tavuk Şiş' },
-        { name: 'Noodle', emoji: '🍜', tags: ['hizli'], reason: 'Asya esintili, hızlı ve doyurucu.', alt: 'Ramen' },
-        { name: 'Ramen', emoji: '🍜', tags: ['protein'], reason: 'Derin tat, zengin et suyu.', alt: 'Noodle' },
-        { name: 'Taco', emoji: '🌮', tags: ['aci', 'hizli'], reason: 'Meksika esintisi, eğlenceli yemek!', alt: 'Burrito' },
-        { name: 'Poké Kasesi', emoji: '🥗', tags: ['hafif', 'protein'], reason: 'Taze, renkli ve sağlıklı.', alt: 'Suşi Tabağı' },
-        { name: 'Simit', emoji: '🥯', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Çay yanında efsane ikili.', alt: 'Poğaça' },
-        { name: 'Baklava', emoji: '🍯', tags: ['tatli'], reason: 'Antep fıstıklı, şerbetli mükemmellik.', alt: 'Künefe' },
-        { name: 'Dondurma', emoji: '🍦', tags: ['tatli', 'hizli'], reason: 'Her mevsim, her zaman tatlı kriz ilacı.', alt: 'Profiterol' },
-        { name: 'Profiterol', emoji: '🍫', tags: ['tatli'], reason: 'Çikolata şelalesi altında ekler.', alt: 'Brownie' },
-        { name: 'Tavuk Kanat', emoji: '🍗', tags: ['protein', 'aci', 'hizli'], reason: 'Soslu kanatlar, parmak yalatan lezzet.', alt: 'Acılı Tavuk' },
-        { name: 'Wrap', emoji: '🌯', tags: ['hafif', 'hizli'], reason: 'İçi renkli, hafif ve pratik.', alt: 'Falafel Wrap' },
-        { name: 'Kısır', emoji: '🌿', tags: ['vegan', 'hafif', 'ekonomik'], reason: 'Narli, limonlu, ferahlatıcı.', alt: 'Mercimek Köftesi' },
-        { name: 'Nohut Yemeği', emoji: '🍛', tags: ['vegan', 'ekonomik', 'protein'], reason: 'Pilavla beraber enfes!', alt: 'Kuru Fasulye' },
-        { name: 'Sarma', emoji: '🥬', tags: ['hafif', 'ekonomik'], reason: 'Zeytinyağlı, soğuk ya da sıcak muhteşem.', alt: 'Biber Dolma' },
+        { name: 'Margherita Pizza', icon: 'icon-menu', tags: ['hizli'], reason: 'Klasik bir seçim, herkesi mutlu eder!', alt: 'Sucuklu Pide' },
+        { name: 'Mercimek Çorbası', icon: 'icon-menu', tags: ['hafif', 'vegan', 'ekonomik'], reason: 'Sıcacık, doyurucu ve bütçe dostu.', alt: 'Domates Çorbası' },
+        { name: 'Tavuk Dürüm', icon: 'icon-menu', tags: ['protein', 'hizli'], reason: 'Hızlı ve protein dolu bir öğün.', alt: 'Adana Dürüm' },
+        { name: 'Sezar Salata', icon: 'icon-menu', tags: ['hafif', 'protein'], reason: 'Hafif ama doyurucu, mükemmel denge.', alt: 'Ton Balıklı Salata' },
+        { name: 'Peynirli Burger', icon: 'icon-menu', tags: ['protein'], reason: 'Günün stresini bu çözer.', alt: 'Sebzeli Burger' },
+        { name: 'Falafel Wrap', icon: 'icon-menu', tags: ['vegan', 'ekonomik'], reason: 'Vegan dostu, lezzet dolu!', alt: 'Humus Tabağı' },
+        { name: 'Karnıyarık', icon: 'icon-menu', tags: ['protein'], reason: 'Ev yemeği özlemi? İşte burada.', alt: 'İmam Bayıldı' },
+        { name: 'Suşi Tabağı', icon: 'icon-menu', tags: [], reason: 'Farklı bir şey deneyelim bugün!', alt: 'Poké Kasesi' },
+        { name: 'Makarna', icon: 'icon-menu', tags: ['hizli', 'ekonomik'], reason: '10 dakikada hazır, her zaman güzel.', alt: 'Lazanya' },
+        { name: 'Güveç', icon: 'icon-menu', tags: ['protein'], reason: 'Yavaş pişmiş, derin tat.', alt: 'Türlü' },
+        { name: 'Acılı Tavuk', icon: 'icon-menu', tags: ['aci', 'protein'], reason: 'Biraz ateş lazım bugün', alt: 'Acılı Kanat' },
+        { name: 'Waffle', icon: 'icon-menu', tags: ['tatli', 'hizli'], reason: 'Tatlı krizine birebir!', alt: 'Krep' },
+        { name: 'Brownie', icon: 'icon-menu', tags: ['tatli'], reason: 'Çikolata her şeyi çözer.', alt: 'Sufle' },
+        { name: 'Smoothie Kasesi', icon: 'icon-menu', tags: ['hafif', 'vegan'], reason: 'Sağlıklı ama lezzetli!', alt: 'Açai Kasesi' },
+        { name: 'Mercimek Köftesi', icon: 'icon-menu', tags: ['vegan', 'ekonomik', 'hafif'], reason: 'Hafif, sağlıklı, ekonomik üçlüsü.', alt: 'Kısır' },
+        { name: 'Tantuni', icon: 'icon-menu', tags: ['aci', 'hizli', 'protein'], reason: 'Acılı, hızlı, doyurucu. Ne istersin?', alt: 'Çiğ Köfte Dürüm' },
+        { name: 'Künefe', icon: 'icon-menu', tags: ['tatli'], reason: 'Sıcak peynirli, şerbetli mutluluk.', alt: 'Katmer' },
+        { name: 'Menemen', icon: 'icon-menu', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Sabah akşam her zaman iyi gider.', alt: 'Omlet' },
+        { name: 'Lahmacun', icon: 'icon-menu', tags: ['hizli', 'ekonomik'], reason: 'İnce hamur, bolca lezzet. Klasiklerin klasiği.', alt: 'Etli Ekmek' },
+        { name: 'Döner', icon: 'icon-menu', tags: ['protein', 'hizli'], reason: 'Her zaman, her yerde güzel!', alt: 'İskender' },
+        { name: 'İskender Kebap', icon: 'icon-menu', tags: ['protein'], reason: 'Tereyağlı, yoğurtlu bir şölen.', alt: 'Döner' },
+        { name: 'Köfte Ekmek', icon: 'icon-menu', tags: ['protein', 'hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin kralı.', alt: 'Kasap Burger' },
+        { name: 'Pide', icon: 'icon-menu', tags: ['protein'], reason: 'Karadeniz usulü, içi dolu dolu.', alt: 'Lahmacun' },
+        { name: 'Tost', icon: 'icon-menu', tags: ['hizli', 'ekonomik'], reason: 'Basit ama asla sıradan değil.', alt: 'Kumru' },
+        { name: 'Kokoreç', icon: 'icon-menu', tags: ['aci', 'protein', 'hizli'], reason: 'Cesurların tercihi, pişman olmayacaksın!', alt: 'Midye Dolma' },
+        { name: 'Mantı', icon: 'icon-menu', tags: ['protein'], reason: 'Anneannenin mutfağından geldi sanki.', alt: 'Düşes Patates' },
+        { name: 'Çiğ Köfte Dürüm', icon: 'icon-menu', tags: ['vegan', 'aci', 'hizli', 'ekonomik'], reason: 'Acılı, limonlu, tam kıvamında.', alt: 'Falafel Wrap' },
+        { name: 'Adana Kebap', icon: 'icon-menu', tags: ['aci', 'protein'], reason: 'Biber acısıyla efsane bir lezzet.', alt: 'Urfa Kebap' },
+        { name: 'Pilav Üstü Kuru Fasulye', icon: 'icon-menu', tags: ['protein', 'ekonomik'], reason: 'Türkiye\'nin resmi fast food\'u', alt: 'Nohut Yemeği' },
+        { name: 'Balık Ekmek', icon: 'icon-menu', tags: ['protein', 'hafif'], reason: 'Deniz kenarı havası evine gelsin.', alt: 'Balık Tava' },
+        { name: 'Kumpir', icon: 'icon-menu', tags: ['protein', 'hizli'], reason: 'İçine ne istersen koyabilirsin!', alt: 'Patates Kızartması' },
+        { name: 'Gözleme', icon: 'icon-menu', tags: ['ekonomik', 'hafif'], reason: 'Yufka + peynir = mutluluk formülü.', alt: 'Börek' },
+        { name: 'Börek', icon: 'icon-menu', tags: ['ekonomik'], reason: 'Çıtır çıtır, katkat lezzet.', alt: 'Poğaça' },
+        { name: 'Midye Dolma', icon: 'icon-menu', tags: ['hizli', 'ekonomik'], reason: 'Sokak lezzetlerinin vazgeçilmezi.', alt: 'Midye Tava' },
+        { name: 'Etli Ekmek', icon: 'icon-menu', tags: ['protein'], reason: 'Konya usulü, uzun ve doyurucu.', alt: 'Lahmacun' },
+        { name: 'Izgara Tavuk', icon: 'icon-menu', tags: ['protein', 'hafif'], reason: 'Sağlıklı ve lezzetli protein kaynağı.', alt: 'Tavuk Şiş' },
+        { name: 'Noodle', icon: 'icon-menu', tags: ['hizli'], reason: 'Asya esintili, hızlı ve doyurucu.', alt: 'Ramen' },
+        { name: 'Ramen', icon: 'icon-menu', tags: ['protein'], reason: 'Derin tat, zengin et suyu.', alt: 'Noodle' },
+        { name: 'Taco', icon: 'icon-menu', tags: ['aci', 'hizli'], reason: 'Meksika esintisi, eğlenceli yemek!', alt: 'Burrito' },
+        { name: 'Poké Kasesi', icon: 'icon-menu', tags: ['hafif', 'protein'], reason: 'Taze, renkli ve sağlıklı.', alt: 'Suşi Tabağı' },
+        { name: 'Simit', icon: 'icon-menu', tags: ['ekonomik', 'hizli', 'hafif'], reason: 'Çay yanında efsane ikili.', alt: 'Poğaça' },
+        { name: 'Baklava', icon: 'icon-menu', tags: ['tatli'], reason: 'Antep fıstıklı, şerbetli mükemmellik.', alt: 'Künefe' },
+        { name: 'Dondurma', icon: 'icon-menu', tags: ['tatli', 'hizli'], reason: 'Her mevsim, her zaman tatlı kriz ilacı.', alt: 'Profiterol' },
+        { name: 'Profiterol', icon: 'icon-menu', tags: ['tatli'], reason: 'Çikolata şelalesi altında ekler.', alt: 'Brownie' },
+        { name: 'Tavuk Kanat', icon: 'icon-menu', tags: ['protein', 'aci', 'hizli'], reason: 'Soslu kanatlar, parmak yalatan lezzet.', alt: 'Acılı Tavuk' },
+        { name: 'Wrap', icon: 'icon-menu', tags: ['hafif', 'hizli'], reason: 'İçi renkli, hafif ve pratik.', alt: 'Falafel Wrap' },
+        { name: 'Kısır', icon: 'icon-menu', tags: ['vegan', 'hafif', 'ekonomik'], reason: 'Narli, limonlu, ferahlatıcı.', alt: 'Mercimek Köftesi' },
+        { name: 'Nohut Yemeği', icon: 'icon-menu', tags: ['vegan', 'ekonomik', 'protein'], reason: 'Pilavla beraber enfes!', alt: 'Kuru Fasulye' },
+        { name: 'Sarma', icon: 'icon-menu', tags: ['hafif', 'ekonomik'], reason: 'Zeytinyağlı, soğuk ya da sıcak muhteşem.', alt: 'Biber Dolma' },
     ];
 
     const FUN_TEXTS = [
@@ -64,30 +65,30 @@
     const BUDGET_SUGGESTIONS = [
         {
             max: 50, items: [
-                { emoji: '🍜', name: 'Mercimek Çorbası', price: '₺35' },
-                { emoji: '🍳', name: 'Menemen', price: '₺40' },
-                { emoji: '🌿', name: 'Mercimek Köftesi', price: '₺30' },
+                { icon: 'icon-menu', name: 'Mercimek Çorbası', price: '₺35' },
+                { icon: 'icon-menu', name: 'Menemen', price: '₺40' },
+                { icon: 'icon-menu', name: 'Mercimek Köftesi', price: '₺30' },
             ]
         },
         {
             max: 100, items: [
-                { emoji: '🍕', name: 'Margherita Pizza', price: '₺80' },
-                { emoji: '🌯', name: 'Tavuk Dürüm', price: '₺75' },
-                { emoji: '🍝', name: 'Makarna', price: '₺65' },
+                { icon: 'icon-menu', name: 'Margherita Pizza', price: '₺80' },
+                { icon: 'icon-menu', name: 'Tavuk Dürüm', price: '₺75' },
+                { icon: 'icon-menu', name: 'Makarna', price: '₺65' },
             ]
         },
         {
             max: 200, items: [
-                { emoji: '🍔', name: 'Peynirli Burger', price: '₺120' },
-                { emoji: '🥘', name: 'Güveç', price: '₺110' },
-                { emoji: '🍣', name: 'Suşi Tabağı', price: '₺180' },
+                { icon: 'icon-menu', name: 'Peynirli Burger', price: '₺120' },
+                { icon: 'icon-menu', name: 'Güveç', price: '₺110' },
+                { icon: 'icon-menu', name: 'Suşi Tabağı', price: '₺180' },
             ]
         },
         {
             max: Infinity, items: [
-                { emoji: '🥩', name: 'Bonfile', price: '₺350' },
-                { emoji: '🍣', name: 'Omakase Suşi', price: '₺450' },
-                { emoji: '🦞', name: 'Deniz Mahsulleri', price: '₺400' },
+                { icon: 'icon-menu', name: 'Bonfile', price: '₺350' },
+                { icon: 'icon-menu', name: 'Omakase Suşi', price: '₺450' },
+                { icon: 'icon-menu', name: 'Deniz Mahsulleri', price: '₺400' },
             ]
         },
     ];
@@ -131,6 +132,21 @@
     let isSpinning = false;
     let lastPicks = new Set();
     const wheelFace = document.querySelector('.wte-wheel__face');
+
+    function resolveFoodIconId(foodName) {
+        const name = normalizeText(foodName);
+        if (name.includes('pizza') || name.includes('lahmacun') || name.includes('pide')) return 'icon-pizza';
+        if (name.includes('burger') || name.includes('kofte') || name.includes('iskender') || name.includes('kebap')) return 'icon-burger';
+        if (name.includes('salata') || name.includes('vegan') || name.includes('kisir') || name.includes('sarma')) return 'icon-leaf';
+        if (name.includes('makarna') || name.includes('corba') || name.includes('ramen') || name.includes('noodle')) return 'icon-bowl';
+        if (name.includes('baklava') || name.includes('kunefe') || name.includes('waffle') || name.includes('tatli')) return 'icon-star';
+        if (name.includes('balik') || name.includes('sushi') || name.includes('susi') || name.includes('poke')) return 'icon-bowl';
+        return 'icon-menu';
+    }
+
+    function getIconMarkup(iconId) {
+        return `<svg class="tm-icon" aria-hidden="true"><use href="${ICON_SPRITE_PATH}#${iconId || 'icon-menu'}"></use></svg>`;
+    }
 
     function getCurrentBudget() {
         return budgetSlider ? parseInt(budgetSlider.value, 10) : 100;
@@ -361,7 +377,7 @@
         resultsGrid.innerHTML = picks.map((item, i) => `
             <div class="wte-result-card" style="transition-delay: ${i * 0.15}s">
                 <div class="wte-result-card__top">
-                    <span class="wte-result-card__emoji">${item.food.emoji}</span>
+                    <span class="wte-result-card__emoji">${getIconMarkup(resolveFoodIconId(item.food.name))}</span>
                     <div>
                         <h3 class="wte-result-card__name">${item.food.name}</h3>
                         <span class="wte-result-card__label">önerilen seçim</span>
@@ -372,7 +388,7 @@
                     <button class="wte-btn wte-btn--ghost" onclick="swapCard(this, '${item.food.alt}')">
                         Alternatif getir
                     </button>
-                    <button class="wte-btn wte-btn--ghost" onclick="shareFood('${item.food.emoji} ${item.food.name}')">
+                    <button class="wte-btn wte-btn--ghost" onclick="shareFood('${item.food.name}')">
                         Paylaş
                     </button>
                 </div>
@@ -403,7 +419,7 @@
 
         card.classList.remove('is-visible');
         setTimeout(() => {
-            card.querySelector('.wte-result-card__emoji').textContent = altFood.emoji;
+            card.querySelector('.wte-result-card__emoji').innerHTML = getIconMarkup(resolveFoodIconId(altFood.name));
             card.querySelector('.wte-result-card__name').textContent = altFood.name;
             card.querySelector('.wte-result-card__reason').innerHTML =
                 `<strong>Neden uygun?</strong> ${buildRecommendationReason(altFood, altMeta)}`;
@@ -411,7 +427,7 @@
             const btns = card.querySelectorAll('.wte-btn--ghost');
             btns[0].innerHTML = 'Alternatif getir';
             btns[0].setAttribute('onclick', `swapCard(this, '${altFood.alt}')`);
-            btns[1].setAttribute('onclick', `shareFood('${altFood.emoji} ${altFood.name}')`);
+            btns[1].setAttribute('onclick', `shareFood('${altFood.name}')`);
 
             card.classList.add('is-visible');
         }, 300);
@@ -472,7 +488,7 @@
         if (tier) {
             budgetSuggestions.innerHTML = tier.items.map(item => `
                 <div class="wte-budget__suggestion">
-                    <span>${item.emoji}</span>
+                    <span>${getIconMarkup(resolveFoodIconId(item.name))}</span>
                     <span style="flex:1">${item.name}</span>
                     <span style="font-weight:800; color: var(--color-primary-dark)">${item.price}</span>
                 </div>
@@ -595,3 +611,5 @@
     updateWheelLabels();
 
 })();
+
+

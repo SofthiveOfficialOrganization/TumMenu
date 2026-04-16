@@ -43,7 +43,9 @@
                 @if (categories.Count == 0)
                 {
                     <div class="pm-empty">
-                        <span class="pm-empty-icon">🍽️</span>
+                        <span class="pm-empty-icon" aria-hidden="true">
+                            <svg class="tm-icon tm-icon--xl"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                        </span>
                         <p>Henüz menüde kategori bulunmuyor.</p>
                     </div>
                 }
@@ -65,7 +67,21 @@
                                     else
                                     {
                                         <div class="pm-cat-card-photo-placeholder">
-                                            @(string.IsNullOrEmpty(cat.CategoryLibraryItem.IconKey) ? "🍽️" : cat.CategoryLibraryItem.IconKey)
+                                            @{
+                                                var iconKey = cat.CategoryLibraryItem.IconKey;
+                                                if (string.IsNullOrWhiteSpace(iconKey))
+                                                {
+                                                    <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                                                }
+                                                else if (iconKey.StartsWith("fa"))
+                                                {
+                                                    <i class="@iconKey" aria-hidden="true"></i>
+                                                }
+                                                else
+                                                {
+                                                    <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#{iconKey}")"></use></svg>
+                                                }
+                                            }
                                         </div>
                                     }
                                 </div>

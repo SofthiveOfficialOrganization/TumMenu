@@ -4,12 +4,12 @@
 
     var features = new[]
     {
-        new { Icon = "📱", Title = "Hızlı QR Oluştur", Description = "Saniyeler içinde profesyonel QR kodlar oluştur ve paylaş" },
-        new { Icon = "📲", Title = "Mobil Dostu", Description = "Her cihazda mükemmel görünen, hızlı yüklenen menüler" },
-        new { Icon = "📊", Title = "Analitik ve İstatistik", Description = "Müşteri davranışlarını takip et, kararları veri ile al" },
-        new { Icon = "⚡", Title = "Hemen Güncelle", Description = "Menüyü istediğin zaman güncelle, canlı yayınla" },
-        new { Icon = "🏬", Title = "Şubeleri Yönet", Description = "Birden fazla şubeyi merkezi olarak yönet" },
-        new { Icon = "🛡️", Title = "Güvenli ve Hızlı", Description = "Yüksek güvenlik, yüksek performans" }
+        new { Icon = "icon-phone", Title = "Hızlı QR Oluştur", Description = "Saniyeler içinde profesyonel QR kodlar oluştur ve paylaş" },
+        new { Icon = "icon-phone", Title = "Mobil Dostu", Description = "Her cihazda mükemmel görünen, hızlı yüklenen menüler" },
+        new { Icon = "icon-table", Title = "Analitik ve İstatistik", Description = "Müşteri davranışlarını takip et, kararları veri ile al" },
+        new { Icon = "icon-bolt", Title = "Hemen Güncelle", Description = "Menüyü istediğin zaman güncelle, canlı yayınla" },
+        new { Icon = "icon-store", Title = "Şubeleri Yönet", Description = "Birden fazla şubeyi merkezi olarak yönet" },
+        new { Icon = "icon-lock", Title = "Güvenli ve Hızlı", Description = "Yüksek güvenlik, yüksek performans" }
     };
 
     var steps = new[]
@@ -107,7 +107,9 @@
             {
                 <div class="bg-gradient-to-br from-background to-white border border-border rounded-xl p-8 hover:shadow-lg transition-shadow">
                     <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                        <span class="text-xl">@feature.Icon</span>
+                        <svg class="tm-icon" style="width: 1.25rem; height: 1.25rem;" aria-hidden="true">
+                            <use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#{feature.Icon}")"></use>
+                        </svg>
                     </div>
                     <h3 class="text-xl font-semibold mb-2 text-foreground">@feature.Title</h3>
                     <p class="text-sm text-muted-foreground">@feature.Description</p>

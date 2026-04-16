@@ -39,7 +39,7 @@ builder.Services.AddSwaggerGen(opt =>
 {
     opt.EnableAnnotations();
 
-    // 🔹 Basic Authentication İçin Swagger'a Destek Ekliyoruz
+    // Basic Authentication için Swagger'a destek ekliyoruz
     opt.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen(opt =>
         Description = "Enter 'Basic' followed by a space and then your Base64-encoded credentials (e.g., Basic dXNlcm5hbWU6cGFzc3dvcmQ=)."
     });
 
-    // 🔹 Swagger'a Security Requirement (Yetkilendirme Zorunluluğu) Ekliyoruz
+    // Swagger'a Security Requirement (Yetkilendirme zorunluluğu) ekliyoruz
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -82,4 +82,3 @@ app.UseMiddleware<BasicAuthMiddleware>();
 
 app.MapControllers();
 app.Run();
-

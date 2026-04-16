@@ -73,7 +73,7 @@
                     <!-- Menu Preview (shown after scan) -->
                     <div class="qr-menu-preview" id="qr-menu-preview">
                         <div class="qr-menu-preview__header">
-                            <span class="qr-menu-preview__icon">🍽️</span>
+                            <span class="qr-menu-preview__icon"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></span>
                             <span class="qr-menu-preview__title">TümMenu</span>
                         </div>
                         <div class="qr-menu-preview__items">
@@ -81,13 +81,13 @@
                             <div class="qr-menu-preview__item"></div>
                             <div class="qr-menu-preview__item"></div>
                         </div>
-                        <div class="qr-menu-preview__badge">✓ Menü Açıldı</div>
+                        <div class="qr-menu-preview__badge"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg> Menü Açıldı</div>
                     </div>
                 </div>
                 
                 <!-- Mobile Touch Trigger -->
                 <div class="qr-touch-hint" id="qr-touch-hint">
-                    <span class="qr-touch-hint__icon">👆</span>
+                    <span class="qr-touch-hint__icon"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></span>
                     <span class="qr-touch-hint__text">Dokun ve tara</span>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     maxlength="50"
                 />
                 <button class="btn btn--primary qr-simulator__generate-btn" id="generate-qr-btn">
-                    <span class="qr-simulator__btn-icon">⚡</span>
+                    <span class="qr-simulator__btn-icon"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bolt")"></use></svg></span>
                     QR Kod Oluştur
                 </button>
             </div>
@@ -136,10 +136,10 @@
                 
                 <div class="qr-simulator__actions" id="qr-actions" style="display: none;">
                     <button class="btn btn--ghost" id="download-qr-btn">
-                        📥 İndir
+                        <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-download")"></use></svg> İndir
                     </button>
                     <button class="btn btn--primary" id="try-demo-btn">
-                        🚀 Demo Dene
+                        <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-rocket")"></use></svg> Demo Dene
                     </button>
                 </div>
             </div>
@@ -162,7 +162,7 @@
             <div class="flip-card">
                 <div class="flip-card__inner">
                     <div class="flip-card__front">
-                        <div class="flip-card__icon">💸</div>
+                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-money")"></use></svg></div>
                         <h3 class="flip-card__title">Yüksek Maliyet</h3>
                         <p class="flip-card__text">
                             Menü basmak ve sürekli yenilemek pahalı
@@ -170,7 +170,7 @@
                         <div class="flip-card__hint">Çözümü gör →</div>
                     </div>
                     <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success">✅</div>
+                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg></div>
                         <h3 class="flip-card__title">Sıfır Baskı Maliyeti</h3>
                         <p class="flip-card__text">
                             Dijital menü ile menü baskısına hiç para ödeme. 
@@ -185,7 +185,7 @@
             <div class="flip-card">
                 <div class="flip-card__inner">
                     <div class="flip-card__front">
-                        <div class="flip-card__icon">⏰</div>
+                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></div>
                         <h3 class="flip-card__title">Zor Güncelleme</h3>
                         <p class="flip-card__text">
                             Fiyat değişikliği için tüm menüleri yeniden bas
@@ -193,7 +193,7 @@
                         <div class="flip-card__hint">Çözümü gör →</div>
                     </div>
                     <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success">⚡</div>
+                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bolt")"></use></svg></div>
                         <h3 class="flip-card__title">Anında Güncelleme</h3>
                         <p class="flip-card__text">
                             Menünü online panelden saniyeler içinde güncelle. 
@@ -208,7 +208,7 @@
             <div class="flip-card">
                 <div class="flip-card__inner">
                     <div class="flip-card__front">
-                        <div class="flip-card__icon">🦠</div>
+                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg></div>
                         <h3 class="flip-card__title">Hijyen Sorunu</h3>
                         <p class="flip-card__text">
                             Fiziksel menüler ellerde dolaşıyor, temizlik zor
@@ -216,7 +216,7 @@
                         <div class="flip-card__hint">Çözümü gör →</div>
                     </div>
                     <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success">📱</div>
+                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></div>
                         <h3 class="flip-card__title">Temassız Menü</h3>
                         <p class="flip-card__text">
                             Müşteriler kendi telefonlarından menüye erişir. 
@@ -231,7 +231,7 @@
             <div class="flip-card">
                 <div class="flip-card__inner">
                     <div class="flip-card__front">
-                        <div class="flip-card__icon">📄</div>
+                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-doc")"></use></svg></div>
                         <h3 class="flip-card__title">Sınırlı Alan</h3>
                         <p class="flip-card__text">
                             Kağıt menüde yer sınırlı, tüm bilgileri sığdıramazsın
@@ -239,7 +239,7 @@
                         <div class="flip-card__hint">Çözümü gör →</div>
                     </div>
                     <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success">🌟</div>
+                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></div>
                         <h3 class="flip-card__title">Sınırsız İçerik</h3>
                         <p class="flip-card__text">
                             Fotoğraflar, açıklamalar, alerjen bilgileri, 
@@ -265,28 +265,28 @@
         
         <div class="qr-stats__grid">
             <div class="stat-card">
-                <div class="stat-card__icon">💰</div>
+                <div class="stat-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-money")"></use></svg></div>
                 <div class="stat-card__number" data-count="70">0</div>
                 <div class="stat-card__label">% Maliyet Düşüşü</div>
                 <p class="stat-card__desc">Baskı ve güncelleme maliyetlerinde ortalama tasarruf</p>
             </div>
             
             <div class="stat-card">
-                <div class="stat-card__icon">⚡</div>
+                <div class="stat-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bolt")"></use></svg></div>
                 <div class="stat-card__number" data-count="5">0</div>
                 <div class="stat-card__label">Saniyede Güncelleme</div>
                 <p class="stat-card__desc">Menü değişikliklerini anında yayınla</p>
             </div>
             
             <div class="stat-card">
-                <div class="stat-card__icon">😊</div>
+                <div class="stat-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-smile")"></use></svg></div>
                 <div class="stat-card__number" data-count="95">0</div>
                 <div class="stat-card__label">% Müşteri Memnuniyeti</div>
                 <p class="stat-card__desc">Müşteriler dijital menüleri tercih ediyor</p>
             </div>
             
             <div class="stat-card">
-                <div class="stat-card__icon">🌍</div>
+                <div class="stat-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-globe")"></use></svg></div>
                 <div class="stat-card__number" data-count="100">0</div>
                 <div class="stat-card__label">% Çevre Dostu</div>
                 <p class="stat-card__desc">Kağıt israfını tamamen ortadan kaldır</p>
@@ -311,7 +311,7 @@
                 <div class="carousel__slide carousel__slide--active">
                     <div class="story-card">
                         <div class="story-card__header">
-                            <div class="story-card__logo">🍕</div>
+                            <div class="story-card__logo"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-pizza")"></use></svg></div>
                             <div class="story-card__info">
                                 <h3 class="story-card__name">Pizzeria Bella</h3>
                                 <p class="story-card__location">İstanbul, Türkiye</p>
@@ -339,7 +339,7 @@
                 <div class="carousel__slide">
                     <div class="story-card">
                         <div class="story-card__header">
-                            <div class="story-card__logo">☕</div>
+                            <div class="story-card__logo"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
                             <div class="story-card__info">
                                 <h3 class="story-card__name">Café Modern</h3>
                                 <p class="story-card__location">Ankara, Türkiye</p>
@@ -367,7 +367,7 @@
                 <div class="carousel__slide">
                     <div class="story-card">
                         <div class="story-card__header">
-                            <div class="story-card__logo">🍔</div>
+                            <div class="story-card__logo"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-burger")"></use></svg></div>
                             <div class="story-card__info">
                                 <h3 class="story-card__name">Burger House</h3>
                                 <p class="story-card__location">İzmir, Türkiye</p>

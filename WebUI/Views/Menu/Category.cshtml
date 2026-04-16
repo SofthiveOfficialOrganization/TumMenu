@@ -66,7 +66,20 @@
                                         else
                                         {
                                             <div class="pm-cat-card-photo-placeholder">
-                                                @(string.IsNullOrEmpty(subCat.IconKey) ? "🍽️" : subCat.IconKey)
+                                                @{
+                                                    if (string.IsNullOrWhiteSpace(subCat.IconKey))
+                                                    {
+                                                        <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                                                    }
+                                                    else if (subCat.IconKey.StartsWith("fa"))
+                                                    {
+                                                        <i class="@subCat.IconKey" aria-hidden="true"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#{subCat.IconKey}")"></use></svg>
+                                                    }
+                                                }
                                             </div>
                                         }
                                     </div>
@@ -106,9 +119,9 @@
                                         <p class="pm-product-desc">@product.Description</p>
                                     }
                                     <div class="pm-product-badges">
-                                        @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan">🌱 Vegan</span> }
-                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg">🥦 Veg</span> }
-                                        @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time">⏱ @product.EstimatedPreparationTimeInMinutes dk</span> }
+                                        @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
+                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
+                                        @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
                                     </div>
                                 </div>
                             </a>

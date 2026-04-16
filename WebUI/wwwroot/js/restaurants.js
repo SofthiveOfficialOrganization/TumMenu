@@ -5,6 +5,7 @@
     'use strict';
 
     const FIRST_PAGE = 1;
+    const ICON_SPRITE_PATH = '/assets/icons/tm-sprite.svg';
 
     // ── DOM refs ──
     const searchForm = document.getElementById('searchForm');
@@ -962,7 +963,7 @@
         } else {
             var noImg = document.createElement('div');
             noImg.className = 'store-card__no-img';
-            noImg.textContent = '🍽️';
+            noImg.innerHTML = '<svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="' + ICON_SPRITE_PATH + '#icon-menu"></use></svg>';
             imgWrap.appendChild(noImg);
         }
 
@@ -979,7 +980,7 @@
             } else {
                 distLabel = store.distanceKm + ' km';
             }
-            distBadge.innerHTML = '📍 ' + distLabel;
+            distBadge.innerHTML = '<svg class="tm-icon" aria-hidden="true"><use href="' + ICON_SPRITE_PATH + '#icon-location"></use></svg> ' + distLabel;
             imgWrap.appendChild(distBadge);
         }
 

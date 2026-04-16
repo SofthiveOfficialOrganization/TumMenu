@@ -15,7 +15,7 @@
                 <div class="form-floating mb-3 input-group">
                     <input asp-for="Email" class="form-control" placeholder=" " disabled />
                         <div class="input-group-append ms-2">
-                            <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                            <span class="h-100 input-group-text text-success font-weight-bold"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg></span>
                         </div>
                     <label asp-for="Email"></label>
                 </div>

@@ -230,7 +230,7 @@
 @if (ViewBag.IsSuccess == true)
 {
     <div class="success-container">
-        <div class="success-icon">🎉</div>
+        <div class="success-icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></div>
         <h1 class="success-title">Başarılı! Hesabınız Açıldı</h1>
         <p class="success-message">
             @ViewBag.Message<br>
@@ -239,17 +239,17 @@
 
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon-small">📱</div>
+                <div class="feature-icon-small"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></div>
                 <div class="feature-title-small">Dijital Menü</div>
                 <div class="feature-description-small">QR kod ile menünüzü müşterilerinize ulaştırın</div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon-small">📊</div>
+                <div class="feature-icon-small"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-table")"></use></svg></div>
                 <div class="feature-title-small">Analitikler</div>
                 <div class="feature-description-small">Restoran performansınızı gerçek zamanlı takip edin</div>
             </div>
             <div class="feature-card">
-                <div class="feature-icon-small">🎨</div>
+                <div class="feature-icon-small"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></div>
                 <div class="feature-title-small">Kolay Yönetim</div>
                 <div class="feature-description-small">Modern arayüz ile menünüzü kolayca yönetin</div>
             </div>
@@ -257,10 +257,10 @@
 
         <div>
             <a href="/Admin" class="btn-dashboard">
-                🚀 Panele Git
+                <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-rocket")"></use></svg> Panele Git
             </a>
             <a href="/" class="btn-dashboard btn-secondary">
-                🏠 Ana Sayfa
+                <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-home")"></use></svg> Ana Sayfa
             </a>
         </div>
     </div>
@@ -268,7 +268,7 @@
 else
 {
     <div class="error-container">
-        <div class="error-icon">😞</div>
+        <div class="error-icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-sad")"></use></svg></div>
         <h1 class="error-title">Hata Oluştu</h1>
         <p class="error-message">
             @ViewBag.Message<br>
@@ -277,10 +277,10 @@ else
 
         <div>
             <a href="/giris" class="btn-dashboard">
-                🔐 Giriş Yap
+                <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-lock")"></use></svg> Giriş Yap
             </a>
             <a href="/" class="btn-dashboard btn-secondary">
-                🏠 Ana Sayfa
+                <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-home")"></use></svg> Ana Sayfa
             </a>
         </div>
     </div>

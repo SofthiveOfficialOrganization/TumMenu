@@ -7,7 +7,7 @@ public static class AppMessages
     public const string MAINTENANCE_TIME = "Sistem Bakımda.";
     public const string AUTHORIZATION_DENIED = "Bu işlemi gerçekleştirmek için yetkiniz bulunmamaktadır.";
 
-    // 🔹 Kullanıcı dostu kimlik doğrulama hata mesajları
+    // Kullanıcı dostu kimlik doğrulama hata mesajları
     public const string MISSING_AUTH_HEADER = "Kimlik doğrulama bilgileri eksik. Lütfen giriş bilgilerinizi ekleyerek tekrar deneyin.";
     public const string INVALID_AUTH_HEADER = "Geçersiz kimlik doğrulama formatı. Lütfen geçerli bir kullanıcı adı ve şifre ile tekrar deneyin.";
     public const string INVALID_CREDENTIALS = "Girdiğiniz kullanıcı adı veya şifre hatalı. Lütfen bilgilerinizi kontrol edip tekrar deneyin.";

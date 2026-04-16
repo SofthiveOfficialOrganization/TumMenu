@@ -8,20 +8,20 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">📧 Email Gönder</h4>
+                    <h4 class="mb-0"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-mail")"></use></svg> Email Gönder</h4>
                 </div>
                 <div class="card-body">
                     @if (ViewBag.Success != null)
                     {
                         <div class="alert alert-success">
-                            <strong>✅ Başarılı!</strong> @ViewBag.Success
+                            <strong><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg> Başarılı!</strong> @ViewBag.Success
                         </div>
                     }
 
                     @if (ViewBag.Error != null)
                     {
                         <div class="alert alert-danger">
-                            <strong>❌ Hata!</strong> @ViewBag.Error
+                            <strong><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg> Hata!</strong> @ViewBag.Error
                         </div>
                     }
 

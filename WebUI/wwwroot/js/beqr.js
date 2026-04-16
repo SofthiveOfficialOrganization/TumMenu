@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Demo button
     if (demoBtn) {
         demoBtn.addEventListener('click', () => {
-            alert('Demo özelliği yakında aktif olacak! 🚀\n\nŞimdilik QR kodunuzu indirebilir ve test edebilirsiniz.');
+            alert('Demo özelliği yakında aktif olacak!\n\nŞimdilik QR kodunuzu indirebilir ve test edebilirsiniz.');
         });
     }
 
@@ -462,8 +462,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================
     // LOG SUCCESS
     // ========================
-    console.log('🎉 QR Landing Page initialized successfully!');
-    console.log('✨ Features loaded:');
+    console.log('QR Landing Page initialized successfully.');
+    console.log('Features loaded:');
     console.log('  - Hero stats counter animation');
     console.log('  - Interactive QR code generator');
     console.log('  - Scroll-triggered statistics');

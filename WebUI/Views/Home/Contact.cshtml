@@ -27,7 +27,7 @@
 
         <!-- FORM CARD -->
         <div class="contact-card">
-            <h2 class="contact-card__title">📩 Mesaj Gönderin</h2>
+            <h2 class="contact-card__title"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-message")"></use></svg> Mesaj Gönderin</h2>
 
             <form asp-action="Contact" asp-controller="Home" method="post" class="contact-form" id="contactForm">
                 <div asp-validation-summary="ModelOnly" class="contact-form__errors"></div>
@@ -80,26 +80,26 @@
         <!-- INFO PANEL -->
         <div class="contact-info">
             <div class="contact-info__card">
-                <div class="contact-info__icon">📧</div>
+                <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-mail")"></use></svg></div>
                 <h3 class="contact-info__title">E-posta</h3>
                 <a href="mailto:destek@tummenu.com.tr" class="contact-info__link">destek@tummenu.com.tr</a>
             </div>
 
             <div class="contact-info__card">
-                <div class="contact-info__icon">⏰</div>
+                <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></div>
                 <h3 class="contact-info__title">Çalışma Saatleri</h3>
                 <p class="contact-info__text">Pazartesi – Cuma</p>
                 <p class="contact-info__text contact-info__text--highlight">09:00 – 18:00</p>
             </div>
 
             <div class="contact-info__card">
-                <div class="contact-info__icon">📍</div>
+                <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg></div>
                 <h3 class="contact-info__title">Adres</h3>
                 <p class="contact-info__text">İstanbul, Türkiye</p>
             </div>
 
             <div class="contact-info__card">
-                <div class="contact-info__icon">🌐</div>
+                <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-globe")"></use></svg></div>
                 <h3 class="contact-info__title">Sosyal Medya</h3>
                 <div class="contact-info__socials">
                     <a href="https://www.instagram.com/softhive_" class="contact-info__social-link" aria-label="Instagram">

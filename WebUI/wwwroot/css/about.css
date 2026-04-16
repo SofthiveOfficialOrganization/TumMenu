@@ -133,11 +133,15 @@
 }
 
 .about-list li::before {
-    content: '✓';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--color-primary);
-    font-weight: 800;
+    top: 6px;
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+    transform: rotate(-45deg);
 }
 
 /* ── Vision ── */
