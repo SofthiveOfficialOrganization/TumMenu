@@ -1,5 +1,4 @@
 using System.Text;
-using Amazon.LocationService.Model;
 using WebAPI.Constants;
 using WebAPI.Exceptions;
 using WebAPI.Models.Concrete;
@@ -9,7 +8,7 @@ namespace WebAPI.Authorization;
 public class BasicAuthMiddleware(RequestDelegate next, IConfiguration configuration)
 {
 	private readonly RequestDelegate _next = next;
-	private readonly AuthOptions _authOptions = configuration.GetSection("Authentication").Get<AuthOptions>() ?? throw new InternalServerException(AppMessages.SERVER_ERROR_TITLE);
+	private readonly AuthOptions _authOptions = configuration.GetSection("Authentication").Get<AuthOptions>() ?? throw new InvalidOperationException(AppMessages.SERVER_ERROR_TITLE);
 
 	public async Task Invoke(HttpContext context)
 	{

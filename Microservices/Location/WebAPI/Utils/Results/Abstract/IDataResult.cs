@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using IResult = WebAPI.Utils.Results.Abstract.IResult;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Utils.Results.Abstract;
 
 public interface IDataResult<T> : IResult
 {
-
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     T Data { get; }
 }

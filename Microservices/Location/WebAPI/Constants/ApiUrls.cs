@@ -4,7 +4,7 @@ public static class ApiUrls
 {
     #region Turkey API Urls
 
-    public const string TURKEY_API_BASE_URL = "https://turkiyeapi.herokuapp.com/api/v1"; // Baz URL
+    public const string TURKEY_API_BASE_URL = "https://turkiyeapi.dev/api/v1"; // Baz URL
 
     // Uzantılar
     public const string TURKEY_API_GET_ALL_PROVINCES = "/provinces";         // Tüm illeri getir

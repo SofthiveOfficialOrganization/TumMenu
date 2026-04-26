@@ -3,8 +3,6 @@ using WebAPI;
 using WebAPI.Authorization;
 using WebAPI.Exceptions;
 using WebAPI.Extensions;
-using WebAPI.Models.Concrete;
-using AwsOptions = WebAPI.Models.Concrete.AwsOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,31 +23,21 @@ builder.Services.AddCors(opt =>
     });
 });
 
-var awsConfig = builder.Configuration.GetSection("AwsSettings");
-builder.Services.Configure<AwsOptions>(awsConfig);
-
-var googleCloudConfig = builder.Configuration.GetSection("GoogleCloudSettings");
-builder.Services.Configure<GoogleCloudOptions>(googleCloudConfig);
-
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.EnableAnnotations();
-
-    // Basic Authentication için Swagger'a destek ekliyoruz
+    opt.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
     opt.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         Scheme = "Basic",
         In = ParameterLocation.Header,
-        Description = "Enter 'Basic' followed by a space and then your Base64-encoded credentials (e.g., Basic dXNlcm5hbWU6cGFzc3dvcmQ=)."
+        Description = "Enter 'Basic' followed by a space and then your Base64-encoded credentials."
     });
-
-    // Swagger'a Security Requirement (Yetkilendirme zorunluluğu) ekliyoruz
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -64,21 +52,15 @@ builder.Services.AddSwaggerGen(opt =>
 
 var app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Hata Yönetimi Middleware (Önce hataları yakala)
 app.ConfigureCustomExceptionMiddleware();
-
 app.UseHttpsRedirection();
-
 app.UseCors("HappencodePolicy");
-
-// Kimlik Doğrulama Middleware (Basic Auth)
 app.UseMiddleware<BasicAuthMiddleware>();
-
 app.MapControllers();
 app.Run();

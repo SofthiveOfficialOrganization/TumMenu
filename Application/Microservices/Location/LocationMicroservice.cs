@@ -17,6 +17,7 @@ namespace Application.Microservices.Location
 			_options = options.Value;
 
 			_httpClient.BaseAddress = new Uri(_options.BaseUrl);
+			_httpClient.Timeout = TimeSpan.FromSeconds(5);
 			_httpClient.DefaultRequestHeaders.Accept.Add(
 				new MediaTypeWithQualityHeaderValue("text/plain"));
 			_httpClient.DefaultRequestHeaders.Authorization =
@@ -52,27 +53,38 @@ namespace Application.Microservices.Location
 		}
 		public async Task<List<GetDisctrictsResponseDTO>> GetDistrictsByProvinceIdAsync(Guid provinceId)
 		{
-			var response = await _httpClient.GetAsync($"api/Districts/GetListByProvinceId/{provinceId}");
-
-			if(response.IsSuccessStatusCode)
+			try
 			{
-				var content = await response.Content.ReadAsStringAsync();
-				var result = JsonSerializer.Deserialize<ApiResponse<List<GetDisctrictsResponseDTO>>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-				return result?.Data ?? new List<GetDisctrictsResponseDTO>();
+				var response = await _httpClient.GetAsync($"api/Districts/GetListByProvinceId/{provinceId}");
+
+				if (response.IsSuccessStatusCode)
+				{
+					var content = await response.Content.ReadAsStringAsync();
+					if (string.IsNullOrWhiteSpace(content)) return [];
+					var result = JsonSerializer.Deserialize<ApiResponse<List<GetDisctrictsResponseDTO>>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+					return result?.Data ?? [];
+				}
 			}
+			catch { }
 
 			return [];
 		}
 
 		public async Task<GetProvinceResponseBasicDTO?> GetProvinceBasicByIdAsync(Guid provinceId)
 		{
-			var response = await _httpClient.GetAsync($"api/Provinces/GetByProvinceId/{provinceId}");
-			if(response.IsSuccessStatusCode)
+			try
 			{
-				var content = await response.Content.ReadAsStringAsync();
-				var result = JsonSerializer.Deserialize<ApiResponse<GetProvinceResponseBasicDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-				return result?.Data;
+				var response = await _httpClient.GetAsync($"api/Provinces/GetByProvinceId/{provinceId}");
+				if (response.IsSuccessStatusCode)
+				{
+					var content = await response.Content.ReadAsStringAsync();
+					if (string.IsNullOrWhiteSpace(content)) return null;
+					var result = JsonSerializer.Deserialize<ApiResponse<GetProvinceResponseBasicDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+					return result?.Data;
+				}
 			}
+			catch { }
+
 			return null;
 		}
 	}

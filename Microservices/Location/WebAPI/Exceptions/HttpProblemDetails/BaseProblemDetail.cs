@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Exceptions.HttpProblemDetails;
 
 public abstract class BaseProblemDetail
 {
-    [JsonProperty("title")]
+    [JsonPropertyName("title")]
     public string Title { get; set; } = null!;
-    [JsonProperty("detail")]
+
+    [JsonPropertyName("detail")]
     public string Detail { get; set; } = null!;
-    [JsonProperty("status")]
+
+    [JsonPropertyName("status")]
     public int Status { get; set; }
 }

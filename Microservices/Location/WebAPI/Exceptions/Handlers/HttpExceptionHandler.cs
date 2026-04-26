@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json;
 using WebAPI.Exceptions.HttpProblemDetails;
 using WebAPI.Utils.Results.Concrete;
 
@@ -14,53 +14,40 @@ public class HttpExceptionHandler : ExceptionHandler
 
     private HttpResponse? _response;
 
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
     public override Task HandleException(BusinessException businessException)
     {
         Response.StatusCode = StatusCodes.Status400BadRequest;
-        var details = new BusinessProblemDetails(businessException.Message);
-        var errorDataResult = new ErrorDataResult<BusinessProblemDetails>(errorModel: details);
-        var jsonResponse = JsonConvert.SerializeObject(errorDataResult, Formatting.Indented);
-
-        return Response.WriteAsync(jsonResponse);
+        var result = new ErrorDataResult<BusinessProblemDetails>(errorModel: new BusinessProblemDetails(businessException.Message));
+        return Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
     }
 
     public override Task HandleException(ValidationException validationException)
     {
         Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
-        var details = new ValidationProblemDetails(validationException.Errors);
-        var errorDataResult = new ErrorDataResult<ValidationProblemDetails>(errorModel: details);
-        string jsonResponse = JsonConvert.SerializeObject(errorDataResult, Formatting.Indented);
-
-        return Response.WriteAsync(jsonResponse);
+        var result = new ErrorDataResult<ValidationProblemDetails>(errorModel: new ValidationProblemDetails(validationException.Errors));
+        return Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
     }
 
     public override Task HandleException(AuthorizationException authorizationException)
     {
         Response.StatusCode = StatusCodes.Status401Unauthorized;
-        var details = new AuthorizationProblemDetails(authorizationException.Message);
-        var errorDataResult = new ErrorDataResult<AuthorizationProblemDetails>(errorModel: details);
-        var jsonResponse = JsonConvert.SerializeObject(errorDataResult, Formatting.Indented);
-
-        return Response.WriteAsync(jsonResponse);
+        var result = new ErrorDataResult<AuthorizationProblemDetails>(errorModel: new AuthorizationProblemDetails(authorizationException.Message));
+        return Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
     }
 
     public override Task HandleException(NotFoundException notFoundException)
     {
         Response.StatusCode = StatusCodes.Status404NotFound;
-        var details = new NotFoundProblemDetails(notFoundException.Message);
-        var errorDataResult = new ErrorDataResult<NotFoundProblemDetails>(errorModel: details);
-        var jsonResponse = JsonConvert.SerializeObject(errorDataResult, Formatting.Indented);
-
-        return Response.WriteAsync(jsonResponse);
+        var result = new ErrorDataResult<NotFoundProblemDetails>(errorModel: new NotFoundProblemDetails(notFoundException.Message));
+        return Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
     }
 
     public override Task HandleException(System.Exception exception)
     {
         Response.StatusCode = StatusCodes.Status500InternalServerError;
-        var details = new InternalServerErrorProblemDetails(exception.Message);
-        var errorDataResult = new ErrorDataResult<InternalServerErrorProblemDetails>(errorModel: details);
-        var jsonResponse = JsonConvert.SerializeObject(errorDataResult, Formatting.Indented);
-
-        return Response.WriteAsync(jsonResponse);
+        var result = new ErrorDataResult<InternalServerErrorProblemDetails>(errorModel: new InternalServerErrorProblemDetails(exception.Message));
+        return Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
     }
 }

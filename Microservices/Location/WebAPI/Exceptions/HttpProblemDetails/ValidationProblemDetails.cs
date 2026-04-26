@@ -1,12 +1,10 @@
-﻿using Newtonsoft.Json;
-using WebAPI.Utils.Results;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Exceptions.HttpProblemDetails;
 
 public class ValidationProblemDetails : BaseProblemDetail
 {
-
-    [JsonProperty("errors")]
+    [JsonPropertyName("errors")]
     public IEnumerable<string> Errors { get; init; }
 
     public ValidationProblemDetails(IEnumerable<string> errors)
@@ -17,4 +15,3 @@ public class ValidationProblemDetails : BaseProblemDetail
         Status = StatusCodes.Status422UnprocessableEntity;
     }
 }
-

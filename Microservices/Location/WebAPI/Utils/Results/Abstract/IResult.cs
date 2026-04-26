@@ -1,15 +1,16 @@
-﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using WebAPI.Exceptions.HttpProblemDetails;
 
 namespace WebAPI.Utils.Results.Abstract;
 
 public interface IResult
 {
-    [JsonProperty("success")]
+    [JsonPropertyName("success")]
     bool Success { get; }
 
-    [JsonProperty("message")]
+    [JsonPropertyName("message")]
     string? Message { get; }
-    [JsonProperty("errorModel")]
+
+    [JsonPropertyName("errorModel")]
     BaseProblemDetail? ErrorModel { get; }
 }
