@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.MenuDesigns.DTOs;
 using Application.Menus.DTOs;
 using Domain.Entities;
 using MediatR;
@@ -22,6 +23,8 @@ public class GetActiveMenuBySlugHandler(
 		var store = await repoStore.Query()
 			.AsSplitQuery()
 			.Include(s => s.Company)
+			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
+				.ThenInclude(m => m.MenuDesign)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.CategoryLibraryItem)
@@ -50,6 +53,7 @@ public class GetActiveMenuBySlugHandler(
 			companyMenu = await repoMenu.Query()
 				.AsSplitQuery()
 				.Include(m => m.Company)
+				.Include(m => m.MenuDesign)
 				.Include(m => m.Categories.Where(c => c.IsActive))
 					.ThenInclude(c => c.CategoryLibraryItem)
 						.ThenInclude(cli => cli.Medias)
@@ -70,6 +74,7 @@ public class GetActiveMenuBySlugHandler(
 			companyMenu = await repoMenu.Query()
 				.AsSplitQuery()
 				.Include(m => m.Company)
+				.Include(m => m.MenuDesign)
 				.Include(m => m.Categories.Where(c => c.IsActive))
 					.ThenInclude(c => c.CategoryLibraryItem)
 						.ThenInclude(cli => cli.Medias)
@@ -97,6 +102,26 @@ public class GetActiveMenuBySlugHandler(
 			Title = menu.Title,
 			StoreId = menu.StoreId,
 			CompanyId = menu.CompanyId,
+			MenuDesignId = menu.MenuDesignId,
+			MenuDesign = menu.MenuDesign is null ? null : new MenuDesignDTO
+			{
+				Id = menu.MenuDesign.Id,
+				Name = menu.MenuDesign.Name,
+				Slug = menu.MenuDesign.Slug,
+				Description = menu.MenuDesign.Description,
+				PrimaryColor = menu.MenuDesign.PrimaryColor,
+				PrimaryDarkColor = menu.MenuDesign.PrimaryDarkColor,
+				AccentColor = menu.MenuDesign.AccentColor,
+				BackgroundColor = menu.MenuDesign.BackgroundColor,
+				SurfaceColor = menu.MenuDesign.SurfaceColor,
+				TextColor = menu.MenuDesign.TextColor,
+				MutedColor = menu.MenuDesign.MutedColor,
+				BorderRadius = menu.MenuDesign.BorderRadius,
+				BackgroundGradient = menu.MenuDesign.BackgroundGradient,
+				PreviewImageUrl = menu.MenuDesign.PreviewImageUrl,
+				IsDefault = menu.MenuDesign.IsDefault,
+				SortOrder = menu.MenuDesign.SortOrder
+			},
 			Status = menu.Status,
 			StoreName = storeName,
 			CompanyName = companyName,

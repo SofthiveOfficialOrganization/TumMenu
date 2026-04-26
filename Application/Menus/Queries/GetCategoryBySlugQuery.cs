@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.MenuDesigns.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ public sealed class CategoryPageDTO
 	public string? ParentCategorySlug { get; set; }
 	public List<CategoryProductItemDTO> Products { get; set; } = [];
 	public List<CategorySubCategoryItemDTO> SubCategories { get; set; } = [];
+	public MenuDesignDTO? MenuDesign { get; set; }
 }
 
 public sealed class CategorySubCategoryItemDTO
@@ -57,8 +59,8 @@ public class GetCategoryBySlugHandler(
 	public async Task<CategoryPageDTO> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
 	{
 		var categoryData = await repoCategory.Query()
-			.Where(c => c.IsActive && 
-			           c.CategoryLibraryItem.Slug == req.CategorySlug && 
+			.Where(c => c.IsActive &&
+			           c.CategoryLibraryItem.Slug == req.CategorySlug &&
 			           c.Menu.Status == MenuStatus.Active &&
 			           c.Menu.Store!.Slug == req.StoreSlug &&
 			           c.Menu.Store!.Company!.Slug == req.CompanySlug)
@@ -73,6 +75,24 @@ public class GetCategoryBySlugHandler(
 				CategoryId = c.Id,
 				CategoryDescription = c.CategoryLibraryItem.Description,
 				ParentCategorySlug = c.Parent != null ? c.Parent.CategoryLibraryItem.Slug : null,
+				MenuDesign = c.Menu.MenuDesign == null ? null : new MenuDesignDTO
+				{
+					Id = c.Menu.MenuDesign.Id,
+					Name = c.Menu.MenuDesign.Name,
+					Slug = c.Menu.MenuDesign.Slug,
+					PrimaryColor = c.Menu.MenuDesign.PrimaryColor,
+					PrimaryDarkColor = c.Menu.MenuDesign.PrimaryDarkColor,
+					AccentColor = c.Menu.MenuDesign.AccentColor,
+					BackgroundColor = c.Menu.MenuDesign.BackgroundColor,
+					SurfaceColor = c.Menu.MenuDesign.SurfaceColor,
+					TextColor = c.Menu.MenuDesign.TextColor,
+					MutedColor = c.Menu.MenuDesign.MutedColor,
+					BorderRadius = c.Menu.MenuDesign.BorderRadius,
+					BackgroundGradient = c.Menu.MenuDesign.BackgroundGradient,
+					PreviewImageUrl = c.Menu.MenuDesign.PreviewImageUrl,
+					IsDefault = c.Menu.MenuDesign.IsDefault,
+					SortOrder = c.Menu.MenuDesign.SortOrder
+				},
 				Products = c.Products
 					.Where(p => p.IsActive)
 					.OrderBy(p => p.SortOrder)

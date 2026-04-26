@@ -12,6 +12,7 @@ public interface IApplicationDbContext
     DbSet<Address> Addresses { get; }
     DbSet<QRCode> QRCodes { get; }
     DbSet<Menu> Menus { get; }
+    DbSet<MenuDesign> MenuDesigns { get; }
     DbSet<Category> Categories { get; }
     DbSet<Product> Products { get; }
     DbSet<Media> Medias { get; }

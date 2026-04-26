@@ -1,23 +1,57 @@
 @using Application.Menus.Commands
+@using Application.MenuDesigns.DTOs
 @model UpdateMenuCommand
 
 @{
     ViewData["Title"] = "Menü Düzenle";
+    var designs = ViewBag.MenuDesigns as List<MenuDesignDTO> ?? [];
+    var currentDesignId = ViewBag.CurrentMenuDesignId as Guid?;
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="horizon-card">
             <h4 class="fw-bold mb-4">Menü Düzenle</h4>
-            
+
             <form asp-action="Update" method="post">
                 <input type="hidden" name="Id" value="@Model.Id" />
-                
+
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Menü Adı</label>
                     <input asp-for="Title" class="form-control" placeholder="Menü Adı" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
+
+                @if (designs.Count > 0)
+                {
+                    <div class="mb-4">
+                        <label class="form-label text-secondary small text-uppercase fw-bold d-block mb-2">Tasarım Seçimi</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <label class="design-option @(currentDesignId == null ? "design-option--active" : "")">
+                                <input type="radio" name="menuDesignId" value="" class="d-none"
+                                       @(currentDesignId == null ? "checked" : "") />
+                                <div class="design-preview" style="background:#f8fafc; border:2px solid #e2e8f0;">
+                                    <span class="design-preview__name text-muted">Varsayılan</span>
+                                    <span class="design-preview__btn" style="background:#688745; border-radius:24px;">Buton</span>
+                                </div>
+                            </label>
+                            @foreach (var d in designs)
+                            {
+                                var isActive = currentDesignId == d.Id;
+                                <label class="design-option @(isActive ? "design-option--active" : "")">
+                                    <input type="radio" name="menuDesignId" value="@d.Id" class="d-none"
+                                           @(isActive ? "checked" : "") />
+                                    <div class="design-preview"
+                                         style="background:@d.BackgroundColor; border:2px solid @d.PrimaryColor; color:@d.TextColor;">
+                                        <span class="design-preview__name">@d.Name</span>
+                                        <span class="design-preview__btn"
+                                              style="background:@d.PrimaryColor; color:#fff; border-radius:@d.BorderRadius;">Buton</span>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                }
 
                 <div class="d-flex justify-content-end gap-2">
                     <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
@@ -32,6 +66,33 @@
     </div>
 </div>
 
+<style>
+    .design-option { cursor: pointer; }
+    .design-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 110px;
+        height: 90px;
+        border-radius: 12px;
+        padding: 10px;
+        transition: box-shadow .2s;
+    }
+    .design-option--active .design-preview { box-shadow: 0 0 0 3px #6366f1; }
+    .design-preview__name { font-size: 12px; font-weight: 600; }
+    .design-preview__btn { font-size: 11px; padding: 3px 10px; }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.design-option input[type=radio]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                document.querySelectorAll('.design-option').forEach(el => el.classList.remove('design-option--active'));
+                radio.closest('.design-option').classList.add('design-option--active');
+            });
+        });
+    </script>
 }

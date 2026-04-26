@@ -93,9 +93,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Şablon</label>
+                    <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Tasarım</label>
                      <div class="p-2 border rounded bg-light text-dark fw-medium">
-                        @(Model.MenuTemplateId.HasValue ? Model.MenuTemplateId.ToString() : "Varsayılan Şablon")
+                        @(Model.MenuDesign != null ? Model.MenuDesign.Name : "Varsayılan Tasarım")
                     </div>
                 </div>
 

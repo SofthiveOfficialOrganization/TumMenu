@@ -7,7 +7,8 @@ namespace Domain.Entities
 		public string Title { get; set; } = null!;
 		public Guid? CompanyId { get; set; }
 		public Company? Company { get; set; }
-		public Guid? MenuTemplateId { get; set; }
+		public Guid? MenuDesignId { get; set; }
+	public MenuDesign? MenuDesign { get; set; }
 		public Guid? StoreId { get; set; }
 		public Store? Store { get; set; }
 		public MenuStatus Status { get; set; } = MenuStatus.Unknown;

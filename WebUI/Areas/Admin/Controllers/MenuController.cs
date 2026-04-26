@@ -1,6 +1,8 @@
 using Application.Companies.Commands;
 using Application.Companies.DTOs;
 using Application.Companies.Queries;
+using Application.MenuDesigns.Commands;
+using Application.MenuDesigns.Queries;
 using Application.Menus.Commands;
 using Application.Menus.Queries;
 using Application.Stores.Queries;
@@ -159,7 +161,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
-		
+
 		if (User.IsInRole("Owner"))
 		{
 			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
@@ -176,17 +178,16 @@ public sealed class MenuController(IMediator mediator) : Controller
 			if (!isOwner) return Forbid();
 		}
 
+		ViewBag.MenuDesigns = await mediator.Send(new GetAllMenuDesignsQuery(), ct);
+		ViewBag.CurrentMenuDesignId = menu.MenuDesignId;
 		return View(new UpdateMenuCommand(menu.Id, menu.Title));
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Update(UpdateMenuCommand req, CancellationToken ct)
+	public async Task<IActionResult> Update([FromForm] UpdateMenuCommand req, [FromForm] Guid? menuDesignId, CancellationToken ct)
 	{
-		// Ideally we should check ownership here too but we need to fetch the menu first.
-		// For now relying on the query handler's scoping might not be enough if ID is forged.
-		// Let's fetch to verify.
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = req.Id }, ct);
 		if (User.IsInRole("Owner"))
 		{
@@ -205,6 +206,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		var updatedMenu = await mediator.Send(req, ct);
+		await mediator.Send(new SetMenuDesignCommand(updatedMenu.Id, menuDesignId), ct);
 		return RedirectToAction(nameof(Details), new { id = updatedMenu.Id, role = RouteData.Values["role"] });
 	}
 

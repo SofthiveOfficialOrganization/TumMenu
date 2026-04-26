@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
+using Application.MenuDesigns.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ public sealed class ProductPageDTO
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
 	public string? Allergens { get; set; }
 	public List<string> ImageUrls { get; set; } = [];
+	public MenuDesignDTO? MenuDesign { get; set; }
 }
 
 public class GetProductBySlugHandler(
@@ -42,6 +44,8 @@ public class GetProductBySlugHandler(
 		var store = await repoStore.Query()
 			.AsSplitQuery()
 			.Include(s => s.Company)
+			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
+				.ThenInclude(m => m.MenuDesign)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
 				.ThenInclude(c => c.CategoryLibraryItem)
@@ -94,7 +98,25 @@ public class GetProductBySlugHandler(
 				.Where(m => m.Kind == MediaKind.Image)
 				.OrderBy(m => m.SortOrder)
 				.Select(m => m.MediaUrl)
-				.ToList()
+				.ToList(),
+			MenuDesign = menu.MenuDesign is null ? null : new MenuDesignDTO
+			{
+				Id = menu.MenuDesign.Id,
+				Name = menu.MenuDesign.Name,
+				Slug = menu.MenuDesign.Slug,
+				PrimaryColor = menu.MenuDesign.PrimaryColor,
+				PrimaryDarkColor = menu.MenuDesign.PrimaryDarkColor,
+				AccentColor = menu.MenuDesign.AccentColor,
+				BackgroundColor = menu.MenuDesign.BackgroundColor,
+				SurfaceColor = menu.MenuDesign.SurfaceColor,
+				TextColor = menu.MenuDesign.TextColor,
+				MutedColor = menu.MenuDesign.MutedColor,
+				BorderRadius = menu.MenuDesign.BorderRadius,
+				BackgroundGradient = menu.MenuDesign.BackgroundGradient,
+				PreviewImageUrl = menu.MenuDesign.PreviewImageUrl,
+				IsDefault = menu.MenuDesign.IsDefault,
+				SortOrder = menu.MenuDesign.SortOrder
+			}
 		};
 	}
 }

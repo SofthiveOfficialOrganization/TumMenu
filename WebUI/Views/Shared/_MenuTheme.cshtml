@@ -1,0 +1,21 @@
+@using Application.MenuDesigns.DTOs
+@model MenuDesignDTO
+@if (Model is not null)
+{
+    <style>
+        :root {
+            --pm-brand:      @Model.PrimaryColor;
+            --pm-brand-dark: @Model.PrimaryDarkColor;
+            --pm-accent:     @Model.AccentColor;
+            --pm-bg:         @Model.BackgroundColor;
+            --pm-surface:    @Model.SurfaceColor;
+            --pm-text:       @Model.TextColor;
+            --pm-muted:      @Model.MutedColor;
+            --pm-radius:     @Model.BorderRadius;
+            @if (!string.IsNullOrEmpty(Model.BackgroundGradient))
+            {
+                <text>--pm-header-gradient: @Model.BackgroundGradient;</text>
+            }
+        }
+    </style>
+}

@@ -37,6 +37,7 @@ namespace Infrastructure.Persistence
 
 		// Menu & product
 		public DbSet<Menu> Menus => Set<Menu>();
+		public DbSet<MenuDesign> MenuDesigns => Set<MenuDesign>();
 		public DbSet<Category> Categories => Set<Category>();
 		public DbSet<CategoryLibraryItem> CategoryLibraryItems => Set<CategoryLibraryItem>();
 		public DbSet<CategorySuggestion> CategorySuggestions => Set<CategorySuggestion>();
@@ -362,6 +363,18 @@ namespace Infrastructure.Persistence
 				.WithMany()
 				.HasForeignKey(s => s.CompanyId)
 				.OnDelete(DeleteBehavior.SetNull);
+
+			// MenuDesign(1) -> Menu(n) (optional)
+			builder.Entity<Menu>()
+				.HasOne(m => m.MenuDesign)
+				.WithMany(d => d.Menus)
+				.HasForeignKey(m => m.MenuDesignId)
+				.OnDelete(DeleteBehavior.SetNull);
+
+			builder.Entity<MenuDesign>()
+				.HasIndex(d => d.Slug)
+				.IsUnique()
+				.HasFilter("[IsDeleted] = 0");
 		}
 
 		#endregion

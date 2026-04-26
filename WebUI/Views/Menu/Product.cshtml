@@ -9,6 +9,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+    @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
 }
 
 <div class="pm-wrapper">
