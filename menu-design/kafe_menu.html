@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe & Çay Menüsü - Tüm Menü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #fdf8f3; }
+        .header-bg { background-color: #6f4e37; } /* Kahve Tonu */
+        .footer-bg { background-color: #3c2a21; } /* Koyu Kahve */
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(111, 78, 55, 0.1), 0 8px 10px -6px rgba(111, 78, 55, 0.1); }
+        .accent-color { color: #d2691e; }
+        .accent-bg { background-color: #d2691e; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="header-bg text-white py-4 px-6 sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-white p-1 rounded-full">
+                    <img src="https://img.icons8.com/color/48/coffee-beans.png" alt="Logo" class="w-8 h-8">
+                </div>
+                <span class="text-xl font-bold tracking-tight">Tüm Menü</span>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#" class="hover:text-orange-200 transition">Ne yesem?</a>
+                <a href="#" class="hover:text-orange-200 transition">Restoranlar</a>
+                <a href="#" class="hover:text-orange-200 transition">Blog</a>
+            </nav>
+            <button class="accent-bg hover:bg-orange-700 text-white px-5 py-2 rounded-full text-sm font-bold transition shadow-lg">
+                QR'lı Ol
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto w-full px-4 py-8">
+        
+        <!-- Shop Info Card -->
+        <div class="relative overflow-hidden rounded-3xl mb-10 card-shadow bg-white">
+            <div class="h-48 bg-[url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70"></div>
+            </div>
+            <div class="relative -mt-16 px-8 pb-8 text-center">
+                <div class="inline-block p-1 bg-white rounded-2xl shadow-xl mb-4">
+                    <div class="bg-orange-50 w-24 h-24 rounded-xl flex items-center justify-center">
+                        <img src="https://img.icons8.com/fluency/96/coffee-to-go.png" alt="Shop Logo" class="w-16 h-16">
+                    </div>
+                </div>
+                <p class="text-orange-200 text-xs font-bold tracking-widest uppercase mb-1">SOFTHIVE</p>
+                <h1 class="text-white text-4xl font-bold mb-3" style="font-family: 'Playfair Display', serif;">Softhive Coffee House</h1>
+                <div class="flex justify-center gap-2">
+                    <span class="bg-white/20 backdrop-blur-md text-white px-4 py-1 rounded-full text-xs font-medium border border-white/30">Dijital Menü</span>
+                    <span class="bg-green-500/80 backdrop-blur-md text-white px-4 py-1 rounded-full text-xs font-medium">Açık</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-800">Kategoriler</h2>
+            <div class="h-1 flex-grow mx-4 bg-orange-100 rounded-full"></div>
+        </div>
+
+        <!-- Category Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Category Card 1 -->
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 card-shadow border border-orange-50 hover:border-orange-200 transition group cursor-pointer">
+                <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1541167760496-162955ed8a9f?auto=format&fit=crop&q=80&w=200" alt="Kahveler" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-gray-800 text-lg">Sıcak Kahveler</h3>
+                    <p class="text-gray-500 text-xs">Espresso, Latte, Cappuccino...</p>
+                </div>
+                <div class="text-orange-400 group-hover:translate-x-1 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Category Card 2 -->
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 card-shadow border border-orange-50 hover:border-orange-200 transition group cursor-pointer">
+                <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80&w=200" alt="Çaylar" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-gray-800 text-lg">Dünya Çayları</h3>
+                    <p class="text-gray-500 text-xs">Yeşil Çay, Rooibos, Earl Grey...</p>
+                </div>
+                <div class="text-orange-400 group-hover:translate-x-1 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Category Card 3 -->
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 card-shadow border border-orange-50 hover:border-orange-200 transition group cursor-pointer">
+                <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80&w=200" alt="Tatlılar" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-gray-800 text-lg">Taze Pastalar</h3>
+                    <p class="text-gray-500 text-xs">Cheesecake, Brownie, Tiramisu...</p>
+                </div>
+                <div class="text-orange-400 group-hover:translate-x-1 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Category Card 4 -->
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 card-shadow border border-orange-50 hover:border-orange-200 transition group cursor-pointer">
+                <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=200" alt="Soğuk" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-gray-800 text-lg">Soğuk İçecekler</h3>
+                    <p class="text-gray-500 text-xs">Iced Latte, Limonata, Frappe...</p>
+                </div>
+                <div class="text-orange-400 group-hover:translate-x-1 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-bg text-gray-300 py-12 px-6 mt-12">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div class="col-span-1 md:col-span-1">
+                <h4 class="text-white font-bold text-lg mb-4">Tüm Menü</h4>
+                <p class="text-sm leading-relaxed">Menüleri keşfet, fiyatları karşılaştır, işletmen için dijital menüye geç.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">Müşteriler</h4>
+                <ul class="text-sm space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Popüler Restoranlar</a></li>
+                    <li><a href="#" class="hover:text-white transition">Günün Restoranları</a></li>
+                    <li><a href="#" class="hover:text-white transition">Yeni Restoranlar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">İşletmeler</h4>
+                <ul class="text-sm space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Hesabım</a></li>
+                    <li><a href="#" class="hover:text-white transition">QR'lı Ol</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">Şirket</h4>
+                <ul class="text-sm space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Hakkımızda</a></li>
+                    <li><a href="#" class="hover:text-white transition">İletişim</a></li>
+                    <li><a href="#" class="hover:text-white transition">Yasal Bilgiler</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs">© 2026 Tüm Menü. Tüm hakları saklıdır.</p>
+            <div class="flex gap-4">
+                <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-white/20 transition"><img src="https://img.icons8.com/ios-filled/20/ffffff/instagram-new.png"/></a>
+                <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-white/20 transition"><img src="https://img.icons8.com/ios-filled/20/ffffff/twitterx.png"/></a>
+                <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-white/20 transition"><img src="https://img.icons8.com/ios-filled/20/ffffff/linkedin.png"/></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

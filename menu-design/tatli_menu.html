@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tatlıcı Menüsü - Tüm Menü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #fff5f7; color: #5d4037; }
+        .header-bg { background-color: #ff85a2; }
+        .footer-bg { background-color: #fce4ec; color: #880e4f; }
+        .handwritten { font-family: 'Pacifico', cursive; }
+        .pastel-pink { background-color: #ff85a2; }
+        .pastel-blue { background-color: #b3e5fc; }
+        .pastel-yellow { background-color: #fff9c4; }
+        .soft-shadow { box-shadow: 0 8px 30px rgba(255, 133, 162, 0.15); }
+        .blob { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="header-bg text-white py-4 px-6 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-white p-2 rounded-full shadow-inner">
+                    <img src="https://img.icons8.com/fluency/48/cupcake.png" alt="Logo" class="w-8 h-8">
+                </div>
+                <span class="handwritten text-2xl">Tüm Menü</span>
+            </div>
+            <nav class="hidden md:flex gap-8 font-bold text-sm">
+                <a href="#" class="hover:scale-110 transition transform">Tatlılar</a>
+                <a href="#" class="hover:scale-110 transition transform">İçecekler</a>
+                <a href="#" class="hover:scale-110 transition transform">Hakkımızda</a>
+            </nav>
+            <button class="bg-white text-[#ff85a2] px-6 py-2 rounded-full font-bold text-sm hover:bg-pink-50 transition shadow-md">
+                Kayıt Ol
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl mx-auto w-full px-4 py-12">
+        
+        <!-- Sweet Shop Info -->
+        <div class="bg-white rounded-[3rem] p-10 mb-12 soft-shadow relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-100 rounded-full opacity-50"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-50 rounded-full opacity-50"></div>
+            
+            <div class="relative z-10 text-center">
+                <div class="inline-block mb-4">
+                    <span class="bg-pink-100 text-pink-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Tatlı Bir Mola</span>
+                </div>
+                <h1 class="handwritten text-5xl md:text-6xl text-[#ff85a2] mb-4">Softhive Patisserie</h1>
+                <p class="text-gray-500 font-medium mb-8">"Her lokmada mutluluk, her dilimde sevgi var."</p>
+                
+                <div class="flex justify-center gap-4">
+                    <div class="bg-pink-50 px-6 py-3 rounded-2xl border-2 border-pink-100">
+                        <p class="text-[10px] uppercase font-bold text-pink-400">Bugünün Yıldızı</p>
+                        <p class="font-bold text-pink-700">Çilekli Magnolia</p>
+                    </div>
+                    <div class="bg-blue-50 px-6 py-3 rounded-2xl border-2 border-blue-100">
+                        <p class="text-[10px] uppercase font-bold text-blue-400">Çalışma Saatleri</p>
+                        <p class="font-bold text-blue-700">09:00 - 22:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Section -->
+        <h2 class="handwritten text-3xl text-[#ff85a2] mb-8 text-center">Neler İstersiniz?</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            
+            <!-- Category 1 -->
+            <div class="group cursor-pointer">
+                <div class="bg-white p-4 rounded-[2rem] soft-shadow mb-3 group-hover:-translate-y-2 transition duration-300">
+                    <div class="aspect-square rounded-2xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" alt="Pastalar" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-center text-gray-700">Pastalar</h3>
+                </div>
+            </div>
+
+            <!-- Category 2 -->
+            <div class="group cursor-pointer">
+                <div class="bg-white p-4 rounded-[2rem] soft-shadow mb-3 group-hover:-translate-y-2 transition duration-300">
+                    <div class="aspect-square rounded-2xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" alt="Donuts" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-center text-gray-700">Donutlar</h3>
+                </div>
+            </div>
+
+            <!-- Category 3 -->
+            <div class="group cursor-pointer">
+                <div class="bg-white p-4 rounded-[2rem] soft-shadow mb-3 group-hover:-translate-y-2 transition duration-300">
+                    <div class="aspect-square rounded-2xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=80&w=400" alt="Dondurma" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-center text-gray-700">Dondurmalar</h3>
+                </div>
+            </div>
+
+            <!-- Category 4 -->
+            <div class="group cursor-pointer">
+                <div class="bg-white p-4 rounded-[2rem] soft-shadow mb-3 group-hover:-translate-y-2 transition duration-300">
+                    <div class="aspect-square rounded-2xl overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?auto=format&fit=crop&q=80&w=400" alt="Makaron" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-center text-gray-700">Makaronlar</h3>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-bg py-12 px-6 mt-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-10">
+                <div class="text-center md:text-left">
+                    <h4 class="handwritten text-3xl mb-2">Tüm Menü</h4>
+                    <p class="text-sm font-medium opacity-70">Hayatın en tatlı anları için buradayız.</p>
+                </div>
+                <div class="flex gap-4">
+                    <a href="#" class="bg-white p-3 rounded-full shadow-sm hover:scale-110 transition"><img src="https://img.icons8.com/color/24/instagram-new.png"/></a>
+                    <a href="#" class="bg-white p-3 rounded-full shadow-sm hover:scale-110 transition"><img src="https://img.icons8.com/color/24/pinterest.png"/></a>
+                    <a href="#" class="bg-white p-3 rounded-full shadow-sm hover:scale-110 transition"><img src="https://img.icons8.com/color/24/whatsapp.png"/></a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-pink-200">
+                <div>
+                    <h5 class="font-bold text-xs uppercase tracking-widest mb-4">Lezzetler</h5>
+                    <ul class="text-sm space-y-2 opacity-80">
+                        <li>Sütlü Tatlılar</li>
+                        <li>Şerbetli Tatlılar</li>
+                        <li>Özel Gün Pastaları</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-xs uppercase tracking-widest mb-4">Kurumsal</h5>
+                    <ul class="text-sm space-y-2 opacity-80">
+                        <li>Hakkımızda</li>
+                        <li>Franchise</li>
+                        <li>Kariyer</li>
+                    </ul>
+                </div>
+                <div class="col-span-2">
+                    <h5 class="font-bold text-xs uppercase tracking-widest mb-4">Bültene Katıl</h5>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="E-posta adresiniz" class="bg-white px-4 py-2 rounded-full text-sm flex-grow outline-none focus:ring-2 focus:ring-pink-300">
+                        <button class="bg-[#ff85a2] text-white px-6 py-2 rounded-full text-sm font-bold">Gönder</button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center mt-12 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">© 2026 SOFTHIVE SWEETS | TÜM MENÜ DİJİTAL</p>
+        </div>
+    </footer>
+
+</body>
+</html>

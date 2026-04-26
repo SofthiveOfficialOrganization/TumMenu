@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şık Restoran Menüsü - Tüm Menü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #0a0a0a; color: #e5e5e5; }
+        .header-bg { background-color: #121212; border-bottom: 1px solid #c5a059; }
+        .footer-bg { background-color: #050505; border-top: 1px solid #c5a059; }
+        .gold-text { color: #c5a059; }
+        .gold-bg { background-color: #c5a059; }
+        .gold-border { border-color: #c5a059; }
+        .card-bg { background-color: #1a1a1a; }
+        .serif-font { font-family: 'Cinzel', serif; }
+        .premium-shadow { box-shadow: 0 4px 20px rgba(197, 160, 89, 0.1); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="header-bg py-5 px-8 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="border gold-border p-1 rounded-sm">
+                    <img src="https://img.icons8.com/ios/50/c5a059/restaurant.png" alt="Logo" class="w-6 h-6">
+                </div>
+                <span class="serif-font text-2xl font-bold tracking-widest gold-text">TÜM MENÜ</span>
+            </div>
+            <nav class="hidden lg:flex gap-10 text-xs font-semibold tracking-widest uppercase">
+                <a href="#" class="hover:text-white transition gold-text">Keşfet</a>
+                <a href="#" class="hover:text-white transition">Restoranlar</a>
+                <a href="#" class="hover:text-white transition">Rezervasyon</a>
+            </nav>
+            <button class="border gold-border gold-text hover:bg-[#c5a059] hover:text-black px-8 py-2 text-xs font-bold tracking-widest uppercase transition duration-300">
+                ÜYE OL
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-6 py-12">
+        
+        <!-- Luxury Shop Info -->
+        <div class="relative mb-16 text-center">
+            <div class="mb-6 flex justify-center">
+                <div class="w-24 h-px gold-bg self-center"></div>
+                <div class="mx-4 serif-font text-sm tracking-[0.3em] gold-text uppercase">Fine Dining</div>
+                <div class="w-24 h-px gold-bg self-center"></div>
+            </div>
+            <h1 class="serif-font text-5xl md:text-7xl font-bold mb-6 tracking-tight">L'Élégance Royale</h1>
+            <p class="max-w-2xl mx-auto text-gray-400 text-sm leading-relaxed mb-8 italic">"Gastronominin sanatla buluştuğu noktada, unutulmaz bir lezzet yolculuğuna davetlisiniz."</p>
+            <div class="flex justify-center gap-6">
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Durum</span>
+                    <span class="text-xs font-bold gold-text uppercase tracking-widest">Açık</span>
+                </div>
+                <div class="w-px h-8 bg-gray-800"></div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Kıyafet Kodu</span>
+                    <span class="text-xs font-bold text-white uppercase tracking-widest">Şık / Resmi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Categories -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            
+            <!-- Category 1 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[16/9] mb-4 border border-gray-800">
+                    <img src="https://images.unsplash.com/photo-1546039907-7fa05f864c02?auto=format&fit=crop&q=80&w=800" alt="Başlangıçlar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6">
+                        <h3 class="serif-font text-2xl text-white tracking-wider">Başlangıçlar</h3>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Soğuk & Sıcak Seçenekler</p>
+                    <span class="gold-text text-xs">Keşfet →</span>
+                </div>
+            </div>
+
+            <!-- Category 2 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[16/9] mb-4 border border-gray-800">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" alt="Ana Yemekler" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6">
+                        <h3 class="serif-font text-2xl text-white tracking-wider">Ana Yemekler</h3>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Şefin Özel Seçimleri</p>
+                    <span class="gold-text text-xs">Keşfet →</span>
+                </div>
+            </div>
+
+            <!-- Category 3 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[16/9] mb-4 border border-gray-800">
+                    <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&q=80&w=800" alt="Tatlılar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6">
+                        <h3 class="serif-font text-2xl text-white tracking-wider">Tatlılar</h3>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Gurme Lezzetler</p>
+                    <span class="gold-text text-xs">Keşfet →</span>
+                </div>
+            </div>
+
+            <!-- Category 4 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[16/9] mb-4 border border-gray-800">
+                    <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=800" alt="Şaraplar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6">
+                        <h3 class="serif-font text-2xl text-white tracking-wider">Kavımız</h3>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500">Seçkin Şarap Listesi</p>
+                    <span class="gold-text text-xs">Keşfet →</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-bg py-16 px-8 mt-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+                <div class="text-center md:text-left">
+                    <h4 class="serif-font gold-text text-lg mb-6 tracking-widest uppercase">İletişim</h4>
+                    <p class="text-xs text-gray-500 leading-loose tracking-widest">
+                        Nişantaşı, Abdi İpekçi Cd. No:42<br>
+                        İstanbul, Türkiye<br>
+                        +90 (212) 555 00 00
+                    </p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="serif-font text-3xl font-bold gold-text mb-4">TM</span>
+                    <div class="flex gap-6">
+                        <a href="#" class="opacity-50 hover:opacity-100 transition"><img src="https://img.icons8.com/ios/24/c5a059/instagram-new.png"/></a>
+                        <a href="#" class="opacity-50 hover:opacity-100 transition"><img src="https://img.icons8.com/ios/24/c5a059/facebook-new.png"/></a>
+                        <a href="#" class="opacity-50 hover:opacity-100 transition"><img src="https://img.icons8.com/ios/24/c5a059/tripadvisor.png"/></a>
+                    </div>
+                </div>
+                <div class="text-center md:text-right">
+                    <h4 class="serif-font gold-text text-lg mb-6 tracking-widest uppercase">Çalışma Saatleri</h4>
+                    <p class="text-xs text-gray-500 leading-loose tracking-widest">
+                        Pazartesi - Cumartesi: 12:00 - 00:00<br>
+                        Pazar: 10:00 - 22:00
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600">© 2026 TÜM MENÜ PRESTIGE. ALL RIGHTS RESERVED.</p>
+                <div class="flex gap-8 text-[10px] uppercase tracking-[0.2em] text-gray-600">
+                    <a href="#" class="hover:text-white transition">Gizlilik</a>
+                    <a href="#" class="hover:text-white transition">Şartlar</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
