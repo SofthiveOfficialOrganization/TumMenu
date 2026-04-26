@@ -77,9 +77,12 @@
     <div class="container hero__inner">
 
         <div class="hero__left">
-            <p class="hero__eyebrow">Menüleri keşfet • Gitmeden fiyatları gör</p>
+            @* <p class="hero__eyebrow">Menüleri keşfet • Gitmeden fiyatları gör</p> *@
 
-            <h1 id="hero-heading" class="hero__title">Gitmeden menülere göz at</h1>
+            <h1 id="hero-heading" class="hero__title">
+                <span>Gitmeden menülere</span>
+                göz at.
+            </h1>
 
             <p class="hero__lead">
                 Yakınındaki restoranların menülerini incele, fiyatları karşılaştır ve kararını hızlı ver.
@@ -97,7 +100,7 @@
                 </button>
             </div>
 
-            <div class="hero-benefits-wrap">
+            @* <div class="hero-benefits-wrap">
                 <ul class="hero-benefits hero-benefits--customers is-active">
                     <li>Restoranları tek ekranda gör.</li>
                     <li>Menü ve fiyatlara gitmeden bak.</li>
@@ -109,6 +112,15 @@
                     <li>Daha fazla müşteriye ulaş.</li>
                     <li>Fiyat ve ürünleri anlık kontrol et.</li>
                 </ul>
+            </div> *@
+
+            <div class="hero__actions">
+                <a href="/Home/Restaurants" class="hero-btn hero-btn--primary">
+                    Restoran Keşfet
+                </a>
+                <a href="/Home/WhatToEat" class="hero-btn hero-btn--secondary">
+                    Bugün ne yesem?
+                </a>
             </div>
         </div>
 

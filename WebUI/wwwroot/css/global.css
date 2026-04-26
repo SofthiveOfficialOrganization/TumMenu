@@ -71,19 +71,23 @@ a {
 
 /* Headings */
 .section__title {
-    font-size: 26px;
-    margin: 0 0 6px;
-    color: #423426;
+    font-size: clamp(26px, 3.2vw, 46px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin: 0 0 10px;
+    color: #3a2b1f;
 }
 
 .section__subtitle {
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.6;
     color: var(--color-muted);
     margin: 0;
 }
 
 .section-heading {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .section-heading--center {

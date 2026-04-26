@@ -458,6 +458,157 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ========================
+    // ROADMAP SVG PATH
+    // ========================
+    const initRoadmapPath = () => {
+        const wrapper = document.getElementById('roadmapWrapper');
+        const svg = document.getElementById('roadSvg');
+        const roadShadow = document.getElementById('roadShadow');
+        const roadWhite = document.getElementById('roadWhite');
+        const roadColor = document.getElementById('roadColor');
+        const dotsGroup = document.getElementById('dotsGroup');
+
+        if (!wrapper || !svg || !roadShadow || !roadWhite || !roadColor || !dotsGroup) {
+            return;
+        }
+
+        const makeSvgEl = (tag, attrs) => {
+            const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+            return el;
+        };
+
+        const f = (value) => value.toFixed(2);
+
+        const getCenter = (element, containerRect) => {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: rect.left - containerRect.left + (rect.width / 2),
+                y: rect.top - containerRect.top + (rect.height / 2)
+            };
+        };
+
+        const buildRoad = () => {
+            const steps = Array.from(wrapper.querySelectorAll('.qr-roadmap__step-row'));
+            const wrapperRect = wrapper.getBoundingClientRect();
+
+            const getRect = (el) => {
+                const r = el.getBoundingClientRect();
+                return {
+                    left:   r.left   - wrapperRect.left,
+                    top:    r.top    - wrapperRect.top,
+                    right:  r.right  - wrapperRect.left,
+                    bottom: r.bottom - wrapperRect.top,
+                    cx: r.left - wrapperRect.left + r.width  / 2,
+                    cy: r.top  - wrapperRect.top  + r.height / 2
+                };
+            };
+
+            const stepData = steps
+                .map((step) => {
+                    const block = step.querySelector('.qr-roadmap__video-block');
+                    if (!block) return null;
+                    return {
+                        rect:   getRect(block),
+                        isLeft: step.classList.contains('qr-roadmap__step-row--left'),
+                        color:  getComputedStyle(step).getPropertyValue('--c').trim() || '#7f9d58'
+                    };
+                })
+                .filter(Boolean);
+
+            if (stepData.length < 2) return;
+
+            svg.setAttribute('viewBox', `0 0 ${wrapper.clientWidth} ${wrapper.clientHeight}`);
+
+            // Horizontal clearance from the video's outer edge (must be < gap 44px to stay out of text)
+            const OH = 26;
+
+            const dotPoints = [];
+
+            // For each video: a vertical track just outside the video's outer edge.
+            // topY/botY are the exact top/bottom of the video so the track runs the
+            // full height of the video on that side.
+            const tracks = stepData.map(({ rect, isLeft, color }) => ({
+                x:    isLeft ? rect.right + OH : rect.left - OH,
+                topY: rect.top,
+                midY: rect.cy,
+                botY: rect.bottom,
+                color
+            }));
+
+            const t0 = tracks[0];
+
+            // Start 40 px above the first video's top edge, then drop straight down
+            // along its outer side.
+            let pathData = `M ${f(t0.x)} ${f(t0.topY - 40)} L ${f(t0.x)} ${f(t0.botY)}`;
+            dotPoints.push({ x: t0.x, y: t0.midY, color: t0.color });
+
+            for (let i = 1; i < tracks.length; i++) {
+                const prev = tracks[i - 1];
+                const curr = tracks[i];
+
+                // Gap between bottom of video N and top of video N+1.
+                // The S-curve lives entirely inside this vertical gap, so it
+                // never overlaps either video.
+                const gap     = curr.topY - prev.botY;
+                const tension = Math.max(gap * 0.45, 30);
+
+                // Cubic bezier: vertical tangent at both ends ensures a smooth
+                // join with the straight L segments above and below.
+                pathData += ` C ${f(prev.x)} ${f(prev.botY + tension)},`
+                          + ` ${f(curr.x)} ${f(curr.topY - tension)},`
+                          + ` ${f(curr.x)} ${f(curr.topY)}`;
+
+                // Straight down along this video's outer side
+                pathData += ` L ${f(curr.x)} ${f(curr.botY)}`;
+
+                dotPoints.push({ x: curr.x, y: curr.midY, color: curr.color });
+            }
+
+            roadShadow.setAttribute('d', pathData);
+            roadWhite.setAttribute('d', pathData);
+            roadColor.setAttribute('d', pathData);
+
+            dotsGroup.innerHTML = '';
+            dotPoints.forEach(({ x, y, color }) => {
+                dotsGroup.appendChild(makeSvgEl('circle', {
+                    cx: x, cy: y, r: 20,
+                    fill: color, opacity: '0.18'
+                }));
+                dotsGroup.appendChild(makeSvgEl('circle', {
+                    cx: x, cy: y, r: 13,
+                    fill: color, stroke: 'white', 'stroke-width': '3.5'
+                }));
+                dotsGroup.appendChild(makeSvgEl('circle', {
+                    cx: x, cy: y, r: 4.5,
+                    fill: 'white'
+                }));
+            });
+        };
+
+        let resizeTimeoutId = null;
+        const scheduleRoadBuild = () => {
+            window.requestAnimationFrame(buildRoad);
+        };
+
+        scheduleRoadBuild();
+        window.addEventListener('load', scheduleRoadBuild, { once: true });
+        window.addEventListener('resize', () => {
+            window.clearTimeout(resizeTimeoutId);
+            resizeTimeoutId = window.setTimeout(scheduleRoadBuild, 60);
+        });
+
+        wrapper.querySelectorAll('video').forEach((video) => {
+            video.addEventListener('loadedmetadata', scheduleRoadBuild, { once: true });
+        });
+
+        window.setTimeout(scheduleRoadBuild, 120);
+        window.setTimeout(scheduleRoadBuild, 420);
+    };
+
+    initRoadmapPath();
+
 
     // ========================
     // LOG SUCCESS
@@ -470,4 +621,26 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('  - Autoplay carousel');
     console.log('  - Mobile-friendly flip cards');
     console.log('  - Smooth scrolling');
+
+    // ========================
+    // ROADMAP ANIMATION LOOP
+    // ========================
+    const ANIM_DURATION = 8000; // ms — matches CSS total timeline
+
+    function restartAnimations(container) {
+        const animated = container.querySelectorAll('[class*="tm-a-"]');
+        animated.forEach(function (el) {
+            el.style.animationName = 'none';
+        });
+        void container.offsetHeight;
+        animated.forEach(function (el) {
+            el.style.animationName = '';
+        });
+    }
+
+    document.querySelectorAll('.tm-anim').forEach(function (anim) {
+        setInterval(function () {
+            restartAnimations(anim);
+        }, ANIM_DURATION);
+    });
 });
