@@ -1,0 +1,227 @@
+@using Application.MenuDesigns.Commands
+@model CreateMenuDesignCommand
+
+@{
+    ViewData["Title"] = "Yeni Tasarım Oluştur";
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Yeni Tasarım Oluştur</h4>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Geri
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Tasarım Adı <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" placeholder="Örn: Modern Koyu" id="nameInput" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Slug <span class="text-danger">*</span></label>
+                        <input asp-for="Slug" class="form-control" placeholder="Örn: modern-koyu" id="slugInput" />
+                        <span asp-validation-for="Slug" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Açıklama</label>
+                        <textarea asp-for="Description" class="form-control" rows="2" placeholder="İsteğe bağlı kısa açıklama"></textarea>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">Renkler</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Ana Renk (--pm-brand) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#688745" data-target="PrimaryColor" />
+                            <input asp-for="PrimaryColor" class="form-control font-monospace" placeholder="#688745" />
+                        </div>
+                        <span asp-validation-for="PrimaryColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Koyu Ana (--pm-brand-dark) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#4a6130" data-target="PrimaryDarkColor" />
+                            <input asp-for="PrimaryDarkColor" class="form-control font-monospace" placeholder="#4a6130" />
+                        </div>
+                        <span asp-validation-for="PrimaryDarkColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Vurgu (--pm-accent) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#f59e0b" data-target="AccentColor" />
+                            <input asp-for="AccentColor" class="form-control font-monospace" placeholder="#f59e0b" />
+                        </div>
+                        <span asp-validation-for="AccentColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Arka Plan (--pm-bg) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#f8fafc" data-target="BackgroundColor" />
+                            <input asp-for="BackgroundColor" class="form-control font-monospace" placeholder="#f8fafc" />
+                        </div>
+                        <span asp-validation-for="BackgroundColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Yüzey (--pm-surface) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#ffffff" data-target="SurfaceColor" />
+                            <input asp-for="SurfaceColor" class="form-control font-monospace" placeholder="#ffffff" />
+                        </div>
+                        <span asp-validation-for="SurfaceColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Metin (--pm-text) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#1e293b" data-target="TextColor" />
+                            <input asp-for="TextColor" class="form-control font-monospace" placeholder="#1e293b" />
+                        </div>
+                        <span asp-validation-for="TextColor" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Soluk Metin (--pm-muted) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#64748b" data-target="MutedColor" />
+                            <input asp-for="MutedColor" class="form-control font-monospace" placeholder="#64748b" />
+                        </div>
+                        <span asp-validation-for="MutedColor" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">Stil</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Köşe Yarıçapı (--pm-radius) <span class="text-danger">*</span></label>
+                        <input asp-for="BorderRadius" class="form-control font-monospace" placeholder="24px" />
+                        <span asp-validation-for="BorderRadius" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Sıra</label>
+                        <input asp-for="SortOrder" type="number" class="form-control" placeholder="0" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check mb-2">
+                            <input asp-for="IsDefault" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsDefault" class="form-check-label fw-semibold">Varsayılan Tasarım</label>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold small">Arka Plan Gradyanı (--pm-header-gradient) <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="BackgroundGradient" class="form-control font-monospace" placeholder="linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Önizleme Görseli URL <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="PreviewImageUrl" class="form-control" placeholder="https://..." />
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-2"></i>Oluştur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="horizon-card sticky-top" style="top: 80px;">
+            <h6 class="fw-bold mb-3">Canlı Önizleme</h6>
+            <div id="livePreview" style="border-radius:16px; overflow:hidden; border:2px solid #688745;">
+                <div id="prev-header" style="background:#688745; padding:16px;">
+                    <div class="fw-bold text-white mb-1">Şirket Adı</div>
+                    <div style="color:rgba(255,255,255,.8); font-size:13px;">Dükkan Adı</div>
+                </div>
+                <div id="prev-body" style="background:#f8fafc; padding:16px;">
+                    <div id="prev-category" style="background:#ffffff; border-radius:12px; padding:12px; margin-bottom:12px;">
+                        <div id="prev-category-title" style="font-weight:600; color:#1e293b; margin-bottom:4px;">Kategori Başlığı</div>
+                        <div id="prev-muted" style="font-size:12px; color:#64748b;">3 ürün</div>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border-radius:12px; padding:10px 12px;">
+                        <div>
+                            <div id="prev-product-title" style="font-weight:600; color:#1e293b; font-size:14px;">Ürün Adı</div>
+                            <div id="prev-price" style="font-size:13px; color:#64748b;">49,90 ₺</div>
+                        </div>
+                        <span id="prev-btn" style="background:#688745; color:#fff; border-radius:24px; padding:6px 14px; font-size:12px; font-weight:600;">Ekle</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Slug auto-generation from Name
+        document.getElementById('nameInput').addEventListener('input', function () {
+            const slug = this.value
+                .toLowerCase()
+                .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('slugInput').value = slug;
+        });
+
+        // Color picker ↔ text input sync
+        document.querySelectorAll('.color-trigger').forEach(picker => {
+            const targetName = picker.dataset.target;
+            const textInput = document.querySelector(`input[name="${targetName}"]`);
+            if (!textInput) return;
+
+            // Init picker from text input value
+            if (textInput.value) {
+                const hex = textInput.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(hex)) picker.value = hex;
+            }
+
+            picker.addEventListener('input', () => {
+                textInput.value = picker.value;
+                updatePreview();
+            });
+
+            textInput.addEventListener('input', () => {
+                const hex = textInput.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(hex)) picker.value = hex;
+                updatePreview();
+            });
+        });
+
+        function getVal(name) {
+            return document.querySelector(`input[name="${name}"]`)?.value || '';
+        }
+
+        function updatePreview() {
+            const primary = getVal('PrimaryColor') || '#688745';
+            const bg = getVal('BackgroundColor') || '#f8fafc';
+            const surface = getVal('SurfaceColor') || '#ffffff';
+            const text = getVal('TextColor') || '#1e293b';
+            const muted = getVal('MutedColor') || '#64748b';
+            const radius = document.querySelector('input[name="BorderRadius"]')?.value || '24px';
+
+            document.getElementById('livePreview').style.borderColor = primary;
+            document.getElementById('prev-header').style.background = primary;
+            document.getElementById('prev-body').style.background = bg;
+            document.getElementById('prev-category').style.background = surface;
+            document.getElementById('prev-category').style.borderRadius = radius;
+            document.getElementById('prev-category-title').style.color = text;
+            document.getElementById('prev-muted').style.color = muted;
+            document.getElementById('prev-product-title').style.color = text;
+            document.getElementById('prev-price').style.color = muted;
+            document.getElementById('prev-btn').style.background = primary;
+            document.getElementById('prev-btn').style.borderRadius = radius;
+        }
+
+        document.querySelector('input[name="BorderRadius"]').addEventListener('input', updatePreview);
+        updatePreview();
+    </script>
+}
