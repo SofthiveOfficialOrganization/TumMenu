@@ -19,7 +19,22 @@ public sealed class CreateMenuDesignCommand : IRequest<MenuDesign>, ITransaction
     [Required] public string MutedColor { get; set; } = null!;
     [Required] public string BorderRadius { get; set; } = "24px";
     public string? BackgroundGradient { get; set; }
+    public string? BackgroundImageUrl { get; set; }
     public string? PreviewImageUrl { get; set; }
+    public string? HeaderBackgroundColor { get; set; }
+    public string? HeaderTextColor { get; set; }
+    public string ButtonStyle { get; set; } = "solid";
+    public string? CardShadow { get; set; }
+    public string? CardBorderColor { get; set; }
+    public string? CardImageBorderRadius { get; set; }
+    public string? FooterBackgroundColor { get; set; }
+    public string? FooterTextColor { get; set; }
+    public string? FooterButtonColor { get; set; }
+    public string? FooterButtonStyle { get; set; }
+    public string? FontFamily { get; set; }
+    public string? HeadingFontFamily { get; set; }
+    public string? HeadingFontSize { get; set; }
+    public string? SubheadingFontSize { get; set; }
     public bool IsDefault { get; set; }
     public int SortOrder { get; set; }
 
@@ -46,7 +61,22 @@ public class CreateMenuDesignHandler(
             MutedColor = req.MutedColor,
             BorderRadius = req.BorderRadius,
             BackgroundGradient = req.BackgroundGradient,
+            BackgroundImageUrl = req.BackgroundImageUrl,
             PreviewImageUrl = req.PreviewImageUrl,
+            HeaderBackgroundColor = req.HeaderBackgroundColor,
+            HeaderTextColor = req.HeaderTextColor,
+            ButtonStyle = req.ButtonStyle,
+            CardShadow = req.CardShadow,
+            CardBorderColor = req.CardBorderColor,
+            CardImageBorderRadius = req.CardImageBorderRadius,
+            FooterBackgroundColor = req.FooterBackgroundColor,
+            FooterTextColor = req.FooterTextColor,
+            FooterButtonColor = req.FooterButtonColor,
+            FooterButtonStyle = req.FooterButtonStyle,
+            FontFamily = req.FontFamily,
+            HeadingFontFamily = req.HeadingFontFamily,
+            HeadingFontSize = req.HeadingFontSize,
+            SubheadingFontSize = req.SubheadingFontSize,
             IsDefault = req.IsDefault,
             SortOrder = req.SortOrder
         };

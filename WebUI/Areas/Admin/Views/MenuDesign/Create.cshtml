@@ -103,8 +103,12 @@
                         <span asp-validation-for="BorderRadius" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold small">Sıra</label>
-                        <input asp-for="SortOrder" type="number" class="form-control" placeholder="0" />
+                        <label class="form-label fw-semibold small">Tuş Stili</label>
+                        <select asp-for="ButtonStyle" class="form-select">
+                            <option value="solid">Dolu (Solid)</option>
+                            <option value="outline">Çerçeveli (Outline)</option>
+                            <option value="ghost">Şeffaf (Ghost)</option>
+                        </select>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check mb-2">
@@ -113,12 +117,111 @@
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <label class="form-label fw-semibold small">Arka Plan Gradyanı (--pm-header-gradient) <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <label class="form-label fw-semibold small">Header Gradyanı (--pm-header-gradient) <span class="text-muted fw-normal">isteğe bağlı</span></label>
                         <input asp-for="BackgroundGradient" class="form-control font-monospace" placeholder="linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Arka Plan Görseli URL <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="BackgroundImageUrl" class="form-control" placeholder="https://..." />
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold small">Önizleme Görseli URL <span class="text-muted fw-normal">isteğe bağlı</span></label>
                         <input asp-for="PreviewImageUrl" class="form-control" placeholder="https://..." />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Sıra</label>
+                        <input asp-for="SortOrder" type="number" class="form-control" placeholder="0" />
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">Menü Üst Kısım (Header)</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Header Arka Plan <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#688745" data-target="HeaderBackgroundColor" />
+                            <input asp-for="HeaderBackgroundColor" class="form-control font-monospace" placeholder="Ana renkle aynı" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Header Metin Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#ffffff" data-target="HeaderTextColor" />
+                            <input asp-for="HeaderTextColor" class="form-control font-monospace" placeholder="#ffffff" />
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">İçerik Kartları</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Kart Kenarlık Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#e2e8f0" data-target="CardBorderColor" />
+                            <input asp-for="CardBorderColor" class="form-control font-monospace" placeholder="#e2e8f0" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Kart Gölgesi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="CardShadow" class="form-control font-monospace" placeholder="0 2px 8px rgba(0,0,0,.08)" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Kart Görsel Köşe Yarıçapı <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="CardImageBorderRadius" class="form-control font-monospace" placeholder="12px" />
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">Footer</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Footer Arka Plan <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#1e293b" data-target="FooterBackgroundColor" />
+                            <input asp-for="FooterBackgroundColor" class="form-control font-monospace" placeholder="#1e293b" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Footer Metin Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#ffffff" data-target="FooterTextColor" />
+                            <input asp-for="FooterTextColor" class="form-control font-monospace" placeholder="#ffffff" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Footer Tuş Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color color-trigger" value="#688745" data-target="FooterButtonColor" />
+                            <input asp-for="FooterButtonColor" class="form-control font-monospace" placeholder="Ana renkle aynı" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Footer Tuş Stili <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <select asp-for="FooterButtonStyle" class="form-select">
+                            <option value="">Genel tuş stiliyle aynı</option>
+                            <option value="solid">Dolu (Solid)</option>
+                            <option value="outline">Çerçeveli (Outline)</option>
+                            <option value="ghost">Şeffaf (Ghost)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary text-uppercase small mb-3">Tipografi</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Genel Yazı Tipi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="FontFamily" class="form-control font-monospace" placeholder="Inter, sans-serif" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Başlık Yazı Tipi <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="HeadingFontFamily" class="form-control font-monospace" placeholder="Genel yazı tipiyle aynı" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small">Ana Başlık Boyutu <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="HeadingFontSize" class="form-control font-monospace" placeholder="2rem" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small">Alt Başlık Boyutu <span class="text-muted fw-normal">isteğe bağlı</span></label>
+                        <input asp-for="SubheadingFontSize" class="form-control font-monospace" placeholder="1.25rem" />
                     </div>
                 </div>
 
