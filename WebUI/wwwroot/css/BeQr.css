@@ -137,45 +137,26 @@
 }
 
 .qr-hero__title {
-    font-size: 36px;
+    font-size: clamp(44px, 7vw, 88px);
     font-weight: 800;
-    line-height: 1.1;
-    margin: 0 0 16px;
-    display: flex;
-    flex-direction: column;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: 0 0 24px;
+    color: var(--wte-ink);
 }
 
-@media (min-width: 768px) {
-    .qr-hero__title {
-        font-size: 48px;
-    }
-}
-
-.qr-hero__title-line {
+.qr-hero__title span {
     display: block;
-}
-
-.qr-hero__title-line--gradient {
-    background: linear-gradient(to right, #fff, #ffd700, #fff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer 3s linear infinite;
-}
-
-@keyframes shimmer {
-    to {
-        background-position: 200% center;
-    }
+    color: var(--color-bg);
 }
 
 .qr-hero__subtitle {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 18px;
+    line-height: 1.65;
     margin: 0 0 24px;
-    opacity: 0.95;
-    max-width: 540px;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+    max-width: 480px;
 }
 
 .qr-hero--qrflow .qr-hero__subtitle {
@@ -892,10 +873,6 @@
 @media (max-width: 768px) {
     .qr-hero {
         padding: 60px 0 80px;
-    }
-
-    .qr-hero__title {
-        font-size: 36px;
     }
 
     .qr-hero__qr-container {

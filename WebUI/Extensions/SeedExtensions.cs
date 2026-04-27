@@ -8,6 +8,8 @@ namespace WebUI.Extensions;
 
 public static class SeedExtensions
 {
+
+
     public static async Task SeedAdminAsync(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
@@ -17,6 +19,7 @@ public static class SeedExtensions
 
         await SeedSystemSettingsAsync(db);
         await SeedBlogPostsAsync(db);
+        await SeedMenuDesignsAsync(db);
 
         string adminEmail = "yonetim@softhive.com";
         string adminPassword = "SoftHive123!";
@@ -50,6 +53,67 @@ public static class SeedExtensions
         {
             await userManager.AddToRoleAsync(admin, adminRole);
         }
+    }
+
+    private static async Task SeedMenuDesignsAsync(ApplicationDbContext db)
+    {
+        var seedDesigns = MenuDesignSeedData.GetDesigns();
+        var existingDesigns = await db.MenuDesigns
+            .ToListAsync();
+        var existingSlugs = existingDesigns
+            .Select(d => d.Slug)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var toAdd = seedDesigns
+            .Where(d => !existingSlugs.Contains(d.Slug))
+            .ToList();
+        var hasUpdates = false;
+
+        foreach (var existing in existingDesigns)
+        {
+            var seed = seedDesigns.FirstOrDefault(d =>
+                string.Equals(d.Slug, existing.Slug, StringComparison.OrdinalIgnoreCase));
+
+            if (seed is null)
+            {
+                continue;
+            }
+
+            if (ShouldUpdateSeededAsset(
+                existing.BackgroundImageUrl,
+                seed.BackgroundImageUrl))
+            {
+                existing.BackgroundImageUrl = seed.BackgroundImageUrl;
+                hasUpdates = true;
+            }
+
+            if (ShouldUpdateSeededAsset(
+                existing.PreviewImageUrl,
+                seed.PreviewImageUrl))
+            {
+                existing.PreviewImageUrl = seed.PreviewImageUrl;
+                hasUpdates = true;
+            }
+        }
+
+        if (toAdd.Count > 0 || hasUpdates)
+        {
+            db.MenuDesigns.AddRange(toAdd);
+            await db.SaveChangesAsync();
+        }
+    }
+
+    private static bool ShouldUpdateSeededAsset(
+        string? current,
+        string? seeded)
+    {
+        if (string.IsNullOrWhiteSpace(seeded))
+        {
+            return false;
+        }
+
+        return string.IsNullOrWhiteSpace(current) ||
+            current.StartsWith("https://images.unsplash.com/", StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task SeedBlogPostsAsync(ApplicationDbContext db)

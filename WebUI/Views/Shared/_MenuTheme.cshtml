@@ -1,21 +1,170 @@
 @using Application.MenuDesigns.DTOs
 @model MenuDesignDTO
+@{
+    string? googleFontsUrl = null;
+    if (Model is not null)
+    {
+        Func<string?, string?> extractFontName = f => f?.Split(',').FirstOrDefault()?.Trim();
+        Func<string?, bool> isGeneric = n =>
+            n is null || n == "sans-serif" || n == "serif" || n == "monospace" || n == "cursive" || n == "fantasy";
+
+        var bodyFont    = extractFontName(Model.FontFamily);
+        var headingFont = extractFontName(Model.HeadingFontFamily);
+
+        var families = new List<string>();
+        if (!isGeneric(bodyFont))
+            families.Add(Uri.EscapeDataString(bodyFont!) + ":wght@300;400;500;600;700;800");
+        if (!isGeneric(headingFont) && headingFont != bodyFont)
+            families.Add(Uri.EscapeDataString(headingFont!) + ":wght@400;700");
+
+        if (families.Count > 0)
+            googleFontsUrl = "https://fonts.googleapis.com/css2?" +
+                string.Join("&", families.Select(f => "family=" + f)) +
+                "&display=swap";
+    }
+
+    string normalizeStyle(string? style) => style?.Trim().ToLowerInvariant() switch
+    {
+        "outline" => "outline",
+        "ghost" => "ghost",
+        _ => "solid"
+    };
+
+    string buttonStyle = Model is null ? "solid" : normalizeStyle(Model.ButtonStyle);
+    string footerButtonStyle = Model is null ? "solid" : normalizeStyle(Model.FooterButtonStyle ?? Model.ButtonStyle);
+    string? normalizeBackgroundImageUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return null;
+
+        var trimmed = url.Trim();
+        return trimmed.StartsWith("~/", StringComparison.Ordinal)
+            ? Url.Content(trimmed)
+            : trimmed;
+    }
+
+    string escapeCssUrl(string url) => url
+        .Replace("\\", "\\\\")
+        .Replace("'", "\\'")
+        .Replace("\r", "")
+        .Replace("\n", "");
+
+    var backgroundImageUrl = normalizeBackgroundImageUrl(Model?.BackgroundImageUrl);
+    var backgroundImageCss = backgroundImageUrl is null
+        ? "none"
+        : $"url('{escapeCssUrl(backgroundImageUrl)}')";
+}
 @if (Model is not null)
 {
+    @if (googleFontsUrl is not null)
+    {
+        <link rel="stylesheet" href="@googleFontsUrl" />
+    }
     <style>
         :root {
-            --pm-brand:      @Model.PrimaryColor;
-            --pm-brand-dark: @Model.PrimaryDarkColor;
-            --pm-accent:     @Model.AccentColor;
-            --pm-bg:         @Model.BackgroundColor;
-            --pm-surface:    @Model.SurfaceColor;
-            --pm-text:       @Model.TextColor;
-            --pm-muted:      @Model.MutedColor;
-            --pm-radius:     @Model.BorderRadius;
-            @if (!string.IsNullOrEmpty(Model.BackgroundGradient))
+            --pm-brand:         @Model.PrimaryColor;
+            --pm-brand-dark:    @Model.PrimaryDarkColor;
+            --pm-accent:        @Model.AccentColor;
+            --pm-bg:            @Model.BackgroundColor;
+            --pm-surface:       @Model.SurfaceColor;
+            --pm-surface-solid: @Model.SurfaceColor;
+            --pm-text:          @Model.TextColor;
+            --pm-muted:         @Model.MutedColor;
+            --pm-radius:        @Model.BorderRadius;
+            --pm-header-bg:     @(Model.HeaderBackgroundColor ?? Model.PrimaryColor);
+            --pm-header-gradient: @(Model.BackgroundGradient ?? "linear-gradient(135deg, var(--pm-header-bg) 0%, var(--pm-brand-dark) 100%)");
+            --pm-header-text:   @(Model.HeaderTextColor ?? "#ffffff");
+            --pm-bg-image:      @Html.Raw(backgroundImageCss);
+            --pm-footer-bg:     @(Model.FooterBackgroundColor ?? Model.PrimaryDarkColor);
+            --pm-footer-text:   @(Model.FooterTextColor ?? "#ffffff");
+            --pm-footer-button: @(Model.FooterButtonColor ?? Model.AccentColor);
+            --pm-button-bg:     @(buttonStyle == "solid" ? "var(--pm-brand)" : "transparent");
+            --pm-button-text:   @(buttonStyle == "solid" ? "#ffffff" : "var(--pm-brand)");
+            --pm-button-border: @(buttonStyle == "ghost" ? "transparent" : "var(--pm-brand)");
+            --pm-button-hover-bg: @(buttonStyle == "solid" ? "var(--pm-brand-dark)" : "color-mix(in srgb, var(--pm-brand) 10%, transparent)");
+            --pm-footer-button-bg: @(footerButtonStyle == "solid" ? "var(--pm-footer-button)" : "transparent");
+            --pm-footer-button-text: @(footerButtonStyle == "solid" ? "#ffffff" : "var(--pm-footer-button)");
+            --pm-footer-button-border: @(footerButtonStyle == "ghost" ? "transparent" : "var(--pm-footer-button)");
+            --pm-footer-button-hover-bg: @(footerButtonStyle == "solid" ? "color-mix(in srgb, var(--pm-footer-button) 82%, #000000)" : "color-mix(in srgb, var(--pm-footer-button) 14%, transparent)");
+            @if (!string.IsNullOrEmpty(Model.CardShadow))
             {
-                <text>--pm-header-gradient: @Model.BackgroundGradient;</text>
+                <text>--pm-shadow: @Model.CardShadow;</text>
             }
+            @if (!string.IsNullOrEmpty(Model.CardBorderColor))
+            {
+                <text>--pm-border: @Model.CardBorderColor;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.CardImageBorderRadius))
+            {
+                <text>--pm-card-img-radius: @Model.CardImageBorderRadius;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.FontFamily))
+            {
+                <text>--pm-font: @Model.FontFamily;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.HeadingFontFamily))
+            {
+                <text>--pm-heading-font: @Model.HeadingFontFamily;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.HeadingFontSize))
+            {
+                <text>--pm-heading-size: @Model.HeadingFontSize;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.SubheadingFontSize))
+            {
+                <text>--pm-subheading-size: @Model.SubheadingFontSize;</text>
+            }
+        }
+
+        .site-header {
+            background-image: var(--pm-header-gradient);
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-size: 100vw var(--pm-header-hero-gradient-height);
+            color: var(--pm-header-text);
+        }
+
+        .site-header__logo,
+        .site-header__nav-link,
+        .site-header__mobile-link {
+            color: var(--pm-header-text);
+        }
+
+        .site-header__nav {
+            background: color-mix(in srgb, var(--pm-header-text) 16%, transparent);
+        }
+
+        .site-header__nav-link:hover,
+        .site-header__mobile-link:hover {
+            color: var(--pm-header-text);
+            background: color-mix(in srgb, var(--pm-header-text) 12%, transparent);
+        }
+
+        .btn--header {
+            background: var(--pm-footer-button-bg);
+            border: 1px solid var(--pm-footer-button-border);
+            color: var(--pm-footer-button-text);
+        }
+
+        .btn--header:hover {
+            background: var(--pm-footer-button-hover-bg);
+            color: var(--pm-footer-button-text);
+        }
+
+        .site-header__burger {
+            border-color: color-mix(in srgb, var(--pm-header-text) 42%, transparent);
+            color: var(--pm-header-text);
+        }
+
+        .site-header__burger[aria-expanded="true"],
+        .site-header__mobile-inner {
+            background: var(--pm-brand-dark);
+        }
+
+        .site-header__burger-lines,
+        .site-header__burger-lines::before,
+        .site-header__burger-lines::after {
+            background-color: var(--pm-header-text);
         }
     </style>
 }

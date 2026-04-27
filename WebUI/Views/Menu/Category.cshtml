@@ -8,6 +8,8 @@
         ? $"/{Model.CompanySlug}/{Model.StoreSlug}" 
         : $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.ParentCategorySlug}";
     var backLabel = string.IsNullOrEmpty(Model.ParentCategorySlug) ? "Menüye Dön" : "Geri Dön";
+    var productCount = Model.Products?.Count ?? 0;
+    var subCategoryCount = Model.SubCategories?.Count ?? 0;
 }
 
 @section Head {
@@ -17,43 +19,55 @@
 
 <div class="pm-wrapper">
     <main class="pm-main">
+        <div class="pm-shell">
+            <header class="pm-hero">
+                <div class="pm-hero-inner">
+                    <div class="pm-hero-actions">
+                        <a href="@backUrl" class="pm-back-link">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg>
+                            <span>@backLabel</span>
+                        </a>
+                    </div>
 
-        <!-- HERO HEADER -->
-        <header class="pm-header">
-            <div class="pm-header-bg"></div>
-            <div class="pm-header-content">
-                <p class="pm-company">@Model.CompanyName</p>
-                <h1 class="pm-store">@Model.StoreName</h1>
-                <p class="pm-subtitle">@Model.CategoryTitle</p>
-            </div>
-        </header>
+                    <div class="pm-hero-main">
+                        <p class="pm-eyebrow">@Model.CompanyName / @Model.StoreName</p>
+                        <h1 class="pm-store">@Model.CategoryTitle</h1>
+                        @if (!string.IsNullOrEmpty(Model.CategoryDescription))
+                        {
+                            <p class="pm-subtitle">@Model.CategoryDescription</p>
+                        }
+                    </div>
 
-        <div class="pm-content-area">
-
-            <div class="pm-view active">
-                <div class="pm-view-header">
-                    <a href="@backUrl" class="pm-btn-back">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                        </svg>
-                        <span>@backLabel</span>
-                    </a>
+                    <div class="pm-meta-row" aria-label="Kategori özeti">
+                        @if (subCategoryCount > 0)
+                        {
+                            <span class="pm-stat">
+                                <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                                @subCategoryCount alt kategori
+                            </span>
+                        }
+                        <span class="pm-stat">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-tag")"></use></svg>
+                            @productCount ürün
+                        </span>
+                    </div>
                 </div>
+            </header>
 
-                <!-- Category Top Ad - Show to all visitors for approval -->
+            <div class="pm-content-area">
                 @await Component.InvokeAsync("Ad", new { slotKey = "category_top" })
-
-                <h2 class="pm-view-title mb-2">@Model.CategoryTitle</h2>
-
-                @if (!string.IsNullOrEmpty(Model.CategoryDescription))
-                {
-                    <p class="pm-cat-desc">@Model.CategoryDescription</p>
-                }
 
                 @if (Model.SubCategories != null && Model.SubCategories.Count > 0)
                 {
-                    <div class="mb-5">
-                        <h4 class="pm-section-title mb-4">Alt Kategoriler</h4>
+                    <section class="pm-panel pm-panel--spacious">
+                        <div class="pm-section-head">
+                            <div>
+                                <h2 class="pm-section-title">Alt Kategoriler</h2>
+                                @* <p class="pm-section-note">Bu bölümdeki alt başlıklara göz at.</p> *@
+                            </div>
+                            @* <span class="pm-count-pill">@subCategoryCount kategori</span> *@
+                        </div>
+
                         <div class="pm-category-grid">
                             @foreach (var subCat in Model.SubCategories)
                             {
@@ -86,62 +100,88 @@
                                     </div>
                                     <div class="pm-cat-card-info">
                                         <h3 class="pm-cat-card-title">@subCat.Title</h3>
-                                        <span class="pm-cat-card-count">@subCat.ProductCount ürün</span>
+                                        <div class="pm-card-footer">
+                                            <span class="pm-cat-card-count">@subCat.ProductCount ürün</span>
+                                            <span class="pm-card-arrow" aria-hidden="true">
+                                                <svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg>
+                                            </span>
+                                        </div>
                                     </div>
                                 </a>
                             }
                         </div>
-                    </div>
+                    </section>
                 }
 
                 @if (Model.Products != null && Model.Products.Count > 0)
                 {
-                    <h4 class="pm-section-title mb-4">Ürünler</h4>
-                    <div class="pm-product-list">
-                        @{ int productCounter = 0; }
-                        @foreach (var product in Model.Products)
-                        {
-                            productCounter++;
-                            var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
-                            <a href="@productUrl" class="pm-product-card">
-                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                    <section class="pm-panel pm-panel--spacious">
+                        <div class="pm-section-head">
+                            <div>
+                                <h2 class="pm-section-title">Ürünler</h2>
+                                <p class="pm-section-note">@Model.CategoryTitle içindeki seçenekler.</p>
+                            </div>
+                            <span class="pm-count-pill">@productCount ürün</span>
+                        </div>
+
+                        <div class="pm-product-list">
+                            @{ int productCounter = 0; }
+                            @foreach (var product in Model.Products)
+                            {
+                                productCounter++;
+                                var productUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}/{product.Slug}";
+                                <a href="@productUrl" class="pm-product-card">
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                    {
+                                        <div class="pm-product-img-wrap">
+                                            <img src="@product.ImageUrl" alt="@product.Title" class="pm-product-img" loading="lazy" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="pm-product-img-placeholder" aria-hidden="true">
+                                            <svg class="tm-icon tm-icon--xl"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg>
+                                        </div>
+                                    }
+                                    <div class="pm-product-content">
+                                        <div class="pm-product-header">
+                                            <h3 class="pm-product-title">@product.Title</h3>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(product.Description))
+                                        {
+                                            <p class="pm-product-desc">@product.Description</p>
+                                        }
+                                        <div class="pm-product-badges">
+                                            @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
+                                            @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
+                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
+                                        </div>
+                                    </div>
+                                    <div class="pm-product-side">
+                                        <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
+                                        <span class="pm-card-arrow" aria-hidden="true">
+                                            <svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg>
+                                        </span>
+                                    </div>
+                                </a>
+
+                                if (productCounter % 5 == 0 && productCounter < Model.Products.Count)
                                 {
-                                    <div class="pm-product-img-wrap">
-                                        <img src="@product.ImageUrl" alt="@product.Title" class="pm-product-img" loading="lazy" />
+                                    <div class="pm-ad-in-feed">
+                                        @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
                                     </div>
                                 }
-                                <div class="pm-product-content">
-                                    <div class="pm-product-header">
-                                        <h3 class="pm-product-title">@product.Title</h3>
-                                        <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
-                                    </div>
-                                    @if (!string.IsNullOrEmpty(product.Description))
-                                    {
-                                        <p class="pm-product-desc">@product.Description</p>
-                                    }
-                                    <div class="pm-product-badges">
-                                        @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
-                                        @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
-                                        @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
-                                    </div>
-                                </div>
-                            </a>
-
-                            if (productCounter % 5 == 0 && productCounter < Model.Products.Count)
-                            {
-                                <div class="pm-ad-in-feed">
-                                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
-                                </div>
                             }
-                        }
-                    </div>
+                        </div>
+                    </section>
                 }
                 else if (Model.SubCategories == null || Model.SubCategories.Count == 0)
                 {
-                    <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
+                    <section class="pm-panel pm-panel--spacious">
+                        <div class="pm-empty-products">Bu kategoride henüz ürün yok.</div>
+                    </section>
                 }
             </div>
-
         </div>
     </main>
 </div>

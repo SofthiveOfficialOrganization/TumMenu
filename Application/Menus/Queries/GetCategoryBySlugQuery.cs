@@ -75,24 +75,7 @@ public class GetCategoryBySlugHandler(
 				CategoryId = c.Id,
 				CategoryDescription = c.CategoryLibraryItem.Description,
 				ParentCategorySlug = c.Parent != null ? c.Parent.CategoryLibraryItem.Slug : null,
-				MenuDesign = c.Menu.MenuDesign == null ? null : new MenuDesignDTO
-				{
-					Id = c.Menu.MenuDesign.Id,
-					Name = c.Menu.MenuDesign.Name,
-					Slug = c.Menu.MenuDesign.Slug,
-					PrimaryColor = c.Menu.MenuDesign.PrimaryColor,
-					PrimaryDarkColor = c.Menu.MenuDesign.PrimaryDarkColor,
-					AccentColor = c.Menu.MenuDesign.AccentColor,
-					BackgroundColor = c.Menu.MenuDesign.BackgroundColor,
-					SurfaceColor = c.Menu.MenuDesign.SurfaceColor,
-					TextColor = c.Menu.MenuDesign.TextColor,
-					MutedColor = c.Menu.MenuDesign.MutedColor,
-					BorderRadius = c.Menu.MenuDesign.BorderRadius,
-					BackgroundGradient = c.Menu.MenuDesign.BackgroundGradient,
-					PreviewImageUrl = c.Menu.MenuDesign.PreviewImageUrl,
-					IsDefault = c.Menu.MenuDesign.IsDefault,
-					SortOrder = c.Menu.MenuDesign.SortOrder
-				},
+				MenuDesign = c.Menu.MenuDesign == null ? null : c.Menu.MenuDesign.ToDto(),
 				Products = c.Products
 					.Where(p => p.IsActive)
 					.OrderBy(p => p.SortOrder)

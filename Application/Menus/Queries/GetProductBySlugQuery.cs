@@ -99,24 +99,7 @@ public class GetProductBySlugHandler(
 				.OrderBy(m => m.SortOrder)
 				.Select(m => m.MediaUrl)
 				.ToList(),
-			MenuDesign = menu.MenuDesign is null ? null : new MenuDesignDTO
-			{
-				Id = menu.MenuDesign.Id,
-				Name = menu.MenuDesign.Name,
-				Slug = menu.MenuDesign.Slug,
-				PrimaryColor = menu.MenuDesign.PrimaryColor,
-				PrimaryDarkColor = menu.MenuDesign.PrimaryDarkColor,
-				AccentColor = menu.MenuDesign.AccentColor,
-				BackgroundColor = menu.MenuDesign.BackgroundColor,
-				SurfaceColor = menu.MenuDesign.SurfaceColor,
-				TextColor = menu.MenuDesign.TextColor,
-				MutedColor = menu.MenuDesign.MutedColor,
-				BorderRadius = menu.MenuDesign.BorderRadius,
-				BackgroundGradient = menu.MenuDesign.BackgroundGradient,
-				PreviewImageUrl = menu.MenuDesign.PreviewImageUrl,
-				IsDefault = menu.MenuDesign.IsDefault,
-				SortOrder = menu.MenuDesign.SortOrder
-			}
+			MenuDesign = menu.MenuDesign?.ToDto()
 		};
 	}
 }

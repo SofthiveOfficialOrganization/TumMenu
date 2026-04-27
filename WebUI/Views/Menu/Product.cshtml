@@ -5,6 +5,8 @@
     ViewData["Description"] = $"{Model.StoreName} – {Model.ProductTitle}";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var backUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}";
+    var backHref = backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : "");
+    var hasImages = Model.ImageUrls.Count > 0;
 }
 
 @section Head {
@@ -14,76 +16,79 @@
 
 <div class="pm-wrapper">
     <main class="pm-main">
+        <div class="pm-shell">
+            <header class="pm-hero">
+                <div class="pm-hero-inner">
+                    <div class="pm-hero-actions">
+                        <a href="@backHref" class="pm-back-link">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg>
+                            <span>Geri Dön</span>
+                        </a>
+                    </div>
 
-        <!-- HERO HEADER -->
-        <header class="pm-header">
-            <div class="pm-header-bg"></div>
-            <div class="pm-header-content">
-                <p class="pm-company">@Model.CompanyName</p>
-                <h1 class="pm-store">@Model.StoreName</h1>
-                <p class="pm-subtitle">@Model.CategoryTitle</p>
-            </div>
-        </header>
-
-        <div class="pm-content-area">
-
-            <div class="pm-view active">
-                <div class="pm-view-header">
-                    <a href="@(backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : ""))" class="pm-btn-back">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                        </svg>
-                        <span>Geri Dön</span>
-                    </a>
+                    <div class="pm-hero-main">
+                        <p class="pm-eyebrow">@Model.CompanyName / @Model.StoreName</p>
+                        <h1 class="pm-store">@Model.CategoryTitle</h1>
+                        <p class="pm-subtitle">@Model.ProductTitle</p>
+                    </div>
                 </div>
+            </header>
 
+            <div class="pm-content-area">
                 @if (ViewBag.IsQrSource == true)
                 {
                     @await Component.InvokeAsync("Ad", new { slotKey = "product_top" })
                 }
 
-                <!-- Ürün Görselleri -->
-                @if (Model.ImageUrls.Count > 0)
-                {
-                    <div class="pm-product-detail-gallery">
-                        @foreach (var imgUrl in Model.ImageUrls)
-                        {
-                            <img src="@imgUrl" alt="@Model.ProductTitle" class="pm-product-detail-img" loading="lazy" />
-                        }
-                    </div>
-                }
-
-                <!-- Ürün Bilgileri -->
-                <div class="pm-product-detail-body">
-                    <div class="pm-product-detail-header">
-                        <h1 class="pm-product-detail-title">@Model.ProductTitle</h1>
-                        <span class="pm-product-price pm-product-price--lg">@Model.BasePrice.ToString("N2") ₺</span>
-                    </div>
-
-                    @if (!string.IsNullOrEmpty(Model.ProductDescription))
+                <section class="pm-product-detail @(hasImages ? "" : "pm-product-detail--no-media")">
+                    @if (hasImages)
                     {
-                        <p class="pm-product-detail-desc">@Model.ProductDescription</p>
-                    }
-
-                    <div class="pm-product-badges mt-4">
-                        @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
-                        @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vejeteryan</span> }
-                        @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
-                        {
-                            <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
-                        }
-                    </div>
-
-                    @if (!string.IsNullOrEmpty(Model.Allergens))
-                    {
-                        <div class="pm-allergen-box">
-                            <span class="pm-badge pm-badge-allergen"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg> Alerjen Bilgisi</span>
-                            <p class="pm-allergen-text">@Model.Allergens</p>
+                        <div class="pm-product-detail-gallery">
+                            @foreach (var imgUrl in Model.ImageUrls)
+                            {
+                                <img src="@imgUrl" alt="@Model.ProductTitle" class="pm-product-detail-img" loading="lazy" />
+                            }
                         </div>
                     }
-                </div>
-            </div>
 
+                    <div class="pm-product-detail-body">
+                        <div class="pm-meta-row" aria-label="Ürün yolu">
+                            <span class="pm-count-pill">@Model.CategoryTitle</span>
+                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                            {
+                                <span class="pm-count-pill">@Model.EstimatedPreparationTimeInMinutes dk</span>
+                            }
+                        </div>
+
+                        <div class="pm-product-detail-header">
+                            <h1 class="pm-product-detail-title">@Model.ProductTitle</h1>
+                            <span class="pm-product-price pm-product-price--lg">@Model.BasePrice.ToString("N2") ₺</span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ProductDescription))
+                        {
+                            <p class="pm-product-detail-desc">@Model.ProductDescription</p>
+                        }
+
+                        <div class="pm-product-badges">
+                            @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
+                            @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vejeteryan</span> }
+                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                            {
+                                <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Allergens))
+                        {
+                            <div class="pm-allergen-box">
+                                <span class="pm-badge pm-badge-allergen"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg> Alerjen Bilgisi</span>
+                                <p class="pm-allergen-text">@Model.Allergens</p>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
         </div>
     </main>
 </div>

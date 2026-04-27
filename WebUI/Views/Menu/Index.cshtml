@@ -5,6 +5,7 @@
     var storeName = Model.StoreName ?? Model.Title;
     var companyName = Model.CompanyName ?? "";
     var categories = Model.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).ToList();
+    var totalProductCount = categories.Sum(c => c.Products.Count(p => p.IsActive));
     var companySlug = ViewContext.RouteData.Values["companySlug"]?.ToString() ?? "";
     var storeSlug = ViewContext.RouteData.Values["storeSlug"]?.ToString() ?? "";
 
@@ -20,89 +21,121 @@
 
 <div class="pm-wrapper">
     <main class="pm-main">
+        <div class="pm-shell">
+            <header class="pm-hero">
+                <div class="pm-hero-inner">
+                    <div class="pm-hero-main">
+                        @if (!string.IsNullOrWhiteSpace(companyName))
+                        {
+                            <p class="pm-eyebrow">@companyName</p>
+                        }
+                        <h1 class="pm-store">@storeName</h1>
+                        <p class="pm-subtitle">Menüde gezin, kategorileri karşılaştır ve aradığın lezzete hızlıca ulaş.</p>
+                    </div>
 
-        <!-- HERO HEADER -->
-        <header class="pm-header">
-            <div class="pm-header-bg"></div>
-            <div class="pm-header-content">
-                <p class="pm-company">@companyName</p>
-                <h1 class="pm-store">@storeName</h1>
-                <p class="pm-subtitle">Dijital Menü</p>
-            </div>
-        </header>
+                    <div class="pm-meta-row" aria-label="Menü özeti">
+                        <span class="pm-stat">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                            @categories.Count kategori
+                        </span>
+                        <span class="pm-stat">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-tag")"></use></svg>
+                            @totalProductCount ürün
+                        </span>
+                    </div>
+@* 
+                    @if (categories.Count > 0)
+                    {
+                        <nav class="pm-chip-row" aria-label="Kategoriler">
+                            @foreach (var cat in categories.Take(8))
+                            {
+                                var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
+                                <a href="@categoryUrl" class="pm-chip">@cat.CategoryLibraryItem.Title</a>
+                            }
+                        </nav>
+                    } *@
+                </div>
+            </header>
 
-        <div class="pm-content-area">
-
-            <!-- KATEGORİLER -->
-            <div class="pm-view active">
-                
-                <!-- Menu Top Ad - Show to all visitors for approval -->
+            <div class="pm-content-area">
                 @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
 
-                <h2 class="pm-view-title">Kategoriler</h2>
-
-                @if (categories.Count == 0)
-                {
-                    <div class="pm-empty">
-                        <span class="pm-empty-icon" aria-hidden="true">
-                            <svg class="tm-icon tm-icon--xl"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
-                        </span>
-                        <p>Henüz menüde kategori bulunmuyor.</p>
+                <section class="pm-panel pm-panel--spacious">
+                    <div class="pm-section-head">
+                        <div>
+                            <h2 class="pm-section-title">Kategoriler</h2>
+                            @* <p class="pm-section-note">İştahına göre bir bölüm seç.</p> *@
+                        </div>
+                        @* <span class="pm-count-pill">@categories.Count kategori</span> *@
                     </div>
-                }
-                else
-                {
-                    <div class="pm-category-grid">
-                        @{ int categoryCounter = 0; }
-                        @foreach (var cat in categories)
-                        {
-                            categoryCounter++;
-                            var productCount = cat.Products.Count(p => p.IsActive);
-                            var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
-                            <a href="@categoryUrl" class="pm-cat-card">
-                                <div class="pm-cat-card-photo">
-                                    @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.ImageUrl))
-                                    {
-                                        <img src="@cat.CategoryLibraryItem.ImageUrl" alt="@cat.CategoryLibraryItem.Title" loading="lazy" />
-                                    }
-                                    else
-                                    {
-                                        <div class="pm-cat-card-photo-placeholder">
-                                            @{
-                                                var iconKey = cat.CategoryLibraryItem.IconKey;
-                                                if (string.IsNullOrWhiteSpace(iconKey))
-                                                {
-                                                    <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
-                                                }
-                                                else if (iconKey.StartsWith("fa"))
-                                                {
-                                                    <i class="@iconKey" aria-hidden="true"></i>
-                                                }
-                                                else
-                                                {
-                                                    <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#{iconKey}")"></use></svg>
-                                                }
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                                <div class="pm-cat-card-info">
-                                    <h3 class="pm-cat-card-title">@cat.CategoryLibraryItem.Title</h3>
-                                    <span class="pm-cat-card-count">@productCount ürün</span>
-                                </div>
-                            </a>
 
-                            if (categoryCounter % 4 == 0 && categoryCounter < categories.Count)
+                    @if (categories.Count == 0)
+                    {
+                        <div class="pm-empty">
+                            <span class="pm-empty-icon" aria-hidden="true">
+                                <svg class="tm-icon tm-icon--xl"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                            </span>
+                            <p>Henüz menüde kategori bulunmuyor.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="pm-category-grid">
+                            @{ int categoryCounter = 0; }
+                            @foreach (var cat in categories)
                             {
-                                <div class="pm-ad-in-feed" style="grid-column: 1 / -1;">
-                                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
-                                </div>
-                            }
-                        }
-                    </div>
-                }
-            </div>
+                                categoryCounter++;
+                                var productCount = cat.Products.Count(p => p.IsActive);
+                                var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
+                                <a href="@categoryUrl" class="pm-cat-card">
+                                    <div class="pm-cat-card-photo">
+                                        @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.ImageUrl))
+                                        {
+                                            <img src="@cat.CategoryLibraryItem.ImageUrl" alt="@cat.CategoryLibraryItem.Title" loading="lazy" />
+                                        }
+                                        else
+                                        {
+                                            <div class="pm-cat-card-photo-placeholder">
+                                                @{
+                                                    var iconKey = cat.CategoryLibraryItem.IconKey;
+                                                    if (string.IsNullOrWhiteSpace(iconKey))
+                                                    {
+                                                        <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
+                                                    }
+                                                    else if (iconKey.StartsWith("fa"))
+                                                    {
+                                                        <i class="@iconKey" aria-hidden="true"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#{iconKey}")"></use></svg>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="pm-cat-card-info">
+                                        <h3 class="pm-cat-card-title">@cat.CategoryLibraryItem.Title</h3>
+                                        <div class="pm-card-footer">
+                                            <span class="pm-cat-card-count">@productCount ürün</span>
+                                            <span class="pm-card-arrow" aria-hidden="true">
+                                                <svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
 
+                                if (categoryCounter % 4 == 0 && categoryCounter < categories.Count)
+                                {
+                                    <div class="pm-ad-in-feed">
+                                        @await Component.InvokeAsync("Ad", new { slotKey = "menu_in_feed" })
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </section>
+            </div>
         </div>
     </main>
 </div>

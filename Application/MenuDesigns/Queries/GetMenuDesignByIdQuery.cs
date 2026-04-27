@@ -18,39 +18,6 @@ public class GetMenuDesignByIdHandler(
             .FirstOrDefaultAsync(x => x.Id == req.Id, ct)
             ?? throw new KeyNotFoundException("Tasarım bulunamadı.");
 
-        return new MenuDesignDTO
-        {
-            Id = d.Id,
-            Name = d.Name,
-            Slug = d.Slug,
-            Description = d.Description,
-            PrimaryColor = d.PrimaryColor,
-            PrimaryDarkColor = d.PrimaryDarkColor,
-            AccentColor = d.AccentColor,
-            BackgroundColor = d.BackgroundColor,
-            SurfaceColor = d.SurfaceColor,
-            TextColor = d.TextColor,
-            MutedColor = d.MutedColor,
-            BorderRadius = d.BorderRadius,
-            BackgroundGradient = d.BackgroundGradient,
-            BackgroundImageUrl = d.BackgroundImageUrl,
-            PreviewImageUrl = d.PreviewImageUrl,
-            HeaderBackgroundColor = d.HeaderBackgroundColor,
-            HeaderTextColor = d.HeaderTextColor,
-            ButtonStyle = d.ButtonStyle,
-            CardShadow = d.CardShadow,
-            CardBorderColor = d.CardBorderColor,
-            CardImageBorderRadius = d.CardImageBorderRadius,
-            FooterBackgroundColor = d.FooterBackgroundColor,
-            FooterTextColor = d.FooterTextColor,
-            FooterButtonColor = d.FooterButtonColor,
-            FooterButtonStyle = d.FooterButtonStyle,
-            FontFamily = d.FontFamily,
-            HeadingFontFamily = d.HeadingFontFamily,
-            HeadingFontSize = d.HeadingFontSize,
-            SubheadingFontSize = d.SubheadingFontSize,
-            IsDefault = d.IsDefault,
-            SortOrder = d.SortOrder
-        };
+        return d.ToDto();
     }
 }
