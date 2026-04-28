@@ -22,6 +22,124 @@
     var topTags = tagGroups.Select(g => g.Key).ToList();
 }
 
+@section Head {
+    <style>
+        .blog-topic-section {
+            max-width: 1180px;
+            margin: 0 auto 48px;
+            padding: 0 24px;
+        }
+
+        .blog-topic-heading {
+            margin-bottom: 18px;
+        }
+
+        .blog-topic-heading h2 {
+            color: var(--color-secondary-dark);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin-bottom: 8px;
+        }
+
+        .blog-topic-heading p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+            max-width: 780px;
+        }
+
+        .blog-topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .blog-topic-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 230px;
+            padding: 22px;
+            border-radius: 8px;
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .blog-topic-card h3 {
+            color: var(--color-secondary-dark);
+            font-size: 1.15rem;
+            margin: 0;
+        }
+
+        .blog-topic-card p {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .blog-topic-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .blog-topic-links a {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 7px 10px;
+            background: rgba(104, 135, 69, 0.1);
+            color: var(--color-primary);
+            font-size: 0.88rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .blog-resource-banner {
+            max-width: 1180px;
+            margin: 0 auto 48px;
+            padding: 0 24px;
+        }
+
+        .blog-resource-banner__inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: center;
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 24px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .blog-resource-banner h2 {
+            color: var(--color-secondary-dark);
+            font-size: 1.35rem;
+            margin: 0 0 8px;
+        }
+
+        .blog-resource-banner p {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .blog-resource-banner__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @@media (max-width: 820px) {
+            .blog-resource-banner__inner {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
 <main class="blog-page-main">
     @if (Model.Items.Any())
     {
@@ -54,6 +172,72 @@
                 </div>
             </section>
         }
+
+        <section class="blog-topic-section" aria-labelledby="blog-topic-heading">
+            <div class="blog-topic-heading">
+                <h2 id="blog-topic-heading">Konuya göre rehberler</h2>
+                <p>
+                    QR menüye geçiş, menü tasarımı, fiyatlandırma ve restoran pazarlaması üzerine yazıları
+                    ihtiyacınıza göre grupladık. Böylece yalnızca son yazılara değil, karar sürecinize en yakın
+                    rehberlere de hızlıca ulaşabilirsiniz.
+                </p>
+            </div>
+
+            <div class="blog-topic-grid">
+                <article class="blog-topic-card">
+                    <h3>QR Menüye Başlangıç</h3>
+                    <p>QR menünün çalışma mantığını, kağıt menüyle farklarını ve kurulum adımlarını öğrenin.</p>
+                    <div class="blog-topic-links">
+                        <a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a>
+                        <a href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">QR vs kağıt</a>
+                        <a href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">Kurulum</a>
+                    </div>
+                </article>
+
+                <article class="blog-topic-card">
+                    <h3>Menü Tasarımı ve İçerik</h3>
+                    <p>Ürün açıklaması, fotoğraf, kategori düzeni ve fiyatlandırma kararlarını daha bilinçli planlayın.</p>
+                    <div class="blog-topic-links">
+                        <a href="/blog/restoran-menusu-nasil-tasarlanir">Menü tasarımı</a>
+                        <a href="/blog/menu-fotograflari-dijital-menude-neden-onemlidir">Fotoğraf</a>
+                        <a href="/blog/restoran-menu-fiyatlandirma-stratejileri">Fiyatlandırma</a>
+                    </div>
+                </article>
+
+                <article class="blog-topic-card">
+                    <h3>İşletme ve Müşteri Deneyimi</h3>
+                    <p>Kafe, restoran ve çok şubeli işletmeler için dijital menünün operasyonel etkisini inceleyin.</p>
+                    <div class="blog-topic-links">
+                        <a href="/blog/restoranlar-neden-dijital-menuye-gecmeli">Neden dijital?</a>
+                        <a href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">Deneyim</a>
+                        <a href="/blog/kucuk-kafeler-icin-qr-menu-avantajlari">Küçük kafeler</a>
+                    </div>
+                </article>
+
+                <article class="blog-topic-card">
+                    <h3>Büyüme ve Pazarlama</h3>
+                    <p>Online siparişe hazırlık, sosyal medya menü tanıtımı ve restoran teknolojisi trendlerini keşfedin.</p>
+                    <div class="blog-topic-links">
+                        <a href="/blog/online-siparise-hazirlik-rehberi">Online sipariş</a>
+                        <a href="/blog/restoranlar-icin-sosyal-medya-menu-tanitimi">Sosyal medya</a>
+                        <a href="/blog/restoran-teknolojileri-trendleri">Trendler</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="blog-resource-banner" aria-labelledby="blog-resource-heading">
+            <div class="blog-resource-banner__inner">
+                <div>
+                    <h2 id="blog-resource-heading">Yazıları araçlarla destekleyin</h2>
+                    <p>QR menü kararınızı hızlandırmak için uygunluk testini çözebilir, kağıt menü baskı maliyetinizi hesaplayabilir ve kontrol listesini inceleyebilirsiniz.</p>
+                </div>
+                <div class="blog-resource-banner__actions">
+                    <a class="btn btn--primary" href="/restoran-kaynaklari">Kaynak merkezi</a>
+                    <a class="btn btn--ghost" href="/qr-menu-uygunluk-testi">Uygunluk testi</a>
+                </div>
+            </div>
+        </section>
 
         <!-- Content Grid & Sidebar -->
         <div class="blog-content-grid">

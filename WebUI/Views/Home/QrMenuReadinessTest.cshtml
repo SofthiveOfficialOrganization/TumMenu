@@ -1,0 +1,156 @@
+@{
+    ViewData["Title"] = "QR Menü Uygunluk Testi";
+    ViewData["Description"] = "Restoranınızın QR menüye geçiş için ne kadar hazır olduğunu ölçen ücretsiz uygunluk testi.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="readiness-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Ücretsiz değerlendirme aracı</p>
+            <h1 id="readiness-heading" class="resource-title">Restoranınız QR menüye hazır mı?</h1>
+            <p class="resource-lead">
+                Bu kısa test, işletmenizin menü güncelleme sıklığı, müşteri deneyimi, fotoğraf ihtiyacı ve operasyon
+                yapısına göre dijital menüye geçiş önceliğini anlamanıza yardımcı olur. Sonuçlar yönlendirme amaçlıdır;
+                herhangi bir bilgi sunucuya gönderilmez.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band" aria-labelledby="test-heading">
+        <div class="container">
+            <div class="tool-panel">
+                <h2 id="test-heading">Uygunluk testi</h2>
+                <form id="readinessForm" class="tool-form">
+                    <fieldset class="tool-question">
+                        <legend>Menü fiyatlarınız veya ürünleriniz ne sıklıkla değişiyor?</legend>
+                        <div class="tool-options">
+                            <label class="tool-option"><input type="radio" name="updates" value="3" required /> Ayda birkaç kez değişiyor.</label>
+                            <label class="tool-option"><input type="radio" name="updates" value="2" /> Sezonluk veya kampanya dönemlerinde değişiyor.</label>
+                            <label class="tool-option"><input type="radio" name="updates" value="1" /> Nadiren değişiyor.</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="tool-question">
+                        <legend>Menü baskısı sizin için düzenli bir maliyet veya operasyon yükü oluşturuyor mu?</legend>
+                        <div class="tool-options">
+                            <label class="tool-option"><input type="radio" name="printing" value="3" required /> Evet, sık baskı veya revizyon gerekiyor.</label>
+                            <label class="tool-option"><input type="radio" name="printing" value="2" /> Bazen sorun oluyor.</label>
+                            <label class="tool-option"><input type="radio" name="printing" value="1" /> Şu anda büyük bir sorun değil.</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="tool-question">
+                        <legend>Müşteriler ürün fotoğrafı, içerik veya alerjen bilgisi soruyor mu?</legend>
+                        <div class="tool-options">
+                            <label class="tool-option"><input type="radio" name="details" value="3" required /> Sık soruyorlar.</label>
+                            <label class="tool-option"><input type="radio" name="details" value="2" /> Bazı ürünlerde soruyorlar.</label>
+                            <label class="tool-option"><input type="radio" name="details" value="1" /> Çok nadir soruyorlar.</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="tool-question">
+                        <legend>Menünüzü sosyal medya veya web üzerinden paylaşmak istiyor musunuz?</legend>
+                        <div class="tool-options">
+                            <label class="tool-option"><input type="radio" name="sharing" value="3" required /> Evet, aktif olarak paylaşmak istiyoruz.</label>
+                            <label class="tool-option"><input type="radio" name="sharing" value="2" /> Yakında ihtiyacımız olabilir.</label>
+                            <label class="tool-option"><input type="radio" name="sharing" value="1" /> Şimdilik öncelik değil.</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="tool-question">
+                        <legend>İşletmenizde birden fazla şube, farklı menü veya farklı fiyat düzeni var mı?</legend>
+                        <div class="tool-options">
+                            <label class="tool-option"><input type="radio" name="branches" value="3" required /> Evet, yönetim karmaşıklaşabiliyor.</label>
+                            <label class="tool-option"><input type="radio" name="branches" value="2" /> Tek şube ama farklı menü dönemleri var.</label>
+                            <label class="tool-option"><input type="radio" name="branches" value="1" /> Tek ve sabit menü kullanıyoruz.</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="tool-actions">
+                        <button type="submit" class="btn btn--primary">Sonucu göster</button>
+                        <button type="reset" class="btn btn--ghost">Temizle</button>
+                    </div>
+                </form>
+
+                <div id="readinessResult" class="result-panel" hidden aria-live="polite"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="resource-section" aria-labelledby="after-test-heading">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2 id="after-test-heading">Sonucu nasıl yorumlamalı?</h2>
+                    <p>
+                        Yüksek puan, QR menünün işletmenizde hızlı değer üretebileceğini gösterir. Orta puan, önce kategori
+                        yapısı ve ürün içeriklerinin toparlanmasının faydalı olabileceğini anlatır. Düşük puan ise kağıt menü
+                        ile dijital menünün birlikte kullanılabileceği daha sakin bir geçiş planına işaret eder.
+                    </p>
+                </article>
+                <article class="resource-card">
+                    <h2>Hazırlık rehberleri</h2>
+                    <ul>
+                        <li><a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir ve nasıl çalışır?</a></li>
+                        <li><a href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">QR menü ile kağıt menü karşılaştırması</a></li>
+                        <li><a href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">QR menü müşteri deneyimini nasıl iyileştirir?</a></li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('readinessForm');
+            const result = document.getElementById('readinessResult');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const data = new FormData(form);
+                let score = 0;
+                for (const value of data.values()) {
+                    score += Number(value);
+                }
+
+                let title = 'Kademeli geçiş daha uygun görünüyor';
+                let copy = 'Menünüz şu anda çok sık değişmiyorsa QR menüyü önce sosyal medya linki, vitrin QR kodu veya belirli bir menü bölümüyle test edebilirsiniz.';
+                let tips = ['Menü kategorilerinizi sadeleştirin.', 'Ürün açıklamalarını güncelleyin.', 'QR menüyü önce sınırlı alanda deneyin.'];
+
+                if (score >= 13) {
+                    title = 'QR menüye güçlü şekilde hazırsınız';
+                    copy = 'Menü güncellemeleri, müşteri bilgi ihtiyacı ve dijital paylaşım beklentisi QR menünün işletmeniz için hızlı değer üretebileceğini gösteriyor.';
+                    tips = ['QR kod yerleşimlerini planlayın.', 'Fotoğraflı ürünleri önceliklendirin.', 'Sosyal medya profilinize menü linki ekleyin.'];
+                } else if (score >= 9) {
+                    title = 'QR menü için iyi bir hazırlık aşamasındasınız';
+                    copy = 'Dijital menü işletmenize fayda sağlayabilir; yayına almadan önce ürün açıklamaları, fiyat tutarlılığı ve kategori düzeni üzerinde kısa bir hazırlık yapmanız iyi olur.';
+                    tips = ['En çok satılan ürünlerden başlayın.', 'Fiyat ve stok kontrolünü tamamlayın.', 'Personelin müşteriye QR menüyü nasıl anlatacağını netleştirin.'];
+                }
+
+                result.hidden = false;
+                result.innerHTML = `
+                    <span class="result-score">${score} / 15 puan</span>
+                    <h3>${title}</h3>
+                    <p>${copy}</p>
+                    <ul>${tips.map(tip => `<li>${tip}</li>`).join('')}</ul>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--primary" href="/qr-kod">QR menü çözümünü incele</a>
+                        <a class="btn btn--ghost" href="/restoran-kaynaklari">Kaynak merkezine dön</a>
+                    </div>
+                `;
+            });
+
+            form.addEventListener('reset', function () {
+                result.hidden = true;
+                result.innerHTML = '';
+            });
+        });
+    </script>
+}

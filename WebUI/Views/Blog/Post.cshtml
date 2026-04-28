@@ -18,6 +18,46 @@
 }
 
 @section Head {
+    <style>
+        .blog-trust-note,
+        .blog-related-tools {
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 22px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .blog-trust-note {
+            margin: 22px 0;
+        }
+
+        .blog-trust-note h2,
+        .blog-related-tools h2 {
+            color: var(--color-secondary-dark);
+            font-size: 1.2rem;
+            margin: 0 0 10px;
+        }
+
+        .blog-trust-note p,
+        .blog-related-tools p,
+        .blog-related-tools li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .blog-related-tools {
+            margin: 26px 0;
+        }
+
+        .blog-related-tools__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+    </style>
+
     <script type="application/ld+json">
     {
       "@@context": "https://schema.org",
@@ -78,6 +118,37 @@
         <section class="blog-post__content">
             @Html.Raw(Model.Content)
         </section>
+
+        <aside class="blog-trust-note" aria-labelledby="blog-trust-heading">
+            <h2 id="blog-trust-heading">Editoryal not</h2>
+            <p>
+                Bu içerik, restoranların QR menü ve dijital menü kurulumunda karşılaştığı pratik sorulara yanıt vermek için
+                TumMenu ekibi tarafından hazırlanmıştır. Yazılarda ürün tanıtımından çok uygulanabilir kontrol noktaları,
+                menü yönetimi ve müşteri deneyimi konularına odaklanılır.
+            </p>
+        </aside>
+
+        <aside class="blog-related-tools" aria-labelledby="blog-related-tools-heading">
+            <h2 id="blog-related-tools-heading">İlgili araçlar ve kaynaklar</h2>
+            <p>Okuduğunuz konuyu kendi işletmenize uyarlamak için aşağıdaki ücretsiz kaynakları kullanabilirsiniz.</p>
+            <div class="blog-related-tools__grid">
+                <article>
+                    <h3>QR menü uygunluk testi</h3>
+                    <p>İşletmenizin QR menüye ne kadar hazır olduğunu kısa sorularla değerlendirin.</p>
+                    <a href="/qr-menu-uygunluk-testi">Teste git</a>
+                </article>
+                <article>
+                    <h3>Baskı maliyeti hesaplayıcı</h3>
+                    <p>Kağıt menü baskısının yıllık tahmini maliyetini kendi verilerinizle görün.</p>
+                    <a href="/menu-baski-maliyeti-hesaplayici">Hesaplayıcıyı aç</a>
+                </article>
+                <article>
+                    <h3>Kaynak merkezi</h3>
+                    <p>Kontrol listeleri, blog rehberleri ve karar araçlarını tek sayfada inceleyin.</p>
+                    <a href="/restoran-kaynaklari">Kaynaklara dön</a>
+                </article>
+            </div>
+        </aside>
 
         <div class="blog-post__footer">
             <p>Bu yazıyı faydalı bulduysan diğer rehberlere de göz atabilirsin.</p>

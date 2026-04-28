@@ -55,6 +55,24 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return View();
     }
 
+    [Route("restoran-kaynaklari")]
+    public IActionResult Resources()
+    {
+        return View();
+    }
+
+    [Route("qr-menu-uygunluk-testi")]
+    public IActionResult QrMenuReadinessTest()
+    {
+        return View();
+    }
+
+    [Route("menu-baski-maliyeti-hesaplayici")]
+    public IActionResult MenuPrintingCostCalculator()
+    {
+        return View();
+    }
+
     [Route("ne-yesem")]
     public IActionResult WhatToEat()
     {
@@ -232,6 +250,24 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return RedirectPermanent("/sss");
     }
 
+    [Route("Home/Resources")]
+    public IActionResult ResourcesRedirect()
+    {
+        return RedirectPermanent("/restoran-kaynaklari");
+    }
+
+    [Route("Home/QrMenuReadinessTest")]
+    public IActionResult QrMenuReadinessTestRedirect()
+    {
+        return RedirectPermanent("/qr-menu-uygunluk-testi");
+    }
+
+    [Route("Home/MenuPrintingCostCalculator")]
+    public IActionResult MenuPrintingCostCalculatorRedirect()
+    {
+        return RedirectPermanent("/menu-baski-maliyeti-hesaplayici");
+    }
+
     [Route("Home/Restaurants")]
     public IActionResult RestaurantsRedirect()
     {
@@ -268,6 +304,9 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/fiyatlandirma", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/ozellikler", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/sss", ChangeFreq = "monthly", Priority = "0.7" },
+            new { Url = "/restoran-kaynaklari", ChangeFreq = "weekly", Priority = "0.8" },
+            new { Url = "/qr-menu-uygunluk-testi", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/menu-baski-maliyeti-hesaplayici", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
             new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },

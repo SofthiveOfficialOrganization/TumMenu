@@ -1,0 +1,96 @@
+@{
+    ViewData["Title"] = "Restoran Kaynakları";
+    ViewData["Description"] = "Restoranlar ve kafeler için QR menü, dijital menü, menü maliyeti, müşteri deneyimi ve online sipariş hazırlığı kaynakları.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="resources-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Restoran sahipleri için ücretsiz kaynak merkezi</p>
+            <h1 id="resources-heading" class="resource-title">QR menüye geçmeden önce kararınızı netleştirin.</h1>
+            <p class="resource-lead">
+                TümMenü kaynak merkezi; dijital menüye geçişi araştıran restoran, kafe ve paket servis işletmeleri için
+                pratik testler, hesaplayıcılar, kontrol listeleri ve rehber yazıları bir araya getirir. Amaç yalnızca ürün
+                tanıtmak değil, işletmenin gerçekten neye ihtiyacı olduğunu daha anlaşılır hale getirmektir.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band" aria-labelledby="tools-heading">
+        <div class="container">
+            <div class="section-heading">
+                <h2 id="tools-heading" class="section__title">Ücretsiz araçlar</h2>
+                <p class="section__subtitle">Kendi işletme bilgilerinize göre daha gerçekçi bir başlangıç değerlendirmesi yapın.</p>
+            </div>
+
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h3>QR menü uygunluk testi</h3>
+                    <p>Menünüzün değişim sıklığı, fotoğraf ihtiyacı, masa deneyimi ve operasyon yapınıza göre QR menüye ne kadar hazır olduğunuzu görün.</p>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--primary" href="/qr-menu-uygunluk-testi">Teste başla</a>
+                    </div>
+                </article>
+                <article class="resource-card">
+                    <h3>Menü baskı maliyeti hesaplayıcı</h3>
+                    <p>Menü adedi, güncelleme sıklığı, şube sayısı ve ortalama baskı maliyetinizle yıllık baskı yükünüzü hesaplayın.</p>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--primary" href="/menu-baski-maliyeti-hesaplayici">Hesapla</a>
+                    </div>
+                </article>
+                <article class="resource-card">
+                    <h3>Dijitalleşme kontrol listesi</h3>
+                    <p>QR kod, menü fotoğrafları, alerjen bilgisi, Google işletme profili ve sosyal medya linkleri gibi temel hazırlıkları kontrol edin.</p>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--ghost" href="#checklist">Listeyi incele</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="checklist" class="resource-section" aria-labelledby="checklist-heading">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2 id="checklist-heading">Restoran dijitalleşme kontrol listesi</h2>
+                    <ul>
+                        <li>İşletme adı, adresi, telefon ve çalışma saatleri güncel mi?</li>
+                        <li>Menü kategorileri müşteri gözüyle anlaşılır mı?</li>
+                        <li>Ürün açıklamalarında içerik, porsiyon ve alerjen bilgileri var mı?</li>
+                        <li>Fiyatlar masadaki QR menü ve sosyal medya linkinde aynı mı?</li>
+                        <li>Menü fotoğrafları ürünü doğru temsil ediyor mu?</li>
+                        <li>QR kod masada, vitrinde ve paket servis alanında kolay görülebiliyor mu?</li>
+                        <li>Google işletme profili, Instagram biyografisi ve web sitesi linkleri güncel mi?</li>
+                        <li>Online siparişe geçilecekse stok, teslimat bölgesi ve destek süreci planlandı mı?</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>İlgili rehberler</h2>
+                    <p>Kontrol listesindeki başlıkları daha detaylı okumak için aşağıdaki yazılar iyi bir başlangıç sağlar.</p>
+                    <ul>
+                        <li><a href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">QR menü kurulumu adım adım restoran rehberi</a></li>
+                        <li><a href="/blog/restoran-menusu-nasil-tasarlanir">Restoran menüsü nasıl tasarlanır?</a></li>
+                        <li><a href="/blog/menu-fotograflari-dijital-menude-neden-onemlidir">Menü fotoğrafları dijital menüde neden önemlidir?</a></li>
+                        <li><a href="/blog/online-siparise-hazirlik-rehberi">Online siparişe hazırlık rehberi</a></li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>Sonraki adım</h2>
+                    <p>
+                        Test ve hesaplayıcı sonuçları size uygun görünüyorsa TümMenü özelliklerini inceleyebilir,
+                        fiyatlandırmaya bakabilir veya kurulum sorularınız için bizimle iletişime geçebilirsiniz.
+                    </p>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--primary" href="/ozellikler">Özellikleri incele</a>
+                        <a class="btn btn--ghost" href="/iletisim">İletişime geç</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

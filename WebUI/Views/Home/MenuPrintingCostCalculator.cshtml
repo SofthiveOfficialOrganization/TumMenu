@@ -1,0 +1,144 @@
+@{
+    ViewData["Title"] = "Menü Baskı Maliyeti Hesaplayıcı";
+    ViewData["Description"] = "Restoran ve kafeler için yıllık kağıt menü baskı maliyetini hesaplayan ücretsiz araç.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="calculator-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Ücretsiz hesaplayıcı</p>
+            <h1 id="calculator-heading" class="resource-title">Menü baskı maliyetinizi hesaplayın.</h1>
+            <p class="resource-lead">
+                Kağıt menü maliyeti yalnızca ilk baskıdan oluşmaz. Fiyat güncellemeleri, yıpranan menüler, şube sayısı
+                ve sezonluk değişiklikler yıl içinde tekrar eden bir operasyon yükü oluşturabilir. Bu araç, kendi
+                varsayımlarınızla yıllık baskı maliyetini görmenize yardımcı olur.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band" aria-labelledby="calculator-form-heading">
+        <div class="container">
+            <div class="tool-panel">
+                <h2 id="calculator-form-heading">Baskı maliyeti hesaplayıcı</h2>
+                <form id="printingCalculator" class="tool-form">
+                    <div class="tool-input-grid">
+                        <label class="tool-input">
+                            <span class="tool-label">Şube sayısı</span>
+                            <input type="number" name="branches" min="1" value="1" required />
+                        </label>
+                        <label class="tool-input">
+                            <span class="tool-label">Şube başına menü adedi</span>
+                            <input type="number" name="menus" min="1" value="25" required />
+                        </label>
+                        <label class="tool-input">
+                            <span class="tool-label">Bir menünün baskı maliyeti (₺)</span>
+                            <input type="number" name="unitCost" min="1" value="40" required />
+                        </label>
+                        <label class="tool-input">
+                            <span class="tool-label">Yılda baskı yenileme sayısı</span>
+                            <input type="number" name="updates" min="1" value="3" required />
+                        </label>
+                        <label class="tool-input">
+                            <span class="tool-label">Yedek / yıpranma payı (%)</span>
+                            <input type="number" name="waste" min="0" max="100" value="10" required />
+                        </label>
+                    </div>
+
+                    <div class="tool-actions">
+                        <button type="submit" class="btn btn--primary">Maliyeti hesapla</button>
+                        <button type="reset" class="btn btn--ghost">Varsayılana dön</button>
+                    </div>
+                </form>
+
+                <div id="printingResult" class="result-panel" hidden aria-live="polite"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="resource-section" aria-labelledby="calculator-context-heading">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2 id="calculator-context-heading">Bu sonuç neyi gösterir?</h2>
+                    <p>
+                        Hesaplama, menü baskısının yıl boyunca ne kadar tekrarlayabileceğini görünür kılar. QR menüye geçiş,
+                        her işletmede aynı sonucu vermez; ancak fiyat güncellemesi sık olan, çok şubeli veya sezonluk menü
+                        kullanan işletmelerde baskı ihtiyacını azaltabilir.
+                    </p>
+                </article>
+                <article class="resource-card">
+                    <h2>Maliyeti etkileyen noktalar</h2>
+                    <ul>
+                        <li>Menünün kaç sayfa ve hangi malzemeyle basıldığı</li>
+                        <li>Fiyatların yılda kaç kez değiştiği</li>
+                        <li>Masa, paket servis ve dış alan için ayrı menü gerekip gerekmediği</li>
+                        <li>Şube sayısı ve her şubenin ayrı fiyat yapısı</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>İlgili okumalar</h2>
+                    <ul>
+                        <li><a href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">QR menü vs kağıt menü</a></li>
+                        <li><a href="/blog/restoran-menu-fiyatlandirma-stratejileri">Restoran menü fiyatlandırma stratejileri</a></li>
+                        <li><a href="/fiyatlandirma">TümMenü fiyatlandırması</a></li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('printingCalculator');
+            const result = document.getElementById('printingResult');
+            const currency = new Intl.NumberFormat('tr-TR', {
+                style: 'currency',
+                currency: 'TRY',
+                maximumFractionDigits: 0
+            });
+
+            function calculate(event) {
+                if (event) event.preventDefault();
+
+                const data = new FormData(form);
+                const branches = Number(data.get('branches'));
+                const menus = Number(data.get('menus'));
+                const unitCost = Number(data.get('unitCost'));
+                const updates = Number(data.get('updates'));
+                const waste = Number(data.get('waste')) / 100;
+                const baseTotal = branches * menus * unitCost * updates;
+                const wasteTotal = baseTotal * waste;
+                const total = baseTotal + wasteTotal;
+
+                result.hidden = false;
+                result.innerHTML = `
+                    <span class="result-score">Tahmini yıllık baskı maliyeti</span>
+                    <div class="calculator-total">${currency.format(total)}</div>
+                    <p>Bu tutarın yaklaşık ${currency.format(baseTotal)} bölümü planlı baskı, ${currency.format(wasteTotal)} bölümü yedek ve yıpranma payıdır.</p>
+                    <ul>
+                        <li>Fiyat değişiklikleri sıklaştıkça baskı maliyeti büyür.</li>
+                        <li>QR menü, fiyat ve ürün güncellemelerini yeniden baskı gerektirmeden yayına almayı kolaylaştırır.</li>
+                        <li>Kağıt menüyü tamamen kaldırmak zorunda değilsiniz; bazı işletmeler karma kullanım ile başlar.</li>
+                    </ul>
+                    <div class="resource-card__actions">
+                        <a class="btn btn--primary" href="/qr-menu-uygunluk-testi">QR uygunluk testini çöz</a>
+                        <a class="btn btn--ghost" href="/qr-kod">QR menüyü incele</a>
+                    </div>
+                `;
+            }
+
+            form.addEventListener('submit', calculate);
+            form.addEventListener('reset', function () {
+                setTimeout(calculate, 0);
+            });
+
+            calculate();
+        });
+    </script>
+}
