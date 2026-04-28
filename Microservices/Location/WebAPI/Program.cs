@@ -58,6 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+await app.MigrateDatabaseAsync();
+await app.SeedDataAsync();
 app.ConfigureCustomExceptionMiddleware();
 app.UseHttpsRedirection();
 app.UseCors("HappencodePolicy");
