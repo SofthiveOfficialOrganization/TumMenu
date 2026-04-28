@@ -565,7 +565,7 @@
         // Handle initial hash
         document.addEventListener('DOMContentLoaded', () => {
              // If no hash, default to privacy
-            const hash = window.location.hash.replace('#', '') || 'privacy';
+            const hash = (window.location.hash.replace('#', '') || 'privacy').replace('section-', '');
             // Verify if section exists
             if (document.getElementById('section-' + hash)) {
                 switchTab(hash);
@@ -574,7 +574,7 @@
 
         // Handle back/forward navigation
         window.addEventListener('hashchange', () => {
-             const hash = window.location.hash.replace('#', '');
+             const hash = window.location.hash.replace('#', '').replace('section-', '');
              if (hash && document.getElementById('section-' + hash)) {
                  switchTab(hash);
              }

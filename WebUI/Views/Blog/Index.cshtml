@@ -92,15 +92,6 @@
 
             <!-- Sidebar -->
             <aside class="blog-sidebar-new" aria-label="Blog Yan Panel">
-                <!-- Search -->
-                <div class="blog-panel-new">
-                    <h4 class="blog-panel-new__heading">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        İçerik Bul
-                    </h4>
-                    <input type="search" class="blog-search-new" placeholder="Yazılarda ara..." />
-                </div>
-
                 <!-- Categories -->
                 @if (tagGroups.Any())
                 {
@@ -118,15 +109,6 @@
                         }
                     </div>
                 }
-
-                <!-- Newsletter -->
-                <div class="blog-panel-new blog-panel-new--newsletter">
-                    <div class="blog-newsletter-glow"></div>
-                    <h4 class="blog-newsletter-title">Bülten</h4>
-                    <p class="blog-newsletter-desc">Yeni içeriklerden haberdar olmak için e-posta adresinizi bırakın.</p>
-                    <input type="email" class="blog-newsletter-input" placeholder="E-posta adresiniz" />
-                    <button class="blog-newsletter-btn">Abone Ol</button>
-                </div>
 
                 <!-- Popular Tags -->
                 @if (topTags.Any())
@@ -151,7 +133,7 @@
     {
         <div class="blog-empty-new">
             <h2>Henüz içerik yok</h2>
-            <p>İlk blog yazıları hazırlanıyor. Çok yakında burada faydalı içerikler göreceksiniz.</p>
+            <p>Restoran işletmeciliği, QR menü ve dijital menü tasarımı hakkında içerikler burada yayınlanır.</p>
         </div>
     }
 

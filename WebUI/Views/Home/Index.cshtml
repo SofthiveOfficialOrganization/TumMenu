@@ -115,10 +115,10 @@
             </div> *@
 
             <div class="hero__actions">
-                <a href="/Home/Restaurants" class="hero-btn hero-btn--primary">
+                <a href="/restoranlar" class="hero-btn hero-btn--primary">
                     Restoran Keşfet
                 </a>
-                <a href="/Home/WhatToEat" class="hero-btn hero-btn--secondary">
+                <a href="/ne-yesem" class="hero-btn hero-btn--secondary">
                     Bugün ne yesem?
                 </a>
             </div>
@@ -205,7 +205,7 @@
             <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg></button>
             
             <div class="home-store-grid">
-                @if (homepageStores?.NewStores != null)
+                @if (homepageStores?.NewStores != null && homepageStores.NewStores.Any())
                 {
                     @foreach (var store in homepageStores.NewStores)
                     {
@@ -230,47 +230,15 @@
                         </a>
                     }
                 }
-                <!-- Örnek kartlar (4 adet) -->
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></div>
-                        <span class="home-store-card__badge">Yeni</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Lezzet Durağı</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Kadıköy, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Yeni</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Yeşil Bahçe</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Moda, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-burger")"></use></svg></div>
-                        <span class="home-store-card__badge">Yeni</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Et Evi</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Bostancı, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Yeni</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Kahve Molası</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Caddebostan, İstanbul</p>
-                    </div>
-                </a>
+                else
+                {
+                    <article class="home-store-card">
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">Yeni işletmeler listeleniyor</h3>
+                            <p class="home-store-card__location">Yakınındaki dijital menülü restoranları harita ve arama üzerinden keşfedebilirsin.</p>
+                        </div>
+                    </article>
+                }
             </div>
 
             <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg></button>
@@ -290,7 +258,7 @@
             <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg></button>
 
             <div class="home-store-grid">
-                @if (homepageStores?.PopularStores != null)
+                @if (homepageStores?.PopularStores != null && homepageStores.PopularStores.Any())
                 {
                     @foreach (var store in homepageStores.PopularStores)
                     {
@@ -315,47 +283,15 @@
                         </a>
                     }
                 }
-                <!-- Örnek kartlar (4 adet) -->
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-burger")"></use></svg></div>
-                        <span class="home-store-card__badge">Popüler</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Burger House</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Beşiktaş, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-pizza")"></use></svg></div>
-                        <span class="home-store-card__badge">Popüler</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Pizza Roma</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Şişli, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-burger")"></use></svg></div>
-                        <span class="home-store-card__badge">Popüler</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Sosisçi Baba</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Kadıköy, İstanbul</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Popüler</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Taco Meksika</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Beyoğlu, İstanbul</p>
-                    </div>
-                </a>
+                else
+                {
+                    <article class="home-store-card">
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">Popüler işletmeler hazırlanıyor</h3>
+                            <p class="home-store-card__location">Arama sayfasından kategori, konum ve mesafe filtreleriyle gerçek işletmeleri bulabilirsin.</p>
+                        </div>
+                    </article>
+                }
             </div>
 
             <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg></button>
@@ -375,7 +311,7 @@
             <button class="scroll-arrow scroll-arrow--left" aria-label="Sola kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg></button>
 
             <div class="home-store-grid">
-                @if (homepageStores?.DailyStores != null)
+                @if (homepageStores?.DailyStores != null && homepageStores.DailyStores.Any())
                 {
                     @foreach (var store in homepageStores.DailyStores)
                     {
@@ -400,51 +336,59 @@
                         </a>
                     }
                 }
-                <!-- Örnek kartlar (4 adet) -->
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Günün seçimi</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Sakura Sushi</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Çankaya, Ankara</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Günün seçimi</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Anadolu Sofrası</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Ulus, Ankara</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Günün seçimi</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">Asya Wok</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Çayyolu, Ankara</p>
-                    </div>
-                </a>
-                <a class="home-store-card" href="#">
-                    <div class="home-store-card__img-wrap">
-                        <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bowl")"></use></svg></div>
-                        <span class="home-store-card__badge">Günün seçimi</span>
-                    </div>
-                    <div class="home-store-card__body">
-                        <h3 class="home-store-card__name">İtalyan İşi</h3>
-                        <p class="home-store-card__location"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg> Bahçelievler, Ankara</p>
-                    </div>
-                </a>
+                else
+                {
+                    <article class="home-store-card">
+                        <div class="home-store-card__body">
+                            <h3 class="home-store-card__name">Bugünün seçimi için keşfe çık</h3>
+                            <p class="home-store-card__location">Konumunu seçerek yakınındaki güncel menülere, fiyatlara ve kategorilere ulaşabilirsin.</p>
+                        </div>
+                    </article>
+                }
             </div>
 
             <button class="scroll-arrow scroll-arrow--right" aria-label="Sağa kaydır" type="button"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg></button>
         </div>
+    </div>
+</section>
+
+
+<section class="section" aria-labelledby="guide-heading">
+    <div class="container">
+        <div class="section-heading">
+            <h2 id="guide-heading" class="section__title">TümMenü ne işe yarar?</h2>
+            <p class="section__subtitle">
+                TümMenü iki ihtiyacı birleştirir: müşteriler gitmeden önce menü ve fiyatları görebilir,
+                işletmeler ise QR menüsünü tek panelden güncel tutabilir.
+            </p>
+        </div>
+
+        <div class="features-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+            <article class="home-store-card" style="padding:22px;">
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Müşteriler için</h3>
+                    <p class="home-store-card__location">Yakındaki restoranları keşfetmek, menüye önceden bakmak ve fiyatları karşılaştırmak daha kolay hale gelir. Karar süreci masaya oturmadan önce başlar.</p>
+                </div>
+            </article>
+            <article class="home-store-card" style="padding:22px;">
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">İşletmeler için</h3>
+                    <p class="home-store-card__location">Kağıt menü baskısı, eski fiyatlar ve stokta olmayan ürünlerin görünmesi gibi sorunlar azalır. Menü değişiklikleri yönetim panelinden güncellenir.</p>
+                </div>
+            </article>
+            <article class="home-store-card" style="padding:22px;">
+                <div class="home-store-card__body">
+                    <h3 class="home-store-card__name">Google için anlaşılır yapı</h3>
+                    <p class="home-store-card__location">Açıklayıcı sayfalar, yasal bilgiler, fiyatlandırma, SSS ve blog içerikleri sitenin yalnızca bir araç değil, restoran teknolojileri hakkında kaynak olduğunu gösterir.</p>
+                </div>
+            </article>
+        </div>
+
+        <p class="section__subtitle" style="margin-top:24px;">
+            QR menüye geçişi araştırıyorsanız <a href="/ozellikler">özellikleri</a>,
+            <a href="/fiyatlandirma">planları</a>, <a href="/sss">sık sorulan soruları</a> ve
+            <a href="/blog">restoran teknolojileri blogunu</a> inceleyebilirsiniz.
+        </p>
     </div>
 </section>
 
@@ -523,7 +467,7 @@
                 params.set('categories', selectedCats.join(','));
             }
 
-            var url = '/Home/Restaurants';
+            var url = '/restoranlar';
             var qs = params.toString();
             if (qs) url += '?' + qs;
             window.location.href = url;
@@ -534,7 +478,7 @@
           chips.forEach(function(chip) {
             chip.addEventListener('click', function() {
               var text = chip.textContent.trim();
-              window.location.href = '/Home/Restaurants?search=' + encodeURIComponent(text);
+              window.location.href = '/restoranlar?search=' + encodeURIComponent(text);
             });
           });
 

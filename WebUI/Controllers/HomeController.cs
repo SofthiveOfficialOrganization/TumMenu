@@ -35,10 +35,22 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
 
     public IActionResult Privacy()
     {
-        return Redirect("/Home/Legal#section-privacy");
+        return Redirect("/yasal-bilgiler#privacy");
     }
     [Route("qr-kod")]
     public IActionResult BeQr()
+    {
+        return View();
+    }
+
+    [Route("ozellikler")]
+    public IActionResult Features()
+    {
+        return View();
+    }
+
+    [Route("sss")]
+    public IActionResult Faq()
     {
         return View();
     }
@@ -208,6 +220,18 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return RedirectPermanent("/fiyatlandirma");
     }
 
+    [Route("Home/Features")]
+    public IActionResult FeaturesRedirect()
+    {
+        return RedirectPermanent("/ozellikler");
+    }
+
+    [Route("Home/Faq")]
+    public IActionResult FaqRedirect()
+    {
+        return RedirectPermanent("/sss");
+    }
+
     [Route("Home/Restaurants")]
     public IActionResult RestaurantsRedirect()
     {
@@ -242,14 +266,11 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/iletisim", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/yasal-bilgiler", ChangeFreq = "monthly", Priority = "0.5" },
             new { Url = "/fiyatlandirma", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/ozellikler", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/sss", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
             new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },
-            new { Url = "/giris", ChangeFreq = "monthly", Priority = "0.6" },
-            new { Url = "/kayit", ChangeFreq = "monthly", Priority = "0.6" },
-            new { Url = "/sifremi-unuttum", ChangeFreq = "monthly", Priority = "0.4" },
-            new { Url = "/hesabim", ChangeFreq = "weekly", Priority = "0.5" },
-            new { Url = "/hesap-aktivasyon", ChangeFreq = "monthly", Priority = "0.3" },
             new { Url = "/blog", ChangeFreq = "daily", Priority = "0.9" }
         };
 

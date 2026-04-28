@@ -1,6 +1,154 @@
-﻿@{
-    ViewData["Title"] = "Features";
+@{
+    ViewData["Title"] = "Özellikler";
+    ViewData["Description"] = "TümMenü'nün QR menü, restoran keşfi, menü yönetimi, ürün görselleri, analitik ve çoklu şube özelliklerini keşfedin.";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+@section Head {
+    <style>
+        .features-page {
+            background: #fbfaf7;
+        }
+
+        .features-hero,
+        .features-section {
+            padding: 72px 0;
+        }
+
+        .features-hero__inner {
+            max-width: 900px;
+        }
+
+        .features-eyebrow {
+            color: var(--color-primary);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .features-title {
+            color: var(--color-secondary-dark);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+
+        .features-lead {
+            color: var(--color-text-muted);
+            font-size: 1.15rem;
+            line-height: 1.75;
+            max-width: 760px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: #fff;
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .feature-card h2,
+        .feature-card h3 {
+            color: var(--color-secondary-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-card p,
+        .feature-card li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .feature-card ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .feature-band {
+            background: #fff;
+            border-top: 1px solid rgba(73, 85, 56, 0.12);
+            border-bottom: 1px solid rgba(73, 85, 56, 0.12);
+        }
+    </style>
+}
+
+<div class="features-page">
+    <section class="features-hero" aria-labelledby="features-heading">
+        <div class="container features-hero__inner">
+            <p class="features-eyebrow">Restoranlar ve kafeler için dijital menü altyapısı</p>
+            <h1 id="features-heading" class="features-title">Menünü yayınla, güncelle, ölç ve müşteriye daha net göster.</h1>
+            <p class="features-lead">
+                TümMenü, kağıt menünün yerine yalnızca bir QR kod koyan basit bir araç değildir. İşletme sahibinin
+                menü içeriklerini yönetmesini, müşterinin güncel fiyatlara ulaşmasını ve restoranın dijitalde daha
+                güvenilir görünmesini sağlayan pratik bir platformdur.
+            </p>
+        </div>
+    </section>
+
+    <section class="features-section feature-band" aria-labelledby="core-features-heading">
+        <div class="container">
+            <div class="section-heading">
+                <h2 id="core-features-heading" class="section__title">Temel özellikler</h2>
+                <p class="section__subtitle">Günlük restoran operasyonunda gerçekten kullanılan araçlara odaklanır.</p>
+            </div>
+
+            <div class="features-grid">
+                <article class="feature-card">
+                    <h3>QR menü oluşturma</h3>
+                    <p>Her işletme ve şube için menü bağlantısı oluşturulur. QR kodu masalarda, paket servis alanında, vitrinlerde veya sosyal medya profillerinde kullanılabilir.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Kategori ve ürün yönetimi</h3>
+                    <p>Başlangıçlar, ana yemekler, tatlılar ve içecekler gibi kategorileri düzenleyebilir; ürün adı, fiyat, açıklama ve görsel bilgilerini tek panelden güncelleyebilirsiniz.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Çoklu şube desteği</h3>
+                    <p>Birden fazla şubesi olan işletmeler her şubenin menüsünü ayrı yönetebilir. Böylece farklı fiyat, stok veya kampanya düzenleri karışmadan yayınlanır.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Mobil uyumlu menü sayfası</h3>
+                    <p>Müşteri uygulama indirmeden telefon kamerasıyla QR kodu okutur ve menüye ulaşır. Sayfalar küçük ekranlarda hızlı okunacak şekilde tasarlanır.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Keşif sayfaları</h3>
+                    <p>TümMenü, restoranların yalnızca masadaki müşteriye değil, çevrede mekan arayan kullanıcılara da görünür olmasına yardımcı olur.</p>
+                </article>
+                <article class="feature-card">
+                    <h3>Menü analitiği</h3>
+                    <p>Görüntülenme eğilimleri, kategori ilgisi ve ürün performansı gibi veriler, menü kararlarını tahmin yerine gözleme dayandırmayı kolaylaştırır.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" aria-labelledby="who-heading">
+        <div class="container">
+            <div class="features-grid">
+                <article class="feature-card">
+                    <h2 id="who-heading">Kimler için uygun?</h2>
+                    <p>Kafe, restoran, pastane, burgerci, dönerci, otel restoranı, paket servis noktası ve çok şubeli yeme-içme işletmeleri TümMenü'yü kullanabilir.</p>
+                    <p>Özellikle fiyatları sık güncellenen, sezonluk ürün ekleyen veya menüsünü müşteriye daha görsel anlatmak isteyen işletmeler için güçlü bir başlangıç sağlar.</p>
+                </article>
+                <article class="feature-card">
+                    <h2>Nasıl başlanır?</h2>
+                    <ul>
+                        <li>Hesap oluşturun ve işletme bilgilerinizi girin.</li>
+                        <li>Şube, kategori ve ürünlerinizi ekleyin.</li>
+                        <li>Menünüzü kontrol edip QR kodunuzu indirin.</li>
+                        <li>QR kodu masalara, vitrine veya sosyal medya profillerinize yerleştirin.</li>
+                    </ul>
+                </article>
+                <article class="feature-card">
+                    <h2>İlgili rehberler</h2>
+                    <p>Dijital menüye geçmeden önce pratik bilgi almak isterseniz blog yazılarımızı inceleyebilirsiniz.</p>
+                    <p><a href="/blog">Blog rehberlerini oku</a> veya <a href="/fiyatlandirma">fiyatlandırmayı incele</a>.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

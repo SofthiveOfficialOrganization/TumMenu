@@ -122,15 +122,65 @@ public static class SeedExtensions
             .Select(b => b.Slug)
             .ToListAsync();
 
+        var editorialPosts = EditorialBlogPostSeedData.GetPosts();
+        var editorialSlugs = editorialPosts
+            .Select(p => p.Slug)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var existingEditorialPosts = await db.BlogPosts
+            .Where(b => editorialSlugs.Contains(b.Slug))
+            .ToListAsync();
+
+        var hasEditorialUpdates = false;
+
+        foreach (var seededPost in editorialPosts)
+        {
+            var existing = existingEditorialPosts.FirstOrDefault(p =>
+                string.Equals(p.Slug, seededPost.Slug, StringComparison.OrdinalIgnoreCase));
+
+            if (existing is null)
+            {
+                db.BlogPosts.Add(seededPost);
+                existingSlugs.Add(seededPost.Slug);
+                hasEditorialUpdates = true;
+                continue;
+            }
+
+            if (ShouldUpdateEditorialPost(existing, seededPost))
+            {
+                existing.Title = seededPost.Title;
+                existing.Summary = seededPost.Summary;
+                existing.Content = seededPost.Content;
+                existing.CoverImageUrl = seededPost.CoverImageUrl;
+                existing.PublishedAt = seededPost.PublishedAt;
+                existing.IsPublished = seededPost.IsPublished;
+                existing.Tags = seededPost.Tags;
+                existing.ModifiedAt = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3));
+                existing.ModifiedBy = "seed";
+                hasEditorialUpdates = true;
+            }
+        }
+
         var toAdd = BlogPostSeedData.GetPosts()
             .Where(p => !existingSlugs.Contains(p.Slug, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
-        if (toAdd.Count > 0)
+        if (toAdd.Count > 0 || hasEditorialUpdates)
         {
             db.BlogPosts.AddRange(toAdd);
             await db.SaveChangesAsync();
         }
+    }
+
+    private static bool ShouldUpdateEditorialPost(BlogPost existing, BlogPost seeded)
+    {
+        return existing.Title != seeded.Title ||
+            existing.Summary != seeded.Summary ||
+            existing.Content != seeded.Content ||
+            existing.CoverImageUrl != seeded.CoverImageUrl ||
+            existing.PublishedAt != seeded.PublishedAt ||
+            existing.IsPublished != seeded.IsPublished ||
+            existing.Tags != seeded.Tags;
     }
 
     private static async Task SeedSystemSettingsAsync(ApplicationDbContext db)

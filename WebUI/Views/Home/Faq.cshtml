@@ -1,0 +1,148 @@
+@{
+    ViewData["Title"] = "Sık Sorulan Sorular";
+    ViewData["Description"] = "TümMenü QR menü kurulumu, fiyatlandırma, destek, KVKK, çerezler ve restoranlar için dijital menü kullanımı hakkında sık sorulan sorular.";
+}
+
+@section Head {
+    <style>
+        .faq-page {
+            background: #fbfaf7;
+        }
+
+        .faq-hero,
+        .faq-content {
+            padding: 72px 0;
+        }
+
+        .faq-hero__inner {
+            max-width: 880px;
+        }
+
+        .faq-eyebrow {
+            color: var(--color-primary);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .faq-title {
+            color: var(--color-secondary-dark);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+
+        .faq-lead {
+            color: var(--color-text-muted);
+            font-size: 1.15rem;
+            line-height: 1.75;
+            max-width: 740px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 14px;
+            max-width: 920px;
+        }
+
+        .faq-item {
+            background: #fff;
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 22px 24px;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.05);
+        }
+
+        .faq-item h2 {
+            color: var(--color-secondary-dark);
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        .faq-item p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        .faq-cta {
+            margin-top: 36px;
+            max-width: 920px;
+            padding: 28px;
+            border-radius: 8px;
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        .faq-cta a {
+            color: #fff;
+            font-weight: 800;
+        }
+    </style>
+}
+
+<div class="faq-page">
+    <section class="faq-hero" aria-labelledby="faq-heading">
+        <div class="container faq-hero__inner">
+            <p class="faq-eyebrow">Yardım ve karar rehberi</p>
+            <h1 id="faq-heading" class="faq-title">QR menüye geçmeden önce bilmeniz gerekenler</h1>
+            <p class="faq-lead">
+                TümMenü'yü kullanmaya başlamadan önce kurulum, fiyatlandırma, destek ve veri güvenliği hakkında
+                en sık sorulan soruları burada topladık. Daha detaylı bilgi için özellikler, blog ve yasal
+                bilgiler sayfalarına da geçebilirsiniz.
+            </p>
+        </div>
+    </section>
+
+    <section class="faq-content" aria-label="Sık sorulan sorular listesi">
+        <div class="container">
+            <div class="faq-grid">
+                <article class="faq-item">
+                    <h2>QR menü nedir?</h2>
+                    <p>QR menü, müşterinin telefon kamerasıyla okuttuğu karekod üzerinden restoran menüsüne ulaşmasını sağlayan dijital menüdür. Ürünler, fiyatlar, açıklamalar ve görseller web sayfası olarak gösterilir.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Müşterinin uygulama indirmesi gerekir mi?</h2>
+                    <p>Hayır. Müşteri telefon kamerasını açıp QR kodu okutur. Menü tarayıcıda açılır; üyelik, şifre veya uygulama zorunluluğu yoktur.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Menüde fiyat değişikliği yaparsam QR kodu değişir mi?</h2>
+                    <p>Hayır. Aynı QR kodu kullanılmaya devam eder. Siz panelden fiyatı veya ürün bilgisini güncellediğinizde menü sayfası güncel haliyle görüntülenir.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Birden fazla şubem varsa kullanabilir miyim?</h2>
+                    <p>Evet. Şube yapısı olan işletmeler farklı şubeler için ayrı menü, kategori ve fiyat düzeni oluşturabilir. Bu yapı özellikle zincir restoranlar ve farklı lokasyon fiyatları için kullanışlıdır.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Ücretsiz plan gerçekten ücretsiz mi?</h2>
+                    <p>Evet. Ücretsiz plan, küçük işletmelerin dijital menüye başlaması için tasarlanmıştır. Kapsam ve limitler fiyatlandırma sayfasında açıkça belirtilir.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Premium plan kimler için daha uygundur?</h2>
+                    <p>Çok sayıda menü, şube veya gelişmiş analitik ihtiyacı olan işletmeler Premium planı tercih edebilir. Reklamsız deneyim ve öncelikli destek de bu plan kapsamındadır.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Menüme fotoğraf eklemek zorunda mıyım?</h2>
+                    <p>Zorunlu değildir, ancak fotoğraflar müşterinin karar vermesini kolaylaştırır. En azından öne çıkan ürünlerde net, güncel ve gerçek ürün fotoğrafları kullanmanız önerilir.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Yasal metinler ve kişisel veri süreçleri nerede?</h2>
+                    <p>Gizlilik Politikası, Çerez Politikası, KVKK Aydınlatma Metni ve Kullanıcı Sözleşmesi yasal bilgiler sayfasında yayınlanır. İletişim formunda da ilgili bilgilendirme bağlantıları yer alır.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>Destek almak için ne yapmalıyım?</h2>
+                    <p>İletişim formunu doldurabilir veya destek e-posta adresine yazabilirsiniz. İşletme hesabınızla ilgili bir konuysa şirket/şube adını ve mümkünse ekran görüntüsünü eklemek süreci hızlandırır.</p>
+                </article>
+                <article class="faq-item">
+                    <h2>QR menü restoranımı Google'da daha görünür yapar mı?</h2>
+                    <p>QR menü tek başına SEO garantisi vermez. Ancak güncel, açıklayıcı ve erişilebilir menü sayfaları; blog içerikleri, net işletme bilgileri ve doğru site yapısı ile birlikte daha anlaşılır bir dijital varlık oluşturur.</p>
+                </article>
+            </div>
+
+            <div class="faq-cta">
+                <h2>Başlamadan önce daha fazla bilgi mi gerekiyor?</h2>
+                <p><a href="/ozellikler">Özellikleri inceleyin</a>, <a href="/fiyatlandirma">planlara bakın</a> veya <a href="/iletisim">bize ulaşın</a>.</p>
+            </div>
+        </div>
+    </section>
+</div>

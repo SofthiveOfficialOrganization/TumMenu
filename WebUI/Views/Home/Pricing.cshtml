@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Fiyatlandırma";
+    ViewData["Description"] = "TümMenü QR menü fiyatlandırması. Ücretsiz ve Premium plan kapsamlarını, işletmeler için dahil olan özellikleri ve sık sorulan fiyatlandırma sorularını inceleyin.";
 }
 
 @section Head {
@@ -8,13 +9,15 @@
 
 <section class="pricing-hero">
     <div class="container">
-        <div class="text-center mx-auto mb-5" style="max-width: 700px;">
-            <h1 class="display-4 fw-bold mb-3">İşletmenizi Büyütün</h1>
-            <p class="lead text-muted">İhtiyaçlarınıza uygun planı seçin ve hemen başlayın. Şeffaf fiyatlandırma, gizli ücret yok.</p>
+        <div class="text-center mx-auto mb-5" style="max-width: 780px;">
+            <h1 class="display-4 fw-bold mb-3">Şeffaf QR menü fiyatlandırması</h1>
+            <p class="lead text-muted">
+                Küçük bir kafe için başlangıç kolay olsun, büyüyen restoranlar için yönetim sınırları dar gelmesin.
+                TümMenü planları; menü oluşturma, QR kod paylaşımı, şube yönetimi ve destek ihtiyaçlarını açık şekilde gösterir.
+            </p>
         </div>
 
         <div class="row justify-content-center g-4">
-            <!-- Free Plan -->
             <div class="col-md-6 col-lg-4">
                 <div class="pricing-card">
                     <div class="pricing-header">
@@ -22,19 +25,20 @@
                         <div class="pricing-price">0 ₺<span class="pricing-period">/ay</span></div>
                     </div>
                     <div class="pricing-body">
+                        <p class="text-muted">Dijital menüye ilk kez geçen küçük işletmeler için temel başlangıç planı.</p>
                         <ul class="pricing-features">
-                            <li><i class="bi bi-check-circle-fill"></i>5 Adet Menü</li>
-                            <li><i class="bi bi-check-circle-fill"></i>1 Adet Şirket</li>
-                            <li><i class="bi bi-check-circle-fill"></i>3 Adet Dükkan</li>
-                            <li><i class="bi bi-check-circle-fill"></i>Temel Destek</li>
-                            <li class="disabled"><i class="bi bi-x-circle-fill"></i>Reklamsız Deneyim</li>
+                            <li><i class="bi bi-check-circle-fill"></i>5 adet menü</li>
+                            <li><i class="bi bi-check-circle-fill"></i>1 adet şirket</li>
+                            <li><i class="bi bi-check-circle-fill"></i>3 adet şube</li>
+                            <li><i class="bi bi-check-circle-fill"></i>QR kod oluşturma</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Temel destek</li>
+                            <li class="disabled"><i class="bi bi-x-circle-fill"></i>Reklamsız deneyim dahil değildir</li>
                         </ul>
-                        <button type="button" class="btn btn-pricing btn-pricing-outline">Hemen Başla</button>
+                        <a href="/kayit" class="btn btn-pricing btn-pricing-outline">Ücretsiz Başla</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Premium Plan -->
             <div class="col-md-6 col-lg-4">
                 <div class="pricing-card pricing-card--premium">
                     <div class="pricing-header">
@@ -42,18 +46,70 @@
                         <div class="pricing-price">199 ₺<span class="pricing-period">/ay</span></div>
                     </div>
                     <div class="pricing-body">
+                        <p class="text-muted">Daha fazla şube, menü ve analiz ihtiyacı olan işletmeler için genişletilmiş plan.</p>
                         <ul class="pricing-features">
-                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Menü</li>
-                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Şirket</li>
-                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız Dükkan</li>
-                            <li><i class="bi bi-check-circle-fill"></i>Gelişmiş Analitik</li>
-                            <li><i class="bi bi-check-circle-fill"></i>7/24 Öncelikli Destek</li>
-                            <li><i class="bi bi-check-circle-fill"></i>Reklamsız Deneyim</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız menü</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız şirket</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Sınırsız şube</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Gelişmiş analitik</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Öncelikli destek</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Reklamsız deneyim</li>
                         </ul>
-                        <button type="button" class="btn btn-pricing btn-pricing-primary">Premium'a Geç</button>
+                        <a href="/iletisim" class="btn btn-pricing btn-pricing-primary">Premium Bilgi Al</a>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="mx-auto mt-5" style="max-width: 900px;">
+            <h2 class="h3 fw-bold mb-3">Hangi planı seçmelisiniz?</h2>
+            <p class="text-muted">
+                Tek şubeli ve sınırlı ürün sayısına sahip işletmeler genellikle ücretsiz planla başlayabilir. Menü sayınız,
+                şube sayınız veya analitik ihtiyacınız arttığında Premium plan daha uygun olur. Karar verirken sadece bugünkü
+                menü sayısını değil, sezonluk menüler, kampanya menüleri ve farklı şube fiyatları gibi büyüme ihtiyaçlarını da düşünün.
+            </p>
+
+            <h2 class="h3 fw-bold mt-5 mb-3">Fiyatlandırma hakkında sık sorulanlar</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="pricing-card h-100">
+                        <div class="pricing-body">
+                            <h3 class="h5">Kredi kartı gerekli mi?</h3>
+                            <p class="text-muted mb-0">Ücretsiz planla başlamak için kredi kartı gerekmez. Premium kullanım için ödeme koşulları ayrıca paylaşılır.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="pricing-card h-100">
+                        <div class="pricing-body">
+                            <h3 class="h5">Plan değiştirebilir miyim?</h3>
+                            <p class="text-muted mb-0">İşletme ihtiyacınız değiştiğinde daha geniş bir plana geçebilirsiniz. Destek ekibi geçiş sürecinde yardımcı olur.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="pricing-card h-100">
+                        <div class="pricing-body">
+                            <h3 class="h5">Kurulum ücreti var mı?</h3>
+                            <p class="text-muted mb-0">Standart kullanımda ayrıca kurulum ücreti alınmaz. Özel veri aktarımı veya tasarım ihtiyaçları varsa kapsam ayrıca değerlendirilir.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="pricing-card h-100">
+                        <div class="pricing-body">
+                            <h3 class="h5">Yardım alabilir miyim?</h3>
+                            <p class="text-muted mb-0">Evet. Ürün, kategori ve QR kod kurulumuyla ilgili sorularınız için iletişim sayfasından destek isteyebilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-muted mt-4">
+                Daha fazla karar desteği için <a href="/sss">SSS sayfasını</a>, ürün kapsamı için
+                <a href="/ozellikler">özellikler sayfasını</a>, pratik kullanım rehberleri için
+                <a href="/blog">blog yazılarını</a> inceleyebilirsiniz.
+            </p>
         </div>
     </div>
 </section>

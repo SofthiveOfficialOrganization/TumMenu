@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Demo button
     if (demoBtn) {
         demoBtn.addEventListener('click', () => {
-            alert('Demo özelliği yakında aktif olacak!\n\nŞimdilik QR kodunuzu indirebilir ve test edebilirsiniz.');
+            window.location.href = '/kayit';
         });
     }
 
