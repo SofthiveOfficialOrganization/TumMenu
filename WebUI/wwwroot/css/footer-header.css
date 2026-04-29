@@ -56,6 +56,35 @@
     font-size: 18px;
 }
 
+.site-header--compact .site-header__inner {
+    padding-block: 6px;
+}
+
+.site-header--compact .site-header__logo-icon {
+    height: 52px;
+    padding-top: 3px;
+}
+
+.site-header--compact .site-header__nav {
+    padding: 4px;
+}
+
+.site-header--compact .site-header__nav-link {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.site-header--compact .btn--header {
+    padding: 7px 14px;
+    font-size: 13px;
+}
+
+.site-header--compact .site-header__burger {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+}
+
 /* NAV pill (desktop) */
 .site-header__nav {
     grid-area: nav;

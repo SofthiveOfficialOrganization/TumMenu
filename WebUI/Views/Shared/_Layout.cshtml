@@ -2,6 +2,11 @@
     var pageTitle = ViewData["Title"] as string ?? "Tüm Menü";
     var fullTitle = $"{pageTitle} | Tüm Menü";
     var bodyClass = ViewData["BodyClass"] as string ?? string.Empty;
+    var isPublicMenuPage = string.Equals(ViewContext.RouteData.Values["Controller"]?.ToString(), "Menu", StringComparison.OrdinalIgnoreCase)
+        && string.IsNullOrEmpty(ViewContext.RouteData.Values["Area"]?.ToString());
+    var hideFooter = ViewData["HideFooter"] is bool hideFooterValue ? hideFooterValue : isPublicMenuPage;
+    var compactHeader = ViewData["CompactHeader"] is bool compactHeaderValue ? compactHeaderValue : isPublicMenuPage;
+    var headerClass = compactHeader ? "site-header site-header--compact" : "site-header";
 
     var description = ViewData["Description"] as string
         ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
@@ -93,7 +98,7 @@
 </head>
 <body class="app-shell @bodyClass">
     <!-- HEADER -->
-    <header class="site-header" role="banner">
+    <header class="@headerClass" role="banner">
         <div class="container site-header__inner">
 
             <a asp-area="" asp-controller="Home" asp-action="Index" class="site-header__logo" aria-label="Tüm Menü ana sayfa">
@@ -150,9 +155,11 @@
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer" role="contentinfo">
-        <div class="container">
+    @if (!hideFooter)
+    {
+        <!-- FOOTER -->
+        <footer class="site-footer" role="contentinfo">
+            <div class="container">
 
             <!-- Desktop footer -->
             <div class="site-footer__top site-footer__top--desktop">
@@ -242,15 +249,16 @@
                 </details>
             </div>
 
-            <div class="site-footer__bottom">
-                <span>© @DateTime.Now.Year Tüm Menü. Tüm hakları saklıdır.</span>
-                <div class="site-footer__social">
-                    <a href="https://www.instagram.com/softhive_" aria-label="Instagram">ig</a>
-                    <a href="https://x.com/Softhive_" aria-label="X">x</a>
+                <div class="site-footer__bottom">
+                    <span>© @DateTime.Now.Year Tüm Menü. Tüm hakları saklıdır.</span>
+                    <div class="site-footer__social">
+                        <a href="https://www.instagram.com/softhive_" aria-label="Instagram">ig</a>
+                        <a href="https://x.com/Softhive_" aria-label="X">x</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    }
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -35,7 +35,7 @@
   --pm-heading-font: "Outfit", sans-serif;
   --pm-heading-size: 2.45rem;
   --pm-subheading-size: 1.6rem;
-  --pm-public-header-height: 95px;
+  --pm-public-header-height: 64px;
   --pm-header-hero-gradient-height: 520px;
 }
 
@@ -557,7 +557,6 @@ body {
   position: sticky;
   top: 18px;
   border: 1px solid var(--pm-border);
-  border-radius: calc(var(--pm-radius) + 8px);
   background: var(--pm-surface-solid);
   padding: clamp(20px, 3vw, 34px);
   box-shadow: var(--pm-shadow);

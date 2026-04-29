@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = $"{Model.ProductTitle} – {Model.StoreName}";
     ViewData["Description"] = $"{Model.StoreName} – {Model.ProductTitle}";
+    ViewData["HideFooter"] = true;
+    ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var backUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}";
     var backHref = backUrl + (ViewBag.IsQrSource == true ? "?isQr=true" : "");

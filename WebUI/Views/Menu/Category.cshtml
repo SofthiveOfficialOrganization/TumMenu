@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = $"{Model.CategoryTitle} – {Model.StoreName}";
     ViewData["Description"] = $"{Model.StoreName} – {Model.CategoryTitle} kategorisindeki ürünler.";
+    ViewData["HideFooter"] = true;
+    ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var backUrl = string.IsNullOrEmpty(Model.ParentCategorySlug) 
         ? $"/{Model.CompanySlug}/{Model.StoreSlug}" 
