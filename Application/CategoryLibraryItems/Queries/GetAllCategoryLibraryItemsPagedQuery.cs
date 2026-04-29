@@ -5,7 +5,6 @@ using Application.Common.Base.Page.RequestBase;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Categories.Queries;
 
@@ -30,7 +29,6 @@ public class GetAllCategoriesPagedHandler(
 				c.Title.Contains(req.Search) ||
 				c.Slug.Contains(req.Search)),
 			orderBy: c => c.OrderBy(c => c.Title),
-			include: c => c.Include(x => x.Parent),
 			ct: ct
 		);
 		var categoryLibItemListDTO = mapper.Map<IPaginate<CategoryLibraryItemDTO>>(categoryLibItemList);

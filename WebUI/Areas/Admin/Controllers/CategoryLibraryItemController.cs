@@ -12,8 +12,7 @@ namespace WebUI.Areas.Admin.Controllers;
 [Area("Admin")]
 public class CategoryLibraryItemController(
 	IMediator mediator, 
-	IMapper mapper,
-	Application.Abstractions.IRepository<Domain.Entities.CategoryLibraryItem> repoCategoryLibrary
+	IMapper mapper
 ) : Controller
 {
 	[Authorize(Roles = "Admin,Owner")]
@@ -26,22 +25,12 @@ public class CategoryLibraryItemController(
 
 	[Authorize(Roles = "Admin")]
 	[HttpGet]
-	public async Task<IActionResult> Create(string? suggestedTitle, Guid? suggestionId, Guid? parentId)
+	public IActionResult Create(string? suggestedTitle, Guid? suggestionId)
 	{
 		var cmd = new CreateCategoryLibraryItemCommand();
 		if (!string.IsNullOrWhiteSpace(suggestedTitle))
 			cmd.Title = suggestedTitle;
 		ViewBag.SuggestionId = suggestionId;
-        
-		if (parentId.HasValue)
-		{
-			cmd.ParentId = parentId;
-			var parentCat = await repoCategoryLibrary.GetByIdAsync(parentId.Value);
-			if (parentCat != null)
-			{
-				ViewBag.ParentName = parentCat.Title;
-			}
-		}
 
 		return View(cmd);
 	}
@@ -79,15 +68,6 @@ public class CategoryLibraryItemController(
 		var dto = await mediator.Send(new GetCategoryLibraryItemByIdQuery { CategoryId = id }, ct);
 		if(dto is null) return NotFound();
 
-		if (dto.ParentId.HasValue)
-		{
-			var parentCat = await repoCategoryLibrary.GetByIdAsync(dto.ParentId.Value, ct);
-			if(parentCat != null)
-			{
-				ViewBag.ParentName = parentCat.Title;
-			}
-		}
-
 		var cmd = mapper.Map<UpdateCategoryLibraryItemCommand>(dto);
 		return View(cmd);
 	}
@@ -116,7 +96,6 @@ public class CategoryLibraryItemController(
 		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
 }
-
 
 
 

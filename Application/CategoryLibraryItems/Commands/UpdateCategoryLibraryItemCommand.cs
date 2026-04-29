@@ -20,7 +20,6 @@ public class UpdateCategoryLibraryItemCommand : IRequest<CategoryLibraryItemDTO>
 	public string? Description { get; set; }
 	public string? Slug { get; set; }
 	public string? IconKey { get; set; }
-	public Guid? ParentId { get; set; }
 }
 
 public class UpdateCategoryLibraryItemCommandValidator : AbstractValidator<UpdateCategoryLibraryItemCommand>
@@ -68,4 +67,3 @@ public class UpdateCategoryLibraryItemCommandHandler(
 		return mapper.Map<CategoryLibraryItemDTO>(item);
 	}
 }
-

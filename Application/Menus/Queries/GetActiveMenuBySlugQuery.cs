@@ -126,7 +126,6 @@ public class GetActiveMenuBySlugHandler(
 						Slug = c.CategoryLibraryItem.Slug,
 						Description = c.CategoryLibraryItem.Description,
 						IconKey = c.CategoryLibraryItem.IconKey,
-						ParentId = c.CategoryLibraryItem.ParentId,
 						ImageUrl = c.CategoryLibraryItem.Medias
 							.Where(m => m.Kind == MediaKind.Image)
 							.OrderBy(m => m.SortOrder)

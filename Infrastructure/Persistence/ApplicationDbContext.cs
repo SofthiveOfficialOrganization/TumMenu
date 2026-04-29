@@ -285,13 +285,6 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(c => c.CategoryLibraryItemId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			// CategoryLibraryItem Self-Referencing (Parent/Children)
-			builder.Entity<CategoryLibraryItem>()
-				.HasOne(c => c.Parent)
-				.WithMany(c => c.Children)
-				.HasForeignKey(c => c.ParentId)
-				.OnDelete(DeleteBehavior.Restrict);
-
 			builder.Entity<CategoryLibraryItem>()
 				.HasIndex(c => c.Slug)
 				.IsUnique()

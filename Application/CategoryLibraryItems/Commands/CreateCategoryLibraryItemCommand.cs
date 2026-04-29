@@ -17,7 +17,6 @@ public class CreateCategoryLibraryItemCommand : IRequest<CategoryLibraryItemDTO>
 	public string? Slug { get; set; }
 	public string? Description { get; set; }
 	public string? IconKey { get; set; }
-	public Guid? ParentId { get; set; }
 }
 
 
@@ -58,4 +57,3 @@ public class CreateCategoryLibraryItemCommandHandler(
 		return mapper.Map<CategoryLibraryItemDTO>(entity);
 	}
 }
-

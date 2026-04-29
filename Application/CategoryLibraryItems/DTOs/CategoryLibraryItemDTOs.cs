@@ -11,8 +11,6 @@ public sealed class CategoryLibraryItemDTO : BaseDTO
 	public string? Description { get; set; }
 	public string? IconKey { get; set; }
 	public string? ImageUrl { get; set; }
-	public Guid? ParentId { get; set; }
-	public string? ParentName { get; set; }
 	public List<MediaDTO> Medias { get; set; } = [];
 }
 

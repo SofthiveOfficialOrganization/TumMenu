@@ -14,8 +14,5 @@ namespace Domain.Entities
 		public string? Description { get; set; }
 		public string? IconKey { get; set; }
 		public ICollection<Media> Medias { get; set; } = [];
-		public Guid? ParentId { get; set; }
-		public CategoryLibraryItem? Parent { get; set; }
-		public ICollection<CategoryLibraryItem> Children { get; set; } = [];
 	}
 }

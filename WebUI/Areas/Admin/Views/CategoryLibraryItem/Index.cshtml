@@ -57,12 +57,6 @@
                                     <small class="text-muted font-monospace"><i class="fas fa-icons me-1 opacity-50"></i>@item.IconKey</small>
                                 </div>
                             }
-                            @if (!string.IsNullOrEmpty(item.ParentName))
-                            {
-                                <div class="mt-2 text-truncate">
-                                    <span class="badge bg-light text-secondary border fw-normal"><i class="fas fa-level-up-alt fa-rotate-90 me-1"></i> Üst Kategori: @item.ParentName</span>
-                                </div>
-                            }
                             @if (!string.IsNullOrEmpty(item.Description))
                             {
                                 <p class="text-secondary small mb-0 mt-2 text-truncate" title="@item.Description">@item.Description</p>
@@ -75,9 +69,6 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-3 pt-3 border-top text-nowrap">
-                        <a asp-action="Create" asp-route-parentId="@item.Id" class="btn btn-sm btn-light text-success" title="Alt Kategori Ekle">
-                            <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
-                        </a>
                         <a asp-action="Details" asp-route-slug="@item.Slug" class="btn btn-sm btn-light text-info" title="Detaylar ve Fotoğraflar">
                             <i class="fas fa-images"></i>
                         </a>
