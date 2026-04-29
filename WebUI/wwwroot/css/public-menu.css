@@ -634,7 +634,6 @@ body {
 .pm-product-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.88fr);
-  gap: 22px;
   align-items: start;
 }
 
