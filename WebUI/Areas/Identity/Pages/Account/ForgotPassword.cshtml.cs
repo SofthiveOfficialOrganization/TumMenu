@@ -79,9 +79,11 @@ namespace WebUI.Areas.Identity.Pages.Account
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 
-                // Türkçe URL'yi manuel oluştur
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var passwordResetUrl = $"{baseUrl}/reset-password?code={code}&userId={user.Id}";
+                var passwordResetUrl = Url.Page(
+                    "./ResetPassword",
+                    pageHandler: null,
+                    values: new { code, userId = user.Id },
+                    protocol: Request.Scheme);
 
                 var emailModel = new PasswordResetEmailModel
                 {
@@ -105,4 +107,3 @@ namespace WebUI.Areas.Identity.Pages.Account
         }
     }
 }
-
