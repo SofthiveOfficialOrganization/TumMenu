@@ -73,6 +73,30 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return View();
     }
 
+    [Route("qr-menu-kurulum-kontrol-listesi")]
+    public IActionResult QrMenuSetupChecklist()
+    {
+        return View();
+    }
+
+    [Route("restoran-menu-fotografi-rehberi")]
+    public IActionResult RestaurantMenuPhotographyGuide()
+    {
+        return View();
+    }
+
+    [Route("kafe-dijital-menu-rehberi")]
+    public IActionResult CafeDigitalMenuGuide()
+    {
+        return View();
+    }
+
+    [Route("restoran-online-menu-seo-rehberi")]
+    public IActionResult RestaurantOnlineMenuSeoGuide()
+    {
+        return View();
+    }
+
     [Route("ne-yesem")]
     public IActionResult WhatToEat()
     {
@@ -268,6 +292,30 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return RedirectPermanent("/menu-baski-maliyeti-hesaplayici");
     }
 
+    [Route("Home/QrMenuSetupChecklist")]
+    public IActionResult QrMenuSetupChecklistRedirect()
+    {
+        return RedirectPermanent("/qr-menu-kurulum-kontrol-listesi");
+    }
+
+    [Route("Home/RestaurantMenuPhotographyGuide")]
+    public IActionResult RestaurantMenuPhotographyGuideRedirect()
+    {
+        return RedirectPermanent("/restoran-menu-fotografi-rehberi");
+    }
+
+    [Route("Home/CafeDigitalMenuGuide")]
+    public IActionResult CafeDigitalMenuGuideRedirect()
+    {
+        return RedirectPermanent("/kafe-dijital-menu-rehberi");
+    }
+
+    [Route("Home/RestaurantOnlineMenuSeoGuide")]
+    public IActionResult RestaurantOnlineMenuSeoGuideRedirect()
+    {
+        return RedirectPermanent("/restoran-online-menu-seo-rehberi");
+    }
+
     [Route("Home/Restaurants")]
     public IActionResult RestaurantsRedirect()
     {
@@ -307,6 +355,10 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/restoran-kaynaklari", ChangeFreq = "weekly", Priority = "0.8" },
             new { Url = "/qr-menu-uygunluk-testi", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/menu-baski-maliyeti-hesaplayici", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/qr-menu-kurulum-kontrol-listesi", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/restoran-menu-fotografi-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/kafe-dijital-menu-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
+            new { Url = "/restoran-online-menu-seo-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
             new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },

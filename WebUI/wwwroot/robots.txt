@@ -4,6 +4,11 @@ Allow: /
 # Disallow admin areas
 Disallow: /Admin/
 Disallow: /Identity/
+Disallow: /api/
+Disallow: /user/
+Disallow: /owner/
+Disallow: /error
+Disallow: /status-code/
 
 # Sitemap
 Sitemap: https://tummenu.com/sitemap.xml

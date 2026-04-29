@@ -4,6 +4,41 @@
 }
 
 @section Head {
+    @{
+        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var faqSchema = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "FAQPage",
+            ["mainEntity"] = new[]
+            {
+                new { Question = "QR menü nedir?", Answer = "QR menü, müşterinin telefon kamerasıyla okuttuğu karekod üzerinden restoran menüsüne ulaşmasını sağlayan dijital menüdür. Ürünler, fiyatlar, açıklamalar ve görseller web sayfası olarak gösterilir." },
+                new { Question = "Müşterinin uygulama indirmesi gerekir mi?", Answer = "Hayır. Müşteri telefon kamerasını açıp QR kodu okutur. Menü tarayıcıda açılır; üyelik, şifre veya uygulama zorunluluğu yoktur." },
+                new { Question = "Menüde fiyat değişikliği yaparsam QR kodu değişir mi?", Answer = "Hayır. Aynı QR kodu kullanılmaya devam eder. Siz panelden fiyatı veya ürün bilgisini güncellediğinizde menü sayfası güncel haliyle görüntülenir." },
+                new { Question = "Birden fazla şubem varsa kullanabilir miyim?", Answer = "Evet. Şube yapısı olan işletmeler farklı şubeler için ayrı menü, kategori ve fiyat düzeni oluşturabilir." },
+                new { Question = "Ücretsiz plan gerçekten ücretsiz mi?", Answer = "Evet. Ücretsiz plan, küçük işletmelerin dijital menüye başlaması için tasarlanmıştır. Kapsam ve limitler fiyatlandırma sayfasında açıkça belirtilir." },
+                new { Question = "Premium plan kimler için daha uygundur?", Answer = "Çok sayıda menü, şube veya gelişmiş analitik ihtiyacı olan işletmeler Premium planı tercih edebilir." },
+                new { Question = "Menüme fotoğraf eklemek zorunda mıyım?", Answer = "Zorunlu değildir, ancak fotoğraflar müşterinin karar vermesini kolaylaştırır. En azından öne çıkan ürünlerde net, güncel ve gerçek ürün fotoğrafları kullanmanız önerilir." },
+                new { Question = "Yasal metinler ve kişisel veri süreçleri nerede?", Answer = "Gizlilik Politikası, Çerez Politikası, KVKK Aydınlatma Metni ve Kullanıcı Sözleşmesi yasal bilgiler sayfasında yayınlanır." },
+                new { Question = "Destek almak için ne yapmalıyım?", Answer = "İletişim formunu doldurabilir veya destek e-posta adresine yazabilirsiniz." },
+                new { Question = "QR menü restoranımı Google'da daha görünür yapar mı?", Answer = "QR menü tek başına SEO garantisi vermez. Ancak güncel, açıklayıcı ve erişilebilir menü sayfaları; blog içerikleri, net işletme bilgileri ve doğru site yapısı ile birlikte daha anlaşılır bir dijital varlık oluşturur." }
+            }.Select(item => new Dictionary<string, object?>
+            {
+                ["@type"] = "Question",
+                ["name"] = item.Question,
+                ["acceptedAnswer"] = new Dictionary<string, object?>
+                {
+                    ["@type"] = "Answer",
+                    ["text"] = item.Answer
+                }
+            }).ToList()
+        };
+    }
+
+    <script type="application/ld+json">
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(faqSchema))
+    </script>
+
     <style>
         .faq-page {
             background: #fbfaf7;

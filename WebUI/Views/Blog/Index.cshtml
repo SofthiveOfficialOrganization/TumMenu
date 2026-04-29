@@ -23,6 +23,51 @@
 }
 
 @section Head {
+    @{
+        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var blogSchema = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "Blog",
+            ["name"] = "TümMenü Blog",
+            ["description"] = ViewData["Description"],
+            ["url"] = $"{baseUrl}/blog",
+            ["inLanguage"] = "tr-TR",
+            ["publisher"] = new Dictionary<string, object?>
+            {
+                ["@type"] = "Organization",
+                ["name"] = "Tüm Menü",
+                ["url"] = baseUrl,
+                ["logo"] = new Dictionary<string, object?>
+                {
+                    ["@type"] = "ImageObject",
+                    ["url"] = $"{baseUrl}/images/logo.png"
+                }
+            }
+        };
+
+        var itemListSchema = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "ItemList",
+            ["name"] = "TümMenü restoran teknolojileri yazıları",
+            ["itemListElement"] = Model.Items.Select((post, index) => new Dictionary<string, object?>
+            {
+                ["@type"] = "ListItem",
+                ["position"] = index + 1,
+                ["url"] = $"{baseUrl}/blog/{post.Slug}",
+                ["name"] = post.Title
+            }).ToList()
+        };
+    }
+
+    <script type="application/ld+json">
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(blogSchema))
+    </script>
+    <script type="application/ld+json">
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(itemListSchema))
+    </script>
+
     <style>
         .blog-topic-section {
             max-width: 1180px;

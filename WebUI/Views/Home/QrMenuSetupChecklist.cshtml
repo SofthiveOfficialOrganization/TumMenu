@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "QR Menü Kurulum Kontrol Listesi";
+    ViewData["Description"] = "Restoranlar için QR menü yayına alma öncesi işletme bilgisi, kategori, ürün, QR yerleşimi ve test kontrol listesi.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="setup-checklist-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Uygulanabilir kontrol listesi</p>
+            <h1 id="setup-checklist-heading" class="resource-title">QR menüyü yayına almadan önce kontrol edin.</h1>
+            <p class="resource-lead">
+                QR menü kurulumunda en sık sorun, teknolojiden değil eksik hazırlıktan çıkar. İşletme bilgileri, kategori
+                düzeni, ürün açıklamaları ve QR kod yerleşimi net olduğunda müşterinin menüye ulaşması daha kolay olur.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2>1. İşletme bilgileri</h2>
+                    <ul>
+                        <li>İşletme adı, adres, telefon ve çalışma saatlerini güncelleyin.</li>
+                        <li>Sosyal medya ve web sitesi linklerini aynı menü bağlantısına yönlendirin.</li>
+                        <li>Şube varsa her şubenin fiyat ve ürün farklarını ayrı kontrol edin.</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>2. Menü yapısı</h2>
+                    <ul>
+                        <li>Kategorileri müşteri diline göre adlandırın: kahvaltı, sıcak içecekler, ana yemekler gibi.</li>
+                        <li>En çok satılan ürünleri kategori içinde kolay bulunur hale getirin.</li>
+                        <li>Stokta olmayan veya sezon dışı ürünleri yayında bırakmayın.</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>3. Ürün detayları</h2>
+                    <ul>
+                        <li>Fiyat, porsiyon, içerik ve alerjen bilgilerini gözden geçirin.</li>
+                        <li>Fotoğraf kullanıyorsanız gerçek ürünü temsil ettiğinden emin olun.</li>
+                        <li>Uzun açıklamaları mobil ekranda okunabilir şekilde kısaltın.</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>4. QR kod yerleşimi</h2>
+                    <ul>
+                        <li>QR kodu masa üzerinde kolay görünen ama yemek alanını daraltmayan bir noktaya koyun.</li>
+                        <li>Vitrin, kasa ve paket servis alanı için ayrı kullanım noktalarını düşünün.</li>
+                        <li>Yazdırmadan önce farklı telefonlarla tarama testi yapın.</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>5. Yayın sonrası kontrol</h2>
+                    <ul>
+                        <li>Menü linkini Instagram, Google işletme profili ve web sitenizde güncelleyin.</li>
+                        <li>Personelin müşteriye QR menüyü nasıl anlatacağını netleştirin.</li>
+                        <li>İlk hafta gelen müşteri sorularını not edip menü açıklamalarını iyileştirin.</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>İlgili kaynaklar</h2>
+                    <p>Kurulum kararınızı tamamlamak için uygunluk testini ve QR menü başlangıç yazısını da inceleyebilirsiniz.</p>
+                    <ul>
+                        <li><a href="/qr-menu-uygunluk-testi">QR menü uygunluk testi</a></li>
+                        <li><a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a></li>
+                        <li><a href="/qr-kod">QR menü çözümü</a></li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

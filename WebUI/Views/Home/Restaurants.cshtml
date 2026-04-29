@@ -12,6 +12,47 @@
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <style>
+        .rest-info-section {
+            padding: 44px 0;
+            background: #fbfaf7;
+            border-bottom: 1px solid rgba(73, 85, 56, 0.1);
+        }
+
+        .rest-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .rest-info-card {
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 22px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.05);
+        }
+
+        .rest-info-card h2,
+        .rest-info-card h3 {
+            color: var(--color-secondary-dark);
+            margin-bottom: 10px;
+        }
+
+        .rest-info-card p,
+        .rest-info-card li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .rest-empty-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+    </style>
 }
 
 <!-- HERO MINI -->
@@ -32,6 +73,30 @@
             </div>
             <button type="submit" class="btn btn--primary rest-search__btn">Ara</button>
         </form>
+    </div>
+</section>
+
+<section class="rest-info-section" aria-labelledby="restaurants-info-heading">
+    <div class="container">
+        <div class="rest-info-grid">
+            <article class="rest-info-card">
+                <h2 id="restaurants-info-heading">Restoranları menü bilgisiyle keşfedin</h2>
+                <p>Bu sayfa, yakındaki işletmeleri yalnızca isim olarak değil; menü, kategori, fiyat ve konum bilgisiyle incelemek için tasarlanmıştır. Konum seçimi yaparak çevrenizdeki kayıtlı restoranları daha anlamlı şekilde filtreleyebilirsiniz.</p>
+            </article>
+            <article class="rest-info-card">
+                <h3>Daha iyi sonuç için</h3>
+                <ul>
+                    <li>Önce il/ilçe veya harita konumu seçin.</li>
+                    <li>Arama alanına ürün, restoran adı veya kategori yazın.</li>
+                    <li>Mesafe filtresini günlük kullanımınıza göre daraltın.</li>
+                </ul>
+            </article>
+            <article class="rest-info-card">
+                <h3>İşletme sahibi misiniz?</h3>
+                <p>Restoranınızın menüsünü QR kodla yayınlamak ve keşif sayfalarında daha anlaşılır görünmek için QR menü kaynaklarını inceleyebilirsiniz.</p>
+                <p><a href="/restoran-kaynaklari">Kaynak merkezi</a> · <a href="/qr-kod">QR'lı Ol</a></p>
+            </article>
+        </div>
     </div>
 </section>
 
@@ -219,7 +284,11 @@
                     <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
                 <h3>Sonuç bulunamadı</h3>
-                <p>Farklı bir arama terimi veya filtre deneyin.</p>
+                <p>Farklı bir arama terimi veya filtre deneyin. Konum seçimi yaptıysanız mesafeyi genişletmek veya kategori filtresini temizlemek de yardımcı olabilir.</p>
+                <div class="rest-empty-links">
+                    <a class="btn btn--ghost" href="/blog/restoranlar-neden-dijital-menuye-gecmeli">Dijital menü rehberi</a>
+                    <a class="btn btn--ghost" href="/restoran-kaynaklari">Restoran kaynakları</a>
+                </div>
             </div>
 
             <!-- Load more -->

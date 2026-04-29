@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Restoran Menü Fotoğrafı Rehberi";
+    ViewData["Description"] = "Dijital menüde daha güven veren restoran ürün fotoğrafları hazırlamak için ışık, açı, arka plan ve tutarlılık rehberi.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="photo-guide-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Dijital menü görsel rehberi</p>
+            <h1 id="photo-guide-heading" class="resource-title">Menü fotoğrafları müşterinin kararını kolaylaştırmalı.</h1>
+            <p class="resource-lead">
+                Dijital menüde fotoğraf, yalnızca süs değildir. Ürünün porsiyonunu, sunumunu ve beklentisini anlatır.
+                Pahalı ekipman olmadan da tutarlı ışık, sade arka plan ve gerçek ürün sunumuyla güven veren görseller hazırlanabilir.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2>Işık ve arka plan</h2>
+                    <p>Doğal ışık alan bir masa, çoğu ürün için yeterlidir. Sert gölgelerden, renkli ışıklardan ve kalabalık arka plandan kaçının. Fotoğraf ürünün kendisini anlatmalı.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Açı ve porsiyon</h2>
+                    <p>Pizza, tabak yemekleri ve kahvaltı için üstten açı; burger, tatlı ve içecekler için hafif yandan açı daha anlaşılır olabilir. Porsiyonu olduğundan büyük göstermeyin.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Tutarlılık</h2>
+                    <p>Tüm ürünleri aynı ışık, benzer kadraj ve benzer arka planla çekmek menünün daha profesyonel görünmesini sağlar. Karışık stiller güveni azaltabilir.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Kaç fotoğraf yeterli?</h2>
+                    <p>Her ürünü çekmek zorunlu değildir. Önce en çok satılan, yeni eklenen veya müşterinin sık sorduğu ürünlerle başlayın. Zamanla eksikleri tamamlayabilirsiniz.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Kaçınılacak hatalar</h2>
+                    <ul>
+                        <li>Gerçek üründen farklı stok görsel kullanmak</li>
+                        <li>Eski sunuma ait fotoğrafı yayında bırakmak</li>
+                        <li>Menüdeki fiyat ve fotoğraf beklentisini uyumsuz bırakmak</li>
+                        <li>Çok karanlık veya çok yakın kadraj kullanmak</li>
+                    </ul>
+                </article>
+                <article class="resource-card">
+                    <h2>İlgili kaynaklar</h2>
+                    <ul>
+                        <li><a href="/blog/menu-fotograflari-dijital-menude-neden-onemlidir">Menü fotoğrafları neden önemlidir?</a></li>
+                        <li><a href="/blog/restoran-menusu-nasil-tasarlanir">Restoran menüsü nasıl tasarlanır?</a></li>
+                        <li><a href="/restoran-kaynaklari">Kaynak merkezine dön</a></li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

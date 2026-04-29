@@ -7,6 +7,29 @@
         ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
 
     var canonical = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var requestPath = Context.Request.Path.Value ?? string.Empty;
+    var systemNoIndexPrefixes = new[]
+    {
+        "/Admin",
+        "/Identity",
+        "/api",
+        "/user",
+        "/owner",
+        "/error",
+        "/status-code"
+    };
+    var systemNoIndexExactPaths = new[]
+    {
+        "/giris",
+        "/kayit",
+        "/hesap-aktivasyon",
+        "/Account/AccountActivationSuccess"
+    };
+    var robotsContent = ViewData["Robots"] as string
+        ?? (systemNoIndexPrefixes.Any(prefix => requestPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            || systemNoIndexExactPaths.Any(path => string.Equals(requestPath, path, StringComparison.OrdinalIgnoreCase))
+                ? "noindex,nofollow"
+                : "index,follow");
 }
 
 <!doctype html>
@@ -17,7 +40,7 @@
 
     <title>@fullTitle</title>
     <meta name="description" content="@description" />
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="@robotsContent" />
     <link rel="canonical" href="@canonical" />
 
     <meta name="theme-color" content="#688745" />

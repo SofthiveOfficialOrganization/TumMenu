@@ -18,6 +18,46 @@
 }
 
 @section Head {
+    @{
+        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var articleSchema = new Dictionary<string, object?>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "Article",
+            ["headline"] = Model.Title,
+            ["description"] = Model.Summary,
+            ["url"] = $"{baseUrl}/blog/{Model.Slug}",
+            ["mainEntityOfPage"] = new Dictionary<string, object?>
+            {
+                ["@type"] = "WebPage",
+                ["@id"] = $"{baseUrl}/blog/{Model.Slug}"
+            },
+            ["datePublished"] = Model.PublishedAt.ToString("yyyy-MM-dd"),
+            ["dateModified"] = Model.PublishedAt.ToString("yyyy-MM-dd"),
+            ["inLanguage"] = "tr-TR",
+            ["image"] = string.IsNullOrWhiteSpace(Model.CoverImageUrl)
+                ? $"{baseUrl}/images/hero-illustration.png"
+                : $"{baseUrl}{Model.CoverImageUrl}",
+            ["author"] = new Dictionary<string, object?>
+            {
+                ["@type"] = "Organization",
+                ["name"] = "TumMenu Ekibi",
+                ["url"] = baseUrl
+            },
+            ["publisher"] = new Dictionary<string, object?>
+            {
+                ["@type"] = "Organization",
+                ["name"] = "Tüm Menü",
+                ["url"] = baseUrl,
+                ["logo"] = new Dictionary<string, object?>
+                {
+                    ["@type"] = "ImageObject",
+                    ["url"] = $"{baseUrl}/images/logo.png"
+                }
+            }
+        };
+    }
+
     <style>
         .blog-trust-note,
         .blog-related-tools {
@@ -59,13 +99,7 @@
     </style>
 
     <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "Article",
-      "headline": "@Model.Title",
-      "description": "@Model.Summary",
-      "datePublished": "@Model.PublishedAt.ToString("yyyy-MM-dd")"
-    }
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(articleSchema))
     </script>
 }
 

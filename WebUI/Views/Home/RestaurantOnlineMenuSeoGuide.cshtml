@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Restoran Online Menü SEO Rehberi";
+    ViewData["Description"] = "Restoran online menüsünü Google ve kullanıcılar için daha anlaşılır hale getirmek üzere başlık, açıklama, kategori ve iç link önerileri.";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/resources.css" asp-append-version="true" />
+}
+
+<div class="resource-page">
+    <section class="resource-hero" aria-labelledby="seo-guide-heading">
+        <div class="container resource-hero__inner">
+            <p class="resource-eyebrow">Restoran görünürlüğü için temel rehber</p>
+            <h1 id="seo-guide-heading" class="resource-title">Online menü, hem müşteriye hem Google'a anlaşılır olmalı.</h1>
+            <p class="resource-lead">
+                Restoran menüsü yalnızca fiyat listesi değildir. Kategori adları, ürün açıklamaları, konum bilgisi ve güncel
+                işletme detayları arama motorlarının sayfayı daha iyi anlamasına yardımcı olur. Bu rehber teknik karmaşaya
+                girmeden temel düzeni anlatır.
+            </p>
+        </div>
+    </section>
+
+    <section class="resource-section resource-band">
+        <div class="container">
+            <div class="resource-grid">
+                <article class="resource-card">
+                    <h2>Net sayfa başlıkları</h2>
+                    <p>Menü sayfanız işletme adı, şube ve menü bağlamını açıkça taşımalıdır. Kullanıcı hangi işletmenin menüsüne baktığını ilk ekranda anlamalıdır.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Açıklayıcı kategori yapısı</h2>
+                    <p>“Ürünler” gibi genel başlıklar yerine “kahvaltı”, “ana yemekler”, “tatlılar”, “soğuk içecekler” gibi gerçek kategori adları kullanın.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Ürün açıklamaları</h2>
+                    <p>Her ürün için uzun metin gerekmez; ancak içerik, porsiyon veya ayırt edici özellik kısa şekilde yazıldığında sayfa daha yararlı olur.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>Güncellik sinyali</h2>
+                    <p>Fiyatı değişmiş, stokta olmayan veya sezon dışı kalmış ürünleri yayında bırakmayın. Güncel menü, hem müşteri güveni hem site kalitesi için önemlidir.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>İç linkler</h2>
+                    <p>Menü sayfasından işletme bilgilerine, blog rehberlerinden fiyatlandırma ve destek sayfalarına doğal bağlantılar vermek site yapısını anlaşılır kılar.</p>
+                </article>
+                <article class="resource-card">
+                    <h2>İlgili kaynaklar</h2>
+                    <ul>
+                        <li><a href="/blog/restoranlar-neden-dijital-menuye-gecmeli">Restoranlar neden dijital menüye geçmeli?</a></li>
+                        <li><a href="/blog/online-siparise-hazirlik-rehberi">Online siparişe hazırlık rehberi</a></li>
+                        <li><a href="/sss">Sık sorulan sorular</a></li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

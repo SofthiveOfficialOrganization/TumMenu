@@ -6,6 +6,38 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/WhatToEatRedesign.css" asp-append-version="true" />
+    <style>
+        .wte-info {
+            padding: 64px 0;
+            background: #fbfaf7;
+        }
+
+        .wte-info__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .wte-info__card {
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 22px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.05);
+        }
+
+        .wte-info__card h2,
+        .wte-info__card h3 {
+            color: var(--color-secondary-dark);
+            margin-bottom: 10px;
+        }
+
+        .wte-info__card p,
+        .wte-info__card li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+    </style>
 }
 
 <div class="wte-page">
@@ -253,6 +285,30 @@
                     </div>
                     <div class="wte-budget__suggestions" id="wte-budget-suggestions"></div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wte-info" aria-labelledby="wte-info-heading">
+        <div class="container">
+            <div class="wte-info__grid">
+                <article class="wte-info__card">
+                    <h2 id="wte-info-heading">“Ne yesem?” kararı neden zorlaşır?</h2>
+                    <p>Seçenek arttıkça karar vermek de zorlaşır. Menüye gitmeden bakmak, fiyat aralığını görmek ve yakın restoranları karşılaştırmak günlük yemek kararını daha sakin hale getirir.</p>
+                </article>
+                <article class="wte-info__card">
+                    <h3>Daha iyi seçim için</h3>
+                    <ul>
+                        <li>Önce bütçenizi ve yemek tarzınızı belirleyin.</li>
+                        <li>Yakın restoranları menü bilgisiyle karşılaştırın.</li>
+                        <li>Fotoğraf, açıklama ve fiyat bilgisini birlikte değerlendirin.</li>
+                    </ul>
+                </article>
+                <article class="wte-info__card">
+                    <h3>İlgili kaynaklar</h3>
+                    <p>Menü kalitesi, fotoğraf ve dijital menü deneyimi hakkında daha fazla bilgi için rehberleri inceleyebilirsiniz.</p>
+                    <p><a href="/restoranlar">Restoranları keşfet</a> · <a href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">Müşteri deneyimi rehberi</a></p>
+                </article>
             </div>
         </div>
     </section>

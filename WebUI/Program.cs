@@ -83,6 +83,36 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value ?? string.Empty;
+    var noIndexPrefixes = new[]
+    {
+        "/Admin",
+        "/Identity",
+        "/api",
+        "/user",
+        "/owner",
+        "/error",
+        "/status-code"
+    };
+    var noIndexExactPaths = new[]
+    {
+        "/giris",
+        "/kayit",
+        "/hesap-aktivasyon",
+        "/Account/AccountActivationSuccess"
+    };
+
+    if (noIndexPrefixes.Any(prefix => path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        || noIndexExactPaths.Any(noIndexPath => string.Equals(path, noIndexPath, StringComparison.OrdinalIgnoreCase)))
+    {
+        context.Response.Headers["X-Robots-Tag"] = "noindex, nofollow";
+    }
+
+    await next();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/status-code/{0}");
