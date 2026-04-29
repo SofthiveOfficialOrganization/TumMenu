@@ -505,7 +505,6 @@
             });
 
             // --- Address Handling for Store Step ---
-            const cityInput = document.getElementById('citySelect');
             const districtSelect = $('#districtSelect');
             const citySelect = $('#citySelect'); // for select2
             
@@ -551,46 +550,111 @@
                 $('#mapOverlay').hide();
             }
 
-            function loadDistricts(cityId, targetDistrictName = null) {
-                districtSelect.prop('disabled', true);
-                fetch(`/api/location/districts/${cityId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        districtSelect.prop('disabled', false).empty().append('<option value="">İlçe Seçiniz</option>');
-                        data.forEach(d => {
-                            var opt = $('<option>', { value: d.id, text: d.name });
-                            if(targetDistrictName && d.name === targetDistrictName) {
-                                opt.attr('selected', true);
-                            }
-                            districtSelect.append(opt);
-                        });
-                        districtSelect.trigger('change');
-                    })
-                    .catch(err => console.error('District load error:', err));
+            function setDistrictPlaceholder(text, disabled = true) {
+                districtSelect
+                    .prop('disabled', disabled)
+                    .empty()
+                    .append($('<option>', { value: '', text: text }))
+                    .trigger('change.select2');
             }
 
-            // Load Cities
-            fetch('/api/location/provinces')
-                .then(res => res.json())
-                .then(data => {
-                    data.forEach(p => {
-                        var opt = document.createElement('option');
-                        opt.value = p.id;
-                        opt.textContent = p.name;
-                        opt.dataset.name = p.name;
-                        if(state.cityId === p.id || state.cityName === p.name) {
-                            opt.selected = true;
-                            state.cityId = p.id;
-                            state.cityName = p.name;
-                        }
-                        cityInput.appendChild(opt);
-                    });
-                    citySelect.trigger('change');
-                    if(state.cityId) {
-                        loadDistricts(state.cityId, state.districtName);
+            function loadDistricts(cityId, selectedDistrictId = null) {
+                if (!cityId) {
+                    setDistrictPlaceholder('Önce İl Seçiniz');
+                    return;
+                }
+
+                setDistrictPlaceholder('Yükleniyor...');
+
+                $.get(`/api/location/districts/${cityId}`, function(data) {
+                    if (!Array.isArray(data)) {
+                        console.error('District response was not a list:', data);
+                        setDistrictPlaceholder('İlçe listesi yüklenemedi');
+                        return;
                     }
-                })
-                .catch(err => console.error('City load error:', err));
+
+                    districtSelect
+                        .prop('disabled', false)
+                        .empty()
+                        .append($('<option>', { value: '', text: 'İlçe Seçiniz' }));
+
+                    data.forEach(d => {
+                        districtSelect.append($('<option>', {
+                            value: d.id,
+                            text: d.name
+                        }));
+                    });
+
+                    if (selectedDistrictId) {
+                        districtSelect.val(selectedDistrictId);
+                    }
+
+                    districtSelect.trigger('change');
+                }).fail(function(xhr) {
+                    console.error('District load error:', xhr);
+                    setDistrictPlaceholder('İlçe listesi yüklenemedi');
+                });
+            }
+
+            let provincesLoaded = false;
+
+            function loadProvinces(forceReload = false) {
+                if (provincesLoaded && !forceReload) return;
+
+                citySelect
+                    .prop('disabled', true)
+                    .empty()
+                    .append($('<option>', { value: '', text: 'İl yükleniyor...' }))
+                    .trigger('change.select2');
+
+                $.get('/api/location/provinces', function(data) {
+                    if (!Array.isArray(data)) {
+                        console.error('Province response was not a list:', data);
+                        provincesLoaded = false;
+                        citySelect
+                            .prop('disabled', false)
+                            .empty()
+                            .append($('<option>', { value: '', text: 'İl listesi yüklenemedi' }))
+                            .trigger('change.select2');
+                        setDistrictPlaceholder('Önce İl Seçiniz');
+                        return;
+                    }
+
+                    citySelect
+                        .prop('disabled', false)
+                        .empty()
+                        .append($('<option>', { value: '', text: 'İl Seçiniz' }));
+
+                    data.forEach(p => {
+                        citySelect.append($('<option>', {
+                            value: p.id,
+                            text: p.name,
+                            'data-lat': p.latitude,
+                            'data-lng': p.longitude
+                        }));
+                    });
+
+                    provincesLoaded = true;
+
+                    if (state.cityId) {
+                        citySelect.val(state.cityId);
+                    }
+
+                    citySelect.trigger('change');
+                }).fail(function(xhr) {
+                    console.error('City load error:', xhr);
+                    provincesLoaded = false;
+                    citySelect
+                        .prop('disabled', false)
+                        .empty()
+                        .append($('<option>', { value: '', text: 'İl listesi yüklenemedi' }))
+                        .trigger('change.select2');
+                    setDistrictPlaceholder('Önce İl Seçiniz');
+                });
+            }
+
+            // Load provinces on page load, and retry when the store step becomes active.
+            loadProvinces();
 
             citySelect.on('change', function() {
                 const cityId = $(this).val();
@@ -612,8 +676,7 @@
                         });
                 } else {
                     cityNameInput.val('');
-                    districtSelect.prop('disabled', true).empty().append('<option value="">Önce İl Seçiniz</option>');
-                    districtSelect.trigger('change');
+                    setDistrictPlaceholder('Önce İl Seçiniz');
                     $('#mapOverlay').show();
                 }
             });
@@ -677,6 +740,12 @@
                 
                 wizard.css('transform', `translateX(-${currentStep * 25}%)`);
                 updateWizardHeight();
+
+                if (currentStep === 1) {
+                    loadProvinces();
+                    citySelect.trigger('change.select2');
+                    districtSelect.trigger('change.select2');
+                }
 
                 // Auto-init category step when reaching step 4
                 if (currentStep === 3) {
@@ -879,7 +948,7 @@
 
             // --- Step 4: Category Library Search + Add + Sort ---
             let categorySearchTimer = null;
-            const categorySearchUrl  = `/admin/CategoryLibrary/Index`;
+            const categorySearchUrl  = `/admin/Onboarding/category-library`;
             const menuCategoriesUrl  = `/admin/Onboarding/menu-categories`;
             const addCategoryUrl     = `/admin/Onboarding/add-category`;
             const sortUrl            = `/admin/Category/UpdateSortOrder`;
