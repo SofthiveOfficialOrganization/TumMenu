@@ -32,6 +32,14 @@ public class UpdateStoreCommandHandler(
 					.Include(s => s.Address)
 					.FirstOrDefaultAsync(s => s.Id == req.Id, ct) ?? throw new NotFoundAppException("Dükkan bulunamadı.");
 
+		if(req.Slug != store.Slug)
+		{
+			var slugExistsInCompany = await repoStore.Query()
+				.AnyAsync(s => s.CompanyId == store.CompanyId && s.Slug == req.Slug && s.Id != req.Id, ct);
+			if(slugExistsInCompany)
+				throw new AlreadyExistsAppException("Bu slug zaten kullanılmakta.");
+		}
+
 		mapper.Map(req, store);
 		repoStore.Update(store);
 		return Unit.Value;

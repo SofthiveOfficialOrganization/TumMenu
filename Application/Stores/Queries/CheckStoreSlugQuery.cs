@@ -8,6 +8,7 @@ namespace Application.Stores.Queries;
 public class CheckStoreSlugQuery : IRequest<CheckStoreSlugResult>
 {
 	public string Slug { get; set; } = string.Empty;
+	public Guid CompanyId { get; set; }
 	public Guid? ExcludeId { get; set; }
 }
 
@@ -26,8 +27,11 @@ public class CheckStoreSlugHandler(
 		if (string.IsNullOrWhiteSpace(req.Slug))
 			return new CheckStoreSlugResult { Available = false, Message = "Slug boş olamaz." };
 
+		if (req.CompanyId == Guid.Empty)
+			return new CheckStoreSlugResult { Available = false, Message = "Şirket seçilmelidir." };
+
 		var query = repoStore.Query()
-			.Where(s => s.Slug == req.Slug);
+			.Where(s => s.CompanyId == req.CompanyId && s.Slug == req.Slug);
 
 		if (req.ExcludeId.HasValue)
 			query = query.Where(s => s.Id != req.ExcludeId.Value);

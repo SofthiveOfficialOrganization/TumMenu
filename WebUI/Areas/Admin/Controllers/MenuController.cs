@@ -38,7 +38,7 @@ public sealed class MenuController(IMediator mediator) : Controller
     {
         if (User.IsInRole("Admin"))
         {
-            var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery { Search = search, Page = page, OnlyCompanyMenus = true }, ct);
+            var menus = await mediator.Send(new GetAllMenusPagedQuery { Search = search, Page = page, OnlyCompanyMenus = true }, ct);
             return View("CompanyMenus", menus);
         }
         else
@@ -428,6 +428,5 @@ public class CloneMenuToStoreRequest
     public Guid SourceMenuId { get; set; }
     public Guid StoreId { get; set; }
 }
-
 
 

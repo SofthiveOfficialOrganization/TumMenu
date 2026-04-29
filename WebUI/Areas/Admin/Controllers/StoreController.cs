@@ -170,9 +170,9 @@ public class StoreController(IMediator mediator) : Controller
 		return RedirectToAction(nameof(Index), new { companyId = id, role = RouteData.Values["role"] });
 	}
 	[HttpGet]
-	public async Task<IActionResult> CheckSlug(string slug, Guid? excludeId, CancellationToken ct)
+	public async Task<IActionResult> CheckSlug(string slug, Guid companyId, Guid? excludeId, CancellationToken ct)
 	{
-		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, ExcludeId = excludeId }, ct);
+		var result = await mediator.Send(new CheckStoreSlugQuery { Slug = slug, CompanyId = companyId, ExcludeId = excludeId }, ct);
 		return Json(new { available = result.Available, message = result.Message });
 	}
 
@@ -186,7 +186,6 @@ public class StoreController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
-
 
 
 

@@ -228,11 +228,6 @@ namespace Infrastructure.Persistence
 				.HasIndex(x => new { x.CompanyId, x.Slug })
 				.IsUnique()
 				.HasFilter("[IsDeleted] = 0");
-
-			builder.Entity<Store>()
-				.HasIndex(x => x.Slug)
-				.IsUnique()
-				.HasFilter("[IsDeleted] = 0");
 		}
 
 		#endregion

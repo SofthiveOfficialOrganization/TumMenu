@@ -157,6 +157,10 @@
          CompanySelector.init(function(id, title) {
             $('#selectedCompanyId').val(id);
             $('#companyNameDisplay').val(title);
+            const slug = $('#slugInput').val();
+            if (slug) {
+                debouncedCheck(slug);
+            }
         });
 
         // Slug Logic
@@ -197,7 +201,19 @@
                 slugAvailable = true;
                 return;
             }
-            $.get(checkUrl, { slug: slug }, function (data) {
+
+            const companyId = $('#selectedCompanyId').val();
+            if (!companyId) {
+                slugFeedback.show()
+                    .html('<i class="fas fa-info-circle text-warning me-1"></i> Önce şirket seçilmelidir.')
+                    .removeClass('text-success text-danger').addClass('text-warning');
+                slugIcon.removeClass('fa-lock fa-check-circle fa-times-circle text-success text-danger text-secondary')
+                    .addClass('fa-info-circle text-warning');
+                slugAvailable = false;
+                return;
+            }
+
+            $.get(checkUrl, { slug: slug, companyId: companyId }, function (data) {
                 slugFeedback.show();
                 if (data.available) {
                     slugFeedback.html('<i class="fas fa-check-circle text-success me-1"></i> ' + data.message)

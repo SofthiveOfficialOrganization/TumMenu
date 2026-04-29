@@ -423,7 +423,7 @@
                 return result;
             }
 
-            function setupSlugHandling(prefix, checkUrl) {
+            function setupSlugHandling(prefix, checkUrl, getExtraParams) {
                 const titleInput = $('#' + prefix + 'Title');
                 const slugInput = $('#' + prefix + 'Slug');
                 const slugToggle = $('#' + prefix + 'SlugToggle');
@@ -437,7 +437,8 @@
                         slugFeedback.hide();
                         return;
                     }
-                    $.get(checkUrl, { slug: slug }, function (data) {
+                    const params = Object.assign({ slug: slug }, getExtraParams ? getExtraParams() : {});
+                    $.get(checkUrl, params, function (data) {
                         console.log('Slug Check Response (' + prefix + '):', data); // Debugging
                         slugFeedback.show();
                         if (data.available) {
@@ -499,7 +500,9 @@
             }
 
             setupSlugHandling('Company', '@Url.Action("CheckSlug", "Company", new { area = "Admin" })');
-            setupSlugHandling('Store', '@Url.Action("CheckSlug", "Store", new { area = "Admin" })');
+            setupSlugHandling('Store', '@Url.Action("CheckSlug", "Store", new { area = "Admin" })', function () {
+                return { companyId: $('#StoreCompanyId').val() };
+            });
 
             // --- Address Handling for Store Step ---
             const cityInput = document.getElementById('citySelect');
@@ -779,6 +782,7 @@
                         // Response should be CompanyDTO
                         $('#StoreCompanyId').val(response.id);
                         $('#MenuCompanyId').val(response.id);
+                        $('#StoreSlugFeedback').removeClass('text-danger text-success').hide();
                         btn.prop('disabled', false).html(originalText);
                         nextStep();
                     },

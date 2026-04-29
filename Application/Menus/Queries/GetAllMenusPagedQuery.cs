@@ -12,6 +12,8 @@ namespace Application.Menus.Queries;
 public class GetAllMenusPagedQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>
 {
     public string? Search { get; set; }
+    public bool OnlyStoreMenus { get; set; }
+    public bool OnlyCompanyMenus { get; set; }
 }
 
 public class GetAllMenusPagedHandler(
@@ -23,7 +25,10 @@ public class GetAllMenusPagedHandler(
 	{
 		var menu = await repoMenu.GetPageListAsync(
 			request: req,
-			expression: m => string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search),
+			expression: m =>
+				(string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search)) &&
+				(!req.OnlyStoreMenus || m.StoreId != null) &&
+				(!req.OnlyCompanyMenus || m.CompanyId != null),
 			include: m => m.Include(m => m.Categories).Include(m => m.Medias)
 				.Include(m => m.Store).Include(m => m.Company),
 			orderBy: m => m

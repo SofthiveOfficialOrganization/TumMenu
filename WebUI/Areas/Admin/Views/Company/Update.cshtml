@@ -46,7 +46,7 @@
                     <button type="submit" class="btn btn-primary btn-lg shadow-sm" id="submitBtn">
                         <i class="fas fa-save me-2"></i> Şirketi Güncelle
                     </button>
-                    <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-secondary">İptal</a>
+                    <a asp-area="Admin" asp-controller="Company" asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-secondary">İptal</a>
                 </div>
             </form>
         </div>

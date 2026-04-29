@@ -16,8 +16,15 @@ public class CompanyController(IMediator mediator) : Controller
 		return View();
 	}
 	[HttpGet("[action]/{id}")]
-	public async Task<IActionResult> Details(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Details(Guid id, string? returnUrl, CancellationToken ct)
 	{
+		if (!string.IsNullOrWhiteSpace(returnUrl)
+			&& Url.IsLocalUrl(returnUrl)
+			&& returnUrl.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase))
+		{
+			return RedirectToAction(nameof(Details), "Company", new { area = "Admin", id, returnUrl });
+		}
+
 		CompanyDTO? company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
 		return View(company);
 	}

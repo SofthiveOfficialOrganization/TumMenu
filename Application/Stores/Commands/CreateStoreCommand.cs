@@ -5,6 +5,7 @@ using Application.Stores.DTOs;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Stores.Commands;
 
@@ -30,6 +31,11 @@ public class CreateStoreCommandHandler(
 		bool companyExists = await repoCompany.ExistsAsync(c => c.Id == req.CompanyId, ct);
 		if(!companyExists)
 			throw new UnprocessableAppException("Dükkanın ekleneceği şirket bulunamadı.");
+
+		var slugExistsInCompany = await repoStore.Query()
+			.AnyAsync(s => s.CompanyId == req.CompanyId && s.Slug == req.Slug, ct);
+		if(slugExistsInCompany)
+			throw new AlreadyExistsAppException("Bu slug zaten kullanılmakta.");
 
 		var store = mapper.Map<Store>(req);
 		await repoStore.AddAsync(store, ct);

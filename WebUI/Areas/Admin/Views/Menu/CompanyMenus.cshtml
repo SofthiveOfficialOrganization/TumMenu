@@ -3,7 +3,8 @@
 @model PaginatedListDTO<MenuDTO>
 
 @{
-    ViewData["Title"] = "Ana Menülerim";
+    var isAdmin = User.IsInRole("Admin");
+    ViewData["Title"] = isAdmin ? "Şirket Ana Menüleri" : "Ana Menülerim";
 }
 
 <div class="row">
@@ -11,12 +12,19 @@
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                   <h4 class="fw-bold mb-1">Ana Menülerim</h4>
-                   <p class="text-secondary small mb-0">Şirketinize ait ana menüleri yönetin. Bu menüler tüm dükkanlarınızda kullanılabilir.</p>
+                   <h4 class="fw-bold mb-1">@(isAdmin ? "Şirket Ana Menüleri" : "Ana Menülerim")</h4>
+                   <p class="text-secondary small mb-0">
+                       @(isAdmin
+                           ? "Şirketlere ait ana menüleri görüntüleyin."
+                           : "Şirketinize ait ana menüleri yönetin. Bu menüler tüm dükkanlarınızda kullanılabilir.")
+                   </p>
                 </div>
-                <a asp-action="CreateToCompany" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus me-2"></i> Yeni Ana Menü
-                </a>
+                @if (!isAdmin)
+                {
+                    <a asp-action="CreateToCompany" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-2"></i> Yeni Ana Menü
+                    </a>
+                }
             </div>
 
             <div class="table-responsive">
@@ -93,10 +101,13 @@
                                         </span>
                                     </div>
                                     <h5>Henüz ana menü yok</h5>
-                                    <p class="small">Şirketiniz için henüz bir ana menü oluşturmadınız.</p>
-                                    <a asp-action="CreateToCompany" class="btn btn-primary btn-sm mt-2">
-                                        <i class="fas fa-plus me-2"></i> İlk Ana Menünüzü Oluşturun
-                                    </a>
+                                    <p class="small">@(isAdmin ? "Henüz hiçbir şirkete ait ana menü bulunmuyor." : "Şirketiniz için henüz bir ana menü oluşturmadınız.")</p>
+                                    @if (!isAdmin)
+                                    {
+                                        <a asp-action="CreateToCompany" class="btn btn-primary btn-sm mt-2">
+                                            <i class="fas fa-plus me-2"></i> İlk Ana Menünüzü Oluşturun
+                                        </a>
+                                    }
                                 </td>
                             </tr>
                         }

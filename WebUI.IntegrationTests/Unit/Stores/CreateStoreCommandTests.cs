@@ -92,4 +92,63 @@ public class CreateStoreCommandTests
         // Assert
         await act.Should().ThrowAsync<UnprocessableAppException>();
     }
+
+    [Fact]
+    public async Task Handle_DuplicateSlugInSameCompany_ThrowsAlreadyExistsAppException()
+    {
+        var company = new Company { Title = "Test Co", Slug = "test-co" };
+        await _db.Companies.AddAsync(company);
+        await _db.Stores.AddAsync(new Store
+        {
+            Title = "Existing Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        });
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "New Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        };
+
+        var act = () => handler.Handle(command, CancellationToken.None);
+
+        await act.Should().ThrowAsync<AlreadyExistsAppException>();
+    }
+
+    [Fact]
+    public async Task Handle_DuplicateSlugInDifferentCompany_StoreIsPersisted()
+    {
+        var company1 = new Company { Title = "Test Co 1", Slug = "test-co-1" };
+        var company2 = new Company { Title = "Test Co 2", Slug = "test-co-2" };
+        await _db.Companies.AddRangeAsync(company1, company2);
+        await _db.Stores.AddAsync(new Store
+        {
+            Title = "Existing Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company1.Id
+        });
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "New Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company2.Id
+        };
+
+        var result = await handler.Handle(command, CancellationToken.None);
+        await _db.SaveChangesAsync();
+
+        result.CompanyId.Should().Be(company2.Id);
+        (await _db.Stores.IgnoreQueryFilters().CountAsync()).Should().Be(2);
+    }
 }
