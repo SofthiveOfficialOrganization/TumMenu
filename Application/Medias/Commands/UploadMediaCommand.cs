@@ -117,6 +117,9 @@ public class UploadMediaCommandHandler(
             FileSize = req.File.Length,
             MimeType = req.File.ContentType,
             Kind = MediaKind.Image,
+            StoreId = req.Type == MediaRefType.Store ? req.ReferenceId : null,
+            MenuId = req.Type == MediaRefType.Menu ? req.ReferenceId : null,
+            ProductId = req.Type == MediaRefType.Product ? req.ReferenceId : null,
             CategoryLibraryItemId = req.Type == MediaRefType.CategoryLibraryItem ? req.ReferenceId : null
         };
 

@@ -57,6 +57,12 @@
              return container.querySelector('input[name="__RequestVerificationToken"]').value;
         };
 
+        const showToast = (type, message) => {
+            if (window.TumMenuAlerts) {
+                TumMenuAlerts.toast(type, message);
+            }
+        };
+
         uploadArea.addEventListener('click', () => fileInput.click());
 
         uploadArea.addEventListener('dragover', (e) => {
@@ -91,7 +97,7 @@
             // Validate referenceId
             if (!refId || refId === '00000000-0000-0000-0000-000000000000') {
                 console.error('Invalid referenceId detected:', refId);
-                TumMenuAlerts.toast('error', 'Referans ID geçersiz. Lütfen sayfayı yenileyin veya kaydedin.');
+                showToast('error', 'Referans ID geçersiz. Lütfen sayfayı yenileyin veya kaydedin.');
                 return;
             }
             
@@ -121,20 +127,24 @@
                         progressBar.style.display = 'none';
                         bar.style.width = '0%';
                     }, 1000);
-                    TumMenuAlerts.toast('success', 'Görsel başarıyla yüklendi.');
+                    showToast('success', 'Görsel başarıyla yüklendi.');
                 } else {
                     const error = await response.text();
-                    TumMenuAlerts.toast('error', 'Yükleme hatası: ' + error);
+                    showToast('error', 'Yükleme hatası: ' + error);
                     progressBar.style.display = 'none';
                 }
             } catch (err) {
-                TumMenuAlerts.toast('error', 'Bir hata oluştu.');
+                showToast('error', 'Bir hata oluştu.');
                 progressBar.style.display = 'none';
             }
         }
 
         window.deleteMedia = async function(id, btn) {
-            if (!confirm('Bu görseli silmek istediğinize emin misiniz?')) return;
+            const confirmed = window.TumMenuAlerts
+                ? await TumMenuAlerts.confirm('Bu görseli silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!')
+                : window.confirm('Bu görseli silmek istediğinize emin misiniz?');
+
+            if (!confirmed) return;
 
             try {
                 const response = await fetch(`/Media/Delete/${id}`, {
@@ -146,12 +156,13 @@
 
                 if (response.ok) {
                     btn.closest('.media-item').remove();
-                    TumMenuAlerts.toast('success', 'Görsel silindi.');
+                    showToast('success', 'Görsel silindi.');
                 } else {
-                    TumMenuAlerts.toast('error', 'Silme işlemi başarısız.');
+                    const error = await response.text();
+                    showToast('error', error || 'Silme işlemi başarısız.');
                 }
             } catch (err) {
-                TumMenuAlerts.toast('error', 'Bir hata oluştu.');
+                showToast('error', 'Bir hata oluştu.');
             }
         };
 

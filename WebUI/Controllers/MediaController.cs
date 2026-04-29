@@ -66,6 +66,6 @@ public class MediaController(IMediator mediator) : Controller
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
 	{
 		await mediator.Send(new DeleteMediaCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Index));
+		return Ok(new { success = true });
 	}
 }

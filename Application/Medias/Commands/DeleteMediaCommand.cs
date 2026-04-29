@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Medias.Commands;
 
-public class DeleteMediaCommand : IRequest<Unit>
+public class DeleteMediaCommand : IRequest<Unit>, ITransactionalRequest
 {
 	public Guid Id { get; set; }
 }

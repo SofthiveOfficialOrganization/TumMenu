@@ -37,7 +37,7 @@
                     <img src="@media.MediaUrl" alt="@media.AltText" />
                     <div class="media-slot-badge">@media.Slot</div>
                     <div class="media-item-overlay">
-                        <div class="d-flex flex-column gap-2 p-2 w-100">
+                        <div class="media-hover-actions d-flex flex-column gap-2 p-2 w-100">
                              <div class="text-white small text-center mb-auto" style="text-shadow: 0 1px 4px rgba(0,0,0,0.5)">
                                 <div class="fw-bold">@media.Type</div>
                                 <div class="text-xs">@media.CreatedAt?.ToString("dd.MM.yyyy")</div>
@@ -46,11 +46,11 @@
                                 <button type="button" class="btn btn-sm btn-light" onclick="window.open('@media.MediaUrl', '_blank')">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button type="button" class="media-delete-btn" onclick="deleteMediaFromLibrary('@media.Id', this)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
                             </div>
                         </div>
+                        <button type="button" class="media-delete-btn" onclick="deleteMediaFromLibrary('@media.Id', this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             }
@@ -135,7 +135,13 @@
         }
 
         async function deleteMediaFromLibrary(id, btn) {
-            if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?')) return;
+            const confirmed = await TumMenuAlerts.confirm(
+                'Bu görseli kalıcı olarak silmek istediğinize emin misiniz?',
+                'Bu işlem geri alınamaz!',
+                'Evet, Sil!'
+            );
+
+            if (!confirmed) return;
 
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -151,7 +157,8 @@
                     btn.closest('.media-item').remove();
                     TumMenuAlerts.toast('success', 'Görsel silindi.');
                 } else {
-                    TumMenuAlerts.toast('error', 'Silme işlemi başarısız.');
+                    const error = await response.text();
+                    TumMenuAlerts.toast('error', error || 'Silme işlemi başarısız.');
                 }
             } catch (err) {
                 TumMenuAlerts.toast('error', 'Bir hata oluştu.');

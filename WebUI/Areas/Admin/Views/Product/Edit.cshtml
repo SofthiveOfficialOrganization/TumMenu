@@ -119,6 +119,19 @@
     </div>
 </div>
 
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="horizon-card">
+            <div class="mb-3">
+                <h4 class="fw-bold text-primary mb-1">Ürün Fotoğrafları</h4>
+                <p class="text-secondary small mb-0">Menüde ürün detayı ve kart görselleri için kullanılacak fotoğrafları yönetin.</p>
+            </div>
+
+            <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Product, Model.Medias, "default-gallery")' />
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

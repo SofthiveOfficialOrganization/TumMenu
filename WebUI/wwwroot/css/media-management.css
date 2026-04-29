@@ -54,19 +54,35 @@
 .media-item-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    opacity: 1;
+    pointer-events: none;
+    transition: background 0.3s ease;
 }
 
 .media-item:hover .media-item-overlay {
+    background: rgba(0, 0, 0, 0.36);
+}
+
+.media-hover-actions {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.media-item:hover .media-hover-actions {
     opacity: 1;
+    pointer-events: auto;
 }
 
 .media-delete-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3;
     background: #ff4d4d;
     color: white;
     border: none;
@@ -77,10 +93,13 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    pointer-events: auto;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .media-delete-btn:hover {
+    background: #e03131;
     transform: scale(1.1);
 }
 

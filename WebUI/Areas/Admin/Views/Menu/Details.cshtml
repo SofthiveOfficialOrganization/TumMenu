@@ -222,7 +222,7 @@
                                          <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.Id" asp-route-parentId="@category.Id" class="btn btn-sm btn-outline-primary" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                         <a href="@categoryDetailsUrl" class="btn btn-sm btn-outline-secondary" title="Alt Kategoriler ve Ürünler">
+                                         <a href="@categoryDetailsUrl" class="btn btn-sm btn-outline-secondary" title="Kategoriler ve Ürünler">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <form asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" asp-route-menuId="@Model.Id" method="post" class="d-inline" id="deleteCategory-@category.Id">

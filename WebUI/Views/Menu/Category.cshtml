@@ -45,12 +45,12 @@
                         {
                             <span class="pm-stat">
                                 <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg>
-                                @subCategoryCount alt kategori
+                                @subCategoryCount Kategori
                             </span>
                         }
                         <span class="pm-stat">
                             <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-tag")"></use></svg>
-                            @productCount ürün
+                            @productCount Ürün
                         </span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     <section class="pm-panel pm-panel--spacious">
                         <div class="pm-section-head">
                             <div>
-                                <h2 class="pm-section-title">Alt Kategoriler</h2>
+                                <h2 class="pm-section-title">Kategoriler</h2>
                                 @* <p class="pm-section-note">Bu bölümdeki alt başlıklara göz at.</p> *@
                             </div>
                             @* <span class="pm-count-pill">@subCategoryCount kategori</span> *@
@@ -121,9 +121,8 @@
                         <div class="pm-section-head">
                             <div>
                                 <h2 class="pm-section-title">Ürünler</h2>
-                                <p class="pm-section-note">@Model.CategoryTitle içindeki seçenekler.</p>
                             </div>
-                            <span class="pm-count-pill">@productCount ürün</span>
+                            @* <span class="pm-count-pill">@productCount ürün</span> *@
                         </div>
 
                         <div class="pm-product-list">
