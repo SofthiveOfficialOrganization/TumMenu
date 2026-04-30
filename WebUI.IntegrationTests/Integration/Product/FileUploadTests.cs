@@ -15,10 +15,8 @@ public class FileUploadTests : IClassFixture<TumMenuWebAppFactory>
     }
 
     [Fact]
-    public async Task Upload_WithExeFile_ReturnsSuccessOrServerError()
+    public async Task Upload_WithExeFile_ReturnsBadRequest()
     {
-        // NOTE: The application does not currently enforce file extension restrictions.
-        // This test verifies the upload endpoint responds without crashing (200 or 500).
         var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
         // Get antiforgery token from any page
         var token = await AntiforgeryHelper.GetTokenAsync(client, "/Admin/Menu/Index");
@@ -32,11 +30,7 @@ public class FileUploadTests : IClassFixture<TumMenuWebAppFactory>
 
         var response = await client.PostAsync("/Upload", content);
 
-        // Application accepts any file extension; expect 200 or 500 (storage failure in test env)
-        Assert.True(
-            response.StatusCode == HttpStatusCode.OK ||
-            response.StatusCode == HttpStatusCode.InternalServerError,
-            $"Unexpected: {response.StatusCode}");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]

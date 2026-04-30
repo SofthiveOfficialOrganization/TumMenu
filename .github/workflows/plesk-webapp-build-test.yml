@@ -31,10 +31,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
 
@@ -52,7 +52,7 @@ jobs:
         run: dotnet publish WebUI/WebUI.csproj --configuration "$CONFIGURATION" --no-restore /p:UseAppHost=false
 
       - name: Upload publish output for inspection
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: webui-publish-output
           path: ${{ env.PUBLISH_DIR }}

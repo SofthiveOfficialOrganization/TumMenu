@@ -39,3 +39,11 @@ If `deploy_marker` is checked, it uploads only one file named `ci-cd-build-marke
 - `PLESK_WEBAPP_REMOTE_DIR`: `/tummenu.com/webapp`
 
 Keep `run_tests` enabled for CI confidence. It can be disabled only when testing publish artifact generation while existing tests are known to be failing.
+
+## Static file deploy gate
+
+`Plesk WebUI static file deploy` is the next deploy gate. It is manual and uploads only one approved static file:
+
+- `WebUI/wwwroot/css/public-menu.css` -> `/tummenu.com/webapp/wwwroot/css/public-menu.css`
+
+It does not delete files, does not write `web.config`, and does not touch `location-api`.

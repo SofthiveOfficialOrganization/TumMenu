@@ -66,6 +66,7 @@ public class OnboardingFlowTests : IClassFixture<TumMenuWebAppFactory>
         var response = await client.PostAsJsonAsync("/admin/Onboarding/menu", new
         {
             title = "New Test Menu",
+            companyId = TestDbSeeder.CompanyId,
             storeId = TestDbSeeder.StoreId
         });
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
