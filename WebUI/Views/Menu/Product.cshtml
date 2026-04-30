@@ -56,7 +56,7 @@
                     <div class="pm-product-detail-body">
                         <div class="pm-meta-row" aria-label="Ürün yolu">
                             <span class="pm-count-pill">@Model.CategoryTitle</span>
-                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue && Model.EstimatedPreparationTimeInMinutes > 0)
                             {
                                 <span class="pm-count-pill">@Model.EstimatedPreparationTimeInMinutes dk</span>
                             }
@@ -75,7 +75,7 @@
                         <div class="pm-product-badges">
                             @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
                             @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vejeteryan</span> }
-                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue)
+                            @if (Model.EstimatedPreparationTimeInMinutes.HasValue && Model.EstimatedPreparationTimeInMinutes > 0)
                             {
                                 <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @Model.EstimatedPreparationTimeInMinutes dk hazırlık</span>
                             }

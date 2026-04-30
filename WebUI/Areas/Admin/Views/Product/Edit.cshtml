@@ -46,10 +46,11 @@
                     <div class="col-md-4 mb-4">
                         <label asp-for="EstimatedPreparationTimeInMinutes" class="form-label fw-bold text-secondary small text-uppercase">Hazırlık Süresi</label>
                         <div class="input-group">
-                            <input asp-for="EstimatedPreparationTimeInMinutes" class="form-control" type="number" />
+                            <input asp-for="EstimatedPreparationTimeInMinutes" class="form-control" type="number" min="0" />
                             <span class="input-group-text">dk</span>
                         </div>
                         <span asp-validation-for="EstimatedPreparationTimeInMinutes" class="text-danger small"></span>
+                        <small class="text-muted">Boş bırakın veya 0 girin → menüde gösterilmez</small>
                     </div>
 
                     <div class="col-md-4 mb-4">

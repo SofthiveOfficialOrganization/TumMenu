@@ -155,7 +155,7 @@
                                         <div class="pm-product-badges">
                                             @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
                                             @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
-                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
+                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue && product.EstimatedPreparationTimeInMinutes > 0) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
                                         </div>
                                     </div>
                                     <div class="pm-product-side">
