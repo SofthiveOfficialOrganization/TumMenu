@@ -145,24 +145,25 @@
                                         </div>
                                     }
                                     <div class="pm-product-content">
-                                        <div class="pm-product-header">
-                                            <h3 class="pm-product-title">@product.Title</h3>
-                                        </div>
+                                        <h3 class="pm-product-title">@product.Title</h3>
                                         @if (!string.IsNullOrEmpty(product.Description))
                                         {
                                             <p class="pm-product-desc">@product.Description</p>
                                         }
-                                        <div class="pm-product-badges">
-                                            @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
-                                            @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
-                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue && product.EstimatedPreparationTimeInMinutes > 0) { <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span> }
+                                        <div class="pm-product-info-row">
+                                            @if (product.EstimatedPreparationTimeInMinutes.HasValue && product.EstimatedPreparationTimeInMinutes > 0)
+                                            {
+                                                <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span>
+                                            }
+                                            <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
                                         </div>
-                                    </div>
-                                    <div class="pm-product-side">
-                                        <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
-                                        <span class="pm-card-arrow" aria-hidden="true">
-                                            <svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-right")"></use></svg>
-                                        </span>
+                                        @if (product.IsVegan == true || product.IsVegetarian == true)
+                                        {
+                                            <div class="pm-product-badges">
+                                                @if (product.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
+                                                @if (product.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Veg</span> }
+                                            </div>
+                                        }
                                     </div>
                                 </a>
 

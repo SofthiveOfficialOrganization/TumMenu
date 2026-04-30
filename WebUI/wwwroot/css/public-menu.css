@@ -477,8 +477,8 @@ body {
 
 .pm-product-card {
   display: grid;
-  grid-template-columns: minmax(104px, 132px) minmax(0, 1fr) auto;
-  grid-template-areas: "media content action";
+  grid-template-columns: minmax(104px, 132px) minmax(0, 1fr);
+  grid-template-areas: "media content";
   align-items: stretch;
   gap: 14px;
   padding: 10px;
@@ -529,6 +529,8 @@ body {
 .pm-product-content {
   grid-area: content;
   align-self: center;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 4px 0;
 }
@@ -578,8 +580,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  padding: 7px 11px;
+  min-height: 32px;
+  padding: 5px 11px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--pm-accent) 16%, var(--pm-surface-solid));
   color: color-mix(in srgb, var(--pm-brand-dark) 76%, var(--pm-text));
@@ -594,11 +596,22 @@ body {
   font-size: 1.35rem;
 }
 
+.pm-product-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pm-product-info-row .pm-product-price {
+  margin-left: auto;
+}
+
 .pm-product-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 8px;
 }
 
 .pm-badge {
@@ -862,9 +875,9 @@ body {
 
   .pm-cat-card-photo {
     width: 100%;
-    min-height: 106px;
+    height: 112px;
     margin: 0;
-    aspect-ratio: auto;
+    aspect-ratio: unset;
   }
 
   .pm-cat-card-photo-placeholder {
@@ -888,25 +901,16 @@ body {
 
   .pm-product-card {
     grid-template-columns: 88px minmax(0, 1fr);
-    grid-template-areas:
-      "media content"
-      "media action";
+    grid-template-areas: "media content";
     align-items: stretch;
     gap: 8px 12px;
     padding: 10px;
   }
 
-  .pm-product-side {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    height: auto;
-    padding: 0 2px 2px 0;
-  }
-
   .pm-product-img-wrap,
   .pm-product-img-placeholder {
-    min-height: 116px;
+    height: 116px;
+    min-height: unset;
   }
 
   .pm-product-content {
@@ -925,8 +929,12 @@ body {
     line-clamp: 2;
   }
 
-  .pm-product-badges {
+  .pm-product-info-row {
     margin-top: 8px;
+  }
+
+  .pm-product-badges {
+    margin-top: 6px;
     gap: 6px;
   }
 
@@ -937,9 +945,9 @@ body {
   }
 
   .pm-product-price {
-    min-height: 34px;
-    padding: 6px 10px;
-    font-size: 0.92rem;
+    min-height: 30px;
+    padding: 5px 10px;
+    font-size: 0.88rem;
   }
 }
 
@@ -971,7 +979,8 @@ body {
   .pm-cat-card-photo,
   .pm-product-img-wrap,
   .pm-product-img-placeholder {
-    min-height: 104px;
+    height: 104px;
+    min-height: unset;
   }
 
   .pm-product-card {

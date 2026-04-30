@@ -42,11 +42,18 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 		RuleFor(x => x.Description)
 			.MaximumLength(1000);
 		RuleFor(x => x.BasePrice)
-			.GreaterThanOrEqualTo(0);
+			.GreaterThanOrEqualTo(0)
+			.LessThanOrEqualTo(9999);
+		RuleFor(x => x.EstimatedPreparationTimeInMinutes)
+			.LessThanOrEqualTo(99)
+			.When(x => x.EstimatedPreparationTimeInMinutes.HasValue);
 		RuleFor(x => x.SortOrder)
 			.GreaterThanOrEqualTo(0);
 		RuleFor(x => x.CategoryId)
 			.NotEmpty();
+		RuleFor(x => x.Allergens)
+			.MaximumLength(200)
+			.WithMessage("Alerjenler alanı en fazla 200 karakter olabilir.");
 	}
 }
 
