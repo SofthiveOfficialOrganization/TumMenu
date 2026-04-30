@@ -1,6 +1,10 @@
 @model Application.QRs.Queries.MyQRDTO
 @{
     ViewData["Title"] = $"{Model.StoreTitle} - QR Kod Tasarımı";
+    var baseUrl = string.IsNullOrWhiteSpace(Model.BaseDomain)
+        ? $"{Context.Request.Scheme}://{Context.Request.Host}"
+        : Model.BaseDomain.TrimEnd('/');
+    var fullUrl = $"{baseUrl}{Model.PublicUrl}";
 }
 
 <div class="row mb-3">
@@ -24,6 +28,9 @@
                     <button class="btn btn-sm btn-outline-primary shadow-sm px-3" onclick="window.print()" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-print me-2"></i> <span class="d-none d-md-inline">Yazdır / İndir</span>
                     </button>
+                    <button class="btn btn-sm btn-outline-success shadow-sm px-3" data-bs-toggle="modal" data-bs-target="#stickerModal" style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-tags me-2"></i> <span class="d-none d-md-inline">Çıkartma İndir</span>
+                    </button>
                     <a href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Model.MenuUrl}")" target="_blank" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Menüyü Gör" style="height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-external-link-alt me-2"></i> <span class="d-none d-md-inline">Menüyü Gör</span>
                     </a>
@@ -40,12 +47,6 @@
             <h4 class="fw-bold text-primary mb-4">Dijital QR Menünüz</h4>
             
             <div class="qr-box p-4 bg-white rounded-4 shadow-sm mb-4 border" style="max-width: 320px;">
-                @{
-                    var baseUrl = string.IsNullOrWhiteSpace(Model.BaseDomain) 
-                        ? $"{Context.Request.Scheme}://{Context.Request.Host}" 
-                        : Model.BaseDomain.TrimEnd('/');
-                    var fullUrl = $"{baseUrl}{Model.PublicUrl}";
-                }
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=@Uri.EscapeDataString(fullUrl)" 
                      alt="QR Code" class="img-fluid rounded-3" style="width: 250px; height: 250px;" />
                 <div class="qr-label mt-3">
@@ -150,3 +151,96 @@
         word-break: break-word;
     }
 </style>
+
+<!-- Çıkartma Boyut Seçim Modalı -->
+<div class="modal fade" id="stickerModal" tabindex="-1" aria-labelledby="stickerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="stickerModalLabel">
+                    <i class="fas fa-tags text-success me-2"></i>Çıkartma Boyutu Seçin
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body py-3">
+                <p class="text-secondary small mb-3">Seçtiğiniz boyutta çıkartmalar A4 kağıda yerleştirilip PDF olarak indirilir.</p>
+                <div class="list-group list-group-flush" id="stickerPresetList">
+                    <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 rounded-3 mb-2 border cursor-pointer">
+                        <input class="form-check-input flex-shrink-0 mt-0" type="radio" name="stickerPreset" value="3x4" checked>
+                        <div>
+                            <div class="fw-semibold">3×4 cm <span class="text-secondary fw-normal small">— küçük</span></div>
+                            <div class="text-muted small">A4'e 36 adet</div>
+                        </div>
+                    </label>
+                    <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 rounded-3 mb-2 border cursor-pointer">
+                        <input class="form-check-input flex-shrink-0 mt-0" type="radio" name="stickerPreset" value="4x6">
+                        <div>
+                            <div class="fw-semibold">4×6 cm <span class="text-secondary fw-normal small">— orta</span></div>
+                            <div class="text-muted small">A4'e 16 adet</div>
+                        </div>
+                    </label>
+                    <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 rounded-3 mb-2 border cursor-pointer">
+                        <input class="form-check-input flex-shrink-0 mt-0" type="radio" name="stickerPreset" value="5x5">
+                        <div>
+                            <div class="fw-semibold">5×5 cm <span class="text-secondary fw-normal small">— kare</span></div>
+                            <div class="text-muted small">A4'e 15 adet</div>
+                        </div>
+                    </label>
+                    <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 rounded-3 border cursor-pointer">
+                        <input class="form-check-input flex-shrink-0 mt-0" type="radio" name="stickerPreset" value="6x9">
+                        <div>
+                            <div class="fw-semibold">6×9 cm <span class="text-secondary fw-normal small">— büyük</span></div>
+                            <div class="text-muted small">A4'e 9 adet</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-success px-4" id="stickerDownloadBtn">
+                    <i class="fas fa-file-pdf me-2"></i>PDF İndir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="~/js/qr-sticker-pdf.js"></script>
+    <script>
+        (function () {
+            const qrUrl = '@Html.Raw(fullUrl)';
+            const storeTitle = '@Html.Raw(Model.StoreTitle?.Replace("'", "\\'"))';
+            const companyTitle = '@Html.Raw(Model.CompanyTitle?.Replace("'", "\\'"))';
+
+            document.getElementById('stickerDownloadBtn').addEventListener('click', function () {
+                const selected = document.querySelector('input[name="stickerPreset"]:checked');
+                if (!selected) return;
+
+                const btn = this;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Oluşturuluyor...';
+
+                setTimeout(function () {
+                    try {
+                        window.QRStickerPDF.generate({
+                            qrUrl: qrUrl,
+                            storeTitle: storeTitle,
+                            companyTitle: companyTitle,
+                            presetKey: selected.value
+                        });
+                        bootstrap.Modal.getInstance(document.getElementById('stickerModal')).hide();
+                    } catch (e) {
+                        console.error('PDF oluşturma hatası:', e);
+                        alert('PDF oluşturulurken bir hata oluştu.');
+                    } finally {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-file-pdf me-2"></i>PDF İndir';
+                    }
+                }, 50);
+            });
+        })();
+    </script>
+}
