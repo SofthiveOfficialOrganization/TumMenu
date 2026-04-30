@@ -6,7 +6,10 @@
         && string.IsNullOrEmpty(ViewContext.RouteData.Values["Area"]?.ToString());
     var hideFooter = ViewData["HideFooter"] is bool hideFooterValue ? hideFooterValue : isPublicMenuPage;
     var compactHeader = ViewData["CompactHeader"] is bool compactHeaderValue ? compactHeaderValue : isPublicMenuPage;
-    var headerClass = compactHeader ? "site-header site-header--compact" : "site-header";
+    var logoOnlyHeader = ViewData["LogoOnlyHeader"] is bool logoOnlyHeaderValue ? logoOnlyHeaderValue : isPublicMenuPage;
+    var headerClass = "site-header"
+        + (compactHeader ? " site-header--compact" : string.Empty)
+        + (logoOnlyHeader ? " site-header--logo-only" : string.Empty);
 
     var description = ViewData["Description"] as string
         ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
@@ -106,48 +109,54 @@
                 <!-- <span class="site-header__logo-text">Tüm Menü</span> -->
             </a>
 
-            <!-- Menü ORTA -->
-            <nav class="site-header__nav" aria-label="Ana menü">
-                <a href="/" class="site-header__nav-link">Ana Sayfa</a>
-                <a href="/ne-yesem" class="site-header__nav-link">Ne yesem?</a>
-                <a href="/restoranlar" class="site-header__nav-link">Restoranlar</a>
-                <a href="/blog" class="site-header__nav-link">Blog</a>
-                <a href="/iletisim" class="site-header__nav-link">İletişim</a>
-            </nav>
+            @if (!logoOnlyHeader)
+            {
+                <!-- Menü ORTA -->
+                <nav class="site-header__nav" aria-label="Ana menü">
+                    <a href="/" class="site-header__nav-link">Ana Sayfa</a>
+                    <a href="/ne-yesem" class="site-header__nav-link">Ne yesem?</a>
+                    <a href="/restoranlar" class="site-header__nav-link">Restoranlar</a>
+                    <a href="/blog" class="site-header__nav-link">Blog</a>
+                    <a href="/iletisim" class="site-header__nav-link">İletişim</a>
+                </nav>
 
-            <!-- QR SAĞ -->
-            <div class="site-header__actions">
-                @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "BeQr")
-                {
-                    <a class="btn btn--header" asp-area="Identity" asp-page="/Account/Login">Hesabım</a>
-                }
-                @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
-                {
-                    <a href="/qr-kod" class="btn btn--header">QR'lı Ol</a>
-                }
-                <button class="site-header__burger"
-                        type="button"
-                        aria-label="Menüyü aç"
-                        aria-expanded="false"
-                        aria-controls="mobileMenu">
-                    <span class="site-header__burger-lines"></span>
-                </button>
-            </div>
+                <!-- QR SAĞ -->
+                <div class="site-header__actions">
+                    @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "BeQr")
+                    {
+                        <a class="btn btn--header" asp-area="Identity" asp-page="/Account/Login">Hesabım</a>
+                    }
+                    @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
+                    {
+                        <a href="/qr-kod" class="btn btn--header">QR'lı Ol</a>
+                    }
+                    <button class="site-header__burger"
+                            type="button"
+                            aria-label="Menüyü aç"
+                            aria-expanded="false"
+                            aria-controls="mobileMenu">
+                        <span class="site-header__burger-lines"></span>
+                    </button>
+                </div>
+            }
 
         </div>
-        <div id="mobileMenu" class="site-header__mobile" hidden>
-            <div class="site-header__mobile-inner">
-                <a class="site-header__mobile-link" href="/">Ana Sayfa</a>
-                <a class="site-header__mobile-link" href="/ne-yesem">Ne yesem?</a>
-                <a class="site-header__mobile-link" href="/restoranlar">Restoranlar</a>
-                <a class="site-header__mobile-link" href="/blog">Blog</a>
-                <a class="site-header__mobile-link" href="/iletisim">İletişim</a>
-                @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
-                {
-                    <a class="site-header__mobile-link" href="/qr-kod">QR'lı Ol</a>
-                }
+        @if (!logoOnlyHeader)
+        {
+            <div id="mobileMenu" class="site-header__mobile" hidden>
+                <div class="site-header__mobile-inner">
+                    <a class="site-header__mobile-link" href="/">Ana Sayfa</a>
+                    <a class="site-header__mobile-link" href="/ne-yesem">Ne yesem?</a>
+                    <a class="site-header__mobile-link" href="/restoranlar">Restoranlar</a>
+                    <a class="site-header__mobile-link" href="/blog">Blog</a>
+                    <a class="site-header__mobile-link" href="/iletisim">İletişim</a>
+                    @if (ViewContext.RouteData.Values["Controller"]?.ToString() != "Home" || ViewContext.RouteData.Values["Action"]?.ToString() != "BeQr")
+                    {
+                        <a class="site-header__mobile-link" href="/qr-kod">QR'lı Ol</a>
+                    }
+                </div>
             </div>
-        </div>
+        }
     </header>
 
     <!-- ANA İÇERİK -->
@@ -295,6 +304,8 @@
             }
         });
     </script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     <!-- Location Service -->
     <script src="~/js/location-service.js?v=@DateTime.Now.Ticks"></script>

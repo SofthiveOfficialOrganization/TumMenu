@@ -85,6 +85,12 @@
     border-radius: 12px;
 }
 
+.site-header--logo-only .site-header__inner {
+    grid-template-columns: auto;
+    grid-template-areas: "logo";
+    justify-content: start;
+}
+
 /* NAV pill (desktop) */
 .site-header__nav {
     grid-area: nav;

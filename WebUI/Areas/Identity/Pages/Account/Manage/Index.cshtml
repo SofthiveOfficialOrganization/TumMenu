@@ -16,7 +16,7 @@
                 <label asp-for="Username"></label>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder=" " />
+                <input asp-for="Input.PhoneNumber" type="tel" class="form-control" placeholder=" " />
                 <label asp-for="Input.PhoneNumber"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
@@ -28,4 +28,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
