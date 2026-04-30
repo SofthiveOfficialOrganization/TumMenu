@@ -9,24 +9,29 @@
     };
 
     const MARGIN = 10;
-    const PADDING = 3;
-    const QR_CANVAS_PX = 256;
+    const PADDING_MM = 3;
+    const DPI = 150;
+    const MM_TO_PX = DPI / 25.4;
 
-    function buildQRDataUrl(url) {
+    function mmToPx(mm) {
+        return Math.round(mm * MM_TO_PX);
+    }
+
+    function generateQRCanvas(url, sizePx) {
         const qr = qrcode(0, 'M');
         qr.addData(url);
         qr.make();
 
         const canvas = document.createElement('canvas');
-        canvas.width = QR_CANVAS_PX;
-        canvas.height = QR_CANVAS_PX;
+        canvas.width = sizePx;
+        canvas.height = sizePx;
         const ctx = canvas.getContext('2d');
 
         const modules = qr.getModuleCount();
-        const cellSize = QR_CANVAS_PX / modules;
+        const cellSize = sizePx / modules;
 
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, QR_CANVAS_PX, QR_CANVAS_PX);
+        ctx.fillRect(0, 0, sizePx, sizePx);
 
         ctx.fillStyle = '#000000';
         for (let row = 0; row < modules; row++) {
@@ -42,26 +47,57 @@
             }
         }
 
-        return canvas.toDataURL('image/png');
+        return canvas;
     }
 
-    function normalizeTurkish(text) {
-        return text
-            .replace(/ğ/g, 'g').replace(/Ğ/g, 'G')
-            .replace(/ü/g, 'u').replace(/Ü/g, 'U')
-            .replace(/ş/g, 's').replace(/Ş/g, 'S')
-            .replace(/ı/g, 'i').replace(/İ/g, 'I')
-            .replace(/ö/g, 'o').replace(/Ö/g, 'O')
-            .replace(/ç/g, 'c').replace(/Ç/g, 'C');
-    }
-
-    function truncateText(doc, text, maxWidth) {
-        const ellipsis = '...';
-        if (doc.getTextWidth(text) <= maxWidth) return text;
-        while (text.length > 1 && doc.getTextWidth(text + ellipsis) > maxWidth) {
+    function fitText(ctx, text, maxWidth) {
+        if (ctx.measureText(text).width <= maxWidth) return text;
+        const ellipsis = '…';
+        while (text.length > 1 && ctx.measureText(text + ellipsis).width > maxWidth) {
             text = text.slice(0, -1);
         }
         return text + ellipsis;
+    }
+
+    function buildStickerCanvas(qrUrl, storeTitle, companyTitle, widthMm, heightMm) {
+        const widthPx = mmToPx(widthMm);
+        const heightPx = mmToPx(heightMm);
+        const paddingPx = mmToPx(PADDING_MM);
+
+        const qrSizePx = widthPx - paddingPx * 2;
+        const qrCanvas = generateQRCanvas(qrUrl, qrSizePx);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = widthPx;
+        canvas.height = heightPx;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, widthPx, heightPx);
+
+        ctx.drawImage(qrCanvas, paddingPx, paddingPx, qrSizePx, qrSizePx);
+
+        const storeFontPx = Math.max(12, Math.round(widthPx / 7));
+        const companyFontPx = Math.max(10, storeFontPx - 3);
+        const lineGapPx = Math.round(storeFontPx * 0.4);
+
+        const textMaxWidth = widthPx - paddingPx * 2;
+        let textY = paddingPx + qrSizePx + lineGapPx + storeFontPx;
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+
+        ctx.fillStyle = '#1f2937';
+        ctx.font = `bold ${storeFontPx}px Arial, sans-serif`;
+        ctx.fillText(fitText(ctx, storeTitle || '', textMaxWidth), widthPx / 2, textY);
+
+        if (companyTitle) {
+            ctx.fillStyle = '#6b7280';
+            ctx.font = `${companyFontPx}px Arial, sans-serif`;
+            ctx.fillText(fitText(ctx, companyTitle, textMaxWidth), widthPx / 2, textY + storeFontPx + lineGapPx);
+        }
+
+        return canvas;
     }
 
     function generate({ qrUrl, storeTitle, companyTitle, presetKey }) {
@@ -71,49 +107,24 @@
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
-        const qrDataUrl = buildQRDataUrl(qrUrl);
-
-        const stickerW = preset.w;
-        const stickerH = preset.h;
-        const qrSize = stickerW - PADDING * 2;
-
-        const storeFontSize = Math.max(6, Math.round(stickerW / 8));
-        const companyFontSize = Math.max(5, storeFontSize - 1);
-        const lineHeight = storeFontSize * 0.35 + 0.5;
-
-        const textAreaH = lineHeight * 2 + 1;
-        const qrAreaH = stickerH - textAreaH - PADDING * 2;
-        const actualQrSize = Math.min(qrSize, qrAreaH);
+        const stickerDataUrl = buildStickerCanvas(
+            qrUrl, storeTitle, companyTitle, preset.w, preset.h
+        ).toDataURL('image/png');
 
         for (let row = 0; row < preset.rows; row++) {
             for (let col = 0; col < preset.cols; col++) {
-                const x = MARGIN + col * stickerW;
-                const y = MARGIN + row * stickerH;
-
-                const qrX = x + PADDING + (qrSize - actualQrSize) / 2;
-                const qrY = y + PADDING;
-                doc.addImage(qrDataUrl, 'PNG', qrX, qrY, actualQrSize, actualQrSize);
-
-                const textX = x + stickerW / 2;
-                const storeY = qrY + actualQrSize + lineHeight;
-
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(storeFontSize);
-                doc.setTextColor(31, 41, 55);
-                const storeLine = truncateText(doc, normalizeTurkish(storeTitle || ''), stickerW - PADDING * 2);
-                doc.text(storeLine, textX, storeY, { align: 'center' });
-
-                if (companyTitle) {
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(companyFontSize);
-                    doc.setTextColor(107, 114, 128);
-                    const companyLine = truncateText(doc, normalizeTurkish(companyTitle), stickerW - PADDING * 2);
-                    doc.text(companyLine, textX, storeY + lineHeight, { align: 'center' });
-                }
+                const x = MARGIN + col * preset.w;
+                const y = MARGIN + row * preset.h;
+                doc.addImage(stickerDataUrl, 'PNG', x, y, preset.w, preset.h);
             }
         }
 
-        const safeName = normalizeTurkish(storeTitle || 'qr').replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-').toLowerCase();
+        const safeName = (storeTitle || 'qr')
+            .replace(/[^\w\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-')
+            .toLowerCase()
+            .substring(0, 40);
         doc.save(`${safeName}-cikartma-${presetKey}.pdf`);
     }
 
