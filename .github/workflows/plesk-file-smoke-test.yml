@@ -1,0 +1,87 @@
+name: Plesk file smoke test
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Remote file operation"
+        required: true
+        default: "write"
+        type: choice
+        options:
+          - write
+          - delete
+      content:
+        description: "Content for test.txt when operation is write"
+        required: false
+        default: "TumMenu CI/CD smoke test"
+
+concurrency:
+  group: plesk-file-smoke-test
+  cancel-in-progress: false
+
+jobs:
+  file-smoke-test:
+    name: Touch only test.txt on Plesk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Run file operation
+        shell: bash
+        env:
+          PLESK_FILE_HOST: ${{ secrets.PLESK_FILE_HOST }}
+          PLESK_FILE_USERNAME: ${{ secrets.PLESK_FILE_USERNAME }}
+          PLESK_FILE_PASSWORD: ${{ secrets.PLESK_FILE_PASSWORD }}
+          PLESK_TEST_REMOTE_DIR: ${{ secrets.PLESK_TEST_REMOTE_DIR }}
+          PLESK_FTP_SSL_FORCE: ${{ secrets.PLESK_FTP_SSL_FORCE }}
+          PLESK_FTP_SSL_VERIFY: ${{ secrets.PLESK_FTP_SSL_VERIFY }}
+          OPERATION: ${{ inputs.operation }}
+          TEST_CONTENT: ${{ inputs.content }}
+        run: |
+          set -euo pipefail
+
+          : "${PLESK_FILE_HOST:?Missing PLESK_FILE_HOST secret}"
+          : "${PLESK_FILE_USERNAME:?Missing PLESK_FILE_USERNAME secret}"
+          : "${PLESK_FILE_PASSWORD:?Missing PLESK_FILE_PASSWORD secret}"
+          : "${PLESK_TEST_REMOTE_DIR:?Missing PLESK_TEST_REMOTE_DIR secret}"
+
+          ssl_force="${PLESK_FTP_SSL_FORCE:-true}"
+          ssl_verify="${PLESK_FTP_SSL_VERIFY:-true}"
+
+          mkdir -p .deploy
+          printf '%s\n' "$TEST_CONTENT" > .deploy/test.txt
+
+          if [ "$OPERATION" = "write" ]; then
+            lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<WRITE_FILE
+          set ftp:ssl-force $ssl_force
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate $ssl_verify
+          set net:max-retries 2
+          set net:timeout 30
+          mkdir -p "$PLESK_TEST_REMOTE_DIR"
+          cd "$PLESK_TEST_REMOTE_DIR"
+          put .deploy/test.txt -o test.txt
+          cls -l test.txt
+          bye
+          WRITE_FILE
+          elif [ "$OPERATION" = "delete" ]; then
+            lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<DELETE_FILE
+          set ftp:ssl-force $ssl_force
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate $ssl_verify
+          set net:max-retries 2
+          set net:timeout 30
+          cd "$PLESK_TEST_REMOTE_DIR"
+          rm -f test.txt
+          cls -l
+          bye
+          DELETE_FILE
+          else
+            echo "Unsupported operation: $OPERATION"
+            exit 1
+          fi
