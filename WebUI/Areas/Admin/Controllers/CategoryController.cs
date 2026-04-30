@@ -129,9 +129,11 @@ public class CategoryController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, Guid menuId, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, Guid menuId, string? returnUrl, CancellationToken ct)
     {
         await mediator.Send(new RemoveCategoryFromMenuCommand { Id = id }, ct);
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
         return RedirectToAction("Details", "Menu", new { id = menuId, role = RouteData.Values["role"] });
     }
     [Authorize(Policy = "OwnerOrAdmin")]

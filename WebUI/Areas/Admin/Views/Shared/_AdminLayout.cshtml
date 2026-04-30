@@ -18,9 +18,11 @@
     <link rel="stylesheet" href="~/css/admin-tummenu.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/media-management.css" asp-append-version="true" />
     <script>
-        // Apply dark mode BEFORE render to prevent white flash
+        // Default theme is light; only apply dark-mode if user explicitly chose it
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark-mode');
+        } else {
+            localStorage.setItem('theme', 'light');
         }
     </script>
     <link rel="stylesheet" href="~/css/skeleton.css" asp-append-version="true" />
@@ -639,6 +641,10 @@
             if (theme === 'dark') {
                 body.addClass('dark-mode');
                 themeToggle.removeClass('fa-moon').addClass('fa-sun');
+            } else {
+                body.removeClass('dark-mode');
+                $('html').removeClass('dark-mode');
+                themeToggle.removeClass('fa-sun').addClass('fa-moon');
             }
 
             // Toggle theme on click

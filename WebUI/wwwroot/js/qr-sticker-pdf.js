@@ -45,6 +45,16 @@
         return canvas.toDataURL('image/png');
     }
 
+    function normalizeTurkish(text) {
+        return text
+            .replace(/ğ/g, 'g').replace(/Ğ/g, 'G')
+            .replace(/ü/g, 'u').replace(/Ü/g, 'U')
+            .replace(/ş/g, 's').replace(/Ş/g, 'S')
+            .replace(/ı/g, 'i').replace(/İ/g, 'I')
+            .replace(/ö/g, 'o').replace(/Ö/g, 'O')
+            .replace(/ç/g, 'c').replace(/Ç/g, 'C');
+    }
+
     function truncateText(doc, text, maxWidth) {
         const ellipsis = '...';
         if (doc.getTextWidth(text) <= maxWidth) return text;
@@ -90,20 +100,20 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(storeFontSize);
                 doc.setTextColor(31, 41, 55);
-                const storeLine = truncateText(doc, storeTitle || '', stickerW - PADDING * 2);
+                const storeLine = truncateText(doc, normalizeTurkish(storeTitle || ''), stickerW - PADDING * 2);
                 doc.text(storeLine, textX, storeY, { align: 'center' });
 
                 if (companyTitle) {
                     doc.setFont('helvetica', 'normal');
                     doc.setFontSize(companyFontSize);
                     doc.setTextColor(107, 114, 128);
-                    const companyLine = truncateText(doc, companyTitle, stickerW - PADDING * 2);
+                    const companyLine = truncateText(doc, normalizeTurkish(companyTitle), stickerW - PADDING * 2);
                     doc.text(companyLine, textX, storeY + lineHeight, { align: 'center' });
                 }
             }
         }
 
-        const safeName = (storeTitle || 'qr').replace(/[^a-z0-9çğışöü\s-]/gi, '').trim().replace(/\s+/g, '-').toLowerCase();
+        const safeName = normalizeTurkish(storeTitle || 'qr').replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-').toLowerCase();
         doc.save(`${safeName}-cikartma-${presetKey}.pdf`);
     }
 

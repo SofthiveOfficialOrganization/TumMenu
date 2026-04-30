@@ -205,9 +205,40 @@
                                         <a asp-action="Create" asp-route-menuId="@item.MenuId" asp-route-parentId="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Alt Kategori Ekle">
                                             <i class="fas fa-plus"></i> <i class="fas fa-level-down-alt"></i>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary me-1" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteCatModal-@item.Id" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                        <div class="modal fade" id="deleteCatModal-@item.Id" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Kategoriyi Sil</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>@item.Title</strong> kategorisini menüden kaldırmak istediğinize emin misiniz?</p>
+                                                        @if (item.ProductCount > 0)
+                                                        {
+                                                            <div class="alert alert-warning mb-0">
+                                                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                                                Bu kategoride <strong>@item.ProductCount ürün</strong> bulunmaktadır.
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-menuId="@item.MenuId" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" method="post" class="d-inline">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="btn btn-danger">Evet, Kaldır</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
