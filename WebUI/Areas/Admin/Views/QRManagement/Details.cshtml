@@ -48,6 +48,10 @@
                 }
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=@Uri.EscapeDataString(fullUrl)" 
                      alt="QR Code" class="img-fluid rounded-3" style="width: 250px; height: 250px;" />
+                <div class="qr-label mt-3">
+                    <div class="qr-label__store">@Model.StoreTitle</div>
+                    <div class="qr-label__company">@Model.CompanyTitle</div>
+                </div>
             </div>
 
             <p class="text-secondary mb-0 px-lg-4 small">
@@ -124,5 +128,25 @@
             box-shadow: none !important;
             border: 2px solid #eee !important;
         }
+    }
+
+    .qr-label {
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .qr-label__store {
+        color: #1f2937;
+        font-size: 1.15rem;
+        font-weight: 800;
+        word-break: break-word;
+    }
+
+    .qr-label__company {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 0.25rem;
+        word-break: break-word;
     }
 </style>

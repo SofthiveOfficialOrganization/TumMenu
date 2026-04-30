@@ -183,7 +183,14 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     [IgnoreAntiforgeryToken]
     public async Task<IActionResult> RemoveCategory(Guid id, CancellationToken ct)
     {
+        var category = await mediator.Send(new Application.Categories.Queries.GetCategoryByIdQuery(id), ct);
         await mediator.Send(new Application.Menus.Commands.RemoveCategoryFromMenuCommand { Id = id }, ct);
+
+        if (Guid.TryParse(Request.Query["storeId"], out var storeId))
+        {
+            await SyncStoreMenuIfRequested(category.MenuId, storeId, ct);
+        }
+
         return Ok(new { success = true });
     }
 
@@ -205,7 +212,25 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
             IsActive = true
         }, ct);
 
+        await SyncStoreMenuIfRequested(req.MenuId, req.StoreId, ct);
+
         return Ok(new { id = result.Id, title = result.CategoryLibraryItem?.Title });
+    }
+
+    [HttpPost("update-category-sort-order")]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> UpdateCategorySortOrder([FromBody] OnboardingCategorySortRequest req, CancellationToken ct)
+    {
+        if (req.Items.Count > 0)
+        {
+            await mediator.Send(new Application.Categories.Commands.UpdateCategorySortOrderCommand
+            {
+                Items = req.Items
+            }, ct);
+        }
+
+        await SyncStoreMenuIfRequested(req.SourceMenuId, req.StoreId, ct);
+        return Ok(new { success = true });
     }
 
     /// <summary>
@@ -213,18 +238,49 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     /// </summary>
     [HttpPost("complete")]
     [IgnoreAntiforgeryToken]
-    public async Task<IActionResult> CompleteOnboarding(CancellationToken ct)
+    public async Task<IActionResult> CompleteOnboarding([FromBody] CompleteOnboardingRequest? req, CancellationToken ct)
     {
+        if (req is not null)
+        {
+            await SyncStoreMenuIfRequested(req.SourceMenuId, req.StoreId, ct);
+        }
+
         await mediator.Send(new Application.Owners.Commands.MarkWizardCompletedCommand(), ct);
         return Ok(new { success = true });
+    }
+
+    private async Task SyncStoreMenuIfRequested(Guid sourceMenuId, Guid? storeId, CancellationToken ct)
+    {
+        if (sourceMenuId == Guid.Empty || !storeId.HasValue || storeId.Value == Guid.Empty)
+            return;
+
+        await mediator.Send(new SyncMainMenuToStoreMenuCommand
+        {
+            SourceMenuId = sourceMenuId,
+            StoreId = storeId.Value
+        }, ct);
     }
 }
 
 public class AddOnboardingCategoryRequest
 {
     public Guid MenuId { get; set; }
+    public Guid? StoreId { get; set; }
     public Guid CategoryLibraryItemId { get; set; }
     public int SortOrder { get; set; }
+}
+
+public class OnboardingCategorySortRequest
+{
+    public Guid SourceMenuId { get; set; }
+    public Guid? StoreId { get; set; }
+    public List<Application.Categories.Commands.CategorySortItem> Items { get; set; } = [];
+}
+
+public class CompleteOnboardingRequest
+{
+    public Guid SourceMenuId { get; set; }
+    public Guid? StoreId { get; set; }
 }
 
 public class OnboardingCreateMenuRequest
@@ -233,4 +289,3 @@ public class OnboardingCreateMenuRequest
     public Guid CompanyId { get; set; }
     public Guid? StoreId { get; set; }
 }
-

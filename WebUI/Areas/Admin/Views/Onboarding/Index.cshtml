@@ -951,7 +951,7 @@
             const categorySearchUrl  = `/admin/Onboarding/category-library`;
             const menuCategoriesUrl  = `/admin/Onboarding/menu-categories`;
             const addCategoryUrl     = `/admin/Onboarding/add-category`;
-            const sortUrl            = `/admin/Category/UpdateSortOrder`;
+            const sortUrl            = `/admin/Onboarding/update-category-sort-order`;
 
             // Called on step 4 entry: load existing menu categories into right panel,
             // then load the library (which excludes already-added ones).
@@ -988,21 +988,17 @@
                     }
                     items.forEach(function(item) {
                         const row = $(`
-                            <div class="d-flex align-items-center justify-content-between p-3 rounded mb-2 library-item border bg-white shadow-sm"
-                                style="cursor: pointer; transition: all 0.2s ease;"
+                            <div class="d-flex align-items-center justify-content-between p-3 mb-2 library-item onboarding-category-option"
+                                style="cursor: pointer;"
                                 data-id="${item.id}" data-title="${item.title}">
-                                <span class="text-body fw-semibold fs-6 pe-2">${item.title}</span>
-                                <button type="button" class="btn btn-primary btn-add-category px-3 btn-sm fw-bold flex-shrink-0" title="Ekle">
+                                <span class="onboarding-category-title fw-semibold fs-6 pe-2">${item.title}</span>
+                                <button type="button" class="btn btn-add-category px-3 btn-sm fw-bold flex-shrink-0" title="Ekle">
                                     <i class="fas fa-plus me-1"></i> Ekle
                                 </button>
                             </div>`);
                         row.find('.btn-add-category').on('click', function() {
                             addCategoryToMenu(item.id, item.title, row);
                         });
-                        row.hover(
-                            function() { $(this).addClass('bg-warning bg-opacity-10'); },
-                            function() { $(this).removeClass('bg-warning bg-opacity-10'); }
-                        );
                         $('#categoryLibraryList').append(row);
                     });
                 }).fail(function() {
@@ -1026,7 +1022,12 @@
                     url: addCategoryUrl,
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ MenuId: menuId, CategoryLibraryItemId: libraryItemId, SortOrder: sortOrder }),
+                    data: JSON.stringify({
+                        MenuId: menuId,
+                        StoreId: $('#MenuStoreId').val() || null,
+                        CategoryLibraryItemId: libraryItemId,
+                        SortOrder: sortOrder
+                    }),
                     headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                     success: function(res) {
                         // Remove item from library list (already added)
@@ -1047,16 +1048,17 @@
                 $('#addedPlaceholder').hide();
                 const colDiv = $('<div>').addClass('col-12 col-sm-6 added-category-item').attr('data-id', categoryId);
                 const card = $('<div>')
-                    .addClass('rounded-3 p-3 h-100 d-flex align-items-center gap-2 bg-warning bg-opacity-10 border border-warning border-2 position-relative')
+                    .addClass('onboarding-category-selected p-3 h-100 d-flex align-items-center gap-2 position-relative')
                     .html(`
-                        <i class="fas fa-grip-vertical text-secondary handle fs-5 flex-shrink-0" style="cursor:grab"></i>
-                        <span class="text-body fw-bold flex-grow-1 fs-6 pe-5">${title}</span>
+                        <i class="fas fa-grip-vertical handle fs-5 flex-shrink-0" style="cursor:grab"></i>
+                        <span class="onboarding-category-title fw-bold flex-grow-1 fs-6 pe-5">${title}</span>
                         <button type="button" class="btn btn-danger btn-remove-category position-absolute d-flex align-items-center justify-content-center"
                             style="width:32px;height:32px;padding:0; top: 10px; right: 10px;" title="Kaldır">
                             <i class="fas fa-times text-white small"></i>
                         </button>`);
                 card.find('.btn-remove-category').on('click', function() {
-                    $.post(`/admin/Onboarding/remove-category/${categoryId}`, function() {
+                    const storeId = $('#MenuStoreId').val() || '';
+                    $.post(`/admin/Onboarding/remove-category/${categoryId}?storeId=${encodeURIComponent(storeId)}`, function() {
                         colDiv.remove();
                         if ($('#addedCategoryList .added-category-item').length === 0) {
                             $('#addedPlaceholder').show();
@@ -1087,7 +1089,11 @@
                         fetch(sortUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ items: items })
+                            body: JSON.stringify({
+                                sourceMenuId: $('#CategoryMenuId').val(),
+                                storeId: $('#MenuStoreId').val() || null,
+                                items: items
+                            })
                         });
                     }
                 });
@@ -1102,6 +1108,11 @@
                 $.ajax({
                     url: `/admin/Onboarding/complete`,
                     type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        sourceMenuId: menuId,
+                        storeId: $('#MenuStoreId').val() || null
+                    }),
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     success: function() {
                         window.location.href = `/admin/Dashboard`;

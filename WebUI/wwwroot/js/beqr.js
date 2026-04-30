@@ -263,9 +263,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const canvas = qrOutput.querySelector('canvas');
             if (canvas) {
+                const businessName = businessNameInput.value.trim();
+                const padding = 24;
+                const labelGap = 16;
+                const labelHeight = 42;
+                const exportCanvas = document.createElement('canvas');
+                exportCanvas.width = canvas.width + (padding * 2);
+                exportCanvas.height = canvas.height + (padding * 2) + labelGap + labelHeight;
+
+                const ctx = exportCanvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+                ctx.drawImage(canvas, padding, padding);
+                ctx.fillStyle = '#1f2937';
+                ctx.font = '700 22px Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const maxLabelWidth = exportCanvas.width - (padding * 2);
+                let label = businessName;
+                while (ctx.measureText(label).width > maxLabelWidth && label.length > 3) {
+                    label = `${label.slice(0, -4)}...`;
+                }
+
+                ctx.fillText(label, exportCanvas.width / 2, padding + canvas.height + labelGap + (labelHeight / 2));
+
                 const link = document.createElement('a');
-                link.download = `${businessNameInput.value.trim()}-qr-kod.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.download = `${businessName}-qr-kod.png`;
+                link.href = exportCanvas.toDataURL('image/png');
                 link.click();
             }
         });
