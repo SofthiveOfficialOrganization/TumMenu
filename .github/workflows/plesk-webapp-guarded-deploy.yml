@@ -1,6 +1,9 @@
 name: Plesk WebUI guarded deploy
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       action:
@@ -48,7 +51,7 @@ jobs:
         run: dotnet build WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-restore
 
       - name: Test WebUI
-        if: ${{ inputs.run_tests }}
+        if: ${{ github.event_name == 'push' || inputs.run_tests }}
         run: dotnet test WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-build --verbosity normal
 
       - name: Publish WebUI
@@ -129,18 +132,18 @@ jobs:
           retention-days: 3
 
       - name: Stop before deploy in plan mode
-        if: ${{ inputs.action == 'plan' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.action == 'plan' }}
         run: |
           echo "Plan mode complete. No files were uploaded to Plesk."
 
       - name: Install lftp
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
 
       - name: Upload guarded package to Plesk
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         shell: bash
         env:
           PLESK_FILE_HOST: ${{ secrets.PLESK_FILE_HOST }}
@@ -164,6 +167,7 @@ jobs:
             lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<CLEANUP || true
           set ftp:ssl-force $ssl_force
           set ftp:ssl-protect-data true
+          set ftp:use-site-chmod false
           set ssl:verify-certificate $ssl_verify
           set net:max-retries 2
           set net:timeout 30
@@ -189,12 +193,13 @@ jobs:
           lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<DEPLOY
           set ftp:ssl-force $ssl_force
           set ftp:ssl-protect-data true
+          set ftp:use-site-chmod false
           set ssl:verify-certificate $ssl_verify
           set net:max-retries 2
           set net:timeout 30
           cd "$PLESK_WEBAPP_REMOTE_DIR"
           put _deploy/app_offline.htm -o app_offline.htm
-          mirror --reverse --verbose --parallel=2 --exclude-glob "web.config" --exclude-glob "appsettings*.json" --exclude-glob "location-api/**" --exclude-glob "Logs/**" --exclude-glob "logs/**" --exclude-glob "wwwroot/uploads/**" _deploy/package/ .
+          mirror --reverse --verbose --parallel=2 --no-perms --exclude-glob "web.config" --exclude-glob "appsettings*.json" --exclude-glob "location-api/**" --exclude-glob "Logs/**" --exclude-glob "logs/**" --exclude-glob "wwwroot/uploads/**" _deploy/package/ .
           rm -f app_offline.htm
           bye
           DEPLOY

@@ -50,7 +50,11 @@ It does not delete files, does not write `web.config`, and does not touch `locat
 
 ## Guarded WebUI deploy
 
-`Plesk WebUI guarded deploy` is the first full WebUI deploy gate. It is manual and has two modes:
+`Plesk WebUI guarded deploy` is the first full WebUI deploy gate. It runs automatically on every push to `main`, and can also be started manually.
+
+Automatic `main` deployments always run tests before uploading to Plesk.
+
+Manual runs have two modes:
 
 - `plan`: builds, tests, publishes, removes protected paths from the deploy package, and uploads the package as a GitHub artifact for inspection. It does not upload to Plesk.
 - `deploy`: does the same package preparation, then uploads the guarded package to `/tummenu.com/webapp`.
