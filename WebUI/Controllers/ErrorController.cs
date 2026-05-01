@@ -64,8 +64,15 @@ public sealed class ErrorController(IWebHostEnvironment env) : Controller
 		if(code == StatusCodes.Status404NotFound)
 			return View(ResolveViewPath(originalPath, adminPath: "NotFound", publicPath: "NotFound"));
 
-		// İstersen diğer kodlar için ayrı view yapabilirsin; şimdilik Error’a düşelim
-		var msg = "İstek işlenemedi.";
+		if(code == StatusCodes.Status400BadRequest)
+		{
+			ViewData["Message"] = "İstek güvenlik veya doğrulama kontrolünden geçemedi. Sayfayı yenileyip tekrar deneyebilirsiniz.";
+			return View(ResolveViewPath(originalPath, adminPath: "BadRequest", publicPath: "BadRequest"));
+		}
+
+		var msg = code == StatusCodes.Status403Forbidden
+			? "Bu sayfaya erişim yetkiniz bulunmuyor."
+			: "İstek işlenemedi.";
 		ViewData["Message"] = msg;
 		TempData["Error"] = msg;
 		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
