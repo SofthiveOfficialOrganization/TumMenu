@@ -80,7 +80,6 @@ jobs:
           set net:max-retries 2
           set net:timeout 30
           cd "$PLESK_WEBAPP_REMOTE_DIR"
-          mkdir -p "$REMOTE_SUBDIR"
           cd "$REMOTE_SUBDIR"
           put "$LOCAL_FILE" -o "$REMOTE_FILE"
           cls -l "$REMOTE_FILE"
