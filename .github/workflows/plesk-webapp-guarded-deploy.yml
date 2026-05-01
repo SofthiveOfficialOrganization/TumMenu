@@ -1,0 +1,200 @@
+name: Plesk WebUI guarded deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Plan lists the package only; deploy uploads it to Plesk"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - deploy
+      run_tests:
+        description: "Run WebUI test project before publishing"
+        required: true
+        default: true
+        type: boolean
+
+concurrency:
+  group: plesk-webapp-guarded-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-test-publish:
+    name: Build, test, and publish WebUI
+    runs-on: windows-latest
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "true"
+      CONFIGURATION: Release
+      PUBLISH_DIR: WebUI/bin/Release/net8.0/publish
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore WebUI tests
+        run: dotnet restore WebUI.IntegrationTests/WebUI.IntegrationTests.csproj
+
+      - name: Build WebUI tests
+        run: dotnet build WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-restore
+
+      - name: Test WebUI
+        if: ${{ inputs.run_tests }}
+        run: dotnet test WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-build --verbosity normal
+
+      - name: Publish WebUI
+        run: dotnet publish WebUI/WebUI.csproj --configuration "${{ env.CONFIGURATION }}" --no-restore /p:UseAppHost=false
+
+      - name: Upload publish output
+        uses: actions/upload-artifact@v5
+        with:
+          name: webui-publish-output
+          path: ${{ env.PUBLISH_DIR }}
+          if-no-files-found: error
+          retention-days: 3
+
+  package-and-deploy:
+    name: Package and guarded deploy
+    runs-on: ubuntu-latest
+    needs: build-test-publish
+
+    steps:
+      - name: Download publish output
+        uses: actions/download-artifact@v8
+        with:
+          name: webui-publish-output
+          path: _deploy/publish
+
+      - name: Build protected deployment package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -rf _deploy/package
+          mkdir -p _deploy/package
+          cp -a _deploy/publish/. _deploy/package/
+
+          rm -rf \
+            _deploy/package/web.config \
+            _deploy/package/appsettings.json \
+            _deploy/package/appsettings.Development.json \
+            _deploy/package/appsettings.*.json \
+            _deploy/package/location-api \
+            _deploy/package/Location-api \
+            _deploy/package/Logs \
+            _deploy/package/logs \
+            _deploy/package/wwwroot/uploads
+
+          protected_found=0
+          for protected_path in \
+            web.config \
+            appsettings.json \
+            appsettings.Development.json \
+            location-api \
+            Logs \
+            logs \
+            wwwroot/uploads
+          do
+            if [ -e "_deploy/package/$protected_path" ]; then
+              echo "Protected path still exists in package: $protected_path"
+              protected_found=1
+            fi
+          done
+
+          if [ "$protected_found" -ne 0 ]; then
+            exit 1
+          fi
+
+          echo "Package file count:"
+          find _deploy/package -type f | wc -l
+          echo "Top-level package entries:"
+          find _deploy/package -maxdepth 1 -mindepth 1 -printf '%f\n' | sort
+          echo "Protected paths excluded: web.config, appsettings*.json, location-api, Logs, logs, wwwroot/uploads"
+
+      - name: Upload guarded package for inspection
+        uses: actions/upload-artifact@v5
+        with:
+          name: webui-guarded-deploy-package
+          path: _deploy/package
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Stop before deploy in plan mode
+        if: ${{ inputs.action == 'plan' }}
+        run: |
+          echo "Plan mode complete. No files were uploaded to Plesk."
+
+      - name: Install lftp
+        if: ${{ inputs.action == 'deploy' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Upload guarded package to Plesk
+        if: ${{ inputs.action == 'deploy' }}
+        shell: bash
+        env:
+          PLESK_FILE_HOST: ${{ secrets.PLESK_FILE_HOST }}
+          PLESK_FILE_USERNAME: ${{ secrets.PLESK_FILE_USERNAME }}
+          PLESK_FILE_PASSWORD: ${{ secrets.PLESK_FILE_PASSWORD }}
+          PLESK_WEBAPP_REMOTE_DIR: ${{ secrets.PLESK_WEBAPP_REMOTE_DIR }}
+          PLESK_FTP_SSL_FORCE: ${{ secrets.PLESK_FTP_SSL_FORCE }}
+          PLESK_FTP_SSL_VERIFY: ${{ secrets.PLESK_FTP_SSL_VERIFY }}
+        run: |
+          set -euo pipefail
+
+          : "${PLESK_FILE_HOST:?Missing PLESK_FILE_HOST secret}"
+          : "${PLESK_FILE_USERNAME:?Missing PLESK_FILE_USERNAME secret}"
+          : "${PLESK_FILE_PASSWORD:?Missing PLESK_FILE_PASSWORD secret}"
+          : "${PLESK_WEBAPP_REMOTE_DIR:?Missing PLESK_WEBAPP_REMOTE_DIR secret}"
+
+          ssl_force="${PLESK_FTP_SSL_FORCE:-true}"
+          ssl_verify="${PLESK_FTP_SSL_VERIFY:-true}"
+
+          cleanup_app_offline() {
+            lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<CLEANUP || true
+          set ftp:ssl-force $ssl_force
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate $ssl_verify
+          set net:max-retries 2
+          set net:timeout 30
+          cd "$PLESK_WEBAPP_REMOTE_DIR"
+          rm -f app_offline.htm
+          bye
+          CLEANUP
+          }
+
+          trap cleanup_app_offline EXIT
+
+          cat > _deploy/app_offline.htm <<'OFFLINE'
+          <!doctype html>
+          <html lang="tr">
+            <head>
+              <meta charset="utf-8">
+              <title>Bakim</title>
+            </head>
+            <body>Uygulama guncelleniyor. Lutfen kisa sure sonra tekrar deneyin.</body>
+          </html>
+          OFFLINE
+
+          lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<DEPLOY
+          set ftp:ssl-force $ssl_force
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate $ssl_verify
+          set net:max-retries 2
+          set net:timeout 30
+          cd "$PLESK_WEBAPP_REMOTE_DIR"
+          put _deploy/app_offline.htm -o app_offline.htm
+          mirror --reverse --verbose --parallel=2 --exclude-glob "web.config" --exclude-glob "appsettings*.json" --exclude-glob "location-api/**" --exclude-glob "Logs/**" --exclude-glob "logs/**" --exclude-glob "wwwroot/uploads/**" _deploy/package/ .
+          rm -f app_offline.htm
+          bye
+          DEPLOY

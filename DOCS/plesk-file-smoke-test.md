@@ -47,3 +47,21 @@ Keep `run_tests` enabled for CI confidence. It can be disabled only when testing
 - `WebUI/wwwroot/css/public-menu.css` -> `/tummenu.com/webapp/wwwroot/css/public-menu.css`
 
 It does not delete files, does not write `web.config`, and does not touch `location-api`.
+
+## Guarded WebUI deploy
+
+`Plesk WebUI guarded deploy` is the first full WebUI deploy gate. It is manual and has two modes:
+
+- `plan`: builds, tests, publishes, removes protected paths from the deploy package, and uploads the package as a GitHub artifact for inspection. It does not upload to Plesk.
+- `deploy`: does the same package preparation, then uploads the guarded package to `/tummenu.com/webapp`.
+
+Protected paths are removed from the package and also excluded during FTP upload:
+
+- `web.config`
+- `appsettings*.json`
+- `location-api/**`
+- `Logs/**`
+- `logs/**`
+- `wwwroot/uploads/**`
+
+This workflow does not use delete-based mirroring. Files that exist on Plesk but are not in the package are left in place.
