@@ -12,6 +12,8 @@ namespace Application.Menus.Queries;
 public class GetAllMenusPagedQuery : PageRequest, IRequest<PaginatedListDTO<MenuDTO>>
 {
     public string? Search { get; set; }
+    public Guid? CompanyId { get; set; }
+    public Guid? StoreId { get; set; }
     public bool OnlyStoreMenus { get; set; }
     public bool OnlyCompanyMenus { get; set; }
 }
@@ -27,6 +29,8 @@ public class GetAllMenusPagedHandler(
 			request: req,
 			expression: m =>
 				(string.IsNullOrEmpty(req.Search) || m.Title.Contains(req.Search)) &&
+				(!req.CompanyId.HasValue || m.CompanyId == req.CompanyId.Value || (m.StoreId != null && m.Store!.CompanyId == req.CompanyId.Value)) &&
+				(!req.StoreId.HasValue || m.StoreId == req.StoreId.Value) &&
 				(!req.OnlyStoreMenus || m.StoreId != null) &&
 				(!req.OnlyCompanyMenus || m.CompanyId != null),
 			include: m => m.Include(m => m.Categories).Include(m => m.Medias)

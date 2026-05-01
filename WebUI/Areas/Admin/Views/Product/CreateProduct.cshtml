@@ -20,20 +20,28 @@
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label fw-bold text-secondary small text-uppercase">Menü Seçimi</label>
-                        <select name="menuId" id="menuSelect" class="form-select" required>
-                            <option value="">Menü seçin...</option>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Dükkan Seçimi</label>
+                        <select name="storeId" id="storeSelect" class="form-select" required>
+                            <option value="">Dükkan seçin...</option>
                         </select>
-                        <span class="text-danger small" data-valmsg-for="menuId"></span>
+                        @Html.ValidationMessage("storeId", null, new { @class = "text-danger small" })
                     </div>
 
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label fw-bold text-secondary small text-uppercase">Kategori Seçimi</label>
-                        <select name="categoryId" id="categorySelect" class="form-select" required>
-                            <option value="">Kategori seçin...</option>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Menü Seçimi</label>
+                        <select name="menuId" id="menuSelect" class="form-select" required disabled>
+                            <option value="">Önce dükkan seçin...</option>
                         </select>
-                        <span class="text-danger small" data-valmsg-for="categoryId"></span>
+                        @Html.ValidationMessage("menuId", null, new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Kategori Seçimi</label>
+                        <select name="categoryId" id="categorySelect" class="form-select" required disabled>
+                            <option value="">Önce menü seçin...</option>
+                        </select>
+                        @Html.ValidationMessage("categoryId", null, new { @class = "text-danger small" })
                     </div>
                 </div>
 
@@ -155,6 +163,12 @@
             const slugInput  = $('#slugInput');
             const slugToggle = $('#slugManualToggle');
             const slugIcon   = $('#slugIcon');
+            const storeSelect = $('#storeSelect');
+            const menuSelect = $('#menuSelect');
+            const categorySelect = $('#categorySelect');
+            const selectedStoreId = '@(ViewData["SelectedStoreId"]?.ToString() ?? "")';
+            const selectedMenuId = '@(ViewData["SelectedMenuId"]?.ToString() ?? "")';
+            const selectedCategoryId = '@(ViewData["SelectedCategoryId"]?.ToString() ?? "")';
 
             let isManual = false;
 
@@ -205,29 +219,111 @@
                 }
             });
 
-            // Load menus
-            $.get('@Url.Action("GetMenusForSelect2", "Menu", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', 
-                function(data) {
-                    data.results.forEach(function(menu) {
-                        $('#menuSelect').append('<option value="' + menu.id + '">' + menu.text + '</option>');
-                    });
-                });
+            function escapeHtml(value) {
+                return $('<div>').text(value || '').html();
+            }
 
-            // When menu changes, load its categories
-            $('#menuSelect').on('change', function() {
-                var menuId = $(this).val();
-                $('#categorySelect').html('<option value="">Kategori seçin...</option>');
-                
-                if (menuId) {
-                    $.get('@Url.Action("GetCategoriesForSelect2", "Category", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })', 
-                        { menuId: menuId }, 
-                        function(data) {
-                            data.results.forEach(function(cat) {
-                                $('#categorySelect').append('<option value="' + cat.id + '">' + cat.text + '</option>');
-                            });
+            function isEmptyGuid(value) {
+                return !value || value === '00000000-0000-0000-0000-000000000000';
+            }
+
+            function resetMenu(disabled) {
+                menuSelect
+                    .prop('disabled', disabled)
+                    .html('<option value="">' + (disabled ? 'Önce dükkan seçin...' : 'Menü seçin...') + '</option>');
+            }
+
+            function resetCategory(disabled) {
+                categorySelect
+                    .prop('disabled', disabled)
+                    .html('<option value="">' + (disabled ? 'Önce menü seçin...' : 'Kategori seçin...') + '</option>');
+            }
+
+            function loadStores() {
+                storeSelect.prop('disabled', true).html('<option value="">Dükkanlar yükleniyor...</option>');
+                resetMenu(true);
+                resetCategory(true);
+
+                $.get('@Url.Action("GetStoresForSelect2", "Store", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })',
+                    { pageSize: 100 },
+                    function(data) {
+                        storeSelect.html('<option value="">Dükkan seçin...</option>');
+                        data.results.forEach(function(store) {
+                            storeSelect.append('<option value="' + store.id + '">' + escapeHtml(store.text) + '</option>');
                         });
+                        storeSelect.prop('disabled', false);
+
+                        if (!isEmptyGuid(selectedStoreId)) {
+                            storeSelect.val(selectedStoreId);
+                            if (storeSelect.val()) {
+                                loadMenus(selectedStoreId, selectedMenuId, selectedCategoryId);
+                            }
+                        }
+                    });
+            }
+
+            function loadMenus(storeId, menuIdToSelect, categoryIdToSelect) {
+                resetMenu(false);
+                resetCategory(true);
+                menuSelect.prop('disabled', true).html('<option value="">Menüler yükleniyor...</option>');
+
+                $.get('@Url.Action("GetMenusForSelect2", "Menu", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })',
+                    { storeId: storeId, pageSize: 100 },
+                    function(data) {
+                        menuSelect.html('<option value="">Menü seçin...</option>');
+                        data.results.forEach(function(menu) {
+                            menuSelect.append('<option value="' + menu.id + '">' + escapeHtml(menu.text) + '</option>');
+                        });
+                        menuSelect.prop('disabled', false);
+
+                        if (!isEmptyGuid(menuIdToSelect)) {
+                            menuSelect.val(menuIdToSelect);
+                            if (menuSelect.val()) {
+                                loadCategories(menuIdToSelect, categoryIdToSelect);
+                            }
+                        }
+                    });
+            }
+
+            function loadCategories(menuId, categoryIdToSelect) {
+                resetCategory(false);
+                categorySelect.prop('disabled', true).html('<option value="">Kategoriler yükleniyor...</option>');
+
+                $.get('@Url.Action("GetCategoriesForSelect2", "Category", new { area = "Admin", role = ViewContext.RouteData.Values["role"] })',
+                    { menuId: menuId, pageSize: 200 },
+                    function(data) {
+                        categorySelect.html('<option value="">Kategori seçin...</option>');
+                        data.results.forEach(function(cat) {
+                            categorySelect.append('<option value="' + cat.id + '">' + escapeHtml(cat.text) + '</option>');
+                        });
+                        categorySelect.prop('disabled', false);
+
+                        if (!isEmptyGuid(categoryIdToSelect)) {
+                            categorySelect.val(categoryIdToSelect);
+                        }
+                    });
+            }
+
+            storeSelect.on('change', function() {
+                const storeId = $(this).val();
+                resetMenu(true);
+                resetCategory(true);
+
+                if (storeId) {
+                    loadMenus(storeId);
                 }
             });
+
+            menuSelect.on('change', function() {
+                const menuId = $(this).val();
+                resetCategory(true);
+
+                if (menuId) {
+                    loadCategories(menuId);
+                }
+            });
+
+            loadStores();
         });
     </script>
 }

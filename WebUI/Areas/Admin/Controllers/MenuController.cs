@@ -408,14 +408,23 @@ public sealed class MenuController(IMediator mediator) : Controller
     [HttpGet]
     public async Task<IActionResult> GetMenusForSelect2(Guid? companyId, Guid? storeId, string? search, int page = 1, int pageSize = 15, CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
-        {
-            Page = page,
-            PageSize = pageSize,
-            Search = search,
-            CompanyId = companyId,
-            StoreId = storeId
-        }, ct);
+        var result = User.IsInRole("Admin")
+            ? await mediator.Send(new GetAllMenusPagedQuery
+            {
+                Page = page,
+                PageSize = pageSize,
+                Search = search,
+                CompanyId = companyId,
+                StoreId = storeId
+            }, ct)
+            : await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
+            {
+                Page = page,
+                PageSize = pageSize,
+                Search = search,
+                CompanyId = companyId,
+                StoreId = storeId
+            }, ct);
 
         var items = result.Items.Select(m => new { id = m.Id, text = m.Title });
 
@@ -428,5 +437,4 @@ public class CloneMenuToStoreRequest
     public Guid SourceMenuId { get; set; }
     public Guid StoreId { get; set; }
 }
-
 

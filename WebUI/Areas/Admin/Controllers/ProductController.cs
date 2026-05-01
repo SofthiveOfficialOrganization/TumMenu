@@ -67,34 +67,54 @@ public class ProductController(IMediator mediator) : Controller
     [HttpGet]
     public IActionResult CreateProduct()
     {
-        return View();
+        return View(new CreateProductCommand { IsActive = true });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateProduct(Guid menuId, Guid categoryId, CreateProductCommand req, CancellationToken ct)
+    public async Task<IActionResult> CreateProduct(Guid storeId, Guid menuId, Guid categoryId, CreateProductCommand req, CancellationToken ct)
     {
+        req.CategoryId = categoryId;
+        ViewData["SelectedStoreId"] = storeId;
+        ViewData["SelectedMenuId"] = menuId;
+        ViewData["SelectedCategoryId"] = categoryId;
+
+        if (storeId == Guid.Empty)
+            ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        if (menuId == Guid.Empty)
+            ModelState.AddModelError(nameof(menuId), "Menü seçimi zorunludur.");
+        if (categoryId == Guid.Empty)
+            ModelState.AddModelError(nameof(categoryId), "Kategori seçimi zorunludur.");
+
         if (!ModelState.IsValid)
             return View(req);
 
-        // Set the categoryId from form
-        req.CategoryId = categoryId;
+        var selectedMenu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
+        if (selectedMenu.StoreId != storeId)
+        {
+            ModelState.AddModelError(nameof(menuId), "Seçilen menü bu dükkana ait değil.");
+            return View(req);
+        }
+
+        var category = await mediator.Send(new GetCategoryByIdQuery(categoryId), ct);
+        if (category.MenuId != menuId)
+        {
+            ModelState.AddModelError(nameof(categoryId), "Seçilen kategori bu menüye ait değil.");
+            return View(req);
+        }
 
         // Security Check - verify user owns the category
-        var category = await mediator.Send(new GetCategoryByIdQuery(categoryId), ct);
         if (User.IsInRole("Owner"))
         {
             var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
             bool isOwner = false;
             if (ownerCompany != null)
             {
-                // Get the menu to verify ownership
-                var menu = await mediator.Send(new GetMenuByIdQuery { Id = category.MenuId }, ct);
-                if (menu.CompanyId == ownerCompany.Id) isOwner = true;
-                else if (menu.StoreId.HasValue)
+                if (selectedMenu.CompanyId == ownerCompany.Id) isOwner = true;
+                else if (selectedMenu.StoreId.HasValue)
                 {
-                    var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(menu.StoreId.Value), ct);
+                    var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(selectedMenu.StoreId.Value), ct);
                     if (store.CompanyId == ownerCompany.Id) isOwner = true;
                 }
             }
@@ -147,7 +167,6 @@ public class ProductController(IMediator mediator) : Controller
         return Ok();
     }
 }
-
 
 
 
