@@ -69,3 +69,5 @@ Protected paths are removed from the package and also excluded during FTP upload
 - `wwwroot/uploads/**`
 
 This workflow does not use delete-based mirroring. Files that exist on Plesk but are not in the package are left in place.
+
+Deploys use a `.ci-cd-webui-manifest.sha256` file on the Plesk WebUI root to compare file content hashes. The first deploy after adding the manifest may upload the full guarded package once. Later deploys upload only files whose content hash changed.

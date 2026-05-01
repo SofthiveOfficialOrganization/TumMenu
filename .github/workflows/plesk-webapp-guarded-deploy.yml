@@ -123,6 +123,8 @@ jobs:
           find _deploy/package -maxdepth 1 -mindepth 1 -printf '%f\n' | sort
           echo "Protected paths excluded: web.config, appsettings*.json, location-api, Logs, logs, wwwroot/uploads"
 
+          (cd _deploy/package && find . -type f -printf '%P\0' | sort -z | xargs -0 sha256sum) > _deploy/local-manifest.sha256
+
       - name: Upload guarded package for inspection
         uses: actions/upload-artifact@v5
         with:
@@ -162,6 +164,48 @@ jobs:
 
           ssl_force="${PLESK_FTP_SSL_FORCE:-true}"
           ssl_verify="${PLESK_FTP_SSL_VERIFY:-true}"
+          remote_manifest=".ci-cd-webui-manifest.sha256"
+
+          set +e
+          lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<MANIFEST
+          set ftp:ssl-force $ssl_force
+          set ftp:ssl-protect-data true
+          set ftp:use-site-chmod false
+          set ssl:verify-certificate $ssl_verify
+          set net:max-retries 2
+          set net:timeout 30
+          cd "$PLESK_WEBAPP_REMOTE_DIR"
+          get "$remote_manifest" -o _deploy/remote-manifest.sha256
+          bye
+          MANIFEST
+          manifest_status=$?
+          set -e
+
+          if [ "$manifest_status" -ne 0 ]; then
+            echo "Previous deploy manifest was not found. A full guarded upload will run once."
+            : > _deploy/remote-manifest.sha256
+          fi
+
+          sort _deploy/local-manifest.sha256 > _deploy/local-manifest.sorted
+          sort _deploy/remote-manifest.sha256 > _deploy/remote-manifest.sorted
+          comm -23 _deploy/local-manifest.sorted _deploy/remote-manifest.sorted > _deploy/changed-manifest.sha256
+          cut -c 67- _deploy/changed-manifest.sha256 > _deploy/changed-files.txt
+
+          changed_count="$(wc -l < _deploy/changed-files.txt | tr -d ' ')"
+          echo "Changed package file count: $changed_count"
+
+          if [ "$changed_count" -eq 0 ]; then
+            echo "No deployable content changes were detected. Plesk upload skipped."
+            exit 0
+          fi
+
+          rm -rf _deploy/changed-package
+          mkdir -p _deploy/changed-package
+          while IFS= read -r changed_file; do
+            [ -n "$changed_file" ] || continue
+            mkdir -p "_deploy/changed-package/$(dirname "$changed_file")"
+            cp -a "_deploy/package/$changed_file" "_deploy/changed-package/$changed_file"
+          done < _deploy/changed-files.txt
 
           cleanup_app_offline() {
             lftp -u "$PLESK_FILE_USERNAME","$PLESK_FILE_PASSWORD" "$PLESK_FILE_HOST" <<CLEANUP || true
@@ -199,7 +243,8 @@ jobs:
           set net:timeout 30
           cd "$PLESK_WEBAPP_REMOTE_DIR"
           put _deploy/app_offline.htm -o app_offline.htm
-          mirror --reverse --verbose --parallel=2 --no-perms --exclude-glob "web.config" --exclude-glob "appsettings*.json" --exclude-glob "location-api/**" --exclude-glob "Logs/**" --exclude-glob "logs/**" --exclude-glob "wwwroot/uploads/**" _deploy/package/ .
+          mirror --reverse --verbose --parallel=2 --no-perms --exclude-glob "web.config" --exclude-glob "appsettings*.json" --exclude-glob "location-api/**" --exclude-glob "Logs/**" --exclude-glob "logs/**" --exclude-glob "wwwroot/uploads/**" _deploy/changed-package/ .
+          put _deploy/local-manifest.sha256 -o "$remote_manifest"
           rm -f app_offline.htm
           bye
           DEPLOY
