@@ -49,6 +49,7 @@ namespace WebUI.Extensions
 
 			// Register EmailTemplateService
 			services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+			services.AddSingleton<IImageUrlBuilder, CloudflareImageUrlBuilder>();
 
 			// Register TurnstileService
 			services.AddScoped<ITurnstileService, TurnstileService>();

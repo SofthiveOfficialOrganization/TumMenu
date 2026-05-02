@@ -145,7 +145,7 @@
         </header>
 
         <figure class="blog-post-cover-new">
-            <img src="@(string.IsNullOrEmpty(Model.CoverImageUrl) ? "/images/hero-illustration.png" : Model.CoverImageUrl)" alt="@Model.Title" class="blog-post-cover-new__img" />
+            <img src="@ImageUrlBuilder.Build(string.IsNullOrEmpty(Model.CoverImageUrl) ? "/images/hero-illustration.png" : Model.CoverImageUrl)" alt="@Model.Title" class="blog-post-cover-new__img" />
             <figcaption class="blog-post-cover-new__caption">@imageCaption</figcaption>
         </figure>
 
@@ -191,7 +191,7 @@
 
         <!-- Author Card -->
         <div class="blog-author-card">
-            <img src="/images/logo.png" alt="TumMenu" class="blog-author-card__avatar" />
+            <img src='@ImageUrlBuilder.Build("/images/logo.png")' alt="TumMenu" class="blog-author-card__avatar" />
             <div class="blog-author-card__body">
                 <span class="blog-author-card__name">TumMenu Ekibi</span>
                 <p class="blog-author-card__bio">Restoran teknolojileri, QR menü çözümleri ve yemek kültürü üzerine içerikler üreten TumMenu editör ekibi.</p>

@@ -14,8 +14,9 @@
     <div class="media-grid" id="grid-@Model.referenceId-@Model.slot">
         @foreach (var media in (Model.medias ?? new()).Where(m => m.Slot == Model.slot))
         {
-            <div class="media-item" data-media-id="@media.Id" onclick="window.open('@media.MediaUrl', '_blank')">
-                <img src="@media.MediaUrl" alt="@media.AltText" />
+            var mediaDisplayUrl = ImageUrlBuilder.Build(media.MediaUrl);
+            <div class="media-item" data-media-id="@media.Id" onclick="window.open('@mediaDisplayUrl', '_blank')">
+                <img src="@mediaDisplayUrl" alt="@media.AltText" />
                 <div class="media-item-overlay">
                     <button type="button" class="media-delete-btn" onclick="event.stopPropagation(); deleteMedia('@media.Id', this)">
                         <i class="fas fa-trash"></i>
@@ -32,7 +33,7 @@
             <i class="fas fa-cloud-upload-alt"></i>
         </div>
         <div class="upload-text">Dosya yüklemek için buraya tıklayın veya sürükleyin</div>
-        <div class="upload-hint">PNG, JPG, WEBP (Max 5MB)</div>
+        <div class="upload-hint">PNG, JPG, WEBP (Max 10MB)</div>
         
         <div class="media-upload-progress" id="progress-@Model.referenceId-@Model.slot">
             <div class="media-upload-progress-bar" id="bar-@Model.referenceId-@Model.slot"></div>
@@ -61,6 +62,29 @@
             if (window.TumMenuAlerts) {
                 TumMenuAlerts.toast(type, message);
             }
+        };
+
+        const buildImageUrl = (url) => {
+            if (!url || url.startsWith('/cdn-cgi/image/') || /^https?:\/\//i.test(url)) {
+                return url || '';
+            }
+
+            const host = window.location.hostname.toLowerCase();
+            if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+                return url.startsWith('~/') ? '/' + url.slice(2).replace(/^\/+/, '') : url;
+            }
+
+            const normalized = url.startsWith('~/') ? '/' + url.slice(2).replace(/^\/+/, '') : url;
+            if (!normalized.startsWith('/uploads/') && !normalized.startsWith('/images/')) {
+                return normalized;
+            }
+
+            const path = normalized.split(/[?#]/)[0].toLowerCase();
+            if (path.endsWith('.svg') || path.endsWith('.pdf') || path.endsWith('.gif') || path.endsWith('.ico')) {
+                return normalized;
+            }
+
+            return '/cdn-cgi/image/format=auto,quality=75,metadata=none/' + normalized.replace(/^\/+/, '');
         };
 
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -168,11 +192,12 @@
 
         function addMediaToGrid(media) {
             const div = document.createElement('div');
+            const mediaDisplayUrl = buildImageUrl(media.mediaUrl);
             div.className = 'media-item';
             div.dataset.mediaId = media.id;
-            div.onclick = () => window.open(media.mediaUrl, '_blank');
+            div.onclick = () => window.open(mediaDisplayUrl, '_blank');
             div.innerHTML = `
-                <img src="${media.mediaUrl}" alt="${media.altText || ''}" />
+                <img src="${mediaDisplayUrl}" alt="${media.altText || ''}" />
                 <div class="media-item-overlay">
                     <button type="button" class="media-delete-btn" onclick="event.stopPropagation(); deleteMedia('${media.id}', this)">
                         <i class="fas fa-trash"></i>

@@ -25,7 +25,7 @@
                 @foreach (var post in Model.Items)
                 {
                     <article class="blog-card">
-                        <img src="@(string.IsNullOrEmpty(post.CoverImageUrl) ? "/images/hero-illustration-customer.png" : post.CoverImageUrl)" alt="@post.Title" class="blog-card__image" />
+                        <img src="@ImageUrlBuilder.Build(string.IsNullOrEmpty(post.CoverImageUrl) ? "/images/hero-illustration-customer.png" : post.CoverImageUrl)" alt="@post.Title" class="blog-card__image" />
                         <div class="blog-card__body">
                             <h2 class="blog-card__title">@post.Title</h2>
                             <p class="blog-card__summary">@post.Summary</p>
