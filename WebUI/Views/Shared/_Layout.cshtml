@@ -108,7 +108,13 @@
         <div class="container site-header__inner">
 
             <a asp-area="" asp-controller="Home" asp-action="Index" class="site-header__logo" aria-label="Tüm Menü ana sayfa">
-                <img class="site-header__logo-icon" src='@ImageUrlBuilder.Build("~/images/tum-menu-logo-safe-3.png")' />
+                <picture>
+                    <source srcset='@ImageUrlBuilder.Build("~/images/tum-menu-logo-safe-3.webp")' type="image/webp" />
+                    <img class="site-header__logo-icon"
+                         src='@ImageUrlBuilder.Build("~/images/tum-menu-logo-safe-3.png")'
+                         alt=""
+                         decoding="async" />
+                </picture>
                 <!-- <span class="site-header__logo-text">Tüm Menü</span> -->
             </a>
 
