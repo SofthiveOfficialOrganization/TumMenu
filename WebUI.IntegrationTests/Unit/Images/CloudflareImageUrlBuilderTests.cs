@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using WebUI.Services;
 
 namespace WebUI.IntegrationTests.Unit.Images;
@@ -13,6 +14,28 @@ public sealed class CloudflareImageUrlBuilderTests
         var result = _builder.Build("/uploads/product/a.webp");
 
         result.Should().Be("/cdn-cgi/image/format=auto,quality=75,metadata=none/uploads/product/a.webp");
+    }
+
+    [Fact]
+    public void Build_DoesNotTransformWhenRequestDidNotComeThroughCloudflare()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Host = new HostString("tummenu.com");
+        var builder = new CloudflareImageUrlBuilder(new HttpContextAccessor { HttpContext = context });
+
+        builder.Build("/uploads/product/a.webp").Should().Be("/uploads/product/a.webp");
+    }
+
+    [Fact]
+    public void Build_TransformsWhenRequestCameThroughCloudflare()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Host = new HostString("tummenu.com");
+        context.Request.Headers["CF-Ray"] = "test-ray";
+        var builder = new CloudflareImageUrlBuilder(new HttpContextAccessor { HttpContext = context });
+
+        builder.Build("/uploads/product/a.webp")
+            .Should().Be("/cdn-cgi/image/format=auto,quality=75,metadata=none/uploads/product/a.webp");
     }
 
     [Theory]

@@ -25,7 +25,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
-            <form asp-action="Create" method="post">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
                 @if (ViewBag.SuggestionId != null)
                 {
                     <input type="hidden" name="suggestionId" value="@ViewBag.SuggestionId" />
@@ -72,6 +72,14 @@
                         </div>
                     </div>
                     <input asp-for="IconKey" type="hidden" id="iconKeyHidden" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">
+                        <i class="fas fa-image me-1 opacity-50"></i>Kategori Fotoğrafları
+                    </label>
+                    <input type="file" name="photoFiles" class="form-control" accept="image/*" multiple />
+                    <div class="form-text">İsteğe bağlı. Menüde kategori kartlarında kullanılacak görselleri seçebilirsiniz.</div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 pt-3 border-top">

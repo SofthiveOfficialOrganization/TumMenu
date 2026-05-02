@@ -53,6 +53,7 @@
         const grid = document.getElementById(`grid-${refId}-${slot}`);
         const progressBar = document.getElementById(`progress-${refId}-${slot}`);
         const bar = document.getElementById(`bar-${refId}-${slot}`);
+        const useCloudflareTransforms = @Json.Serialize(ImageUrlBuilder.Build("/uploads/__probe__.webp").StartsWith("/cdn-cgi/image/", StringComparison.OrdinalIgnoreCase));
 
         const getAntiforgeryToken = () => {
              return container.querySelector('input[name="__RequestVerificationToken"]').value;
@@ -70,7 +71,7 @@
             }
 
             const host = window.location.hostname.toLowerCase();
-            if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+            if (!useCloudflareTransforms || host === 'localhost' || host === '127.0.0.1' || host === '::1') {
                 return url.startsWith('~/') ? '/' + url.slice(2).replace(/^\/+/, '') : url;
             }
 

@@ -1,9 +1,12 @@
 using Application.Categories.Commands;
 using Application.Categories.Queries;
 using Application.CategorySuggestions.Commands;
+using Application.Medias.Commands;
+using Domain.Entities;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
@@ -38,12 +41,16 @@ public class CategoryLibraryItemController(
 	[Authorize(Roles = "Admin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Create([FromForm] CreateCategoryLibraryItemCommand cmd, Guid? suggestionId, CancellationToken ct)
+	public async Task<IActionResult> Create([FromForm] CreateCategoryLibraryItemCommand cmd, Guid? suggestionId, List<IFormFile>? photoFiles, CancellationToken ct)
 	{
 		if(!ModelState.IsValid)
+		{
+			ViewBag.SuggestionId = suggestionId;
 			return View(cmd);
+		}
 
-		await mediator.Send(cmd, ct);
+		var category = await mediator.Send(cmd, ct);
+		await UploadCategoryLibraryPhotosAsync(category.Id, photoFiles, category.Title, ct);
 
 		// Öneri var ise onayla
 		if (suggestionId.HasValue)
@@ -95,7 +102,26 @@ public class CategoryLibraryItemController(
 		await mediator.Send(new DeleteCategoryLibraryItemCommand { Id = id }, ct);
 		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
 	}
-}
 
+	private async Task UploadCategoryLibraryPhotosAsync(Guid categoryLibraryItemId, IEnumerable<IFormFile>? photoFiles, string? altText, CancellationToken ct)
+	{
+		if (photoFiles == null)
+			return;
+
+		var sortOrder = 0;
+		foreach (var file in photoFiles.Where(f => f is { Length: > 0 }))
+		{
+			await mediator.Send(new UploadMediaCommand
+			{
+				File = file,
+				ReferenceId = categoryLibraryItemId,
+				Type = MediaRefType.CategoryLibraryItem,
+				Slot = "default-gallery",
+				AltText = altText,
+				SortOrder = sortOrder++
+			}, ct);
+		}
+	}
+}
 
 
