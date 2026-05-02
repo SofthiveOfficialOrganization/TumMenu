@@ -221,7 +221,7 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="~/js/qr-sticker-pdf.js"></script>
+    <script src="~/js/qr-sticker-pdf.js" asp-append-version="true"></script>
     <script>
         (function () {
             const qrUrl = '@Html.Raw(fullUrl)';
