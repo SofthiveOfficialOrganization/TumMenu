@@ -3,8 +3,11 @@ using Application.Products.DTOs;
 using Application.Products.Queries;
 using Application.Categories.Queries;
 using Application.Menus.Queries;
+using Application.Medias.Commands;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
@@ -53,12 +56,14 @@ public class ProductController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateProductCommand req, CancellationToken ct)
+    public async Task<IActionResult> Create(CreateProductCommand req, List<IFormFile>? photoFiles, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return View(req);
 
-        await mediator.Send(req, ct);
+        var product = await mediator.Send(req, ct);
+        await UploadProductPhotosAsync(product.Id, photoFiles, product.Title, ct);
+
         // Redirect back to the category details page where the product was created
         return RedirectToAction("Details", "Category", new { id = req.CategoryId, role = RouteData.Values["role"] });
     }
@@ -73,7 +78,7 @@ public class ProductController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateProduct(Guid storeId, Guid menuId, Guid categoryId, CreateProductCommand req, CancellationToken ct)
+    public async Task<IActionResult> CreateProduct(Guid storeId, Guid menuId, Guid categoryId, CreateProductCommand req, List<IFormFile>? photoFiles, CancellationToken ct)
     {
         req.CategoryId = categoryId;
         ViewData["SelectedStoreId"] = storeId;
@@ -121,7 +126,9 @@ public class ProductController(IMediator mediator) : Controller
             if (!isOwner) return Forbid();
         }
 
-        await mediator.Send(req, ct);
+        var product = await mediator.Send(req, ct);
+        await UploadProductPhotosAsync(product.Id, photoFiles, product.Title, ct);
+
         TempData["Success"] = "Ürün başarıyla eklendi.";
         return RedirectToAction("Index");
     }
@@ -166,8 +173,26 @@ public class ProductController(IMediator mediator) : Controller
         await mediator.Send(cmd, ct);
         return Ok();
     }
+
+    private async Task UploadProductPhotosAsync(Guid productId, IEnumerable<IFormFile>? photoFiles, string? altText, CancellationToken ct)
+    {
+        if (photoFiles == null)
+            return;
+
+        var sortOrder = 0;
+        foreach (var file in photoFiles.Where(f => f is { Length: > 0 }))
+        {
+            await mediator.Send(new UploadMediaCommand
+            {
+                File = file,
+                ReferenceId = productId,
+                Type = MediaRefType.Product,
+                Slot = "default-gallery",
+                AltText = altText,
+                SortOrder = sortOrder++
+            }, ct);
+        }
+    }
 }
-
-
 
 

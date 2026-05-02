@@ -412,7 +412,7 @@ body {
   object-position: center center;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.35s ease;
 }
 
@@ -518,7 +518,8 @@ body {
 .pm-product-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .pm-product-img-placeholder {
@@ -663,8 +664,10 @@ body {
 
 .pm-product-detail-img {
   width: 100%;
-  max-height: 620px;
-  object-fit: cover;
+  height: clamp(260px, 58vh, 620px);
+  object-fit: contain;
+  object-position: center center;
+  background: var(--pm-surface-solid);
   border: 1px solid var(--pm-border);
   box-shadow: var(--pm-shadow);
 }

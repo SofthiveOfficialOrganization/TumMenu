@@ -12,7 +12,7 @@
                 <p class="text-secondary">Kategoriye yeni bir ürün ekleyin.</p>
             </div>
 
-            <form asp-action="Create" method="post">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                 <input asp-for="CategoryId" type="hidden" />
 
@@ -76,7 +76,11 @@
                     <span asp-validation-for="Allergens" class="text-danger small"></span>
                 </div>
 
-
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">Ürün Fotoğrafları</label>
+                    <input type="file" name="photoFiles" class="form-control" accept="image/*" multiple />
+                    <div class="form-text text-muted small">İsteğe bağlı. Birden fazla görsel seçebilirsiniz.</div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-4">

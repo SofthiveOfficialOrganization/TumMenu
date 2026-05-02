@@ -23,6 +23,11 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
     {
     }
 
+    public CloudflareImageUrlBuilder(IHttpContextAccessor httpContextAccessor)
+        : this(enabled: true, httpContextAccessor)
+    {
+    }
+
     public CloudflareImageUrlBuilder(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         : this(!environment.IsDevelopment(), httpContextAccessor)
     {
@@ -75,8 +80,19 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
         if (!_environmentEnabled)
             return false;
 
-        var host = _httpContextAccessor?.HttpContext?.Request.Host.Host;
-        return !IsLocalHost(host);
+        var context = _httpContextAccessor?.HttpContext;
+        if (context is null)
+            return true;
+
+        var host = context.Request.Host.Host;
+        return !IsLocalHost(host) && IsCloudflareRequest(context.Request);
+    }
+
+    private static bool IsCloudflareRequest(HttpRequest request)
+    {
+        return request.Headers.ContainsKey("CF-Ray")
+            || request.Headers.ContainsKey("CF-Connecting-IP")
+            || request.Headers.ContainsKey("CF-Visitor");
     }
 
     private static bool IsLocalHost(string? host)
