@@ -1,8 +1,10 @@
 ﻿@using WebUI
 @using WebUI.Models
 @using WebUI.Models.Email
+@using WebUI.Services
 @using Application.Common.Base.DTOs;
 @using Application.Products.DTOs
 @using Application.Categories.Commands
 
+@inject IImageUrlBuilder ImageUrlBuilder
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

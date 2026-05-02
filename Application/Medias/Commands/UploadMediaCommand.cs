@@ -101,21 +101,23 @@ public class UploadMediaCommandHandler(
 
         // 2. Upload file
         var folder = req.Type.ToString().ToLower();
-        var url = await storageService.UploadAsync(req.File, folder, ct);
+        var upload = await storageService.UploadAsync(req.File, folder, ct);
 
         // 3. Create Media entity
         var media = new Media
         {
-            MediaUrl = url,
+            MediaUrl = upload.Url,
             AltText = req.AltText ?? req.File.FileName,
             SortOrder = req.SortOrder,
             ReferenceId = req.Type == MediaRefType.CategoryLibraryItem ? Guid.Empty : req.ReferenceId,
             Type = req.Type,
             CompanyId = companyId,
             Slot = req.Slot,
-            Extension = Path.GetExtension(req.File.FileName),
-            FileSize = req.File.Length,
-            MimeType = req.File.ContentType,
+            Width = upload.Width,
+            Height = upload.Height,
+            Extension = upload.Extension,
+            FileSize = upload.FileSize,
+            MimeType = upload.MimeType,
             Kind = MediaKind.Image,
             StoreId = req.Type == MediaRefType.Store ? req.ReferenceId : null,
             MenuId = req.Type == MediaRefType.Menu ? req.ReferenceId : null,

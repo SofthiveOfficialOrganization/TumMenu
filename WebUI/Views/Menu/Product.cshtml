@@ -48,7 +48,7 @@
                         <div class="pm-product-detail-gallery">
                             @foreach (var imgUrl in Model.ImageUrls)
                             {
-                                <img src="@imgUrl" alt="@Model.ProductTitle" class="pm-product-detail-img" loading="lazy" />
+                                <img src="@ImageUrlBuilder.Build(imgUrl)" alt="@Model.ProductTitle" class="pm-product-detail-img" loading="lazy" />
                             }
                         </div>
                     }

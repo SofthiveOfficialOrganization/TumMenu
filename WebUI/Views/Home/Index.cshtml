@@ -127,11 +127,11 @@
         <div class="hero__right" aria-hidden="true">
             <div>
                 <img id="hero-main-image--customer" class="is-active"
-                     src="~/images/hero-illustration-customer.png" alt="" />
+                     src='@ImageUrlBuilder.Build("~/images/hero-illustration-customer.png")' alt="" />
             </div>
             <div>
                 <img id="hero-main-image--business"
-                     src="~/images/hero-illustration-business.png" alt="" />
+                     src='@ImageUrlBuilder.Build("~/images/hero-illustration-business.png")' alt="" />
             </div>
         </div>
 
@@ -213,7 +213,7 @@
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
-                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                    <img src="@ImageUrlBuilder.Build(store.ImageUrl)" alt="@store.Title" loading="lazy" />
                                 }
                                 else
                                 {
@@ -266,7 +266,7 @@
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
-                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                    <img src="@ImageUrlBuilder.Build(store.ImageUrl)" alt="@store.Title" loading="lazy" />
                                 }
                                 else
                                 {
@@ -319,7 +319,7 @@
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
-                                    <img src="@store.ImageUrl" alt="@store.Title" loading="lazy" />
+                                    <img src="@ImageUrlBuilder.Build(store.ImageUrl)" alt="@store.Title" loading="lazy" />
                                 }
                                 else
                                 {

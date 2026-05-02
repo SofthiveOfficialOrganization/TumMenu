@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Location", "Location", "{5C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "Microservices\Location\WebAPI\WebAPI.csproj", "{00902F59-214D-4359-B767-415552378329}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{971439EF-9FE8-4275-8EFD-480BA9DD6496}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageOptimizationTool", "Tools\ImageOptimizationTool\ImageOptimizationTool.csproj", "{AE480850-D922-4ADD-BB56-FA8C805EB5A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +105,18 @@ Global
 		{00902F59-214D-4359-B767-415552378329}.Release|x64.Build.0 = Release|Any CPU
 		{00902F59-214D-4359-B767-415552378329}.Release|x86.ActiveCfg = Release|Any CPU
 		{00902F59-214D-4359-B767-415552378329}.Release|x86.Build.0 = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|x64.Build.0 = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +124,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5C5C9B8D-5D9C-B901-6940-A891313A1A8A} = {8A367DDA-5161-A942-4F09-60E4726C9306}
 		{00902F59-214D-4359-B767-415552378329} = {5C5C9B8D-5D9C-B901-6940-A891313A1A8A}
+		{AE480850-D922-4ADD-BB56-FA8C805EB5A0} = {971439EF-9FE8-4275-8EFD-480BA9DD6496}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F9A09DB9-38EF-4B32-A823-246D81426AD3}

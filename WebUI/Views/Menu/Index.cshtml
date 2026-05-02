@@ -92,7 +92,7 @@
                                     <div class="pm-cat-card-photo">
                                         @if (!string.IsNullOrEmpty(cat.CategoryLibraryItem.ImageUrl))
                                         {
-                                            <img src="@cat.CategoryLibraryItem.ImageUrl" alt="@cat.CategoryLibraryItem.Title" loading="lazy" />
+                                            <img src="@ImageUrlBuilder.Build(cat.CategoryLibraryItem.ImageUrl)" alt="@cat.CategoryLibraryItem.Title" loading="lazy" />
                                         }
                                         else
                                         {

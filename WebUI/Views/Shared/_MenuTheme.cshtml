@@ -38,9 +38,9 @@
             return null;
 
         var trimmed = url.Trim();
-        return trimmed.StartsWith("~/", StringComparison.Ordinal)
+        return ImageUrlBuilder.Build(trimmed.StartsWith("~/", StringComparison.Ordinal)
             ? Url.Content(trimmed)
-            : trimmed;
+            : trimmed);
     }
 
     string escapeCssUrl(string url) => url

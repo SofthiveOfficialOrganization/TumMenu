@@ -81,7 +81,21 @@ var localizationOptions = new RequestLocalizationOptions()
 app.UseRequestLocalization(localizationOptions);
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+	OnPrepareResponse = ctx =>
+	{
+		var path = ctx.Context.Request.Path.Value ?? string.Empty;
+		if (path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase))
+		{
+			ctx.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+		}
+		else if (path.StartsWith("/images/", StringComparison.OrdinalIgnoreCase))
+		{
+			ctx.Context.Response.Headers.CacheControl = "public, max-age=2592000";
+		}
+	}
+});
 
 app.UseRouting();
 
