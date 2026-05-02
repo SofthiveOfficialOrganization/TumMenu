@@ -1839,3 +1839,10 @@ body.dark-mode .onboarding-category-selected .onboarding-category-title {
     fill: currentColor;
     flex-shrink: 0;
 }
+
+.product-detail-description {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-line;
+    line-height: 1.6;
+}
