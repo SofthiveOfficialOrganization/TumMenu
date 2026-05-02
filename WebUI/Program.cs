@@ -53,6 +53,7 @@ builder.Services.AddRazorPages()
 		options.Filters.Add<EnsureCompanyExistsFilter>();
 		options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 	});
+builder.Services.AddHealthChecks();
 
 
 
@@ -114,6 +115,7 @@ app.Use(async (context, next) =>
     };
     var noIndexExactPaths = new[]
     {
+        "/health",
         "/giris",
         "/kayit",
         "/hesap-aktivasyon",
@@ -133,6 +135,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/status-code/{0}");
 
+app.MapHealthChecks("/health").AllowAnonymous();
 
 app.MapControllerRoute(
 	name: "areas",
