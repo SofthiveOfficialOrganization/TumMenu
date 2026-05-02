@@ -1,0 +1,59 @@
+<div class="mb-4">
+    <label for="productPhotoFiles" class="form-label fw-bold text-secondary small text-uppercase">
+        <i class="fas fa-images me-1 opacity-50"></i>Ürün Fotoğrafları
+    </label>
+    <div class="border rounded-3 bg-light p-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="rounded-3 d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
+                 style="width: 48px; height: 48px; flex-shrink: 0;">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="flex-grow-1">
+                <input type="file" id="productPhotoFiles" name="photoFiles" class="form-control" accept="image/*" multiple />
+                <div class="form-text text-muted small">İsteğe bağlı. JPG, PNG veya WEBP görselleri seçebilirsiniz.</div>
+            </div>
+        </div>
+        <div id="productPhotoPreview" class="row g-2 mt-3 d-none"></div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const input = document.getElementById('productPhotoFiles');
+        const preview = document.getElementById('productPhotoPreview');
+
+        if (!input || !preview) return;
+
+        input.addEventListener('change', function () {
+            preview.innerHTML = '';
+
+            const files = Array.from(input.files || []);
+            if (!files.length) {
+                preview.classList.add('d-none');
+                return;
+            }
+
+            files.slice(0, 6).forEach(function (file) {
+                if (!file.type.startsWith('image/')) return;
+
+                const col = document.createElement('div');
+                col.className = 'col-4 col-md-2';
+
+                const img = document.createElement('img');
+                img.className = 'img-fluid rounded border bg-white';
+                img.style.aspectRatio = '1';
+                img.style.objectFit = 'cover';
+                img.alt = file.name;
+                img.src = URL.createObjectURL(file);
+                img.onload = function () {
+                    URL.revokeObjectURL(img.src);
+                };
+
+                col.appendChild(img);
+                preview.appendChild(col);
+            });
+
+            preview.classList.toggle('d-none', preview.children.length === 0);
+        });
+    })();
+</script>
