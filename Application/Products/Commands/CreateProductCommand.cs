@@ -25,7 +25,7 @@ public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest,
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
-	public int SortOrder { get; set; }
+	public int SortOrder { get; set; } = 1;
 	public string? Allergens { get; set; }
 	public Guid CategoryId { get; set; }
 }
