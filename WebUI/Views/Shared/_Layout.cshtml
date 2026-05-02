@@ -1,6 +1,9 @@
 @{
-    var pageTitle = ViewData["Title"] as string ?? "Tüm Menü";
-    var fullTitle = $"{pageTitle} | Tüm Menü";
+    const string siteTitle = "Tüm Menü";
+    var pageTitle = ViewData["Title"] as string ?? siteTitle;
+    var fullTitle = string.Equals(pageTitle, siteTitle, StringComparison.OrdinalIgnoreCase)
+        ? siteTitle
+        : $"{pageTitle} | {siteTitle}";
     var bodyClass = ViewData["BodyClass"] as string ?? string.Empty;
     var isPublicMenuPage = string.Equals(ViewContext.RouteData.Values["Controller"]?.ToString(), "Menu", StringComparison.OrdinalIgnoreCase)
         && string.IsNullOrEmpty(ViewContext.RouteData.Values["Area"]?.ToString());
