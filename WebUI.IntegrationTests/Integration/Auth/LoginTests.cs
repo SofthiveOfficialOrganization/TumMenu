@@ -41,6 +41,29 @@ public class LoginTests : IClassFixture<TumMenuWebAppFactory>
     }
 
     [Fact]
+    public async Task Login_WithAdminDonusUrl_RedirectsToRequestedLocalUrl()
+    {
+        var client = CreateClient();
+        var token = await AntiforgeryHelper.GetTokenAsync(client, "/giris?DonusUrl=%2FAdmin%2FAdminSupport");
+
+        var response = await client.PostAsync("/giris", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Input.Email"] = TestDbSeeder.AdminEmail,
+            ["Input.Password"] = TestDbSeeder.AdminPassword,
+            ["Input.RememberMe"] = "false",
+            ["DonusUrl"] = "/Admin/AdminSupport",
+            ["__RequestVerificationToken"] = token,
+            ["cf-turnstile-response"] = "test"
+        }));
+
+        Assert.True(
+            response.StatusCode == System.Net.HttpStatusCode.Redirect ||
+            response.StatusCode == System.Net.HttpStatusCode.Found,
+            $"Expected redirect but got {response.StatusCode}");
+        Assert.Equal("/Admin/AdminSupport", response.Headers.Location?.OriginalString);
+    }
+
+    [Fact]
     public async Task Login_WithInvalidPassword_ReturnsLoginPage()
     {
         var client = CreateClient();

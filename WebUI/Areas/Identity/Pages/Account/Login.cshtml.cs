@@ -84,14 +84,16 @@ namespace WebUI.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(
+            [FromQuery(Name = "DonusUrl")] string donusUrl = null,
+            string returnUrl = null)
         {
             if(!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/");
+            returnUrl = NormalizeReturnUrl(donusUrl ?? returnUrl);
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -101,11 +103,14 @@ namespace WebUI.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(
+            [FromForm(Name = "DonusUrl")] string donusUrl = null,
+            string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl = NormalizeReturnUrl(donusUrl ?? returnUrl);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ReturnUrl = returnUrl;
 
             // Validate Turnstile token
             var turnstileToken = Request.Form["cf-turnstile-response"];
@@ -151,6 +156,11 @@ namespace WebUI.Areas.Identity.Pages.Account
                     user.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     await _userManager.UpdateAsync(user);
 
+                    if (IsMeaningfulLocalReturnUrl(returnUrl))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+
                     if (roles.Contains("Admin") || roles.Contains("Owner"))
                     {
                         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
@@ -177,6 +187,18 @@ namespace WebUI.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private string NormalizeReturnUrl(string returnUrl)
+        {
+            return Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/");
+        }
+
+        private static bool IsMeaningfulLocalReturnUrl(string returnUrl)
+        {
+            return !string.IsNullOrWhiteSpace(returnUrl)
+                && returnUrl != "/"
+                && !returnUrl.StartsWith("/giris", StringComparison.OrdinalIgnoreCase);
         }
 
     }

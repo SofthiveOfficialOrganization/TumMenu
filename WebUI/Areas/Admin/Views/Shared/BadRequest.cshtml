@@ -1,0 +1,28 @@
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "İstek Tamamlanamadı";
+    var message = ViewData["Message"] as string ?? "İstek güvenlik veya doğrulama kontrolünden geçemedi.";
+}
+
+<div class="row min-vh-75 d-flex align-items-center justify-content-center">
+    <div class="col-md-7 text-center">
+        <div class="horizon-card py-5 px-4">
+            <div class="mb-4">
+                <i class="fas fa-shield-alt text-warning display-1 opacity-25"></i>
+            </div>
+            <h1 class="fw-bold text-dark display-4 mb-2">400</h1>
+            <h3 class="fw-bold text-secondary mb-4">İstek tamamlanamadı</h3>
+            <p class="text-muted mb-5 px-md-5">
+                @message
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill">
+                    <i class="fas fa-home me-2"></i> Panele Dön
+                </a>
+                <button onclick="history.back()" class="btn btn-outline-secondary px-4 py-2 rounded-pill" type="button">
+                    <i class="fas fa-arrow-left me-2"></i> Geri Git
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
