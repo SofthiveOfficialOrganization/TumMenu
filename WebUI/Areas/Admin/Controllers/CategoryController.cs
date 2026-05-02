@@ -100,6 +100,7 @@ public class CategoryController(IMediator mediator) : Controller
     public async Task<IActionResult> GetCategoryLibraryItems(
         string? search,
         string? excludeIds,
+        Guid? menuId,
         int page = 1,
         int pageSize = 15,
         CancellationToken ct = default)
@@ -111,6 +112,13 @@ public class CategoryController(IMediator mediator) : Controller
                         .Where(g => g.HasValue)
                         .Select(g => g!.Value)
                         .ToList();
+
+        if (menuId.HasValue && menuId.Value != Guid.Empty)
+        {
+            var menu = await mediator.Send(new GetMenuByIdQuery { Id = menuId.Value }, ct);
+            excludeList.AddRange(menu.Categories.Select(c => c.CategoryLibraryItemId));
+            excludeList = excludeList.Distinct().ToList();
+        }
 
         var result = await mediator.Send(new GetAllCategoryLibraryItemsPagedQuery
         {
@@ -203,28 +211,50 @@ public class CategoryController(IMediator mediator) : Controller
     [HttpGet]
     public IActionResult CreateCategory()
     {
-        return View();
+        return View(new AddCategoryToMenuCommand { IsActive = true });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateCategory(Guid menuId, Guid? parentId, Guid categoryLibraryItemId, CancellationToken ct)
+    public async Task<IActionResult> CreateCategory(Guid? storeId, Guid? menuId, Guid? parentId, Guid? categoryLibraryItemId, CancellationToken ct)
     {
-        if (!ModelState.IsValid)
-        {
-            return View();
-        }
+        ViewData["SelectedStoreId"] = storeId?.ToString() ?? string.Empty;
+        ViewData["SelectedMenuId"] = menuId?.ToString() ?? string.Empty;
+        ViewData["SelectedParentId"] = parentId?.ToString() ?? string.Empty;
+        ViewData["SelectedCategoryLibraryItemId"] = categoryLibraryItemId?.ToString() ?? string.Empty;
 
-        var command = new AddCategoryToMenuCommand 
-        { 
-            MenuId = menuId, 
-            ParentId = parentId, 
-            CategoryLibraryItemId = categoryLibraryItemId 
+        var command = new AddCategoryToMenuCommand
+        {
+            MenuId = menuId ?? Guid.Empty,
+            ParentId = parentId,
+            CategoryLibraryItemId = categoryLibraryItemId ?? Guid.Empty,
+            IsActive = true
         };
 
+        if (!storeId.HasValue || storeId.Value == Guid.Empty)
+            ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        if (!menuId.HasValue || menuId.Value == Guid.Empty)
+            ModelState.AddModelError(nameof(menuId), "Menü seçimi zorunludur.");
+        if (!categoryLibraryItemId.HasValue || categoryLibraryItemId.Value == Guid.Empty)
+            ModelState.AddModelError(nameof(categoryLibraryItemId), "Kategori seçimi zorunludur.");
+
+        if (!ModelState.IsValid)
+        {
+            return View(command);
+        }
+
+        var selectedStoreId = storeId.GetValueOrDefault();
+        var selectedMenuId = menuId.GetValueOrDefault();
+
         // Security Check
-        var menu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
+        var menu = await mediator.Send(new GetMenuByIdQuery { Id = selectedMenuId }, ct);
+        if (menu.StoreId != selectedStoreId)
+        {
+            ModelState.AddModelError(nameof(menuId), "Seçilen menü bu dükkana ait değil.");
+            return View(command);
+        }
+
         if (User.IsInRole("Owner"))
         {
              var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
@@ -246,8 +276,6 @@ public class CategoryController(IMediator mediator) : Controller
         return RedirectToAction("Index");
     }
 }
-
-
 
 
 

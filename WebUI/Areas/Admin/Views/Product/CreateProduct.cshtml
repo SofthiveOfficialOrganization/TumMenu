@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase">Dükkan Seçimi</label>
-                        <select name="storeId" id="storeSelect" class="form-select" required>
+                        <select name="storeId" id="storeSelect" class="form-select" required oninvalid="this.setCustomValidity('Dükkan seçimi zorunludur.')" onchange="this.setCustomValidity('')">
                             <option value="">Dükkan seçin...</option>
                         </select>
                         @Html.ValidationMessage("storeId", null, new { @class = "text-danger small" })
@@ -30,7 +30,7 @@
 
                     <div class="col-md-4 mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase">Menü Seçimi</label>
-                        <select name="menuId" id="menuSelect" class="form-select" required disabled>
+                        <select name="menuId" id="menuSelect" class="form-select" required disabled oninvalid="this.setCustomValidity('Menü seçimi zorunludur.')" onchange="this.setCustomValidity('')">
                             <option value="">Önce dükkan seçin...</option>
                         </select>
                         @Html.ValidationMessage("menuId", null, new { @class = "text-danger small" })
@@ -38,7 +38,7 @@
 
                     <div class="col-md-4 mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase">Kategori Seçimi</label>
-                        <select name="categoryId" id="categorySelect" class="form-select" required disabled>
+                        <select name="categoryId" id="categorySelect" class="form-select" required disabled oninvalid="this.setCustomValidity('Kategori seçimi zorunludur.')" onchange="this.setCustomValidity('')">
                             <option value="">Önce menü seçin...</option>
                         </select>
                         @Html.ValidationMessage("categoryId", null, new { @class = "text-danger small" })

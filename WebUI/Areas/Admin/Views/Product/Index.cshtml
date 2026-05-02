@@ -68,20 +68,17 @@
                                 }
                             </td>
                             <td>@item.SortOrder</td>
-                            <td>
-                                <div class="btn-group gap-2">
-                                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-info">
-                                        Detay
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
-                                        Düzenle
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
-                                        Sil
-                                    </button>
-                                </div>
+                            <td class="text-center text-nowrap">
+                                <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary me-1" title="Detaylar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id" title="Sil">
+                                    <i class="fas fa-trash"></i>
+                                </button>
 
-                                <!-- Silme Modalı -->
                                 <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
