@@ -1,3 +1,5 @@
+@using Application.Companies.Queries
+@inject MediatR.IMediator Mediator
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -34,6 +36,12 @@
 <body class="horizon-admin">
     @{
         var isOwnerPanelUser = User.IsInRole("Owner") && User.HasClaim(c => c.Type == "owner_id");
+        var hideCompanyMenuForOwner = false;
+        if (isOwnerPanelUser)
+        {
+            var ownerCompanyForLayout = await Mediator.Send(new GetCompanyByCurrentOwnerQuery());
+            hideCompanyMenuForOwner = ownerCompanyForLayout?.IsSingleStore == true;
+        }
     }
     <div class="horizon-layout">
         <!-- Sidebar Overlay -->
@@ -76,12 +84,15 @@
                     </li>
                 }
 
-                <li class="horizon-menu-item">
-                    <a href="@Url.Action("Index", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Company" ? "active" : "")">
-                        <div class="horizon-menu-icon"><i class="fas fa-building"></i></div>
-                        <span>@(rolePrefix == "admin" ? "Tüm Şirketler" : "Şirketim")</span>
-                    </a>
-                </li>
+                @if (!hideCompanyMenuForOwner)
+                {
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Company", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Company" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-building"></i></div>
+                            <span>@(rolePrefix == "admin" ? "Tüm Şirketler" : "Şirketim")</span>
+                        </a>
+                    </li>
+                }
 
                 <li class="horizon-menu-item">
                     <a href="@Url.Action("Index", "Store", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Store" ? "active" : "")">

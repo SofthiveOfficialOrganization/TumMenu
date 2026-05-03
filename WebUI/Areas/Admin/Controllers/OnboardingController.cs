@@ -27,6 +27,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
         {
             ViewBag.CompanyId = company.Id;
             ViewBag.CompanySlug = company.Slug;
+            ViewBag.IsSingleStore = company.IsSingleStore;
             
             var stores = await mediator.Send(new Application.Stores.Queries.GetStoresPagedQuery 
             { 
@@ -50,21 +51,21 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
                 if (menus.Items.Any())
                 {
                     ViewBag.MenuId = menus.Items.First().Id;
-                    ViewBag.InitialStep = 3; // Go to Category creation
+                    ViewBag.InitialStep = 4; // Go to Category creation
                 }
                 else
                 {
-                    ViewBag.InitialStep = 2; // Go to Menu creation
+                    ViewBag.InitialStep = 3; // Go to Menu creation
                 }
             }
             else
             {
-                ViewBag.InitialStep = 1; // Go to Store creation
+                ViewBag.InitialStep = 2; // Go to Store creation
             }
         }
         else
         {
-            ViewBag.InitialStep = 0; // Go to Company creation
+            ViewBag.InitialStep = 0; // Go to business type selection
         }
 
         return View();

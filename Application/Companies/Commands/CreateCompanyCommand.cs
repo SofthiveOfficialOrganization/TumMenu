@@ -14,6 +14,7 @@ public class CreateCompanyCommand : IRequest<CompanyDTO>, ITransactionalRequest,
 {
 	public string Title { get; set; } = string.Empty;
 	public string? Slug { get; set; }
+	public bool IsSingleStore { get; set; }
 	public string ActionName => "Şirket oluşturuldu";
 }
 

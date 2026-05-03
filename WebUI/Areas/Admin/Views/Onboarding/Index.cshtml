@@ -36,6 +36,33 @@
                 <div class="card-body p-0 position-relative">
                     <div class="onboarding-progress-bar" id="progressBar"></div>
                     <div id="onboarding-wizard" class="onboarding-wizard">
+
+                        <!-- Step 0: Business Type -->
+                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-business-type">
+                            <div class="text-center mb-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-route fa-4x text-primary animate-bounce"></i>
+                                </div>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-primary mb-2 mb-md-3">Nasıl başlayalım?</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">İşletme yapınıza göre kurulum akışını sadeleştirelim.</p>
+                            </div>
+                            <div class="row g-3 g-md-4">
+                                <div class="col-12 col-md-6">
+                                    <button type="button" class="btn btn-light border shadow-sm w-100 h-100 p-4 text-start onboarding-business-type" data-single-store="true">
+                                        <i class="fas fa-store fa-2x text-success mb-3"></i>
+                                        <span class="d-block h4 fw-bold text-dark mb-2">Tek Dükkan</span>
+                                        <span class="d-block text-secondary">Şirket adı istemeden dükkan adıyla kurulum yapılır.</span>
+                                    </button>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <button type="button" class="btn btn-light border shadow-sm w-100 h-100 p-4 text-start onboarding-business-type" data-single-store="false">
+                                        <i class="fas fa-building fa-2x text-primary mb-3"></i>
+                                        <span class="d-block h4 fw-bold text-dark mb-2">Birden Fazla Dükkan</span>
+                                        <span class="d-block text-secondary">Önce şirket, ardından ilk dükkan bilgileri alınır.</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         
                         <!-- Step 1: Create Company -->
                         <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-company">
@@ -43,7 +70,7 @@
                                 <div class="mb-4">
                                     <i class="fas fa-building fa-4x text-primary animate-bounce"></i>
                                 </div>
-                                <h2 class="fs-2 fs-md-1 fw-bold text-primary mb-2 mb-md-3">Hoşgeldiniz!</h2>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-primary mb-2 mb-md-3">Şirket Bilgisi</h2>
                                 <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Hemen başlayalım. Şirketinizin adı nedir?</p>
                             </div>
                             <form id="form-company" class="onboarding-form">
@@ -85,13 +112,13 @@
                                 <div class="mb-4">
                                     <i class="fas fa-store-alt fa-4x text-success animate-pulse"></i>
                                 </div>
-                                <h2 class="fs-2 fs-md-1 fw-bold text-success mb-2 mb-md-3">Harika Gidiyoruz!</h2>
-                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!</p>
+                                <h2 class="fs-2 fs-md-1 fw-bold text-success mb-2 mb-md-3" id="StoreStepTitle">Harika Gidiyoruz!</h2>
+                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0" id="StoreStepDescription">Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!</p>
                             </div>
                             <form id="form-store" class="onboarding-form">
                                 <input type="hidden" id="StoreCompanyId" name="CompanyId">
                                 <div class="mb-4">
-                                    <label for="StoreTitle" class="form-label h4 text-body">Şube Adı</label>
+                                    <label for="StoreTitle" class="form-label h4 text-body" id="StoreTitleLabel">Şube Adı</label>
                                     <input type="text" class="form-control form-control-xl shadow-sm" id="StoreTitle" name="Title" required placeholder="Örn: Merkez Şube">
                                 </div>
                                 <div class="mb-4">
@@ -323,7 +350,7 @@
 
     .wizard-step {
         transition: opacity 0.4s ease;
-        width: 25% !important;
+        width: 20% !important;
         flex-shrink: 0;
         padding: 2.5rem 1rem !important;
     }
@@ -381,6 +408,9 @@
 
             let currentStep = @(ViewBag.InitialStep ?? 0);
             const wizard = $('#onboarding-wizard');
+            const finalStep = 4;
+            const slidePercent = 20;
+            let isSingleStore = @Json.Serialize(ViewBag.IsSingleStore ?? false);
 
             // Pre-fill hidden fields if resuming
             const existingCompanyId = '@ViewBag.CompanyId';
@@ -399,12 +429,28 @@
                 $('#CategoryMenuId').val(existingMenuId);
             }
 
+            function applyStoreModeText() {
+                if (isSingleStore) {
+                    $('#StoreStepTitle').text('Dükkanınızı Ekleyelim');
+                    $('#StoreStepDescription').text('Şirket adı ayrıca istenmeyecek; dükkan adınız şirket adı olarak da kaydedilecek.');
+                    $('#StoreTitleLabel').text('Dükkan Adı');
+                    $('#StoreTitle').attr('placeholder', 'Örn: Kale Kafe');
+                } else {
+                    $('#StoreStepTitle').text('Harika Gidiyoruz!');
+                    $('#StoreStepDescription').text('Şimdi ilk şubemizi ekleyelim. Müşteriler buraya gelecek!');
+                    $('#StoreTitleLabel').text('Şube Adı');
+                    $('#StoreTitle').attr('placeholder', 'Örn: Merkez Şube');
+                }
+            }
+
+            applyStoreModeText();
+
             // Immediately show correct step
             if (currentStep > 0) {
-                 wizard.css('transform', `translateX(-${currentStep * 25}%)`);
+                 wizard.css('transform', `translateX(-${currentStep * slidePercent}%)`);
             }
             // If resuming directly on step 4, init the category step
-            if (currentStep === 3) {
+            if (currentStep === finalStep) {
                 setTimeout(() => initCategoryStep(), 300);
             }
             
@@ -442,6 +488,12 @@
                         return;
                     }
                     const params = Object.assign({ slug: slug }, getExtraParams ? getExtraParams() : {});
+                    if (prefix === 'Store' && !params.companyId) {
+                        slugFeedback.hide();
+                        slugIcon.removeClass('fa-lock fa-times-circle text-danger text-secondary')
+                            .addClass('fa-check-circle text-success');
+                        return;
+                    }
                     $.get(checkUrl, params, function (data) {
                         console.log('Slug Check Response (' + prefix + '):', data); // Debugging
                         slugFeedback.show();
@@ -515,6 +567,12 @@
             // Re-initialize Select2
             citySelect.select2({ theme: 'bootstrap-5', width: '100%' });
             districtSelect.select2({ theme: 'bootstrap-5', width: '100%' });
+
+            if (currentStep === 2) {
+                loadProvinces();
+                citySelect.trigger('change.select2');
+                districtSelect.trigger('change.select2');
+            }
 
             const cityNameInput = $('#cityNameInput');
             const districtNameInput = $('#districtNameInput');
@@ -739,26 +797,26 @@
             // --- Helper to slide to next step ---
             function nextStep() {
                 currentStep++;
-                const progress = (currentStep / 3) * 100;
+                const progress = (currentStep / finalStep) * 100;
                 $('.onboarding-progress-bar').css('width', progress + '%');
                 
-                wizard.css('transform', `translateX(-${currentStep * 25}%)`);
+                wizard.css('transform', `translateX(-${currentStep * slidePercent}%)`);
                 updateWizardHeight();
 
-                if (currentStep === 1) {
+                if (currentStep === 2) {
                     loadProvinces();
                     citySelect.trigger('change.select2');
                     districtSelect.trigger('change.select2');
                 }
 
                 // Auto-init category step when reaching step 4
-                if (currentStep === 3) {
+                if (currentStep === finalStep) {
                     setTimeout(() => initCategoryStep(), 300);
                 }
             }
             
             // Initial progress & height
-            $('.onboarding-progress-bar').css('width', (@(ViewBag.InitialStep ?? 0) / 3 * 100) + '%');
+            $('.onboarding-progress-bar').css('width', (@(ViewBag.InitialStep ?? 0) / 4 * 100) + '%');
             setTimeout(updateWizardHeight, 500);
             $(window).on('resize', updateWizardHeight);
             
@@ -824,6 +882,30 @@
                 });
             }
 
+            $('.onboarding-business-type').on('click', function() {
+                isSingleStore = $(this).data('single-store') === true || $(this).data('single-store') === 'true';
+                applyStoreModeText();
+                if (isSingleStore) {
+                    nextStep();
+                    nextStep();
+                } else {
+                    nextStep();
+                }
+            });
+
+            function createOnboardingCompany(formData) {
+                return $.ajax({
+                    url: `/admin/Onboarding/company`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+            }
+
             // --- Step 1: Create Company ---
             $('#form-company').on('submit', function(e) {
                 e.preventDefault();
@@ -839,31 +921,23 @@
 
                 const formData = {
                     Title: $('#CompanyTitle').val(),
-                    Slug: $('#CompanySlug').val()
+                    Slug: $('#CompanySlug').val(),
+                    IsSingleStore: false
                 };
 
-                $.ajax({
-                    url: `/admin/Onboarding/company`,
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(formData),
-                    headers: { 
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    success: function(response) {
+                createOnboardingCompany(formData)
+                    .done(function(response) {
                         // Response should be CompanyDTO
                         $('#StoreCompanyId').val(response.id);
                         $('#MenuCompanyId').val(response.id);
                         $('#StoreSlugFeedback').removeClass('text-danger text-success').hide();
                         btn.prop('disabled', false).html(originalText);
                         nextStep();
-                    },
-                    error: function(xhr) {
+                    })
+                    .fail(function(xhr) {
                         btn.prop('disabled', false).html(originalText);
                         handleError(xhr, 'Company Create');
-                    }
-                });
+                    });
             });
 
             // --- Step 2: Create Store ---
@@ -894,7 +968,9 @@
                     }
                 };
 
-                $.ajax({
+                function submitStore() {
+                    formData.CompanyId = $('#StoreCompanyId').val();
+                    $.ajax({
                     url: `/admin/Onboarding/store`,
                     type: 'POST',
                     contentType: 'application/json',
@@ -913,7 +989,27 @@
                         btn.prop('disabled', false).html(originalText);
                          handleError(xhr, 'Store Create');
                     }
-                });
+                    });
+                }
+
+                if (isSingleStore && !$('#StoreCompanyId').val()) {
+                    createOnboardingCompany({
+                        Title: $('#StoreTitle').val(),
+                        Slug: $('#StoreSlug').val(),
+                        IsSingleStore: true
+                    })
+                    .done(function(response) {
+                        $('#StoreCompanyId').val(response.id);
+                        $('#MenuCompanyId').val(response.id);
+                        submitStore();
+                    })
+                    .fail(function(xhr) {
+                        btn.prop('disabled', false).html(originalText);
+                        handleError(xhr, 'Company Create');
+                    });
+                } else {
+                    submitStore();
+                }
             });
 
             // --- Step 3: Create Menu ---
