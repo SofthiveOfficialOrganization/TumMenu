@@ -42,17 +42,16 @@ namespace WebUI.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///     Oturum süresi dolduğunda gösterilecek mesaj
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
+
+        /// <summary>
+        ///     Oturum sona erdi bilgisi
+        /// </summary>
+        [TempData]
+        public string SessionExpired { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -84,33 +83,33 @@ namespace WebUI.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(
-            [FromQuery(Name = "DonusUrl")] string donusUrl = null,
-            string returnUrl = null)
+        public async Task OnGetAsync()
         {
             if(!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl = NormalizeReturnUrl(donusUrl ?? returnUrl);
+            // Oturum sona erdi mesajını TempData'dan al ve ModelState'e ekle
+            var tempDataFactory = HttpContext.RequestServices.GetService<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionaryFactory>();
+            if (tempDataFactory != null)
+            {
+                var tempData = tempDataFactory.GetTempData(HttpContext);
+                if (tempData["SessionExpired"] != null)
+                {
+                    ModelState.AddModelError(string.Empty, tempData["SessionExpired"].ToString());
+                }
+            }
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(
-            [FromForm(Name = "DonusUrl")] string donusUrl = null,
-            string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync()
         {
-            returnUrl = NormalizeReturnUrl(donusUrl ?? returnUrl);
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            ReturnUrl = returnUrl;
 
             // Validate Turnstile token
             var turnstileToken = Request.Form["cf-turnstile-response"];
@@ -148,7 +147,7 @@ namespace WebUI.Areas.Identity.Pages.Account
 
                     if(!allowed)
                     {
-                        await _signInManager.SignOutAsync(); 
+                        await _signInManager.SignOutAsync();
                         ModelState.AddModelError(string.Empty, "Bu hesap ile giriş yapılamaz.");
                         return Page();
                     }
@@ -156,22 +155,13 @@ namespace WebUI.Areas.Identity.Pages.Account
                     user.LastLogin = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     await _userManager.UpdateAsync(user);
 
-                    if (IsMeaningfulLocalReturnUrl(returnUrl))
-                    {
-                        return LocalRedirect(returnUrl);
-                    }
-
-                    if (roles.Contains("Admin") || roles.Contains("Owner"))
-                    {
-                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-                    }
-
-                    return LocalRedirect(returnUrl);
+                    // Her zaman Admin Dashboard'a yönlendir - ReturnUrl artık kullanılmıyor
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
 
                 if(result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { RememberMe = Input.RememberMe });
                 }
                 if(result.IsLockedOut)
                 {
@@ -187,18 +177,6 @@ namespace WebUI.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
-        }
-
-        private string NormalizeReturnUrl(string returnUrl)
-        {
-            return Url.IsLocalUrl(returnUrl) ? returnUrl : Url.Content("~/");
-        }
-
-        private static bool IsMeaningfulLocalReturnUrl(string returnUrl)
-        {
-            return !string.IsNullOrWhiteSpace(returnUrl)
-                && returnUrl != "/"
-                && !returnUrl.StartsWith("/giris", StringComparison.OrdinalIgnoreCase);
         }
 
     }

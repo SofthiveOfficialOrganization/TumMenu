@@ -206,16 +206,37 @@ namespace WebUI.Areas.Identity.Pages.Account
                     };
 
                     var emailHtml = await _emailTemplateService.GenerateRegistrationEmail(emailModel);
-                    
-                    await _emailSender.SendEmailAsync(user.Email!, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", emailHtml);
+
+                    bool emailSent = false;
+                    string emailErrorMessage = null;
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(user.Email!, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", emailHtml);
+                        emailSent = true;
+                        _logger.LogInformation("Registration email sent successfully to {Email}", Input.Email);
+                    }
+                    catch (Exception ex)
+                    {
+                        emailErrorMessage = ex.Message;
+                        _logger.LogError(ex, "Failed to send registration email to {Email}. Account was created successfully.", Input.Email);
+                    }
 
                     if(_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        if (!emailSent)
+                        {
+                            TempData["InfoMessage"] = "Hesabınız başarıyla oluşturuldu ancak onay e-postası gönderilemedi. Lütfen daha sonra tekrar deneyin veya destek ekibiyle iletişime geçin.";
+                            TempData["EmailError"] = emailErrorMessage;
+                        }
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl, emailSent = emailSent });
                     }
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (!emailSent)
+                        {
+                            TempData["WarningMessage"] = "Hesabınız oluşturuldu ancak onay e-postası gönderilemedi. Ayarlardan e-posta adresinizi doğrulayabilirsiniz.";
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }

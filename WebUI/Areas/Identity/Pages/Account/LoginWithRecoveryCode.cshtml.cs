@@ -36,12 +36,6 @@ namespace WebUI.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
             /// <summary>
@@ -55,7 +49,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             public string RecoveryCode { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync()
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -64,12 +58,10 @@ namespace WebUI.Areas.Identity.Pages.Account
                 throw new InvalidOperationException($"İki faktörlü doğrulama kullanıcısı yüklenemedi.");
             }
 
-            ReturnUrl = returnUrl;
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync()
         {
             if(!ModelState.IsValid)
             {
@@ -91,7 +83,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             if(result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                // Her zaman Admin Dashboard'a yönlendir
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             if(result.IsLockedOut)
             {

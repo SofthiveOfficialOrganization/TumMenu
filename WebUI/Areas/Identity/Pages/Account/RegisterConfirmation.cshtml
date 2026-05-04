@@ -7,18 +7,42 @@
 @section Head {
     <link rel="stylesheet" href="~/css/auth.css?v=@DateTime.Now.Ticks" asp-append-version="true" />
 }
-    <div class="confirmation-container">
-        <div class="email-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-            </svg>
-        </div>
 
-        <h1 class="confirmation-title">Kayıt İşleminizi Tamamlayın!</h1>
-    
+<div class="confirmation-container">
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert @(Model.EmailSent ? "alert-success" : "alert-warning") mb-4">
+            @Model.StatusMessage
+        </div>
+    }
+
+    @if (!Model.EmailSent)
+    {
+        <div class="alert alert-warning mb-4">
+            <div class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                <div>
+                    <strong>Hesabınız oluşturuldu ancak e-posta gönderilemedi.</strong><br>
+                    <small>Lütfen tekrar deneyin veya destek ekibiyle iletişime geçin.</small>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="email-icon @(Model.EmailSent ? "" : "email-icon-warning")">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        </svg>
+    </div>
+
+    <h1 class="confirmation-title">@(Model.EmailSent ? "Kayıt İşleminizi Tamamlayın!" : "E-posta Onayı Gerekli")</h1>
+
     <p class="confirmation-message">
-        Kayıt işleminiz başarıyla tamamlandı! <br>
-        Hesabınızı aktive etmek için lütfen e-posta adresinizi kontrol edin.
+        @(Model.EmailSent
+            ? "Kayıt işleminiz başarıyla tamamlandı! Hesabınızı aktive etmek için lütfen e-posta adresinizi kontrol edin."
+            : "Hesabınız oluşturuldu ancak onay e-postası gönderilemedi. Hesabınızı kullanabilmek için e-posta adresinizi doğrulamanız gerekiyor.")
     </p>
 
     <div class="email-display">
@@ -28,41 +52,69 @@
         @Model.Email
     </div>
 
-    <div class="instruction-list">
-        <div class="instruction-item">
-            <div class="instruction-number">1</div>
-            <div class="instruction-text">E-posta kutunuzu açın</div>
-        </div>
-        <div class="instruction-item">
-            <div class="instruction-number">2</div>
-            <div class="instruction-text">TumMenu'dan gelen e-postayı bulun</div>
-        </div>
-        <div class="instruction-item">
-            <div class="instruction-number">3</div>
-            <div class="instruction-text">"Hesabımı Onayla" butonuna tıklayın</div>
-        </div>
-    </div>
-
-    <!-- @if (Model.DisplayConfirmAccountLink)
+    @if (Model.EmailSent)
     {
-        <div class="resend-section">
-            <p class="resend-text">
-                E-posta gelmedi mi? Spam klasörünü kontrol edin veya aşağıdaki linki kullanın:
-            </p>
-            <a href="@Model.EmailConfirmationUrl" class="btn-resend">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                </svg>
-                Hesabımı Şimdi Onayla
-            </a>
+        <div class="instruction-list">
+            <div class="instruction-item">
+                <div class="instruction-number">1</div>
+                <div class="instruction-text">E-posta kutunuzu açın</div>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">2</div>
+                <div class="instruction-text">TumMenu'dan gelen e-postayı bulun</div>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">3</div>
+                <div class="instruction-text">"Hesabımı Onayla" butonuna tıklayın</div>
+            </div>
         </div>
-    } -->
+    }
+    else
+    {
+        <div class="instruction-list" style="opacity: 0.6;">
+            <div class="instruction-item">
+                <div class="instruction-number" style="background: #dc3545;">!</div>
+                <div class="instruction-text">Onay e-postası gönderilemedi</div>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">2</div>
+                <div class="instruction-text">Aşağıdan tekrar göndermeyi deneyin</div>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">3</div>
+                <div class="instruction-text">Sorun devam ederse destek ekibine yazın</div>
+            </div>
+        </div>
+    }
 
     <div class="resend-section">
+        @if (!Model.EmailSent)
+        {
+            <form method="post" asp-page-handler="ResendEmail" class="mb-3">
+                <input type="hidden" name="email" value="@Model.Email" />
+                <input type="hidden" name="returnUrl" value="@Request.Query["returnUrl"]" />
+                <button type="submit" class="btn-resend" style="background: #dc3545; border-color: #dc3545;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    Onay E-postasını Tekrar Gönder
+                </button>
+            </form>
+
+            <div style="height: 1rem;"></div>
+
+            <a href="mailto:destek@tummenu.com?subject=Onay%20E-postas%C4%B1%20Alam%C4%B1yorum&body=Merhaba%2C%0D%0A%0D%0AKay%C4%B1t%20oldum%20ancak%20onay%20e-postas%C4%B1%20alam%C4%B1yorum.%0D%0A%0D%0AE-posta%20adresim%3A%20@(Uri.EscapeDataString(Model.Email))" class="btn-resend" style="background: #6c757d; border-color: #6c757d; margin-bottom: 1rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9 3h15m-9 3H15m0 0l3-3m-3 3l3 3" />
+                </svg>
+                Destek Ekibine Yaz
+            </a>
+        }
+
         <p class="resend-text">
-            E-posta adresiniz yanlışsa veya başka bir sorun yaşarsanız, 
-            lütfen destek ekibimizle iletişime geçin.
+            E-posta gelmedi mi? Spam/Junk klasörünü kontrol etmeyi unutmayın.
         </p>
+
         <a asp-page="./Login" class="btn-resend">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
