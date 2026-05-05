@@ -252,7 +252,19 @@
                     <input type="text" class="horizon-search" placeholder="Ara...">
                     
                     <i class="far fa-bell horizon-navbar-icon"></i>
-                    <i class="far fa-moon horizon-navbar-icon" id="theme-toggle"></i>
+                    <button type="button"
+                            class="theme-switch theme-switch--navbar js-theme-toggle"
+                            id="theme-toggle"
+                            role="switch"
+                            aria-label="Koyu temaya geç"
+                            aria-checked="false"
+                            title="Tema değiştir">
+                        <span class="theme-switch__track">
+                            <span class="theme-switch__icon theme-switch__icon--light"><i class="fas fa-sun"></i></span>
+                            <span class="theme-switch__icon theme-switch__icon--dark"><i class="fas fa-moon"></i></span>
+                            <span class="theme-switch__thumb"></span>
+                        </span>
+                    </button>
                     <a asp-area="" asp-controller="Home" asp-action="Index" class="horizon-site-link horizon-navbar-icon" title="Siteye Git" aria-label="Siteye Git"> 
                         <i class="fas fa-globe"></i>
                         
@@ -347,6 +359,22 @@
             <div class="horizon-content" id="realContent">
                 @RenderBody()
             </div>
+
+            @if (isOnboarding)
+            {
+                <button type="button"
+                        class="theme-switch theme-switch--onboarding js-theme-toggle"
+                        role="switch"
+                        aria-label="Koyu temaya geç"
+                        aria-checked="false"
+                        title="Tema değiştir">
+                    <span class="theme-switch__track">
+                        <span class="theme-switch__icon theme-switch__icon--light"><i class="fas fa-sun"></i></span>
+                        <span class="theme-switch__icon theme-switch__icon--dark"><i class="fas fa-moon"></i></span>
+                        <span class="theme-switch__thumb"></span>
+                    </span>
+                </button>
+            }
 
             <!-- Footer -->
             <footer class="horizon-footer">
@@ -647,32 +675,27 @@
 
     <script>
         $(document).ready(function() {
-            const themeToggle = $('#theme-toggle');
+            const themeToggles = $('.js-theme-toggle');
             const body = $('body');
-            const theme = localStorage.getItem('theme');
 
-            // Sync icon state with saved theme (class already applied in <head>)
-            if (theme === 'dark') {
-                body.addClass('dark-mode');
-                themeToggle.removeClass('fa-moon').addClass('fa-sun');
-            } else {
-                body.removeClass('dark-mode');
-                $('html').removeClass('dark-mode');
-                themeToggle.removeClass('fa-sun').addClass('fa-moon');
+            function applyTheme(theme) {
+                const isDark = theme === 'dark';
+
+                body.toggleClass('dark-mode', isDark);
+                $('html').toggleClass('dark-mode', isDark);
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+                themeToggles
+                    .toggleClass('is-dark', isDark)
+                    .attr('aria-checked', isDark ? 'true' : 'false')
+                    .attr('aria-label', isDark ? 'Açık temaya geç' : 'Koyu temaya geç');
             }
 
-            // Toggle theme on click
-            themeToggle.on('click', function() {
-                body.toggleClass('dark-mode');
-                $('html').toggleClass('dark-mode');
-                
-                if (body.hasClass('dark-mode')) {
-                    localStorage.setItem('theme', 'dark');
-                    themeToggle.removeClass('fa-moon').addClass('fa-sun');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                    themeToggle.removeClass('fa-sun').addClass('fa-moon');
-                }
+            // Sync switch state with saved theme (class already applied in <head>)
+            applyTheme(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+
+            themeToggles.on('click', function() {
+                applyTheme(body.hasClass('dark-mode') ? 'light' : 'dark');
             });
         });
     </script>
