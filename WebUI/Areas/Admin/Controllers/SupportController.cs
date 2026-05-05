@@ -69,7 +69,7 @@ public class SupportController(IMediator mediator, IEmailSender emailSender) : C
                 <p>{FormatMultiline(model.AttemptedAction)}</p>
                 """;
 
-            await emailSender.SendEmailAsync("softhiveyonetim@gmail.com", subject, htmlMessage);
+            await emailSender.SendEmailAsync("destek@tummenu.com", subject, htmlMessage);
 
             return Ok(new { message = "Hata bildiriminiz destek ekibine iletildi." });
         }

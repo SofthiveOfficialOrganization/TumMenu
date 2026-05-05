@@ -58,12 +58,6 @@ namespace WebUI.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
@@ -84,27 +78,27 @@ namespace WebUI.Areas.Identity.Pages.Account
 
         public IActionResult OnGet() => RedirectToPage("./Login");
 
-        public IActionResult OnPost(string provider, string returnUrl = null)
+        public IActionResult OnPost(string provider)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            // Callback'te returnUrl kullanılmıyor - her zaman Dashboard'a yönlendirilir
+            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback");
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 
-        public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> OnGetCallbackAsync(string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
             if(remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                return RedirectToPage("./Login");
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if(info == null)
             {
                 ErrorMessage = "Error loading external login information.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                return RedirectToPage("./Login");
             }
 
             // Sign in the user with this external login provider if the user already has a login.
@@ -112,7 +106,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             if(result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                // Her zaman Admin Dashboard'a yönlendir
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             if(result.IsLockedOut)
             {
@@ -121,7 +116,6 @@ namespace WebUI.Areas.Identity.Pages.Account
             else
             {
                 // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
                 if(info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
@@ -134,15 +128,14 @@ namespace WebUI.Areas.Identity.Pages.Account
             }
         }
 
-        public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostConfirmationAsync()
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
             // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if(info == null)
             {
                 ErrorMessage = "Error loading external login information during confirmation.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                return RedirectToPage("./Login");
             }
 
             if(ModelState.IsValid)
@@ -179,7 +172,8 @@ namespace WebUI.Areas.Identity.Pages.Account
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect(returnUrl);
+                        // Her zaman Admin Dashboard'a yönlendir
+                        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                     }
                 }
                 foreach(var error in result.Errors)
@@ -189,7 +183,6 @@ namespace WebUI.Areas.Identity.Pages.Account
             }
 
             ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
             return Page();
         }
 

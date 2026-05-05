@@ -6,6 +6,8 @@
 
 @{
     ViewData["Title"] = "Yeni Ürün Ekle";
+    var isSingleStore = ViewBag.IsSingleStore == true;
+    var singleStoreId = ViewBag.SingleStoreId as Guid?;
 }
 
 <div class="row justify-content-center">
@@ -19,24 +21,32 @@
             <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <label class="form-label fw-bold text-secondary small text-uppercase">Dükkan Seçimi</label>
-                        <select name="storeId" id="storeSelect" class="form-select" required oninvalid="this.setCustomValidity('Dükkan seçimi zorunludur.')" onchange="this.setCustomValidity('')">
-                            <option value="">Dükkan seçin...</option>
-                        </select>
-                        @Html.ValidationMessage("storeId", null, new { @class = "text-danger small" })
-                    </div>
+                @if (isSingleStore && singleStoreId.HasValue)
+                {
+                    <input type="hidden" name="storeId" id="storeId" value="@singleStoreId.Value" />
+                }
 
-                    <div class="col-md-4 mb-4">
+                <div class="row">
+                    @if (!isSingleStore)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Dükkan Seçimi</label>
+                            <select name="storeId" id="storeSelect" class="form-select" required oninvalid="this.setCustomValidity('Dükkan seçimi zorunludur.')" onchange="this.setCustomValidity('')">
+                                <option value="">Dükkan seçin...</option>
+                            </select>
+                            @Html.ValidationMessage("storeId", null, new { @class = "text-danger small" })
+                        </div>
+                    }
+
+                    <div class="col-@(isSingleStore ? "md-6" : "md-4") mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase">Menü Seçimi</label>
                         <select name="menuId" id="menuSelect" class="form-select" required disabled oninvalid="this.setCustomValidity('Menü seçimi zorunludur.')" onchange="this.setCustomValidity('')">
-                            <option value="">Önce dükkan seçin...</option>
+                            <option value="">@(isSingleStore ? "Menü seçin..." : "Önce dükkan seçin...")</option>
                         </select>
                         @Html.ValidationMessage("menuId", null, new { @class = "text-danger small" })
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-@(isSingleStore ? "md-6" : "md-4") mb-4">
                         <label class="form-label fw-bold text-secondary small text-uppercase">Kategori Seçimi</label>
                         <select name="categoryId" id="categorySelect" class="form-select" required disabled oninvalid="this.setCustomValidity('Kategori seçimi zorunludur.')" onchange="this.setCustomValidity('')">
                             <option value="">Önce menü seçin...</option>
@@ -166,6 +176,8 @@
             const selectedStoreId = '@(ViewData["SelectedStoreId"]?.ToString() ?? "")';
             const selectedMenuId = '@(ViewData["SelectedMenuId"]?.ToString() ?? "")';
             const selectedCategoryId = '@(ViewData["SelectedCategoryId"]?.ToString() ?? "")';
+            const isSingleStore = @(isSingleStore ? "true" : "false");
+            const singleStoreId = '@(singleStoreId?.ToString() ?? "")';
 
             let isManual = false;
 
@@ -225,9 +237,12 @@
             }
 
             function resetMenu(disabled) {
+                const placeholder = isSingleStore
+                    ? (disabled ? 'Yükleniyor...' : 'Menü seçin...')
+                    : (disabled ? 'Önce dükkan seçin...' : 'Menü seçin...');
                 menuSelect
                     .prop('disabled', disabled)
-                    .html('<option value="">' + (disabled ? 'Önce dükkan seçin...' : 'Menü seçin...') + '</option>');
+                    .html('<option value="">' + placeholder + '</option>');
             }
 
             function resetCategory(disabled) {
@@ -237,6 +252,14 @@
             }
 
             function loadStores() {
+                if (isSingleStore) {
+                    // Tek dükkan modunda menüleri doğrudan yükle
+                    if (!isEmptyGuid(singleStoreId)) {
+                        loadMenus(singleStoreId, selectedMenuId, selectedCategoryId);
+                    }
+                    return;
+                }
+
                 storeSelect.prop('disabled', true).html('<option value="">Dükkanlar yükleniyor...</option>');
                 resetMenu(true);
                 resetCategory(true);
@@ -301,15 +324,17 @@
                     });
             }
 
-            storeSelect.on('change', function() {
-                const storeId = $(this).val();
-                resetMenu(true);
-                resetCategory(true);
+            if (!isSingleStore) {
+                storeSelect.on('change', function() {
+                    const storeId = $(this).val();
+                    resetMenu(true);
+                    resetCategory(true);
 
-                if (storeId) {
-                    loadMenus(storeId);
-                }
-            });
+                    if (storeId) {
+                        loadMenus(storeId);
+                    }
+                });
+            }
 
             menuSelect.on('change', function() {
                 const menuId = $(this).val();

@@ -27,6 +27,7 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
         {
             ViewBag.CompanyId = company.Id;
             ViewBag.CompanySlug = company.Slug;
+            ViewBag.IsSingleStore = company.IsSingleStore;
             
             var stores = await mediator.Send(new Application.Stores.Queries.GetStoresPagedQuery 
             { 
@@ -50,21 +51,21 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
                 if (menus.Items.Any())
                 {
                     ViewBag.MenuId = menus.Items.First().Id;
-                    ViewBag.InitialStep = 3; // Go to Category creation
+                    ViewBag.InitialStep = 4; // Go to Category creation
                 }
                 else
                 {
-                    ViewBag.InitialStep = 2; // Go to Menu creation
+                    ViewBag.InitialStep = 3; // Go to Menu creation
                 }
             }
             else
             {
-                ViewBag.InitialStep = 1; // Go to Store creation
+                ViewBag.InitialStep = 2; // Go to Store creation
             }
         }
         else
         {
-            ViewBag.InitialStep = 0; // Go to Company creation
+            ViewBag.InitialStep = 0; // Go to business type selection
         }
 
         return View();
@@ -109,24 +110,50 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var companyMenu = await mediator.Send(new CreateMenuToCompanyCommand
-        {
-            Title = req.Title,
-            CompanyId = req.CompanyId
-        }, ct);
+        // Şirket bilgisini alarak tek dükkan modu kontrolü yap
+        var company = await mediator.Send(new Application.Companies.Queries.GetCompanyByIdQuery { Id = req.CompanyId }, ct);
+        var isSingleStore = company?.IsSingleStore == true;
 
-        // Also create an empty store menu so the store appears in "Dükkan Menülerim"
-        if (req.StoreId.HasValue && req.StoreId.Value != Guid.Empty)
+        if (isSingleStore)
         {
-            await mediator.Send(new CreateMenuToStoreCommand
+            // Tek dükkan modunda sadece dükkan menüsü oluştur, ana menü oluşturma
+            if (req.StoreId.HasValue && req.StoreId.Value != Guid.Empty)
+            {
+                var storeMenu = await mediator.Send(new CreateMenuToStoreCommand
+                {
+                    Title = req.Title,
+                    StoreId = req.StoreId.Value,
+                    Status = Domain.Entities.MenuStatus.Active
+                }, ct);
+                return Ok(storeMenu);
+            }
+            else
+            {
+                return BadRequest("Tek dükkan modunda storeId zorunludur.");
+            }
+        }
+        else
+        {
+            // Çoklu dükkan modunda: önce ana menü oluştur, sonra dükkan menüsüne kopyala
+            var companyMenu = await mediator.Send(new CreateMenuToCompanyCommand
             {
                 Title = req.Title,
-                StoreId = req.StoreId.Value,
-                Status = Domain.Entities.MenuStatus.Active
+                CompanyId = req.CompanyId
             }, ct);
-        }
 
-        return Ok(companyMenu);
+            // Also create an empty store menu so the store appears in "Dükkan Menülerim"
+            if (req.StoreId.HasValue && req.StoreId.Value != Guid.Empty)
+            {
+                await mediator.Send(new CreateMenuToStoreCommand
+                {
+                    Title = req.Title,
+                    StoreId = req.StoreId.Value,
+                    Status = Domain.Entities.MenuStatus.Active
+                }, ct);
+            }
+
+            return Ok(companyMenu);
+        }
     }
 
     /// <summary>

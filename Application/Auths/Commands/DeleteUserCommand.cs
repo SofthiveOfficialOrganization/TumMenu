@@ -20,141 +20,155 @@ public class DeleteUserCommandHandler(
 {
     public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.Users
-            .Include(u => u.Owner)
-                .ThenInclude(o => o!.Company)
-                    .ThenInclude(c => c!.Stores)
-                        .ThenInclude(s => s.Address)
-            .Include(u => u.Owner)
-                .ThenInclude(o => o!.Company)
-                    .ThenInclude(c => c!.Stores)
-                        .ThenInclude(s => s.Staffs)
-            .Include(u => u.Owner)
-                .ThenInclude(o => o!.Company)
-                    .ThenInclude(c => c!.Stores)
-                        .ThenInclude(s => s.QRCode)
-            .Include(u => u.Owner)
-                .ThenInclude(o => o!.Company)
-                    .ThenInclude(c => c!.Stores)
-                        .ThenInclude(s => s.Menus)
-                            .ThenInclude(m => m.Categories)
-                                .ThenInclude(cat => cat.Products)
-            .Include(u => u.Owner)
-                .ThenInclude(o => o!.Company)
-                    .ThenInclude(c => c!.Stores)
-                        .ThenInclude(s => s.Medias)
-            .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+        var user = await userManager.FindByIdAsync(request.Id);
 
         if (user == null) return false;
 
-        if (user.Owner?.Company != null)
+        var ownerId = await context.Owners
+            .IgnoreQueryFilters()
+            .Where(o => o.ApplicationUserId == user.Id)
+            .Select(o => (Guid?)o.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (ownerId != null)
         {
-            var company = user.Owner.Company;
-            var storeIds = company.Stores.Select(s => s.Id).ToList();
+            var companyId = await context.Companies
+                .IgnoreQueryFilters()
+                .Where(c => c.OwnerId == ownerId.Value)
+                .Select(c => (Guid?)c.Id)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            // Store'ları ve bağlı verileri sil (Menüler hariç, onları toplu sileceğiz)
-            foreach (var store in company.Stores)
+            if (companyId != null)
             {
-                // Store'a bağlı medyaları sil
-                var storeMedias = await context.Medias
-                    .Where(m => m.StoreId == store.Id || (m.ReferenceId == store.Id && m.Type == MediaRefType.Store))
-                    .ToListAsync(cancellationToken);
-                context.Medias.RemoveRange(storeMedias);
-
-                // Store'a bağlı QRCode'u sil
-                if (store.QRCode != null)
-                {
-                    var qrMedias = await context.Medias
-                        .Where(m => m.ReferenceId == store.QRCode.Id && m.Type == MediaRefType.QRCode)
-                        .ToListAsync(cancellationToken);
-                    context.Medias.RemoveRange(qrMedias);
-                    context.QRCodes.Remove(store.QRCode);
-                }
-
-                // Store'a bağlı adresi sil
-                if (store.Address != null)
-                {
-                    context.Addresses.Remove(store.Address);
-                }
-
-                // Store'a bağlı staff'ları sil
-                context.Staffs.RemoveRange(store.Staffs);
-
-                context.Stores.Remove(store);
+                await DeleteCompanyGraphAsync(companyId.Value, cancellationToken);
             }
 
-            // Şirkete veya Store'lara bağlı TÜM menüleri bul
-            var allMenus = await context.Menus
-                .Include(m => m.Categories)
-                    .ThenInclude(c => c.Products)
-                .Where(m => m.CompanyId == company.Id || (m.StoreId != null && storeIds.Contains(m.StoreId.Value)))
-                .ToListAsync(cancellationToken);
+            await context.OwnerIssueReports
+                .IgnoreQueryFilters()
+                .Where(r => r.OwnerId == ownerId.Value)
+                .ExecuteDeleteAsync(cancellationToken);
 
-            foreach (var menu in allMenus)
-            {
-                // Menü medyalarını sil
-                var menuMedias = await context.Medias
-                    .Where(m => m.MenuId == menu.Id || (m.ReferenceId == menu.Id && m.Type == MediaRefType.Menu))
-                    .ToListAsync(cancellationToken);
-                context.Medias.RemoveRange(menuMedias);
-
-                // Kategorileri ve ürünleri sil
-                // NOT: hierarchical categories için MenuId üzerinden tüm kategorileri çekmek daha sağlıklı olabilir
-                var allCategories = await context.Categories
-                    .Include(c => c.Products)
-                    .Where(c => c.MenuId == menu.Id)
-                    .ToListAsync(cancellationToken);
-
-                foreach (var category in allCategories)
-                {
-                    // Kategori medyalarını sil
-                    var categoryMedias = await context.Medias
-                        .Where(m => m.ReferenceId == category.Id && m.Type == MediaRefType.Category)
-                        .ToListAsync(cancellationToken);
-                    context.Medias.RemoveRange(categoryMedias);
-
-                    // Ürünleri ve ürün medyalarını sil
-                    foreach (var product in category.Products)
-                    {
-                        var productMedias = await context.Medias
-                            .Where(m => m.ProductId == product.Id || (m.ReferenceId == product.Id && m.Type == MediaRefType.Product))
-                            .ToListAsync(cancellationToken);
-                        context.Medias.RemoveRange(productMedias);
-                        context.Products.Remove(product);
-                    }
-
-                    context.Categories.Remove(category);
-                }
-
-                context.Menus.Remove(menu);
-            }
-
-            // Company medyalarını sil
-            var companyMedias = await context.Medias
-                .Where(m => m.CompanyId == company.Id || (m.ReferenceId == company.Id && m.Type == MediaRefType.Company))
-                .ToListAsync(cancellationToken);
-            context.Medias.RemoveRange(companyMedias);
-
-            context.Companies.Remove(company);
+            await context.Owners
+                .IgnoreQueryFilters()
+                .Where(o => o.Id == ownerId.Value)
+                .ExecuteDeleteAsync(cancellationToken);
         }
 
-        // Audit logları ve bildirimleri sil
-        var logs = await context.AuditLogs.Where(l => l.UserId == user.Id).ToListAsync(cancellationToken);
-        context.AuditLogs.RemoveRange(logs);
+        await context.AuditLogs
+            .IgnoreQueryFilters()
+            .Where(l => l.UserId == user.Id)
+            .ExecuteDeleteAsync(cancellationToken);
 
-        var notifications = await context.Notifications.Where(n => n.ToUserId == user.Id).ToListAsync(cancellationToken);
-        context.Notifications.RemoveRange(notifications);
+        await context.Notifications
+            .IgnoreQueryFilters()
+            .Where(n => n.ToUserId == user.Id)
+            .ExecuteDeleteAsync(cancellationToken);
 
-        // Owner'ı sil
-        if (user.Owner != null)
-        {
-            context.Owners.Remove(user.Owner);
-        }
-
-        await context.SaveChangesAsync(cancellationToken);
-
-        // Son olarak kullanıcıyı sil
         var result = await userManager.DeleteAsync(user);
         return result.Succeeded;
+    }
+
+    private async Task DeleteCompanyGraphAsync(Guid companyId, CancellationToken cancellationToken)
+    {
+        var storeIds = await context.Stores
+            .IgnoreQueryFilters()
+            .Where(s => s.CompanyId == companyId)
+            .Select(s => s.Id)
+            .ToListAsync(cancellationToken);
+
+        var menuIds = await context.Menus
+            .IgnoreQueryFilters()
+            .Where(m => m.CompanyId == companyId || (m.StoreId != null && storeIds.Contains(m.StoreId.Value)))
+            .Select(m => m.Id)
+            .ToListAsync(cancellationToken);
+
+        var categoryIds = await context.Categories
+            .IgnoreQueryFilters()
+            .Where(c => menuIds.Contains(c.MenuId))
+            .Select(c => c.Id)
+            .ToListAsync(cancellationToken);
+
+        var productIds = await context.Products
+            .IgnoreQueryFilters()
+            .Where(p => categoryIds.Contains(p.CategoryId))
+            .Select(p => p.Id)
+            .ToListAsync(cancellationToken);
+
+        var qrCodeIds = await context.QRCodes
+            .IgnoreQueryFilters()
+            .Where(q => q.StoreId != null && storeIds.Contains(q.StoreId.Value))
+            .Select(q => q.Id)
+            .ToListAsync(cancellationToken);
+
+        await context.Companies
+            .IgnoreQueryFilters()
+            .Where(c => c.Id == companyId)
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(c => c.DefaultMainMenuId, (Guid?)null)
+                    .SetProperty(c => c.DefaultPaymentMethodId, (Guid?)null),
+                cancellationToken);
+
+        await context.Medias
+            .IgnoreQueryFilters()
+            .Where(m =>
+                m.CompanyId == companyId ||
+                (m.StoreId != null && storeIds.Contains(m.StoreId.Value)) ||
+                (m.MenuId != null && menuIds.Contains(m.MenuId.Value)) ||
+                (m.ProductId != null && productIds.Contains(m.ProductId.Value)) ||
+                (m.Type == MediaRefType.Company && m.ReferenceId == companyId) ||
+                (m.Type == MediaRefType.Store && storeIds.Contains(m.ReferenceId)) ||
+                (m.Type == MediaRefType.Menu && menuIds.Contains(m.ReferenceId)) ||
+                (m.Type == MediaRefType.Category && categoryIds.Contains(m.ReferenceId)) ||
+                (m.Type == MediaRefType.Product && productIds.Contains(m.ReferenceId)) ||
+                (m.Type == MediaRefType.QRCode && qrCodeIds.Contains(m.ReferenceId)))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Notifications
+            .IgnoreQueryFilters()
+            .Where(n => n.CompanyId == companyId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Categories
+            .IgnoreQueryFilters()
+            .Where(c => categoryIds.Contains(c.Id))
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(c => c.ParentId, (Guid?)null),
+                cancellationToken);
+
+        await context.Products
+            .IgnoreQueryFilters()
+            .Where(p => productIds.Contains(p.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Categories
+            .IgnoreQueryFilters()
+            .Where(c => categoryIds.Contains(c.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.QRCodes
+            .IgnoreQueryFilters()
+            .Where(q => qrCodeIds.Contains(q.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Menus
+            .IgnoreQueryFilters()
+            .Where(m => menuIds.Contains(m.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Staffs
+            .IgnoreQueryFilters()
+            .Where(s => storeIds.Contains(s.StoreId))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Stores
+            .IgnoreQueryFilters()
+            .Where(s => storeIds.Contains(s.Id))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await context.Companies
+            .IgnoreQueryFilters()
+            .Where(c => c.Id == companyId)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

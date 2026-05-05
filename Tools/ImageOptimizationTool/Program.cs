@@ -6,9 +6,14 @@ const uint Quality = 75;
 var options = Options.Parse(args);
 var webRoot = ResolveWebRoot(options.WebRoot);
 var execute = options.Execute;
+var minBytes = options.MinBytes;
+var scope = options.Scope;
 
 Console.WriteLine(execute ? "EXECUTE mode" : "DRY-RUN mode");
 Console.WriteLine($"WebRoot: {webRoot}");
+Console.WriteLine($"Scope: {scope}");
+if (minBytes > 0)
+    Console.WriteLine($"Min bytes: {minBytes:N0}");
 Console.WriteLine();
 
 var uploadFiles = EnumerateRasterFiles(Path.Combine(webRoot, "uploads")).ToList();
@@ -16,31 +21,43 @@ var staticFiles = EnumerateRasterFiles(Path.Combine(webRoot, "images"))
     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}uploads{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
     .ToList();
 
+if (minBytes > 0)
+{
+    uploadFiles = uploadFiles.Where(path => new FileInfo(path).Length >= minBytes).ToList();
+    staticFiles = staticFiles.Where(path => new FileInfo(path).Length >= minBytes).ToList();
+}
+
 Console.WriteLine($"Uploads found: {uploadFiles.Count}");
 Console.WriteLine($"Static images found: {staticFiles.Count}");
 Console.WriteLine();
 
 SqlConnection? connection = null;
-if (execute && !string.IsNullOrWhiteSpace(options.ConnectionString))
+if (execute && scope != OptimizationScope.Static && !string.IsNullOrWhiteSpace(options.ConnectionString))
 {
     connection = new SqlConnection(options.ConnectionString);
     await connection.OpenAsync();
 }
-else if (execute && uploadFiles.Count > 0)
+else if (execute && scope != OptimizationScope.Static && uploadFiles.Count > 0)
 {
     Console.WriteLine("WARNING: --connection-string verilmedi; uploads dosyaları dönüştürülecek ama Media tablosu güncellenmeyecek.");
 }
 
 try
 {
-    foreach (var sourcePath in uploadFiles)
+    if (scope != OptimizationScope.Static)
     {
-        await ProcessFileAsync(sourcePath, webRoot, updateDatabase: true, connection, execute, options.Cleanup);
+        foreach (var sourcePath in uploadFiles)
+        {
+            await ProcessFileAsync(sourcePath, webRoot, updateDatabase: true, connection, execute, options.Cleanup);
+        }
     }
 
-    foreach (var sourcePath in staticFiles)
+    if (scope != OptimizationScope.Uploads)
     {
-        await ProcessFileAsync(sourcePath, webRoot, updateDatabase: false, connection: null, execute, options.Cleanup);
+        foreach (var sourcePath in staticFiles)
+        {
+            await ProcessFileAsync(sourcePath, webRoot, updateDatabase: false, connection: null, execute, options.Cleanup);
+        }
     }
 }
 finally
@@ -171,7 +188,20 @@ static string ResolveWebRoot(string? configured)
 
 internal sealed record OptimizedImageInfo(int Width, int Height, long FileSize);
 
-internal sealed record Options(string? WebRoot, string? ConnectionString, bool Execute, bool Cleanup)
+internal enum OptimizationScope
+{
+    All,
+    Static,
+    Uploads
+}
+
+internal sealed record Options(
+    string? WebRoot,
+    string? ConnectionString,
+    bool Execute,
+    bool Cleanup,
+    OptimizationScope Scope,
+    long MinBytes)
 {
     public static Options Parse(string[] args)
     {
@@ -179,6 +209,8 @@ internal sealed record Options(string? WebRoot, string? ConnectionString, bool E
         string? connectionString = null;
         var execute = false;
         var cleanup = false;
+        var scope = OptimizationScope.All;
+        long minBytes = 0;
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -196,10 +228,27 @@ internal sealed record Options(string? WebRoot, string? ConnectionString, bool E
                 case "--cleanup":
                     cleanup = true;
                     break;
+                case "--scope":
+                    scope = ParseScope(GetValue(args, ref i));
+                    break;
+                case "--min-bytes":
+                    minBytes = long.Parse(GetValue(args, ref i));
+                    break;
             }
         }
 
-        return new Options(webRoot, connectionString, execute, cleanup);
+        return new Options(webRoot, connectionString, execute, cleanup, scope, minBytes);
+    }
+
+    private static OptimizationScope ParseScope(string value)
+    {
+        return value.ToLowerInvariant() switch
+        {
+            "all" => OptimizationScope.All,
+            "static" => OptimizationScope.Static,
+            "uploads" => OptimizationScope.Uploads,
+            _ => throw new ArgumentException("--scope all, static veya uploads olabilir.")
+        };
     }
 
     private static string GetValue(string[] args, ref int index)

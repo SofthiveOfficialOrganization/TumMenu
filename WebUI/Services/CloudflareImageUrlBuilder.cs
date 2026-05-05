@@ -7,7 +7,7 @@ namespace WebUI.Services;
 public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
 {
     private const string TransformPrefix = "/cdn-cgi/image/";
-    private const string TransformOptions = "format=auto,quality=75,metadata=none";
+    private const string BaseTransformOptions = "format=auto,quality=75,metadata=none";
 
     private static readonly string[] TransformablePrefixes = ["/uploads/", "/images/"];
     private static readonly HashSet<string> ExcludedExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -39,7 +39,7 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string Build(string? imageUrl)
+    public string Build(string? imageUrl, int? width = null, int? height = null)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return string.Empty;
@@ -72,7 +72,11 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
         if (ExcludedExtensions.Contains(extension))
             return normalized;
 
-        return $"{TransformPrefix}{TransformOptions}/{normalized.TrimStart('/')}";
+        var transformOptions = BaseTransformOptions;
+        if (width.HasValue) transformOptions += $",width={width.Value}";
+        if (height.HasValue) transformOptions += $",height={height.Value}";
+
+        return $"{TransformPrefix}{transformOptions}/{normalized.TrimStart('/')}";
     }
 
     private bool ShouldUseTransform()

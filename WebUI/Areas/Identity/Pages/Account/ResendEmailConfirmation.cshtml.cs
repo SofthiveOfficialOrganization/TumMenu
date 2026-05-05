@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using WebUI.Models.Email;
+using WebUI.Services;
 
 namespace WebUI.Areas.Identity.Pages.Account
 {
@@ -20,32 +22,31 @@ namespace WebUI.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IEmailTemplateService _emailTemplateService;
+        private readonly ILogger<ResendEmailConfirmationModel> _logger;
 
-        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(
+            UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender,
+            IEmailTemplateService emailTemplateService,
+            ILogger<ResendEmailConfirmationModel> logger)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _emailTemplateService = emailTemplateService;
+            _logger = logger;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        [TempData]
+        public string StatusMessage { get; set; }
+
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "E-posta adresi gereklidir.")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
             public string Email { get; set; }
         }
 
@@ -63,25 +64,58 @@ namespace WebUI.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if(user == null)
             {
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-                return Page();
+                // Don't reveal that the user does not exist
+                _logger.LogInformation("Resend email attempted for non-existent user: {Email}", Input.Email);
+                StatusMessage = "Eğer bu e-posta adresi sistemimizde kayıtlıysa, onay e-postası gönderilecektir.";
+                return RedirectToPage("./ResendEmailConfirmation");
             }
 
-            var userId = await _userManager.GetUserIdAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId = userId, code = code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            // Check if email is already confirmed
+            if (await _userManager.IsEmailConfirmedAsync(user))
+            {
+                StatusMessage = "E-posta adresiniz zaten onaylanmış. Giriş yapabilirsiniz.";
+                return RedirectToPage("./ResendEmailConfirmation");
+            }
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-            return Page();
+            try
+            {
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var confirmationUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = userId, code = code },
+                    protocol: Request.Scheme);
+
+                var accountActivationUrl = Url.Action(
+                    "ActivateAccount",
+                    "Account",
+                    values: new { userId = userId, code = code },
+                    protocol: Request.Scheme);
+
+                var emailModel = new RegistrationEmailModel
+                {
+                    UserName = Input.Email,
+                    UserEmail = Input.Email,
+                    ConfirmationUrl = confirmationUrl,
+                    AccountActivationUrl = accountActivationUrl
+                };
+
+                var emailHtml = await _emailTemplateService.GenerateRegistrationEmail(emailModel);
+                await _emailSender.SendEmailAsync(user.Email!, "TumMenu'a Hoş Geldiniz! - Hesabınızı Onaylayın", emailHtml);
+
+                _logger.LogInformation("Resent confirmation email to {Email}", Input.Email);
+                StatusMessage = "Onay e-postası başarıyla gönderildi. Lütfen e-posta kutunuzu kontrol edin.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to resend confirmation email to {Email}", Input.Email);
+                StatusMessage = "E-posta gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin veya destek ekibiyle iletişime geçin.";
+            }
+
+            return RedirectToPage("./ResendEmailConfirmation");
         }
     }
 }

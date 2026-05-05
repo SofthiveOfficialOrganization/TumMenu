@@ -7,6 +7,7 @@ namespace Domain.Entities
 	{
 		[MaxLength(200)] public string Title { get; set; } = null!;
 		[MaxLength(30)] public string Slug { get; set; } = null!;
+		public bool IsSingleStore { get; set; }
 
 		// TODO: Make it required after implementing example endpoints and services
 		public Guid? OwnerId { get; set; }

@@ -15,7 +15,14 @@
         <p class="auth-subtitle">Hesabınıza giriş yaparak devam edin.</p>
 
         <form id="account" method="post">
-            <input type="hidden" name="DonusUrl" value="@Model.ReturnUrl" />
+            @* Oturum sona erdi mesajı *@
+            @if (TempData["SessionExpired"] != null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["SessionExpired"]
+                </div>
+            }
             <div asp-validation-summary="ModelOnly" class="validation-summary-errors" role="alert"></div>
             
             <div class="form-group">
@@ -47,8 +54,8 @@
             <div class="auth-links">
                 <a id="forgot-password" asp-page="./ForgotPassword" class="auth-link">Şifremi Unuttum?</a>
                 <span>
-                    Hesabın yok mu? 
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="auth-link">Kayıt Ol</a>
+                    Hesabın yok mu?
+                    <a asp-page="./Register" class="auth-link">Kayıt Ol</a>
                 </span>
             </div>
         </form>

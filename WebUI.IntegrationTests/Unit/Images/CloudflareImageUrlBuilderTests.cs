@@ -38,6 +38,21 @@ public sealed class CloudflareImageUrlBuilderTests
             .Should().Be("/cdn-cgi/image/format=auto,quality=75,metadata=none/uploads/product/a.webp");
     }
 
+    [Fact]
+    public void Build_TransformsWithWidthAndHeight()
+    {
+        var context = new DefaultHttpContext();
+        context.Request.Host = new HostString("tummenu.com");
+        context.Request.Headers["CF-Ray"] = "test-ray";
+        var builder = new CloudflareImageUrlBuilder(new HttpContextAccessor { HttpContext = context });
+
+        builder.Build("/uploads/product/a.webp", width: 800)
+            .Should().Be("/cdn-cgi/image/format=auto,quality=75,metadata=none,width=800/uploads/product/a.webp");
+            
+        builder.Build("/uploads/product/a.webp", width: 800, height: 600)
+            .Should().Be("/cdn-cgi/image/format=auto,quality=75,metadata=none,width=800,height=600/uploads/product/a.webp");
+    }
+
     [Theory]
     [InlineData("https://cdn.example.com/a.jpg")]
     [InlineData("/uploads/product/icon.svg")]

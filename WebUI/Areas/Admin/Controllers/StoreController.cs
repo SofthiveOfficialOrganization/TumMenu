@@ -15,14 +15,32 @@ public class StoreController(IMediator mediator) : Controller
 	public async Task<IActionResult> Index(Guid? companyId, string? search, int page = 1, CancellationToken ct = default)
 	{
 		bool isFixedCompany = false;
+		var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
 		
 		if (User.IsInRole("Owner"))
 		{
-			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
 			if (ownerCompany != null)
 			{
 				companyId = ownerCompany.Id;
 				isFixedCompany = true;
+				
+				// Tek dükkan modunda ve sadece 1 dükkan varsa doğrudan detay sayfasına yönlendir
+				if (ownerCompany.IsSingleStore)
+				{
+					var storesQuery = new GetStoresPagedQuery
+					{
+						CompanyId = companyId,
+						Page = 1,
+						PageSize = 2 // Sadece 1 dükkan var mı kontrolü için yeterli
+					};
+					var storesResult = await mediator.Send(storesQuery, ct);
+					
+					if (storesResult.Items.Count == 1)
+					{
+						var singleStore = storesResult.Items.First();
+						return RedirectToAction(nameof(Details), new { id = singleStore.Id, role = RouteData.Values["role"] });
+					}
+				}
 			}
 		}
 

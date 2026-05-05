@@ -209,8 +209,31 @@ public class CategoryController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public IActionResult CreateCategory()
+    public async Task<IActionResult> CreateCategory(CancellationToken ct)
     {
+        var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true;
+        
+        ViewBag.IsSingleStore = isSingleStore;
+        ViewBag.SingleStoreId = (Guid?)null;
+        
+        if (isSingleStore && User.IsInRole("Owner"))
+        {
+            // Tek dükkan modunda şirketin dükkanını bul
+            var storesQuery = new Application.Stores.Queries.GetStoresPagedQuery
+            {
+                CompanyId = ownerCompany!.Id,
+                Page = 1,
+                PageSize = 2
+            };
+            var storesResult = await mediator.Send(storesQuery, ct);
+            
+            if (storesResult.Items.Count == 1)
+            {
+                ViewBag.SingleStoreId = storesResult.Items.First().Id;
+            }
+        }
+        
         return View(new AddCategoryToMenuCommand { IsActive = true });
     }
 
@@ -232,8 +255,37 @@ public class CategoryController(IMediator mediator) : Controller
             IsActive = true
         };
 
-        if (!storeId.HasValue || storeId.Value == Guid.Empty)
-            ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        // Tek dükkan modu kontrolü
+        var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true && User.IsInRole("Owner");
+        
+        if (isSingleStore)
+        {
+            // Tek dükkan modunda storeId otomatik olarak ayarlanır
+            if (!storeId.HasValue || storeId.Value == Guid.Empty)
+            {
+                var storesQuery = new Application.Stores.Queries.GetStoresPagedQuery
+                {
+                    CompanyId = ownerCompany!.Id,
+                    Page = 1,
+                    PageSize = 2
+                };
+                var storesResult = await mediator.Send(storesQuery, ct);
+                
+                if (storesResult.Items.Count == 1)
+                {
+                    storeId = storesResult.Items.First().Id;
+                    ViewData["SelectedStoreId"] = storeId.ToString()!;
+                }
+            }
+        }
+        else
+        {
+            // Çoklu dükkan modunda dükkan seçimi zorunlu
+            if (!storeId.HasValue || storeId.Value == Guid.Empty)
+                ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        }
+        
         if (!menuId.HasValue || menuId.Value == Guid.Empty)
             ModelState.AddModelError(nameof(menuId), "Menü seçimi zorunludur.");
         if (!categoryLibraryItemId.HasValue || categoryLibraryItemId.Value == Guid.Empty)
@@ -241,6 +293,8 @@ public class CategoryController(IMediator mediator) : Controller
 
         if (!ModelState.IsValid)
         {
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = storeId;
             return View(command);
         }
 
@@ -252,12 +306,13 @@ public class CategoryController(IMediator mediator) : Controller
         if (menu.StoreId != selectedStoreId)
         {
             ModelState.AddModelError(nameof(menuId), "Seçilen menü bu dükkana ait değil.");
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = storeId;
             return View(command);
         }
 
         if (User.IsInRole("Owner"))
         {
-             var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
              bool isOwner = false;
              if (ownerCompany != null)
              {

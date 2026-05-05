@@ -70,8 +70,31 @@ public class ProductController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public IActionResult CreateProduct()
+    public async Task<IActionResult> CreateProduct(CancellationToken ct)
     {
+        var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true;
+        
+        ViewBag.IsSingleStore = isSingleStore;
+        ViewBag.SingleStoreId = (Guid?)null;
+        
+        if (isSingleStore && User.IsInRole("Owner"))
+        {
+            // Tek dükkan modunda şirketin dükkanını bul
+            var storesQuery = new Application.Stores.Queries.GetStoresPagedQuery
+            {
+                CompanyId = ownerCompany!.Id,
+                Page = 1,
+                PageSize = 2
+            };
+            var storesResult = await mediator.Send(storesQuery, ct);
+            
+            if (storesResult.Items.Count == 1)
+            {
+                ViewBag.SingleStoreId = storesResult.Items.First().Id;
+            }
+        }
+        
         return View(new CreateProductCommand { IsActive = true });
     }
 
@@ -85,20 +108,55 @@ public class ProductController(IMediator mediator) : Controller
         ViewData["SelectedMenuId"] = menuId;
         ViewData["SelectedCategoryId"] = categoryId;
 
-        if (storeId == Guid.Empty)
-            ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        // Tek dükkan modu kontrolü
+        var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true && User.IsInRole("Owner");
+        
+        if (isSingleStore)
+        {
+            // Tek dükkan modunda storeId otomatik olarak ayarlanır
+            if (storeId == Guid.Empty)
+            {
+                var storesQuery = new Application.Stores.Queries.GetStoresPagedQuery
+                {
+                    CompanyId = ownerCompany!.Id,
+                    Page = 1,
+                    PageSize = 2
+                };
+                var storesResult = await mediator.Send(storesQuery, ct);
+                
+                if (storesResult.Items.Count == 1)
+                {
+                    storeId = storesResult.Items.First().Id;
+                    ViewData["SelectedStoreId"] = storeId;
+                }
+            }
+        }
+        else
+        {
+            // Çoklu dükkan modunda dükkan seçimi zorunlu
+            if (storeId == Guid.Empty)
+                ModelState.AddModelError(nameof(storeId), "Dükkan seçimi zorunludur.");
+        }
+        
         if (menuId == Guid.Empty)
             ModelState.AddModelError(nameof(menuId), "Menü seçimi zorunludur.");
         if (categoryId == Guid.Empty)
             ModelState.AddModelError(nameof(categoryId), "Kategori seçimi zorunludur.");
 
         if (!ModelState.IsValid)
+        {
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = storeId == Guid.Empty ? (Guid?)null : storeId;
             return View(req);
+        }
 
         var selectedMenu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
         if (selectedMenu.StoreId != storeId)
         {
             ModelState.AddModelError(nameof(menuId), "Seçilen menü bu dükkana ait değil.");
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = storeId == Guid.Empty ? (Guid?)null : storeId;
             return View(req);
         }
 
@@ -106,13 +164,14 @@ public class ProductController(IMediator mediator) : Controller
         if (category.MenuId != menuId)
         {
             ModelState.AddModelError(nameof(categoryId), "Seçilen kategori bu menüye ait değil.");
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = storeId == Guid.Empty ? (Guid?)null : storeId;
             return View(req);
         }
 
         // Security Check - verify user owns the category
         if (User.IsInRole("Owner"))
         {
-            var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
             bool isOwner = false;
             if (ownerCompany != null)
             {

@@ -23,6 +23,8 @@ public sealed class CompanyController(IMediator mediator) : Controller
 			var company = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
 			if (company == null)
 				return RedirectToAction(nameof(Create), new { role = RouteData.Values["role"] });
+			if (company.IsSingleStore)
+				return RedirectToAction("Index", "Store", new { area = "Admin", role = RouteData.Values["role"] ?? "owner" });
 			return RedirectToAction(nameof(Details), new { area = "Admin", id = company.Id, role = RouteData.Values["role"] ?? (User.IsInRole("Admin") ? "admin" : "owner") });
 		}
 	}
@@ -174,7 +176,6 @@ public sealed class CompanyController(IMediator mediator) : Controller
         return Json(new { results = items, pagination = new { more = result.HasNext } });
     }
 }
-
 
 
 

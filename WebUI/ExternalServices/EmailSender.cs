@@ -183,11 +183,11 @@ namespace WebUI.ExternalServices
 
     public class EmailSettings
     {
-        public string SmtpServer { get; set; } = "smtp.gmail.com";
-        public int Port { get; set; } = 587;
-        public string Username { get; set; } = "";
-        public string Password { get; set; } = "";
-        public string FromEmail { get; set; } = "";
+        public string SmtpServer { get; set; } = "mail.tummenu.com";
+        public int Port { get; set; } = 465;
+        public string Username { get; set; } = "destek@tummenu.com";
+        public string Password { get; set; } = "zez02102025__";
+        public string FromEmail { get; set; } = "destek@tummenu.com";
         public string FromName { get; set; } = "Tüm Menü";
         public bool EnableSsl { get; set; } = true;
     }

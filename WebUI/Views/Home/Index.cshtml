@@ -1,7 +1,7 @@
 ﻿@using Application.Stores.DTOs
 @using Application.Stores.Queries
 @{
-    ViewData["Title"] = "Ana Sayfa";
+    ViewData["Title"] = "Tüm Menü";
     ViewData["Description"] = "Yakınındaki restoranların QR menülerini keşfet, fiyatları gitmeden gör ve işletmen için dijital QR menü oluştur.";
     var homepageStores = ViewBag.HomepageStores as HomepageStoresDTO;
 }
@@ -126,12 +126,24 @@
 
         <div class="hero__right" aria-hidden="true">
             <div>
-                <img id="hero-main-image--customer" class="is-active"
-                     src='@ImageUrlBuilder.Build("~/images/hero-illustration-customer.png")' alt="" />
+                <picture>
+                    <source srcset='@ImageUrlBuilder.Build("~/images/hero-illustration-customer.webp")' type="image/webp" />
+                    <img id="hero-main-image--customer" class="is-active"
+                         src='@ImageUrlBuilder.Build("~/images/hero-illustration-customer.png")'
+                         alt=""
+                         decoding="async"
+                         fetchpriority="high" />
+                </picture>
             </div>
             <div>
-                <img id="hero-main-image--business"
-                     src='@ImageUrlBuilder.Build("~/images/hero-illustration-business.png")' alt="" />
+                <picture>
+                    <source srcset='@ImageUrlBuilder.Build("~/images/hero-illustration-business.webp")' type="image/webp" />
+                    <img id="hero-main-image--business"
+                         src='@ImageUrlBuilder.Build("~/images/hero-illustration-business.png")'
+                         alt=""
+                         decoding="async"
+                         loading="lazy" />
+                </picture>
             </div>
         </div>
 

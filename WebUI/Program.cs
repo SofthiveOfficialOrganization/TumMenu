@@ -17,9 +17,25 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/giris";
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-	options.ReturnUrlParameter = "DonusUrl";
-	options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+	// ReturnUrl parametresi kaldırıldı - oturum sona erdiğinde kullanıcı doğrudan login sayfasına yönlendirilir
+	options.ReturnUrlParameter = "";
+	// Oturum süresi: 2 saat (120 dakika) - kullanıcı 10 dakikadan şikayetçi
+	options.ExpireTimeSpan = TimeSpan.FromHours(2);
 	options.SlidingExpiration = true;
+	// Oturum sona erdiğinde kullanıcıya bilgi vermek için olay işleyici
+	options.Events.OnRedirectToLogin = context =>
+	{
+		// TempData kullanarak oturum sona erdi bilgisi ekle
+		var tempDataFactory = context.HttpContext.RequestServices.GetService<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionaryFactory>();
+		if (tempDataFactory != null)
+		{
+			var tempData = tempDataFactory.GetTempData(context.HttpContext);
+			tempData["SessionExpired"] = "Oturum süreniz sona erdi. Lütfen tekrar giriş yapın.";
+		}
+
+		context.Response.Redirect(options.LoginPath);
+		return Task.CompletedTask;
+	};
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));

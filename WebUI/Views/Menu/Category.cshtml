@@ -78,7 +78,7 @@
                                     <div class="pm-cat-card-photo">
                                         @if (!string.IsNullOrEmpty(subCat.ImageUrl))
                                         {
-                                            <img src="@ImageUrlBuilder.Build(subCat.ImageUrl)" alt="@subCat.Title" loading="lazy" />
+                                            <img src="@ImageUrlBuilder.Build(subCat.ImageUrl, width: 400)" alt="@subCat.Title" loading="lazy" />
                                         }
                                         else
                                         {
@@ -135,7 +135,7 @@
                                     @if (!string.IsNullOrEmpty(product.ImageUrl))
                                     {
                                         <div class="pm-product-img-wrap">
-                                            <img src="@ImageUrlBuilder.Build(product.ImageUrl)" alt="@product.Title" class="pm-product-img" loading="lazy" />
+                                            <img src="@ImageUrlBuilder.Build(product.ImageUrl, width: 400)" alt="@product.Title" class="pm-product-img" loading="lazy" />
                                         </div>
                                     }
                                     else

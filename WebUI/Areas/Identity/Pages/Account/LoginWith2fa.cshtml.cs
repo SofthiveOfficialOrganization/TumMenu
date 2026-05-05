@@ -43,12 +43,6 @@ namespace WebUI.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
             /// <summary>
@@ -69,7 +63,7 @@ namespace WebUI.Areas.Identity.Pages.Account
             public bool RememberMachine { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(bool rememberMe)
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -79,20 +73,17 @@ namespace WebUI.Areas.Identity.Pages.Account
                 throw new InvalidOperationException($"İki faktörlü doğrulama kullanıcısı yüklenemedi.");
             }
 
-            ReturnUrl = returnUrl;
             RememberMe = rememberMe;
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(bool rememberMe)
         {
             if(!ModelState.IsValid)
             {
                 return Page();
             }
-
-            returnUrl = returnUrl ?? Url.Content("~/");
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if(user == null)
@@ -109,7 +100,8 @@ namespace WebUI.Areas.Identity.Pages.Account
             if(result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
-                return LocalRedirect(returnUrl);
+                // Her zaman Admin Dashboard'a yönlendir
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             else if(result.IsLockedOut)
             {

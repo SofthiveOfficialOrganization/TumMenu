@@ -53,8 +53,37 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public IActionResult CreateToStore(CancellationToken ct)
+    public async Task<IActionResult> CreateToStore(CancellationToken ct)
     {
+        var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true;
+        
+        ViewBag.IsSingleStore = isSingleStore;
+        ViewBag.SingleStoreId = (Guid?)null;
+        ViewBag.StoreName = (string?)null;
+        
+        if (isSingleStore && User.IsInRole("Owner") && ownerCompany != null)
+        {
+            // Tek dükkan modunda şirketin dükkanını bul
+            var storesQuery = new GetStoresPagedQuery
+            {
+                CompanyId = ownerCompany.Id,
+                Page = 1,
+                PageSize = 2
+            };
+            var storesResult = await mediator.Send(storesQuery, ct);
+            
+            if (storesResult.Items.Count == 1)
+            {
+                var singleStore = storesResult.Items.First();
+                ViewBag.SingleStoreId = singleStore.Id;
+                ViewBag.StoreName = singleStore.Title;
+                
+                // Tek dükkan varsa, model'de storeId'yi önceden doldur
+                return View(new CreateMenuToStoreCommand { StoreId = singleStore.Id });
+            }
+        }
+        
         return View(new CreateMenuToStoreCommand());
     }
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -62,8 +91,35 @@ public sealed class MenuController(IMediator mediator) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateToStore([FromForm] CreateMenuToStoreCommand cmd, CancellationToken ct)
     {
+        // Tek dükkan modu kontrolü
+        var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+        var isSingleStore = ownerCompany?.IsSingleStore == true && User.IsInRole("Owner");
+        
+        if (isSingleStore)
+        {
+            // Tek dükkan modunda storeId otomatik olarak ayarlanır
+            if (cmd.StoreId == Guid.Empty && ownerCompany != null)
+            {
+                var storesQuery = new GetStoresPagedQuery
+                {
+                    CompanyId = ownerCompany.Id,
+                    Page = 1,
+                    PageSize = 2
+                };
+                var storesResult = await mediator.Send(storesQuery, ct);
+                
+                if (storesResult.Items.Count == 1)
+                {
+                    cmd.StoreId = storesResult.Items.First().Id;
+                }
+            }
+        }
+        
         if (!ModelState.IsValid)
         {
+            ViewBag.IsSingleStore = isSingleStore;
+            ViewBag.SingleStoreId = cmd.StoreId == Guid.Empty ? (Guid?)null : cmd.StoreId;
+            
             if (cmd.StoreId != Guid.Empty)
             {
                 // Try to find the store to repopulate the name
