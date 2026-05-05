@@ -41,7 +41,7 @@ public class LoginTests : IClassFixture<TumMenuWebAppFactory>
     }
 
     [Fact]
-    public async Task Login_WithAdminDonusUrl_RedirectsToRequestedLocalUrl()
+    public async Task Login_WithAdminDonusUrl_RedirectsToAdminDashboard()
     {
         var client = CreateClient();
         var token = await AntiforgeryHelper.GetTokenAsync(client, "/giris?DonusUrl=%2FAdmin%2FAdminSupport");
@@ -60,7 +60,7 @@ public class LoginTests : IClassFixture<TumMenuWebAppFactory>
             response.StatusCode == System.Net.HttpStatusCode.Redirect ||
             response.StatusCode == System.Net.HttpStatusCode.Found,
             $"Expected redirect but got {response.StatusCode}");
-        Assert.Equal("/Admin/AdminSupport", response.Headers.Location?.OriginalString);
+        Assert.Equal("/Admin/Dashboard", response.Headers.Location?.OriginalString);
     }
 
     [Fact]
