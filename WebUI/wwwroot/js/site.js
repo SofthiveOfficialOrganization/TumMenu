@@ -2,6 +2,21 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 (function () {
+    const handleNumberInputWheel = (event) => {
+        const input = event.target;
+        if (
+            input instanceof HTMLInputElement &&
+            input.type === 'number' &&
+            document.activeElement === input
+        ) {
+            event.preventDefault();
+        }
+    };
+
+    document.addEventListener('wheel', handleNumberInputWheel, { passive: false });
+})();
+
+(function () {
     const selector = [
         'input[type="tel"]',
         'input[name*="Phone"]',
