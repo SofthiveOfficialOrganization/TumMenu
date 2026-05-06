@@ -228,7 +228,7 @@
         }
 
         <!-- Main Content -->
-        <div class="horizon-main @(isOnboarding ? "horizon-main--onboarding" : "")">
+        <div class="horizon-main @(isOnboarding ? "horizon-main--onboarding" : "") @ViewData["AdminPageClass"]">
             @if (!isOnboarding)
             {
                 <!-- Navbar -->

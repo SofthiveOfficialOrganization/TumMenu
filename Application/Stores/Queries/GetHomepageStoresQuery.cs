@@ -59,8 +59,13 @@ public class GetHomepageStoresQueryHandler(
 
 	private static StoreSearchResultDTO MapToDTO(Store store)
 	{
+		var logo = store.Medias?
+			.Where(m => m.Kind == MediaKind.Image && m.Slot == "logo")
+			.OrderBy(m => m.SortOrder)
+			.FirstOrDefault();
+
 		var storeImage = store.Medias?
-			.Where(m => m.Kind == MediaKind.Image)
+			.Where(m => m.Kind == MediaKind.Image && m.Slot != "logo")
 			.OrderBy(m => m.SortOrder)
 			.FirstOrDefault();
 
@@ -87,6 +92,7 @@ public class GetHomepageStoresQueryHandler(
 			Slug = store.Slug,
 			CompanySlug = store.Company.Slug,
 			ImageUrl = storeImage?.MediaUrl,
+			LogoUrl = logo?.MediaUrl,
 			City = city,
 			District = district,
 		};

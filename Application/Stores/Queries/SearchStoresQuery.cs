@@ -164,7 +164,8 @@ public class SearchStoresQueryHandler(
 		var dtos = pagedMatches.Select(match =>
 		{
 			var fullStore = storeMedias.First(s => s.Id == match.Id);
-			var storeImage = fullStore.Medias.FirstOrDefault(m => m.Kind == MediaKind.Image)?.MediaUrl;
+			var storeLogo = fullStore.Medias.FirstOrDefault(m => m.Kind == MediaKind.Image && m.Slot == "logo")?.MediaUrl;
+			var storeImage = fullStore.Medias.FirstOrDefault(m => m.Kind == MediaKind.Image && m.Slot != "logo")?.MediaUrl;
 			
 			// Try to extract city/district from FullAddress
 			string? city = null;
@@ -188,6 +189,7 @@ public class SearchStoresQueryHandler(
 				CompanySlug = match.CompanySlug,
 				CompanyName = match.CompanyName,
 				ImageUrl = storeImage,
+				LogoUrl = storeLogo,
 				City = city,
 				District = district,
 				DistanceKm = match.DistanceKm.HasValue ? Math.Round(match.DistanceKm.Value, 2) : null,

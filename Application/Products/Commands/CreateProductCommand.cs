@@ -5,6 +5,7 @@ using Domain.Entities;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,12 @@ public class CreateProductCommandHandler(
 		// Auto-generate slug from Title if not provided
 		var slug = string.IsNullOrWhiteSpace(req.Slug)
 			? GenerateSlug(req.Title)
-			: req.Slug;
+			: req.Slug.Trim();
+
+		var slugExistsInCategory = await repoProduct.Query()
+			.AnyAsync(p => p.CategoryId == req.CategoryId && p.Slug == slug, ct);
+		if(slugExistsInCategory)
+			throw new AlreadyExistsAppException("Bu kategoride aynı URL yoluna sahip bir ürün zaten mevcut.");
 
 		var product = mapper.Map<Product>(req);
 		product.Slug = slug;

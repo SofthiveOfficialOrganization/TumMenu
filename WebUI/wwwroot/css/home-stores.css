@@ -72,6 +72,32 @@
     transform: scale(1.06);
 }
 
+.home-store-card__logo {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    width: 52px;
+    height: 52px;
+    padding: 4px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid rgba(0, 0, 0, .08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .16);
+    z-index: 2;
+}
+
+.home-store-card__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    transition: none;
+}
+
+.home-store-card:hover .home-store-card__logo img {
+    transform: none;
+}
+
 .home-store-card__badge {
     position: absolute;
     top: 10px;
@@ -135,6 +161,18 @@
 
     .home-store-card__name {
         font-size: 14px;
+    }
+
+    .home-store-card__logo {
+        width: 44px;
+        height: 44px;
+        right: 10px;
+        bottom: 8px;
+        border-radius: 12px;
+    }
+
+    .home-store-card__logo img {
+        border-radius: 8px;
     }
 
     .home-store-card__location {

@@ -29,6 +29,9 @@ public static partial class DbErrorTranslator
         if(match.Success)
         {
             var constraint = match.Groups[1].Value;
+            if(string.Equals(constraint, "IX_Products_CategoryId_Slug", StringComparison.OrdinalIgnoreCase))
+                return "Bu kategoride aynı URL yoluna sahip bir ürün zaten mevcut.";
+
             // Extract field hints: IX_Companies_OwnerId → OwnerId
             var parts = constraint.Split('_');
             if(parts.Length >= 3)

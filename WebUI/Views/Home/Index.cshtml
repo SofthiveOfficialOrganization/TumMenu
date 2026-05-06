@@ -231,6 +231,12 @@
                                 {
                                     <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></div>
                                 }
+                                @if (!string.IsNullOrEmpty(store.LogoUrl))
+                                {
+                                    <span class="home-store-card__logo">
+                                        <img src="@ImageUrlBuilder.Build(store.LogoUrl)" alt="@store.Title logosu" loading="lazy" />
+                                    </span>
+                                }
                             </div>
                             <div class="home-store-card__body">
                                 <h3 class="home-store-card__name">@store.Title</h3>
@@ -284,6 +290,12 @@
                                 {
                                     <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></div>
                                 }
+                                @if (!string.IsNullOrEmpty(store.LogoUrl))
+                                {
+                                    <span class="home-store-card__logo">
+                                        <img src="@ImageUrlBuilder.Build(store.LogoUrl)" alt="@store.Title logosu" loading="lazy" />
+                                    </span>
+                                }
                             </div>
                             <div class="home-store-card__body">
                                 <h3 class="home-store-card__name">@store.Title</h3>
@@ -336,6 +348,12 @@
                                 else
                                 {
                                     <div class="home-store-card__no-img"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></div>
+                                }
+                                @if (!string.IsNullOrEmpty(store.LogoUrl))
+                                {
+                                    <span class="home-store-card__logo">
+                                        <img src="@ImageUrlBuilder.Build(store.LogoUrl)" alt="@store.Title logosu" loading="lazy" />
+                                    </span>
                                 }
                             </div>
                             <div class="home-store-card__body">
