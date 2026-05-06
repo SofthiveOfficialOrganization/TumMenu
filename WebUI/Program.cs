@@ -152,6 +152,7 @@ app.Use(async (context, next) =>
         "/health",
         "/giris",
         "/kayit",
+        "/guncelleniyor",
         "/hesap-aktivasyon",
         "/Account/AccountActivationSuccess"
     };
