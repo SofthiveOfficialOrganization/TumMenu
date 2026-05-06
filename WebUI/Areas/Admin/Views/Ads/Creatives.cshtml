@@ -13,7 +13,7 @@
                    <p class="text-secondary small mb-0">Google Adsense kodlarını veya görsellerinizi yönetin.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <a asp-action="Index" data-tummenu-back data-fallback-url="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-arrow-left me-1"></i> Slotlara Dön
                     </a>
                     <a asp-action="CreateCreative" class="btn btn-primary btn-sm">

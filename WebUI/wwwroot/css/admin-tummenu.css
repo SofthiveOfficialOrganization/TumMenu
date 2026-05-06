@@ -9,7 +9,7 @@
     --horizon-border-radius: 20px;
     --horizon-sidebar-width: 290px;
     --sidebar-transition: all 0.3s ease;
-    --horizon-scrollbar-track: #EDF1FA;
+    --horizon-scrollbar-track: #EDA1FA;
     --horizon-scrollbar-thumb: #BDC8E5;
     --horizon-scrollbar-thumb-hover: #9EACD2;
     --horizon-scrollbar-thumb-border: #FFFFFF;
@@ -237,9 +237,11 @@ body.dark-mode .horizon-submenu-link.active {
 .horizon-main {
     flex-grow: 1;
     margin-left: var(--horizon-sidebar-width);
+    width: calc(100% - var(--horizon-sidebar-width));
     padding: 30px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     min-width: 0; /* Prevents flex items from overflowing horizontally */
     transition: var(--sidebar-transition);
 }
@@ -454,6 +456,84 @@ body.dark-mode .theme-switch--onboarding {
 /* Content Area */
 .horizon-content {
     flex-grow: 1;
+}
+
+.admin-page-category-details {
+    overflow-x: hidden;
+}
+
+.admin-page-category-details .horizon-content {
+    overflow: visible;
+}
+
+.category-details-page {
+    width: 100%;
+}
+
+.category-details-layout {
+    align-items: stretch;
+    row-gap: 20px;
+}
+
+.category-details-column,
+.category-details-main,
+.category-details-card,
+.category-details-section {
+    min-height: 0;
+}
+
+.category-details-column {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.category-details-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.category-details-card {
+    margin-bottom: 0;
+}
+
+.category-details-info-card {
+    width: 100%;
+}
+
+.category-details-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-details-section--subcategories {
+    flex: 0 0 auto;
+}
+
+.category-details-section--products {
+    flex: 0 0 auto;
+}
+
+.category-details-section-header {
+    flex-shrink: 0;
+}
+
+.category-details-scroll {
+    --bs-gutter-x: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.category-details-section--subcategories .category-details-scroll {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.category-details-section--products .category-details-scroll {
+    max-height: 520px;
+    overflow-y: auto;
 }
 
 /* Footer */
@@ -1132,6 +1212,7 @@ body.dark-mode .manage-nav .nav-link:hover:not(.active) {
 
     .horizon-main {
         margin-left: 0;
+        width: 100%;
     }
 }
 
@@ -1164,6 +1245,42 @@ body.dark-mode .manage-nav .nav-link:hover:not(.active) {
 @media (max-width: 768px) {
     .horizon-main {
         padding: 15px;
+    }
+
+    .admin-page-category-details {
+        height: auto;
+        overflow: visible;
+    }
+
+    .admin-page-category-details .horizon-content {
+        display: block;
+        overflow: visible;
+    }
+
+    .admin-page-category-details .horizon-footer {
+        display: flex;
+    }
+
+    .category-details-page,
+    .category-details-layout,
+    .category-details-column,
+    .category-details-main,
+    .category-details-card,
+    .category-details-section {
+        display: block;
+        height: auto;
+        min-height: 0;
+    }
+
+    .category-details-column,
+    .category-details-card {
+        margin-bottom: 1rem;
+    }
+
+    .category-details-scroll,
+    .category-details-info-card {
+        max-height: none;
+        overflow: visible;
     }
 
     .horizon-navbar {

@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-5">
-                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" class="btn btn-outline-secondary">
+                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@Model.MenuId" data-tummenu-back data-fallback-url="@Url.Action("Details", "Menu", new { id = Model.MenuId })" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Geri Dön
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

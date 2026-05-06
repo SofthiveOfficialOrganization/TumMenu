@@ -25,7 +25,7 @@
             <header class="pm-hero">
                 <div class="pm-hero-inner">
                     <div class="pm-hero-actions">
-                        <a href="@backUrl" class="pm-back-link">
+                        <a href="@backUrl" data-tummenu-back data-fallback-url="@backUrl" class="pm-back-link">
                             <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg>
                             <span>@backLabel</span>
                         </a>

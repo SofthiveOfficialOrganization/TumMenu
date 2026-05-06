@@ -5,6 +5,7 @@ using Domain.Entities;
 using FluentValidation;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest,
 	public int SortOrder { get; set; } = 1;
 	public string? Allergens { get; set; }
 	public Guid CategoryId { get; set; }
+	public List<ProductPriceInputDTO> Prices { get; set; } = [];
 }
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
@@ -54,6 +56,15 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 		RuleFor(x => x.Allergens)
 			.MaximumLength(200)
 			.WithMessage("Alerjenler alanı en fazla 200 karakter olabilir.");
+		RuleForEach(x => x.Prices).ChildRules(price =>
+		{
+			price.RuleFor(x => x.Size)
+				.MaximumLength(100);
+			price.RuleFor(x => x.Price)
+				.GreaterThanOrEqualTo(0)
+				.LessThanOrEqualTo(9999)
+				.When(x => x.Price.HasValue);
+		});
 	}
 }
 
@@ -72,10 +83,23 @@ public class CreateProductCommandHandler(
 		// Auto-generate slug from Title if not provided
 		var slug = string.IsNullOrWhiteSpace(req.Slug)
 			? GenerateSlug(req.Title)
-			: req.Slug;
+			: req.Slug.Trim();
+
+		var slugExistsInCategory = await repoProduct.Query()
+			.AnyAsync(p => p.CategoryId == req.CategoryId && p.Slug == slug, ct);
+		if(slugExistsInCategory)
+			throw new AlreadyExistsAppException("Bu kategoride aynı URL yoluna sahip bir ürün zaten mevcut.");
 
 		var product = mapper.Map<Product>(req);
 		product.Slug = slug;
+		product.Prices = req.Prices
+			.Where(p => !string.IsNullOrWhiteSpace(p.Size) && p.Price is >= 0 and <= 9999)
+			.Select(p => new ProductPrice
+			{
+				Size = p.Size!.Trim(),
+				Price = p.Price!.Value
+			})
+			.ToList();
 		await repoProduct.AddAsync(product, ct);
 		return mapper.Map<ProductDTO>(product);
 	}

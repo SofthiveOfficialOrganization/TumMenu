@@ -604,6 +604,32 @@ body {
   font-size: 1.35rem;
 }
 
+.pm-price-options {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+}
+
+.pm-price-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--pm-border) 80%, transparent);
+}
+
+.pm-price-option-size {
+  color: var(--pm-text);
+  font-weight: 700;
+}
+
+.pm-price-option-price {
+  color: var(--pm-accent);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .pm-product-info-row {
   display: flex;
   align-items: center;

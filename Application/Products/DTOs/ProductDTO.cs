@@ -21,5 +21,6 @@ public sealed class ProductDTO : BaseDTO
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
+	public List<ProductPriceDTO> Prices { get; set; } = [];
 	public List<MediaDTO> Medias { get; set; } = [];
 }

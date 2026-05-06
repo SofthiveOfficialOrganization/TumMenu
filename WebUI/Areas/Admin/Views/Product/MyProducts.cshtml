@@ -168,7 +168,13 @@
                                         </div>
                                     </td>
                                     <td class="text-secondary">@item.CategoryName</td>
-                                    <td class="fw-bold">@item.BasePrice.ToString("C2")</td>
+                                    <td class="fw-bold">
+                                        <span>@item.BasePrice.ToString("C2")</span>
+                                        @if (item.PriceOptionCount > 0)
+                                        {
+                                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 ms-1">+@item.PriceOptionCount seçenek</span>
+                                        }
+                                    </td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(item.StoreName))
                                         {

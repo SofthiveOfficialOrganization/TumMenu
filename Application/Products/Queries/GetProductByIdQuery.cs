@@ -25,6 +25,7 @@ public class GetProductByIdHandler(
 	public async Task<ProductDTO> Handle(GetProductByIdQuery req, CancellationToken ct)
 	{
 		var product = (await repoProduct.Query()
+			.Include(p => p.Prices)
 			.Include(p => p.Medias)
 			.FirstOrDefaultAsync(p => p.Id == req.ProductId, ct)).EnsureFound("Ürün bulunamadı.");
 		var productDTO = mapper.Map<ProductDTO>(product);

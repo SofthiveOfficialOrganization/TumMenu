@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Kategori Detayları";
+    ViewData["AdminPageClass"] = "admin-page-category-details";
     var returnUrl = ViewData["ReturnUrl"] as string
         ?? Url.Action("Details", "Menu", new { id = Model.MenuId });
     var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
@@ -14,24 +15,25 @@
     @Html.AntiForgeryToken()
 </div>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #d4edda; border-color: #c3e6cb; color: #155724;">
-        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
-        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
+<div class="category-details-page">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #d4edda; border-color: #c3e6cb; color: #155724;">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-dismissible fade show mb-3" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="horizon-card h-100">
+    <div class="row category-details-layout">
+        <div class="col-md-4 category-details-column">
+            <div class="horizon-card category-details-card category-details-info-card">
             <div class="d-flex align-items-center gap-3 mb-4">
                 <div class="rounded-3 d-flex align-items-center justify-content-center"
                      style="width:56px; height:56px; font-size:24px; flex-shrink:0; background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);">
@@ -95,13 +97,7 @@
             </div>
 
             <div class="d-grid gap-2">
-                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-outline-primary">
-                    <i class="fas fa-plus me-2"></i>Alt Kategori Ekle
-                </a>
-                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
-                </a>
-                <a href="@returnUrl" class="btn btn-outline-secondary">
+                <a href="@returnUrl" data-tummenu-back data-fallback-url="@returnUrl" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Geri Dön
                 </a>
             </div>
@@ -112,16 +108,19 @@
         </div>
     </div>
 
-    <div class="col-md-8 mb-4">
-        <div class="horizon-card mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="col-md-8 category-details-column category-details-main">
+            <div class="horizon-card category-details-card category-details-section category-details-section--subcategories">
+                <div class="d-flex justify-content-between align-items-center mb-4 category-details-section-header">
                 <div>
                     <h5 class="fw-bold mb-1">Kategoriler</h5>
                     <p class="text-secondary small mb-0">Bu kategorinin altındaki kategorileri yönetin.</p>
                 </div>
+                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i> Alt Kategori Ekle
+                </a>
             </div>
 
-            <div id="subcategory-grid" class="row">
+                <div id="subcategory-grid" class="row category-details-scroll">
                 @if (Model.SubCategories != null && Model.SubCategories.Any())
                 {
                     foreach (var sub in Model.SubCategories.OrderBy(c => c.SortOrder))
@@ -160,10 +159,10 @@
                     </div>
                 }
             </div>
-        </div>
+            </div>
 
-        <div class="horizon-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="horizon-card category-details-card category-details-section category-details-section--products">
+                <div class="d-flex justify-content-between align-items-center mb-4 category-details-section-header">
                 <div>
                     <h5 class="fw-bold mb-1">Ürünler</h5>
                     <p class="text-secondary small mb-0">Bu kategorideki ürünleri yönetin.</p>
@@ -173,7 +172,7 @@
                 </a>
             </div>
 
-            <div id="product-grid" class="row">
+                <div id="product-grid" class="row category-details-scroll">
                 @if (Model.Products != null && Model.Products.Any())
                 {
                     foreach (var product in Model.Products.OrderBy(c => c.SortOrder))
@@ -194,6 +193,10 @@
                                         </div>
                                         <p class="text-muted small mb-0 d-flex gap-3 mt-1">
                                             <span class="fw-bold" style="color: var(--horizon-primary);">@product.BasePrice.ToString("C")</span>
+                                            @if (product.Prices.Count > 0)
+                                            {
+                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">+@product.Prices.Count seçenek</span>
+                                            }
                                             @if (product.IsVegan == true)
                                             {
                                                 <span class="badge" style="background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);"><i class="fas fa-leaf me-1"></i>Vegan</span>
@@ -230,6 +233,7 @@
                         </div>
                     </div>
                 }
+            </div>
             </div>
         </div>
     </div>

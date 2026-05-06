@@ -53,23 +53,37 @@ public sealed class CategoryProductItemDTO
 }
 
 public class GetCategoryBySlugHandler(
+	IRepository<Store> repoStore,
+	IRepository<Menu> repoMenu,
 	IRepository<Category> repoCategory
 ) : IRequestHandler<GetCategoryBySlugQuery, CategoryPageDTO>
 {
 	public async Task<CategoryPageDTO> Handle(GetCategoryBySlugQuery req, CancellationToken ct)
 	{
+		var store = await repoStore.Query()
+			.Include(s => s.Company)
+			.FirstOrDefaultAsync(
+				s => s.Slug == req.StoreSlug && s.Company.Slug == req.CompanySlug,
+				ct);
+
+		if (store is null)
+			throw new NotFoundAppException("Dükkan bulunamadı.");
+
+		var menuId = await ResolveMenuIdAsync(store, ct);
+
+		if (menuId is null)
+			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
+
 		var categoryData = await repoCategory.Query()
 			.Where(c => c.IsActive &&
 			           c.CategoryLibraryItem.Slug == req.CategorySlug &&
-			           c.Menu.Status == MenuStatus.Active &&
-			           c.Menu.Store!.Slug == req.StoreSlug &&
-			           c.Menu.Store!.Company!.Slug == req.CompanySlug)
+			           c.MenuId == menuId.Value)
 			.Select(c => new CategoryPageDTO
 			{
-				CompanySlug = c.Menu.Store!.Company!.Slug,
-				StoreSlug = c.Menu.Store!.Slug,
-				StoreName = c.Menu.Store!.Title,
-				CompanyName = c.Menu.Store!.Company!.Title,
+				CompanySlug = store.Company.Slug,
+				StoreSlug = store.Slug,
+				StoreName = store.Title,
+				CompanyName = store.Company.Title,
 				CategorySlug = c.CategoryLibraryItem.Slug,
 				CategoryTitle = c.CategoryLibraryItem.Title,
 				CategoryId = c.Id,
@@ -120,5 +134,36 @@ public class GetCategoryBySlugHandler(
 			throw new NotFoundAppException("Kategori bulunamadı.");
 
 		return categoryData;
+	}
+
+	private async Task<Guid?> ResolveMenuIdAsync(Store store, CancellationToken ct)
+	{
+		var activeStoreMenuId = await repoMenu.Query()
+			.Where(m => m.StoreId == store.Id && m.Status == MenuStatus.Active)
+			.OrderBy(m => m.CreatedAt)
+			.Select(m => (Guid?)m.Id)
+			.FirstOrDefaultAsync(ct);
+
+		if (activeStoreMenuId.HasValue)
+			return activeStoreMenuId.Value;
+
+		if (store.Company.DefaultMainMenuId.HasValue)
+		{
+			var defaultMainMenuId = await repoMenu.Query()
+				.Where(m => m.Id == store.Company.DefaultMainMenuId.Value &&
+				            m.CompanyId == store.Company.Id &&
+				            m.Status == MenuStatus.MainMenu)
+				.Select(m => (Guid?)m.Id)
+				.FirstOrDefaultAsync(ct);
+
+			if (defaultMainMenuId.HasValue)
+				return defaultMainMenuId.Value;
+		}
+
+		return await repoMenu.Query()
+			.Where(m => m.CompanyId == store.Company.Id && m.Status == MenuStatus.MainMenu)
+			.OrderBy(m => m.CreatedAt)
+			.Select(m => (Guid?)m.Id)
+			.FirstOrDefaultAsync(ct);
 	}
 }

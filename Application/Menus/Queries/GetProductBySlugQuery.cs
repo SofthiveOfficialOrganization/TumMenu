@@ -1,6 +1,7 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.MenuDesigns.DTOs;
+using Application.Products.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public sealed class ProductPageDTO
 	public string ProductSlug { get; set; } = null!;
 	public string? ProductDescription { get; set; }
 	public decimal BasePrice { get; set; }
+	public List<ProductPriceDTO> Prices { get; set; } = [];
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
@@ -36,37 +38,41 @@ public sealed class ProductPageDTO
 }
 
 public class GetProductBySlugHandler(
-	IRepository<Store> repoStore
+	IRepository<Store> repoStore,
+	IRepository<Menu> repoMenu,
+	IRepository<Category> repoCategory
 ) : IRequestHandler<GetProductBySlugQuery, ProductPageDTO>
 {
 	public async Task<ProductPageDTO> Handle(GetProductBySlugQuery req, CancellationToken ct)
 	{
 		var store = await repoStore.Query()
-			.AsSplitQuery()
 			.Include(s => s.Company)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.MenuDesign)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.CategoryLibraryItem)
-			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
-				.ThenInclude(m => m.Categories.Where(c => c.IsActive))
-				.ThenInclude(c => c.Products.Where(p => p.IsActive))
-				.ThenInclude(p => p.Medias)
 			.FirstOrDefaultAsync(
 				s => s.Slug == req.StoreSlug && s.Company.Slug == req.CompanySlug,
-				ct
-			);
+				ct);
 
 		if (store is null)
 			throw new NotFoundAppException("Dükkan bulunamadı.");
 
-		var menu = store.Menus.FirstOrDefault();
-		if (menu is null)
+		var menuId = await ResolveMenuIdAsync(store, ct);
+
+		if (menuId is null)
 			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
 
-		var category = menu.Categories
-			.FirstOrDefault(c => c.IsActive && c.CategoryLibraryItem.Slug == req.CategorySlug);
+		var category = await repoCategory.Query()
+			.AsSplitQuery()
+			.Include(c => c.Menu)
+				.ThenInclude(m => m.MenuDesign)
+			.Include(c => c.CategoryLibraryItem)
+			.Include(c => c.Products.Where(p => p.IsActive))
+				.ThenInclude(p => p.Medias)
+			.Include(c => c.Products.Where(p => p.IsActive))
+				.ThenInclude(p => p.Prices)
+			.FirstOrDefaultAsync(
+				c => c.IsActive &&
+				     c.MenuId == menuId.Value &&
+				     c.CategoryLibraryItem.Slug == req.CategorySlug,
+				ct);
 
 		if (category is null)
 			throw new NotFoundAppException("Kategori bulunamadı.");
@@ -90,6 +96,17 @@ public class GetProductBySlugHandler(
 			ProductSlug = product.Slug,
 			ProductDescription = product.Description,
 			BasePrice = product.BasePrice,
+			Prices = product.Prices
+				.OrderBy(p => p.CreatedAt)
+				.Select(p => new ProductPriceDTO
+				{
+					Id = p.Id,
+					Size = p.Size,
+					Price = p.Price,
+					CreatedAt = p.CreatedAt,
+					ModifiedAt = p.ModifiedAt
+				})
+				.ToList(),
 			IsVegan = product.IsVegan,
 			IsVegetarian = product.IsVegetarian,
 			EstimatedPreparationTimeInMinutes = product.EstimatedPreparationTimeInMinutes,
@@ -99,7 +116,38 @@ public class GetProductBySlugHandler(
 				.OrderBy(m => m.SortOrder)
 				.Select(m => m.MediaUrl)
 				.ToList(),
-			MenuDesign = menu.MenuDesign?.ToDto()
+			MenuDesign = category.Menu.MenuDesign?.ToDto()
 		};
+	}
+
+	private async Task<Guid?> ResolveMenuIdAsync(Store store, CancellationToken ct)
+	{
+		var activeStoreMenuId = await repoMenu.Query()
+			.Where(m => m.StoreId == store.Id && m.Status == MenuStatus.Active)
+			.OrderBy(m => m.CreatedAt)
+			.Select(m => (Guid?)m.Id)
+			.FirstOrDefaultAsync(ct);
+
+		if (activeStoreMenuId.HasValue)
+			return activeStoreMenuId.Value;
+
+		if (store.Company.DefaultMainMenuId.HasValue)
+		{
+			var defaultMainMenuId = await repoMenu.Query()
+				.Where(m => m.Id == store.Company.DefaultMainMenuId.Value &&
+				            m.CompanyId == store.Company.Id &&
+				            m.Status == MenuStatus.MainMenu)
+				.Select(m => (Guid?)m.Id)
+				.FirstOrDefaultAsync(ct);
+
+			if (defaultMainMenuId.HasValue)
+				return defaultMainMenuId.Value;
+		}
+
+		return await repoMenu.Query()
+			.Where(m => m.CompanyId == store.Company.Id && m.Status == MenuStatus.MainMenu)
+			.OrderBy(m => m.CreatedAt)
+			.Select(m => (Guid?)m.Id)
+			.FirstOrDefaultAsync(ct);
 	}
 }

@@ -7,6 +7,7 @@ public sealed class ProductListDTO : BaseDTO
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public decimal BasePrice { get; set; }
+    public int PriceOptionCount { get; set; }
     public int SortOrder { get; set; }
     public bool IsActive { get; set; }
     public string? Allergens { get; set; }

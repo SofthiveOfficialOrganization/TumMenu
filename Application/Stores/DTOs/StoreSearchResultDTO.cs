@@ -8,6 +8,7 @@ public sealed class StoreSearchResultDTO
 	public string CompanySlug { get; set; } = null!;
 	public string? CompanyName { get; set; }
 	public string? ImageUrl { get; set; }
+	public string? LogoUrl { get; set; }
 	public string? City { get; set; }
 	public string? District { get; set; }
 	public double? DistanceKm { get; set; }

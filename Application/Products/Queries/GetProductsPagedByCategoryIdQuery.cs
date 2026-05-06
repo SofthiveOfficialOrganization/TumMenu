@@ -5,6 +5,7 @@ using Application.Products.DTOs;
 using Domain.Entities;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,7 @@ public class GetProductsByCategoryIdHandler(
 				p.Slug.Contains(req.Search)) &&
 				(req.TagId == null || p.ProductTags.Any(pt => pt.TagId == req.TagId)),
 			orderBy: p => p.OrderBy(p => p.SortOrder),
+			include: query => query.Include(p => p.Prices),
 			ct: ct
 			);
 		var productListDTO = mapper.Map<PaginatedListDTO<ProductDTO>>(products);

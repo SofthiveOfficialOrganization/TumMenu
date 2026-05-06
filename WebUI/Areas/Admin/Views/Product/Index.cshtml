@@ -56,7 +56,13 @@
                                 -->
                                 @item.CategoryId
                             </td>
-                            <td>@item.BasePrice.ToString("C2")</td>
+                            <td>
+                                <span>@item.BasePrice.ToString("C2")</span>
+                                @if (item.Prices.Count > 0)
+                                {
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 ms-1">+@item.Prices.Count seçenek</span>
+                                }
+                            </td>
                             <td>
                                 @if (item.IsActive)
                                 {

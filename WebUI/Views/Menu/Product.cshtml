@@ -22,7 +22,7 @@
             <header class="pm-hero">
                 <div class="pm-hero-inner">
                     <div class="pm-hero-actions">
-                        <a href="@backHref" class="pm-back-link">
+                        <a href="@backHref" data-tummenu-back data-fallback-url="@backHref" class="pm-back-link">
                             <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-chevron-left")"></use></svg>
                             <span>Geri Dön</span>
                         </a>
@@ -70,6 +70,19 @@
                         @if (!string.IsNullOrEmpty(Model.ProductDescription))
                         {
                             <p class="pm-product-detail-desc">@Model.ProductDescription</p>
+                        }
+
+                        @if (Model.Prices.Count > 0)
+                        {
+                            <div class="pm-price-options" aria-label="Fiyat seçenekleri">
+                                @foreach (var price in Model.Prices.OrderBy(p => p.CreatedAt))
+                                {
+                                    <div class="pm-price-option">
+                                        <span class="pm-price-option-size">@price.Size</span>
+                                        <span class="pm-price-option-price">@price.Price.ToString("N2") ₺</span>
+                                    </div>
+                                }
+                            </div>
                         }
 
                         <div class="pm-product-badges">
