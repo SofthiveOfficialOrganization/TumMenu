@@ -55,6 +55,14 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return View();
     }
 
+    [Route("guncelleniyor")]
+    public IActionResult Maintenance()
+    {
+        Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+        Response.Headers.RetryAfter = "120";
+        return View();
+    }
+
     [Route("restoran-kaynaklari")]
     public IActionResult Resources()
     {
