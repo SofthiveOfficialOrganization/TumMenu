@@ -29,6 +29,7 @@ public class CreateProductCommand : IRequest<ProductDTO>, ITransactionalRequest,
 	public int SortOrder { get; set; } = 1;
 	public string? Allergens { get; set; }
 	public Guid CategoryId { get; set; }
+	public List<ProductPriceInputDTO> Prices { get; set; } = [];
 }
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
@@ -55,6 +56,15 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 		RuleFor(x => x.Allergens)
 			.MaximumLength(200)
 			.WithMessage("Alerjenler alanı en fazla 200 karakter olabilir.");
+		RuleForEach(x => x.Prices).ChildRules(price =>
+		{
+			price.RuleFor(x => x.Size)
+				.MaximumLength(100);
+			price.RuleFor(x => x.Price)
+				.GreaterThanOrEqualTo(0)
+				.LessThanOrEqualTo(9999)
+				.When(x => x.Price.HasValue);
+		});
 	}
 }
 
@@ -82,6 +92,14 @@ public class CreateProductCommandHandler(
 
 		var product = mapper.Map<Product>(req);
 		product.Slug = slug;
+		product.Prices = req.Prices
+			.Where(p => !string.IsNullOrWhiteSpace(p.Size) && p.Price is >= 0 and <= 9999)
+			.Select(p => new ProductPrice
+			{
+				Size = p.Size!.Trim(),
+				Price = p.Price!.Value
+			})
+			.ToList();
 		await repoProduct.AddAsync(product, ct);
 		return mapper.Map<ProductDTO>(product);
 	}

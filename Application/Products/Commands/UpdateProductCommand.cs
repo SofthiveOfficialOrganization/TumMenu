@@ -30,6 +30,7 @@ public class UpdateProductCommand : IRequest<ProductDTO>, ITransactionalRequest,
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
+	public List<ProductPriceInputDTO> Prices { get; set; } = [];
 	public IReadOnlyList<Guid> TagIds { get; set; } = [];
 }
 
@@ -55,6 +56,15 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 		RuleFor(x => x.Allergens)
 			.MaximumLength(200)
 			.WithMessage("Alerjenler alanı en fazla 200 karakter olabilir.");
+		RuleForEach(x => x.Prices).ChildRules(price =>
+		{
+			price.RuleFor(x => x.Size)
+				.MaximumLength(100);
+			price.RuleFor(x => x.Price)
+				.GreaterThanOrEqualTo(0)
+				.LessThanOrEqualTo(9999)
+				.When(x => x.Price.HasValue);
+		});
 	}
 }
 
@@ -66,8 +76,9 @@ public class UpdateProductCommandHandler(
 {
 	public async Task<ProductDTO> Handle(UpdateProductCommand req, CancellationToken ct)
 	{
-		var product = await repoProduct.Query()
+		var product = await repoProduct.Query(tracked: true)
 			.Include(p => p.ProductTags)
+			.Include(p => p.Prices)
 			.FirstOrDefaultAsync(p => p.Id == req.Id, ct)
 			.EnsureFound("Ürün bulunamadı."); mapper.Map(req, product);
 
@@ -96,7 +107,17 @@ public class UpdateProductCommandHandler(
 			product.ProductTags.RemoveWhere(pt => tagsToRemove.Contains(pt.TagId));
 		}
 
-		repoProduct.Update(product!);
+		product.Prices.Clear();
+		foreach(var price in req.Prices.Where(p => !string.IsNullOrWhiteSpace(p.Size) && p.Price is >= 0 and <= 9999))
+		{
+			product.Prices.Add(new ProductPrice
+			{
+				ProductId = product.Id,
+				Size = price.Size!.Trim(),
+				Price = price.Price!.Value
+			});
+		}
+
 		var productDTO = mapper.Map<ProductDTO>(product!);
 		return productDTO;
 	}

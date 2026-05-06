@@ -72,6 +72,19 @@
                             <p class="pm-product-detail-desc">@Model.ProductDescription</p>
                         }
 
+                        @if (Model.Prices.Count > 0)
+                        {
+                            <div class="pm-price-options" aria-label="Fiyat seçenekleri">
+                                @foreach (var price in Model.Prices.OrderBy(p => p.CreatedAt))
+                                {
+                                    <div class="pm-price-option">
+                                        <span class="pm-price-option-size">@price.Size</span>
+                                        <span class="pm-price-option-price">@price.Price.ToString("N2") ₺</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+
                         <div class="pm-product-badges">
                             @if (Model.IsVegan == true) { <span class="pm-badge pm-badge-vegan"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vegan</span> }
                             @if (Model.IsVegetarian == true) { <span class="pm-badge pm-badge-veg"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-leaf")"></use></svg> Vejeteryan</span> }

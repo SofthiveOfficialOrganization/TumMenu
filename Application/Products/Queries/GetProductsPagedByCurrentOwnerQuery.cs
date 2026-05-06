@@ -43,6 +43,7 @@ public class GetProductsPagedByCurrentOwnerHandler(
                  (!req.CategoryId.HasValue || p.CategoryId == req.CategoryId.Value),
             orderBy: p => p.OrderBy(p => p.Category.SortOrder).ThenBy(p => p.SortOrder),
             include: query => query
+                .Include(p => p.Prices)
                 .Include(p => p.Category).ThenInclude(c => c.CategoryLibraryItem)
                 .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Company)
                 .Include(p => p.Category).ThenInclude(c => c.Menu).ThenInclude(m => m.Store),

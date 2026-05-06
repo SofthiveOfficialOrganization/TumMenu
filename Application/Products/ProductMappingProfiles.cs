@@ -14,9 +14,12 @@ public class ProductMappingProfiles : IRegister
 {
 	public void Register(TypeAdapterConfig config)
 	{
+		config.NewConfig<ProductPrice, ProductPriceDTO>();
+
 		config.NewConfig<Product, ProductDTO>();
 		
 		config.NewConfig<Product, ProductListDTO>()
+			.Map(dest => dest.PriceOptionCount, src => src.Prices.Count)
 			.Map(dest => dest.CategoryName, src => src.Category != null && src.Category.CategoryLibraryItem != null ? src.Category.CategoryLibraryItem.Title : null)
 			.Map(dest => dest.MenuId, src => src.Category != null ? src.Category.MenuId : (Guid?)null)
 			.Map(dest => dest.MenuName, src => src.Category != null && src.Category.Menu != null ? src.Category.Menu.Title : null)
@@ -25,8 +28,9 @@ public class ProductMappingProfiles : IRegister
 			.Map(dest => dest.StoreId, src => src.Category != null && src.Category.Menu != null ? src.Category.Menu.StoreId : (Guid?)null)
 			.Map(dest => dest.StoreName, src => src.Category != null && src.Category.Menu != null && src.Category.Menu.Store != null ? src.Category.Menu.Store.Title : null);
 
-		config.NewConfig<CreateProductCommand, Product>();
-		config.NewConfig<UpdateProductCommand, Product>();
+		config.NewConfig<CreateProductCommand, Product>()
+			.Ignore(dest => dest.Prices);
+		config.NewConfig<UpdateProductCommand, Product>()
+			.Ignore(dest => dest.Prices);
 	}
 }
-

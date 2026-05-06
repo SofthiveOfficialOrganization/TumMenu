@@ -193,6 +193,10 @@
                                         </div>
                                         <p class="text-muted small mb-0 d-flex gap-3 mt-1">
                                             <span class="fw-bold" style="color: var(--horizon-primary);">@product.BasePrice.ToString("C")</span>
+                                            @if (product.Prices.Count > 0)
+                                            {
+                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">+@product.Prices.Count seçenek</span>
+                                            }
                                             @if (product.IsVegan == true)
                                             {
                                                 <span class="badge" style="background-color: rgba(var(--horizon-primary-rgb), 0.1); color: var(--horizon-primary);"><i class="fas fa-leaf me-1"></i>Vegan</span>

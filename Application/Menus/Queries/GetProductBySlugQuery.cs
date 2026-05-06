@@ -1,6 +1,7 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.MenuDesigns.DTOs;
+using Application.Products.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public sealed class ProductPageDTO
 	public string ProductSlug { get; set; } = null!;
 	public string? ProductDescription { get; set; }
 	public decimal BasePrice { get; set; }
+	public List<ProductPriceDTO> Prices { get; set; } = [];
 	public bool? IsVegan { get; set; }
 	public bool? IsVegetarian { get; set; }
 	public int? EstimatedPreparationTimeInMinutes { get; set; }
@@ -64,6 +66,8 @@ public class GetProductBySlugHandler(
 			.Include(c => c.CategoryLibraryItem)
 			.Include(c => c.Products.Where(p => p.IsActive))
 				.ThenInclude(p => p.Medias)
+			.Include(c => c.Products.Where(p => p.IsActive))
+				.ThenInclude(p => p.Prices)
 			.FirstOrDefaultAsync(
 				c => c.IsActive &&
 				     c.MenuId == menuId.Value &&
@@ -92,6 +96,17 @@ public class GetProductBySlugHandler(
 			ProductSlug = product.Slug,
 			ProductDescription = product.Description,
 			BasePrice = product.BasePrice,
+			Prices = product.Prices
+				.OrderBy(p => p.CreatedAt)
+				.Select(p => new ProductPriceDTO
+				{
+					Id = p.Id,
+					Size = p.Size,
+					Price = p.Price,
+					CreatedAt = p.CreatedAt,
+					ModifiedAt = p.ModifiedAt
+				})
+				.ToList(),
 			IsVegan = product.IsVegan,
 			IsVegetarian = product.IsVegetarian,
 			EstimatedPreparationTimeInMinutes = product.EstimatedPreparationTimeInMinutes,
