@@ -113,9 +113,9 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-action="ByCategory"
+                           asp-action="Index"
                            asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
-                           asp-route-PageIndex="@(Model.Index - 1)"
+                           asp-route-page="@(Model.Index - 1)"
                            asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
                     </li>
                 }
@@ -134,9 +134,9 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-action="ByCategory"
+                           asp-action="Index"
                            asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
-                           asp-route-PageIndex="@(Model.Index + 1)"
+                           asp-route-page="@(Model.Index + 1)"
                            asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
                     </li>
                 }

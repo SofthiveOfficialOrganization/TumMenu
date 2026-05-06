@@ -34,7 +34,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 	options.Cookie.SameSite = SameSiteMode.Lax;
-	options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+	options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 
 	options.Events.OnRedirectToLogin = context =>
 	{

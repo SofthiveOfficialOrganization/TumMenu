@@ -27,6 +27,12 @@
                 var hasMenu = !string.IsNullOrEmpty(Context.Request.Query["MenuId"]);
                 var hasCategory = !string.IsNullOrEmpty(Context.Request.Query["CategoryId"]);
                 var hasAnyFilter = hasSearch || hasCompany || hasStore || hasMenu || hasCategory;
+                var search = Context.Request.Query["Search"].ToString();
+                var filterType = Context.Request.Query["FilterType"].ToString();
+                var companyId = Context.Request.Query["CompanyId"].ToString();
+                var storeId = Context.Request.Query["StoreId"].ToString();
+                var menuId = Context.Request.Query["MenuId"].ToString();
+                var categoryId = Context.Request.Query["CategoryId"].ToString();
             }
             @if (hasAnyFilter)
             {
@@ -37,7 +43,7 @@
                     @if (hasStore) { <span class="badge bg-light text-dark border px-2 py-1 shadow-sm"><i class="fas fa-store text-muted me-1"></i> Dükkan</span> }
                     @if (hasMenu) { <span class="badge bg-light text-dark border px-2 py-1 shadow-sm"><i class="fas fa-book-open text-muted me-1"></i> Menü</span> }
                     @if (hasCategory) { <span class="badge bg-light text-dark border px-2 py-1 shadow-sm"><i class="fas fa-tags text-muted me-1"></i> Kategori</span> }
-                    <a href="@Url.Action("MyProducts")" class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle text-decoration-none px-2 py-1 ms-1 hover-danger"><i class="fas fa-times me-1"></i> Temizle</a>
+                    <a asp-action="Index" class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle text-decoration-none px-2 py-1 ms-1 hover-danger"><i class="fas fa-times me-1"></i> Temizle</a>
                 </div>
             }
 
@@ -118,7 +124,7 @@
                                     </select>
                                 </div>
                                 <div class="d-flex gap-2 w-100 w-lg-auto">
-                                    <a href="@Url.Action("MyProducts")" class="btn btn-light h-100 px-3" title="Filtreleri Temizle"><i class="fas fa-times"></i></a>
+                                    <a asp-action="Index" class="btn btn-light h-100 px-3" title="Filtreleri Temizle"><i class="fas fa-times"></i></a>
                                     <button type="submit" class="btn btn-primary px-3 shadow-sm flex-grow-1"><i class="fas fa-filter me-1"></i> Uygula</button>
                                 </div>
                             </div>
@@ -254,23 +260,38 @@
                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
                                 <a class="page-link"
                                    asp-action="Index"
-                                   asp-route-PageIndex="@(Model.Index - 1)"
-                                   asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
+                                   asp-route-page="@(Model.Index - 1)"
+                                   asp-route-Search="@search"
+                                   asp-route-FilterType="@filterType"
+                                   asp-route-CompanyId="@companyId"
+                                   asp-route-StoreId="@storeId"
+                                   asp-route-MenuId="@menuId"
+                                   asp-route-CategoryId="@categoryId">Önceki</a>
                             </li>
                             @for (int i = 1; i <= Model.Pages; i++)
                             {
                                 <li class="page-item @(Model.Index == i ? "active" : "")">
                                     <a class="page-link"
                                        asp-action="Index"
-                                       asp-route-PageIndex="@i"
-                                       asp-route-Search="@Context.Request.Query["Search"]">@i</a>
+                                       asp-route-page="@i"
+                                       asp-route-Search="@search"
+                                       asp-route-FilterType="@filterType"
+                                       asp-route-CompanyId="@companyId"
+                                       asp-route-StoreId="@storeId"
+                                       asp-route-MenuId="@menuId"
+                                       asp-route-CategoryId="@categoryId">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.HasNext ? "" : "disabled")">
                                 <a class="page-link"
                                    asp-action="Index"
-                                   asp-route-PageIndex="@(Model.Index + 1)"
-                                   asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
+                                   asp-route-page="@(Model.Index + 1)"
+                                   asp-route-Search="@search"
+                                   asp-route-FilterType="@filterType"
+                                   asp-route-CompanyId="@companyId"
+                                   asp-route-StoreId="@storeId"
+                                   asp-route-MenuId="@menuId"
+                                   asp-route-CategoryId="@categoryId">Sonraki</a>
                             </li>
                         </ul>
                     </nav>
@@ -349,4 +370,3 @@
         });
     </script>
 }
-

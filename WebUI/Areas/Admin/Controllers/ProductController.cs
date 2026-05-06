@@ -20,17 +20,36 @@ public class ProductController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)
+    public async Task<IActionResult> Index(
+        [FromQuery] string? search,
+        [FromQuery] Guid? companyId,
+        [FromQuery] Guid? storeId,
+        [FromQuery] Guid? menuId,
+        [FromQuery] Guid? categoryId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageIndex = 0,
+        CancellationToken ct = default)
     {
+        var currentPage = pageIndex > 0 ? pageIndex : page;
+
         if (User.IsInRole("Admin"))
         {
-            var req = new GetAllProductsPagedQuery { Search = search, Page = page, PageSize = 20 };
+            var req = new GetAllProductsPagedQuery { Search = search, Page = currentPage, PageSize = 20 };
             var products = await mediator.Send(req, ct);
             return View("Index", products);
         }
         else
         {
-            var req = new GetProductsPagedByCurrentOwnerQuery { Search = search, Page = page, PageSize = 20 };
+            var req = new GetProductsPagedByCurrentOwnerQuery
+            {
+                Search = search,
+                CompanyId = companyId,
+                StoreId = storeId,
+                MenuId = menuId,
+                CategoryId = categoryId,
+                Page = currentPage,
+                PageSize = 20
+            };
             var result = await mediator.Send(req, ct);
             return View("MyProducts", result);
         }
@@ -253,5 +272,4 @@ public class ProductController(IMediator mediator) : Controller
         }
     }
 }
-
 
