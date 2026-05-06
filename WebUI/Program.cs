@@ -1,4 +1,6 @@
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,19 +15,35 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.AddServices();
 
+var dataProtectionKeysDirectory = new DirectoryInfo(
+	Path.Combine(builder.Environment.ContentRootPath, "DataProtectionKeys"));
+
+builder.Services
+	.AddDataProtection()
+	.PersistKeysToFileSystem(dataProtectionKeysDirectory)
+	.SetApplicationName("TumMenu.WebUI");
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/giris";
 	options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-	// ReturnUrl parametresi kaldırıldı - oturum sona erdiğinde kullanıcı doğrudan login sayfasına yönlendirilir
-	options.ReturnUrlParameter = "";
-	// Oturum süresi: 2 saat (120 dakika) - kullanıcı 10 dakikadan şikayetçi
+	options.ReturnUrlParameter = "DonusUrl";
 	options.ExpireTimeSpan = TimeSpan.FromHours(2);
 	options.SlidingExpiration = true;
-	// Oturum sona erdiğinde kullanıcıya bilgi vermek için olay işleyici
+	options.Cookie.Name = ".TumMenu.Auth";
+	options.Cookie.HttpOnly = true;
+	options.Cookie.IsEssential = true;
+	options.Cookie.SameSite = SameSiteMode.Lax;
+	options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
 	options.Events.OnRedirectToLogin = context =>
 	{
-		// TempData kullanarak oturum sona erdi bilgisi ekle
+		if (IsApiRequest(context.Request))
+		{
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+			return Task.CompletedTask;
+		}
+
 		var tempDataFactory = context.HttpContext.RequestServices.GetService<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionaryFactory>();
 		if (tempDataFactory != null)
 		{
@@ -181,5 +199,13 @@ app.MapRazorPages();
 
 await app.SeedAdminAsync();
 await app.RunAsync();
+
+static bool IsApiRequest(HttpRequest request)
+{
+	return request.Path.StartsWithSegments("/api")
+		|| request.Path.StartsWithSegments("/user")
+		|| request.Path.StartsWithSegments("/owner")
+		|| string.Equals(request.Headers.XRequestedWith, "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
+}
 
 public partial class Program { }
