@@ -103,7 +103,7 @@
 
             <div class="form-footer">
                 <button type="submit" class="btn btn-primary">Güncelle</button>
-                <a asp-action="Index" class="btn btn-link">İptal</a>
+                <a asp-action="Index" data-tummenu-back data-fallback-url="@Url.Action("Index")" class="btn btn-link">İptal</a>
             </div>
         </form>
     </div>

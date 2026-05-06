@@ -101,7 +101,7 @@
                 <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
                 </a>
-                <a href="@returnUrl" class="btn btn-outline-secondary">
+                <a href="@returnUrl" data-tummenu-back data-fallback-url="@returnUrl" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Geri Dön
                 </a>
             </div>

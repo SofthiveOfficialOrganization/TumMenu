@@ -55,7 +55,7 @@
                         var backUrl = ViewData["ReturnUrl"] as string
                             ?? (Model.CompanyId.HasValue ? Url.Action("CompanyMenus") : Url.Action("Index"));
                     }
-                    <a href="@backUrl" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@backUrl" data-tummenu-back data-fallback-url="@backUrl" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </form>

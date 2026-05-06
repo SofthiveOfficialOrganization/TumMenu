@@ -54,7 +54,7 @@
                 }
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                    <a asp-action="Details" asp-route-id="@Model.Id" data-tummenu-back data-fallback-url="@Url.Action("Details", new { id = Model.Id })" class="btn btn-outline-secondary">
                         <i class="fas fa-times me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

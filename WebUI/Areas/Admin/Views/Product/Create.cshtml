@@ -111,13 +111,13 @@
                 <div class="d-flex justify-content-end gap-2 mt-5">
                     @if (Model.CategoryId != Guid.Empty)
                     {
-                        <a asp-action="Details" asp-controller="Category" asp-route-id="@Model.CategoryId" class="btn btn-outline-secondary">
+                        <a asp-action="Details" asp-controller="Category" asp-route-id="@Model.CategoryId" data-tummenu-back data-fallback-url="@Url.Action("Details", "Category", new { id = Model.CategoryId })" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>İptal
                         </a>
                     }
                     else
                     {
-                        <a asp-action="Index" class="btn btn-outline-secondary">
+                        <a asp-action="Index" data-tummenu-back data-fallback-url="@Url.Action("Index")" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>İptal
                         </a>
                     }

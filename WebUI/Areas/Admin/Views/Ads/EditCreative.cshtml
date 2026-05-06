@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="d-flex gap-2 justify-content-end border-top pt-4">
-                    <a asp-action="Creatives" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
+                    <a asp-action="Creatives" data-tummenu-back data-fallback-url="@Url.Action("Creatives")" class="btn btn-outline-secondary btn-sm px-4">İptal</a>
                     <button type="submit" class="btn btn-primary btn-sm px-4">Güncelle</button>
                 </div>
             </form>

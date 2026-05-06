@@ -19,7 +19,7 @@
                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill">
                     <i class="fas fa-home me-2"></i> Panele Dön
                 </a>
-                <button onclick="history.back()" class="btn btn-outline-secondary px-4 py-2 rounded-pill" type="button">
+                <button data-tummenu-back data-fallback-url="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="btn btn-outline-secondary px-4 py-2 rounded-pill" type="button">
                     <i class="fas fa-arrow-left me-2"></i> Geri Git
                 </button>
             </div>

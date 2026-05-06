@@ -17,6 +17,57 @@
 })();
 
 (function () {
+    const getFallbackUrl = (trigger) => {
+        const explicitFallback = trigger.getAttribute('data-fallback-url');
+        if (explicitFallback) {
+            return explicitFallback;
+        }
+
+        if (trigger instanceof HTMLAnchorElement && trigger.href) {
+            return trigger.href;
+        }
+
+        return '/Admin';
+    };
+
+    const hasSameOriginReferrer = () => {
+        if (!document.referrer) {
+            return false;
+        }
+
+        try {
+            return new URL(document.referrer).origin === window.location.origin;
+        } catch (_) {
+            return false;
+        }
+    };
+
+    document.addEventListener('click', (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const trigger = target?.closest('[data-tummenu-back]');
+        if (!trigger) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const fallbackUrl = getFallbackUrl(trigger);
+        if (window.history.length > 1 && hasSameOriginReferrer()) {
+            window.history.back();
+
+            window.setTimeout(() => {
+                if (!document.hidden) {
+                    window.location.assign(fallbackUrl);
+                }
+            }, 700);
+            return;
+        }
+
+        window.location.assign(fallbackUrl);
+    });
+})();
+
+(function () {
     const selector = [
         'input[type="tel"]',
         'input[name*="Phone"]',
