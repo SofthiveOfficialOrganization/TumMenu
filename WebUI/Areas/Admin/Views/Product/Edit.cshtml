@@ -10,6 +10,8 @@
             Price = p.Price
         })
         .ToList();
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl ?? Url.Action("Details", "Category", new { id = Model.CategoryId });
 }
 
 <div class="row justify-content-center">
@@ -28,6 +30,7 @@
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="CategoryId" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
 
                 <div class="mb-4">
                     <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Ürün Adı</label>
@@ -118,7 +121,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-5">
-                    <a asp-action="Details" asp-controller="Category" asp-route-id="@Model.CategoryId" data-tummenu-back data-fallback-url="@Url.Action("Details", "Category", new { id = Model.CategoryId })" class="btn btn-outline-secondary">
+                    <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

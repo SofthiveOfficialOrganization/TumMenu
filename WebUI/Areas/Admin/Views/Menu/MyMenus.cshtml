@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Menülerim";
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row">
@@ -14,7 +15,7 @@
                    <h4 class="fw-bold mb-1">Dükkan Menülerim</h4>
                    <p class="text-secondary small mb-0">Dükkanlarınıza ait menüleri yönetin.</p>
                 </div>
-                <a asp-action="CreateToStore" class="btn btn-primary btn-sm">
+                <a asp-action="CreateToStore" asp-route-returnUrl="@currentPageUrl" class="btn btn-primary btn-sm">
                     <i class="fas fa-plus me-2"></i> Yeni Dükkan Menüsü
                 </a>
             </div>
@@ -84,7 +85,7 @@
                                     </td>
                                     <td class="text-secondary d-none d-lg-table-cell">@item.CreatedAt?.ToString("d")</td>
                                     <td class="text-center">
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

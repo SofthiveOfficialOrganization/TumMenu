@@ -15,8 +15,10 @@ public class CategoryController(IMediator mediator) : Controller
 {
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Create(Guid menuId, Guid? parentId, CancellationToken ct)
+    public async Task<IActionResult> Create(Guid menuId, Guid? parentId, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         // 1. Get the menu and its existing categories
         var menu = await mediator.Send(new GetMenuByIdQuery { Id = menuId }, ct);
         
@@ -60,8 +62,10 @@ public class CategoryController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(AddCategoryToMenuCommand cmd, CancellationToken ct)
+    public async Task<IActionResult> Create(AddCategoryToMenuCommand cmd, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         // Security Check
         var menu = await mediator.Send(new GetMenuByIdQuery { Id = cmd.MenuId }, ct);
         if (User.IsInRole("Owner"))
@@ -89,7 +93,7 @@ public class CategoryController(IMediator mediator) : Controller
 
         await mediator.Send(cmd, ct);
         TempData["Success"] = "Kategori başarıyla eklendi.";
-        return RedirectToAction("Create", "Category", new { menuId = cmd.MenuId, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction("Create", "Category", new { menuId = cmd.MenuId, role = RouteData.Values["role"] }));
     }
 
     /// <summary>
@@ -209,10 +213,11 @@ public class CategoryController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> CreateCategory(CancellationToken ct)
+    public async Task<IActionResult> CreateCategory(string? returnUrl, CancellationToken ct)
     {
         var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
         var isSingleStore = ownerCompany?.IsSingleStore == true;
+        ViewData["ReturnUrl"] = returnUrl;
         
         ViewBag.IsSingleStore = isSingleStore;
         ViewBag.SingleStoreId = (Guid?)null;
@@ -240,8 +245,9 @@ public class CategoryController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateCategory(Guid? storeId, Guid? menuId, Guid? parentId, Guid? categoryLibraryItemId, CancellationToken ct)
+    public async Task<IActionResult> CreateCategory(Guid? storeId, Guid? menuId, Guid? parentId, Guid? categoryLibraryItemId, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         ViewData["SelectedStoreId"] = storeId?.ToString() ?? string.Empty;
         ViewData["SelectedMenuId"] = menuId?.ToString() ?? string.Empty;
         ViewData["SelectedParentId"] = parentId?.ToString() ?? string.Empty;
@@ -328,7 +334,15 @@ public class CategoryController(IMediator mediator) : Controller
 
         await mediator.Send(command, ct);
         TempData["Success"] = "Kategori başarıyla eklendi.";
-        return RedirectToAction("Index");
+        return RedirectToLocal(returnUrl, RedirectToAction("Index"));
+    }
+
+    private IActionResult RedirectToLocal(string? returnUrl, IActionResult fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
+
+        return fallback;
     }
 }
 

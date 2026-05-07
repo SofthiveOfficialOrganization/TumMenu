@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Ürünlerim";
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row">
@@ -14,7 +15,7 @@
                     <h4 class="fw-bold mb-1">Ürünlerim</h4>
                     <p class="text-secondary small mb-0">Size ait menülerdeki ürünleri yönetin.</p>
                 </div>
-                <a asp-action="CreateProduct" class="btn btn-primary">
+                <a asp-action="CreateProduct" asp-route-returnUrl="@currentPageUrl" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Ürün Ekle
                 </a>
             </div>
@@ -204,10 +205,10 @@
                                         }
                                     </td>
                                     <td class="text-center text-nowrap">
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary me-1" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-secondary me-1" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id" title="Sil">
@@ -226,7 +227,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                                                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-categoryId="@item.CategoryId" method="post" class="d-inline">
+                                                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-categoryId="@item.CategoryId" asp-route-returnUrl="@currentPageUrl" method="post" class="d-inline">
                                                             @Html.AntiForgeryToken()
                                                             <button type="submit" class="btn btn-danger">Evet, Sil</button>
                                                         </form>

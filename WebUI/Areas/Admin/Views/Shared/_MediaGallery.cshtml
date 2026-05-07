@@ -139,7 +139,9 @@
                 const response = await fetch('/Media/Upload', {
                     method: 'POST',
                     headers: {
-                        'RequestVerificationToken': getAntiforgeryToken()
+                        'RequestVerificationToken': getAntiforgeryToken(),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: formData
                 });
@@ -154,7 +156,9 @@
                     }, 1000);
                     showToast('success', 'Görsel başarıyla yüklendi.');
                 } else {
-                    const error = await response.text();
+                    const error = window.TumMenuAlerts
+                        ? await TumMenuAlerts.getResponseMessage(response, 'Yükleme başarısız oldu.')
+                        : 'Yükleme başarısız oldu.';
                     showToast('error', 'Yükleme hatası: ' + error);
                     progressBar.style.display = 'none';
                 }
@@ -175,7 +179,9 @@
                 const response = await fetch(`/Media/Delete/${id}`, {
                     method: 'POST',
                     headers: {
-                        'RequestVerificationToken': getAntiforgeryToken()
+                        'RequestVerificationToken': getAntiforgeryToken(),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
 
@@ -183,7 +189,9 @@
                     btn.closest('.media-item').remove();
                     showToast('success', 'Görsel silindi.');
                 } else {
-                    const error = await response.text();
+                    const error = window.TumMenuAlerts
+                        ? await TumMenuAlerts.getResponseMessage(response, 'Silme işlemi başarısız.')
+                        : 'Silme işlemi başarısız.';
                     showToast('error', error || 'Silme işlemi başarısız.');
                 }
             } catch (err) {

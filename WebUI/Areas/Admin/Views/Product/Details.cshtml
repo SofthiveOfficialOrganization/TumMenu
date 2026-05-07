@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Ürün Detayı";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var editReturnUrl = returnUrl ?? $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row mb-3">
@@ -25,13 +27,13 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 flex-shrink-0">
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@editReturnUrl" class="btn btn-sm btn-outline-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-edit"></i>
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-danger shadow-sm" title="Sil" data-bs-toggle="modal" data-bs-target="#deleteModal" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" data-tummenu-back data-fallback-url="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <a href="@(returnUrl ?? Url.Action("Index"))" data-tummenu-back data-fallback-url="@(returnUrl ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
                     </a>
                 </div>
@@ -167,7 +169,7 @@
                 </div>
                 <div class="modal-footer bg-light border-0 justify-content-center">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">İptal</button>
-                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <form asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@returnUrl" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="categoryId" value="@Model.CategoryId" />
                         <button type="submit" class="btn btn-danger px-4">Evet, Sil</button>

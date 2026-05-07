@@ -5,6 +5,7 @@
 @{
     var isAdmin = User.IsInRole("Admin");
     ViewData["Title"] = isAdmin ? "Şirket Ana Menüleri" : "Ana Menülerim";
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row">
@@ -21,7 +22,7 @@
                 </div>
                 @if (!isAdmin)
                 {
-                    <a asp-action="CreateToCompany" class="btn btn-primary btn-sm">
+                    <a asp-action="CreateToCompany" asp-route-returnUrl="@currentPageUrl" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus me-2"></i> Yeni Ana Menü
                     </a>
                 }
@@ -83,7 +84,7 @@
                                     </td>
                                     <td class="text-secondary d-none d-lg-table-cell">@item.CreatedAt?.ToString("d")</td>
                                     <td class="text-center">
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-secondary" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
@@ -104,7 +105,7 @@
                                     <p class="small">@(isAdmin ? "Henüz hiçbir şirkete ait ana menü bulunmuyor." : "Şirketiniz için henüz bir ana menü oluşturmadınız.")</p>
                                     @if (!isAdmin)
                                     {
-                                        <a asp-action="CreateToCompany" class="btn btn-primary btn-sm mt-2">
+                                        <a asp-action="CreateToCompany" asp-route-returnUrl="@currentPageUrl" class="btn btn-primary btn-sm mt-2">
                                             <i class="fas fa-plus me-2"></i> İlk Ana Menünüzü Oluşturun
                                         </a>
                                     }

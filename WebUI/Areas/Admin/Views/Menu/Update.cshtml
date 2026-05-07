@@ -6,6 +6,8 @@
     ViewData["Title"] = "Menü Düzenle";
     var designs = ViewBag.MenuDesigns as List<MenuDesignDTO> ?? [];
     var currentDesignId = ViewBag.CurrentMenuDesignId as Guid?;
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl ?? Url.Action("Details", new { id = Model.Id });
 }
 
 <div class="row justify-content-center">
@@ -15,6 +17,7 @@
 
             <form asp-action="Update" method="post">
                 <input type="hidden" name="Id" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
 
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Menü Adı</label>
@@ -54,7 +57,7 @@
                 }
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Details" asp-route-id="@Model.Id" data-tummenu-back data-fallback-url="@Url.Action("Details", new { id = Model.Id })" class="btn btn-outline-secondary">
+                    <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
                         <i class="fas fa-times me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

@@ -53,10 +53,11 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> CreateToStore(CancellationToken ct)
+    public async Task<IActionResult> CreateToStore(string? returnUrl, CancellationToken ct)
     {
         var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
         var isSingleStore = ownerCompany?.IsSingleStore == true;
+        ViewData["ReturnUrl"] = returnUrl;
         
         ViewBag.IsSingleStore = isSingleStore;
         ViewBag.SingleStoreId = (Guid?)null;
@@ -89,8 +90,10 @@ public sealed class MenuController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateToStore([FromForm] CreateMenuToStoreCommand cmd, CancellationToken ct)
+    public async Task<IActionResult> CreateToStore([FromForm] CreateMenuToStoreCommand cmd, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         // Tek dükkan modu kontrolü
         var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
         var isSingleStore = ownerCompany?.IsSingleStore == true && User.IsInRole("Owner");
@@ -137,21 +140,24 @@ public sealed class MenuController(IMediator mediator) : Controller
         }
 
         var dto = await mediator.Send(cmd, ct);
-        return RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] }));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public IActionResult CreateToCompany()
+    public IActionResult CreateToCompany(string? returnUrl)
     {
+        ViewData["ReturnUrl"] = returnUrl;
         return View(new CreateMenuToCompanyCommand());
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateToCompany([FromForm] CreateMenuToCompanyCommand cmd, CancellationToken ct)
+    public async Task<IActionResult> CreateToCompany([FromForm] CreateMenuToCompanyCommand cmd, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         if (!ModelState.IsValid)
         {
             if (cmd.CompanyId != Guid.Empty)
@@ -170,7 +176,7 @@ public sealed class MenuController(IMediator mediator) : Controller
         }
 
         var dto = await mediator.Send(cmd, ct);
-        return RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id = dto.Id, role = RouteData.Values["role"] }));
     }
 
     	[Authorize(Policy = "OwnerOrAdmin")]
@@ -213,7 +219,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> SetDesign(Guid id, [FromForm] Guid? menuDesignId, CancellationToken ct)
+	public async Task<IActionResult> SetDesign(Guid id, [FromForm] Guid? menuDesignId, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
 		if (User.IsInRole("Owner"))
@@ -234,7 +240,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 
 		await mediator.Send(new SetMenuDesignCommand(id, menuDesignId), ct);
 		TempData["Success"] = "Tasarım güncellendi.";
-		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] }));
 	}
 
 
@@ -243,9 +249,10 @@ public sealed class MenuController(IMediator mediator) : Controller
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet]
-	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Update(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+        ViewData["ReturnUrl"] = returnUrl;
 
 		if (User.IsInRole("Owner"))
 		{
@@ -271,7 +278,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Update([FromForm] UpdateMenuCommand req, [FromForm] Guid? menuDesignId, CancellationToken ct)
+	public async Task<IActionResult> Update([FromForm] UpdateMenuCommand req, [FromForm] Guid? menuDesignId, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = req.Id }, ct);
 		if (User.IsInRole("Owner"))
@@ -292,13 +299,13 @@ public sealed class MenuController(IMediator mediator) : Controller
 
 		var updatedMenu = await mediator.Send(req, ct);
 		await mediator.Send(new SetMenuDesignCommand(updatedMenu.Id, menuDesignId), ct);
-		return RedirectToAction(nameof(Details), new { id = updatedMenu.Id, role = RouteData.Values["role"] });
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id = updatedMenu.Id, role = RouteData.Values["role"] }));
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> SetActive(Guid id, CancellationToken ct)
+	public async Task<IActionResult> SetActive(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
 		if (User.IsInRole("Owner"))
@@ -318,13 +325,13 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new SetMenuActiveCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] }));
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> SetDefault(Guid id, CancellationToken ct)
+	public async Task<IActionResult> SetDefault(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
 		if (User.IsInRole("Owner"))
@@ -335,13 +342,13 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new SetDefaultCompanyMenuCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] });
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] }));
 	}
 	
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
 	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Delete(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
 		if (User.IsInRole("Owner"))
@@ -361,7 +368,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(new DeleteMenuCommand { Id = id }, ct);
-		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] }));
 	}    
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
@@ -414,8 +421,10 @@ public sealed class MenuController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CloneToStore([FromForm] CloneMenuToStoreRequest req, CancellationToken ct)
+    public async Task<IActionResult> CloneToStore([FromForm] CloneMenuToStoreRequest req, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         if (req.SourceMenuId == Guid.Empty || req.StoreId == Guid.Empty)
         {
             ModelState.AddModelError("", "Kaynak menü ve dükkan seçilmeli.");
@@ -427,7 +436,7 @@ public sealed class MenuController(IMediator mediator) : Controller
             SourceMenuId = req.SourceMenuId,
             StoreId = req.StoreId
         }, ct);
-        return RedirectToAction(nameof(Details), new { id = dto.Id });
+        return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id = dto.Id }));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -485,6 +494,14 @@ public sealed class MenuController(IMediator mediator) : Controller
         var items = result.Items.Select(m => new { id = m.Id, text = m.Title });
 
         return Json(new { results = items, pagination = new { more = result.HasNext } });
+    }
+
+    private IActionResult RedirectToLocal(string? returnUrl, IActionResult fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
+
+        return fallback;
     }
 }
 

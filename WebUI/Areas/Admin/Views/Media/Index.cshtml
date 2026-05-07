@@ -116,7 +116,9 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'RequestVerificationToken': token
+                        'RequestVerificationToken': token,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
 
@@ -125,7 +127,8 @@
                     // Refresh grid or reload page
                     setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    TumMenuAlerts.toast('error', 'Yükleme başarısız oldu.');
+                    const error = await TumMenuAlerts.getResponseMessage(response, 'Yükleme başarısız oldu.');
+                    TumMenuAlerts.toast('error', error);
                 }
             } catch (err) {
                 TumMenuAlerts.toast('error', 'Bir hata oluştu.');
@@ -149,7 +152,9 @@
                 const response = await fetch(`/admin/Media/Delete/${id}`, {
                     method: 'POST',
                     headers: {
-                        'RequestVerificationToken': token
+                        'RequestVerificationToken': token,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
 
@@ -157,7 +162,7 @@
                     btn.closest('.media-item').remove();
                     TumMenuAlerts.toast('success', 'Görsel silindi.');
                 } else {
-                    const error = await response.text();
+                    const error = await TumMenuAlerts.getResponseMessage(response, 'Silme işlemi başarısız.');
                     TumMenuAlerts.toast('error', error || 'Silme işlemi başarısız.');
                 }
             } catch (err) {

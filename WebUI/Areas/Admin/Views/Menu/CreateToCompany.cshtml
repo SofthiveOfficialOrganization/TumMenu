@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Ana Menü Oluştur";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl ?? Url.Action("CompanyMenus");
 }
 
 @section Scripts {
@@ -94,6 +96,7 @@
             <h4 class="fw-bold mb-4">Ana Menü Oluştur</h4>
             
             <form asp-action="CreateToCompany" method="post">
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label text-secondary small text-uppercase fw-bold">Menü Adı</label>
                     <input asp-for="Title" class="form-control" placeholder="örn. Yaz Menüsü" />
@@ -113,7 +116,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="CompanyMenus" data-tummenu-back data-fallback-url="@Url.Action("CompanyMenus")" class="btn btn-outline-secondary">
+                    <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
                         <i class="fas fa-times me-2"></i>İptal
                     </a>
                     <button type="submit" class="btn btn-primary px-4">

@@ -66,33 +66,38 @@ public class ProductController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public IActionResult Create(Guid categoryId)
+    public IActionResult Create(Guid categoryId, string? returnUrl)
     {
         // Notice we are returning the command directly so we have categoryId pre-filled
+        ViewData["ReturnUrl"] = returnUrl;
         return View(new CreateProductCommand { CategoryId = categoryId, IsActive = true });
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateProductCommand req, List<IFormFile>? photoFiles, CancellationToken ct)
+    public async Task<IActionResult> Create(CreateProductCommand req, List<IFormFile>? photoFiles, string? returnUrl, CancellationToken ct)
     {
         if (!ModelState.IsValid)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
             return View(req);
+        }
 
         var product = await mediator.Send(req, ct);
         await UploadProductPhotosAsync(product.Id, photoFiles, product.Title, ct);
 
         // Redirect back to the category details page where the product was created
-        return RedirectToAction("Details", "Category", new { id = req.CategoryId, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction("Details", "Category", new { id = req.CategoryId, role = RouteData.Values["role"] }));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> CreateProduct(CancellationToken ct)
+    public async Task<IActionResult> CreateProduct(string? returnUrl, CancellationToken ct)
     {
         var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
         var isSingleStore = ownerCompany?.IsSingleStore == true;
+        ViewData["ReturnUrl"] = returnUrl;
         
         ViewBag.IsSingleStore = isSingleStore;
         ViewBag.SingleStoreId = (Guid?)null;
@@ -120,9 +125,10 @@ public class ProductController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateProduct(Guid storeId, Guid menuId, Guid categoryId, CreateProductCommand req, List<IFormFile>? photoFiles, CancellationToken ct)
+    public async Task<IActionResult> CreateProduct(Guid storeId, Guid menuId, Guid categoryId, CreateProductCommand req, List<IFormFile>? photoFiles, string? returnUrl, CancellationToken ct)
     {
         req.CategoryId = categoryId;
+        ViewData["ReturnUrl"] = returnUrl;
         ViewData["SelectedStoreId"] = storeId;
         ViewData["SelectedMenuId"] = menuId;
         ViewData["SelectedCategoryId"] = categoryId;
@@ -208,39 +214,43 @@ public class ProductController(IMediator mediator) : Controller
         await UploadProductPhotosAsync(product.Id, photoFiles, product.Title, ct);
 
         TempData["Success"] = "Ürün başarıyla eklendi.";
-        return RedirectToAction("Index");
+        return RedirectToLocal(returnUrl, RedirectToAction("Index"));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Edit(Guid id, CancellationToken ct)
+    public async Task<IActionResult> Edit(Guid id, string? returnUrl, CancellationToken ct)
     {
         var product = await mediator.Send(new GetProductByIdQuery(id), ct);
+        ViewData["ReturnUrl"] = returnUrl;
         return View(product);
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(UpdateProductCommand req, CancellationToken ct)
+    public async Task<IActionResult> Update(UpdateProductCommand req, string? returnUrl, CancellationToken ct)
     {
         if (!ModelState.IsValid)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
             return View(req);
+        }
 
         await mediator.Send(req, ct);
         // Fetch after update to get the categoryId for redirect (avoids EF tracking conflict)
         var product = await mediator.Send(new GetProductByIdQuery(req.Id), ct);
-        return RedirectToAction("Details", "Category", new { id = product.CategoryId, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction("Details", "Category", new { id = product.CategoryId, role = RouteData.Values["role"] }));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id, Guid categoryId, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, Guid categoryId, string? returnUrl, CancellationToken ct)
     {
         await mediator.Send(new DeleteProductCommand { ProductId = id }, ct);
         TempData["Success"] = "Ürün başarıyla silindi.";
-        return RedirectToAction("Details", "Category", new { id = categoryId, role = RouteData.Values["role"] });
+        return RedirectToLocal(returnUrl, RedirectToAction("Details", "Category", new { id = categoryId, role = RouteData.Values["role"] }));
     }
 
     [Authorize(Policy = "OwnerOrAdmin")]
@@ -270,6 +280,14 @@ public class ProductController(IMediator mediator) : Controller
                 SortOrder = sortOrder++
             }, ct);
         }
+    }
+
+    private IActionResult RedirectToLocal(string? returnUrl, IActionResult fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
+
+        return fallback;
     }
 }
 

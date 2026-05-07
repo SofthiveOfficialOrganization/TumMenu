@@ -115,7 +115,7 @@
                     <h5 class="fw-bold mb-1">Kategoriler</h5>
                     <p class="text-secondary small mb-0">Bu kategorinin altındaki kategorileri yönetin.</p>
                 </div>
-                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" class="btn btn-sm btn-primary">
+                <a asp-controller="Category" asp-action="Create" asp-route-menuId="@Model.MenuId" asp-route-parentId="@Model.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus me-1"></i> Alt Kategori Ekle
                 </a>
             </div>
@@ -167,7 +167,7 @@
                     <h5 class="fw-bold mb-1">Ürünler</h5>
                     <p class="text-secondary small mb-0">Bu kategorideki ürünleri yönetin.</p>
                 </div>
-                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-sm btn-primary">
+                <a asp-controller="Product" asp-action="Create" asp-route-categoryId="@Model.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus me-1"></i> Yeni Ürün Ekle
                 </a>
             </div>
@@ -208,10 +208,10 @@
                                         </p>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-primary" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" method="post" class="d-inline" id="deleteProduct-@product.Id">
+                                        <form asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" asp-route-categoryId="@Model.Id" asp-route-returnUrl="@currentPageUrl" method="post" class="d-inline" id="deleteProduct-@product.Id">
                                             @Html.AntiForgeryToken()
                                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="TumMenuAlerts.confirm('Bu ürünü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteProduct-@product.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>

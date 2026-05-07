@@ -5,6 +5,7 @@
 @{
     var isAdmin = User.IsInRole("Admin");
     ViewData["Title"] = "Tüm Menüler";
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row">
@@ -24,8 +25,8 @@
                                 <i class="fas fa-plus me-2"></i> Menü Ekle
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="createMenuDropdown">
-                                <li><a class="dropdown-item" asp-action="CreateToCompany">Şirkete Ata</a></li>
-                                <li><a class="dropdown-item" asp-action="CreateToStore">Dükkana Ata</a></li>
+                                <li><a class="dropdown-item" asp-action="CreateToCompany" asp-route-returnUrl="@currentPageUrl">Şirkete Ata</a></li>
+                                <li><a class="dropdown-item" asp-action="CreateToStore" asp-route-returnUrl="@currentPageUrl">Dükkana Ata</a></li>
                             </ul>
                         </div>
                     }
@@ -95,11 +96,11 @@
                                     </td>
                                     <td class="text-secondary small text-nowrap">@item.CreatedAt?.ToString("d")</td>
                                     <td class="text-end pe-3 text-nowrap">
-                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary me-2" title="Detaylar">
+                                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-secondary me-2" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
+                                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" method="post" class="d-inline" id="deleteForm-@item.Id">
                                             @Html.AntiForgeryToken()
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>

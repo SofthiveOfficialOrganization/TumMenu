@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Yeni Ürün Ekle";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl
+        ?? (Model.CategoryId != Guid.Empty
+            ? Url.Action("Details", "Category", new { id = Model.CategoryId })
+            : Url.Action("Index"));
 }
 
 <div class="row justify-content-center">
@@ -15,6 +20,7 @@
             <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                 <input asp-for="CategoryId" type="hidden" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
 
                 <div class="mb-4">
                     <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Ürün Adı</label>
@@ -113,13 +119,13 @@
                 <div class="d-flex justify-content-end gap-2 mt-5">
                     @if (Model.CategoryId != Guid.Empty)
                     {
-                        <a asp-action="Details" asp-controller="Category" asp-route-id="@Model.CategoryId" data-tummenu-back data-fallback-url="@Url.Action("Details", "Category", new { id = Model.CategoryId })" class="btn btn-outline-secondary">
+                        <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>İptal
                         </a>
                     }
                     else
                     {
-                        <a asp-action="Index" data-tummenu-back data-fallback-url="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>İptal
                         </a>
                     }
