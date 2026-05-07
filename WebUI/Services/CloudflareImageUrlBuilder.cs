@@ -39,7 +39,12 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string Build(string? imageUrl, int? width = null, int? height = null)
+    public string Build(
+        string? imageUrl,
+        int? width = null,
+        int? height = null,
+        ImageFitMode fit = ImageFitMode.Default,
+        string? gravity = null)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             return string.Empty;
@@ -75,8 +80,20 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
         var transformOptions = BaseTransformOptions;
         if (width.HasValue) transformOptions += $",width={width.Value}";
         if (height.HasValue) transformOptions += $",height={height.Value}";
+        if (fit == ImageFitMode.CoverCenter && width.HasValue && height.HasValue)
+        {
+            transformOptions += ",fit=cover";
+            transformOptions += $",gravity={NormalizeGravity(gravity)}";
+        }
 
         return $"{TransformPrefix}{transformOptions}/{normalized.TrimStart('/')}";
+    }
+
+    private static string NormalizeGravity(string? gravity)
+    {
+        return string.IsNullOrWhiteSpace(gravity)
+            ? "0.5x0.5"
+            : gravity.Trim();
     }
 
     private bool ShouldUseTransform()
