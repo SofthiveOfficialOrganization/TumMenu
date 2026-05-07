@@ -19,6 +19,14 @@ public class GetSitemapDataQueryHandler(
         var stores = await storeRepository.Query(tracked: false)
             .Include(s => s.Company)
             .Where(s => !s.IsDeleted && !s.Company.IsDeleted)
+            .Where(s => !EF.Functions.Like(s.Slug, "%test%") &&
+                        !EF.Functions.Like(s.Title, "%test%") &&
+                        !EF.Functions.Like(s.Company.Slug, "%test%") &&
+                        !EF.Functions.Like(s.Company.Title, "%test%") &&
+                        !EF.Functions.Like(s.Slug, "%deneme%") &&
+                        !EF.Functions.Like(s.Title, "%deneme%") &&
+                        !EF.Functions.Like(s.Company.Slug, "%deneme%") &&
+                        !EF.Functions.Like(s.Company.Title, "%deneme%"))
             .Select(s => new SitemapItemDTO
             {
                 CompanySlug = s.Company.Slug,
@@ -37,6 +45,22 @@ public class GetSitemapDataQueryHandler(
             .Where(c => c.IsActive && !c.IsDeleted && 
                         c.Menu.Store != null && !c.Menu.Store.IsDeleted &&
                         c.Menu.Store.Company != null && !c.Menu.Store.Company.IsDeleted)
+            .Where(c => !EF.Functions.Like(c.Menu.Store!.Slug, "%test%") &&
+                        !EF.Functions.Like(c.Menu.Store.Title, "%test%") &&
+                        !EF.Functions.Like(c.Menu.Store.Company.Slug, "%test%") &&
+                        !EF.Functions.Like(c.Menu.Store.Company.Title, "%test%") &&
+                        !EF.Functions.Like(c.CategoryLibraryItem.Slug, "%test%") &&
+                        !EF.Functions.Like(c.CategoryLibraryItem.Title, "%test%") &&
+                        !EF.Functions.Like(c.Menu.Store.Slug, "%deneme%") &&
+                        !EF.Functions.Like(c.Menu.Store.Title, "%deneme%") &&
+                        !EF.Functions.Like(c.CategoryLibraryItem.Slug, "%deneme%") &&
+                        !EF.Functions.Like(c.CategoryLibraryItem.Title, "%deneme%") &&
+                        (c.Products.Any(p => p.IsActive && !p.IsDeleted &&
+                                             !EF.Functions.Like(p.Slug, "%test%") &&
+                                             !EF.Functions.Like(p.Title, "%test%") &&
+                                             !EF.Functions.Like(p.Slug, "%deneme%") &&
+                                             !EF.Functions.Like(p.Title, "%deneme%")) ||
+                         c.SubCategories.Any(sc => sc.IsActive && !sc.IsDeleted)))
             .Select(c => new SitemapItemDTO
             {
                 CompanySlug = c.Menu.Store!.Company.Slug,
@@ -57,6 +81,20 @@ public class GetSitemapDataQueryHandler(
                         p.Category.IsActive && !p.Category.IsDeleted &&
                         p.Category.Menu.Store != null && !p.Category.Menu.Store.IsDeleted &&
                         p.Category.Menu.Store.Company != null && !p.Category.Menu.Store.Company.IsDeleted)
+            .Where(p => !EF.Functions.Like(p.Category.Menu.Store!.Slug, "%test%") &&
+                        !EF.Functions.Like(p.Category.Menu.Store.Title, "%test%") &&
+                        !EF.Functions.Like(p.Category.Menu.Store.Company.Slug, "%test%") &&
+                        !EF.Functions.Like(p.Category.Menu.Store.Company.Title, "%test%") &&
+                        !EF.Functions.Like(p.Category.CategoryLibraryItem.Slug, "%test%") &&
+                        !EF.Functions.Like(p.Category.CategoryLibraryItem.Title, "%test%") &&
+                        !EF.Functions.Like(p.Slug, "%test%") &&
+                        !EF.Functions.Like(p.Title, "%test%") &&
+                        !EF.Functions.Like(p.Category.Menu.Store.Slug, "%deneme%") &&
+                        !EF.Functions.Like(p.Category.Menu.Store.Title, "%deneme%") &&
+                        !EF.Functions.Like(p.Slug, "%deneme%") &&
+                        !EF.Functions.Like(p.Title, "%deneme%") &&
+                        p.Description != null &&
+                        p.Description.Length >= 20)
             .Select(p => new SitemapItemDTO
             {
                 CompanySlug = p.Category.Menu.Store!.Company.Slug,

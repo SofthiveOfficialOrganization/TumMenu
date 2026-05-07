@@ -1,4 +1,8 @@
 @{
+    var enableAdSense = string.Equals(
+        Context.RequestServices.GetService<Microsoft.Extensions.Configuration.IConfiguration>()?["Ads:EnableAdSense"],
+        "true",
+        StringComparison.OrdinalIgnoreCase);
     const string siteTitle = "Tüm Menü";
     var pageTitle = ViewData["Title"] as string ?? siteTitle;
     var fullTitle = string.Equals(pageTitle, siteTitle, StringComparison.OrdinalIgnoreCase)
@@ -98,10 +102,13 @@
     }
     </script>
     
-    <!-- AdSense loader. Manual ad placements are intentionally kept out of the layout to avoid intrusive UX. -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
-        crossorigin="anonymous">
-        </script>
+    @if (enableAdSense)
+    {
+        <!-- AdSense loader. Manual ad placements are intentionally kept out of the layout to avoid intrusive UX. -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
+            crossorigin="anonymous">
+            </script>
+    }
 </head>
 <body class="app-shell @bodyClass">
     <!-- HEADER -->

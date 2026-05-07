@@ -161,16 +161,65 @@ public static class SeedExtensions
             }
         }
 
-        var toAdd = BlogPostSeedData.GetPosts()
-            .Where(p => !existingSlugs.Contains(p.Slug, StringComparer.OrdinalIgnoreCase))
-            .ToList();
+        var removedLegacyPosts = await RemoveLegacyAdSenseSeedPostsAsync(db);
 
-        if (toAdd.Count > 0 || hasEditorialUpdates)
+        if (hasEditorialUpdates || removedLegacyPosts)
         {
-            db.BlogPosts.AddRange(toAdd);
             await db.SaveChangesAsync();
         }
     }
+
+    private static async Task<bool> RemoveLegacyAdSenseSeedPostsAsync(ApplicationDbContext db)
+    {
+        var legacySlugs = GetLegacyAdSenseSeedBlogSlugs();
+        var legacyPosts = await db.BlogPosts
+            .Where(p => legacySlugs.Contains(p.Slug))
+            .ToListAsync();
+
+        var hasUpdates = false;
+
+        foreach (var post in legacyPosts)
+        {
+            if (post.IsDeleted && !post.IsPublished)
+            {
+                continue;
+            }
+
+            post.IsPublished = false;
+            post.Deleted("seed");
+            hasUpdates = true;
+        }
+
+        return hasUpdates;
+    }
+
+    private static string[] GetLegacyAdSenseSeedBlogSlugs() =>
+    [
+        "2025te-restoran-teknoloji-tren",
+        "fast-food-vs-ev-yemegi-hangisi",
+        "glutensiz-secenekler-neden-one",
+        "icecek-menusu-tasarim-ipuclari",
+        "kahvalti-menusu-icin-populer-s",
+        "kucuk-kafeler-icin-qr-menu-ava",
+        "menu-fiyatlandirma-stratejiler",
+        "mevsimlik-malzeme-kullaniminin",
+        "musteri-deneyimini-qr-menu-ile",
+        "musteri-sadakati-nasil-saglani",
+        "online-siparise-hazirlik-rehbe",
+        "personel-egitiminde-dikkat-edi",
+        "qr-menu-ile-kagit-menu-karsila",
+        "qr-menu-kurulum-rehberi-adim-a",
+        "qr-menude-fotograf-kullanimini",
+        "restoran-acmadan-once-bilmeniz",
+        "restoran-hijyen-standartlari",
+        "restoran-menusu-nasil-tasarlan",
+        "restoranlar-neden-dijital-menu",
+        "sezonluk-menu-guncelleme-ipucl",
+        "sosyal-medyada-restoran-taniti",
+        "tatli-menusu-nasil-olusturulur",
+        "turk-mutfaginin-vazgecilmez-le",
+        "vejetaryen-menu-olusturma-rehb"
+    ];
 
     private static bool ShouldUpdateEditorialPost(BlogPost existing, BlogPost seeded)
     {
