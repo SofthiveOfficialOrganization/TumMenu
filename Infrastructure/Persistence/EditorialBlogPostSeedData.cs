@@ -530,7 +530,185 @@ public static class EditorialBlogPostSeedData
                     "Fiyat paylaşmak zararlı mı?|Net fiyat çoğu zaman güven oluşturur. Strateji hedef kitleye göre belirlenmelidir.",
                     "Sosyal medya kampanyaları menüye eklenmeli mi?|Evet. Kampanya koşulları menüde net görünmelidir."
                 },
-                "Sosyal medya ilgiyi başlatır, dijital menü kararı destekler. İkisini birlikte planlayan işletmeler daha tutarlı görünür.")
+                "Sosyal medya ilgiyi başlatır, dijital menü kararı destekler. İkisini birlikte planlayan işletmeler daha tutarlı görünür."),
+
+            new Article(
+                "Restoran Menü İçeriği Kontrol Listesi",
+                "restoran-menu-icerigi-kontrol-listesi",
+                "Restoran ve kafelerin dijital menü yayınlamadan önce ürün adı, açıklama, fiyat, alerjen, görsel ve iletişim bilgilerini nasıl kontrol edeceğini anlatan uygulanabilir liste.",
+                "menu-icerigi,restoran,dijital-menu,kontrol-listesi",
+                new DateTime(2026, 4, 13),
+                "İyi bir dijital menü, yalnızca ürünleri listeleyen bir ekran değil, müşterinin sipariş kararını güvenle verebildiği düzenli bir bilgi alanıdır.",
+                "Birçok işletme QR menüye geçerken teknik kuruluma odaklanır; fakat asıl fark içerik kalitesinde oluşur. Eksik açıklamalar, güncel olmayan fiyatlar, boş kategoriler ve belirsiz ürün isimleri menünün güvenini azaltır.",
+                new[]
+                {
+                    MakeSection("Yayına almadan önce temel bilgileri kontrol edin", new[]
+                    {
+                        "İşletme adı, şube adı, adres ve iletişim bilgileri doğru olmalıdır.",
+                        "Çalışma saatleri değiştiyse menü ve sosyal medya profilleri aynı bilgiyi göstermelidir.",
+                        "Kategori isimleri müşterinin arama alışkanlığına uygun ve kısa tutulmalıdır.",
+                        "Boş kategori yayınlanmamalı, hazır olmayan bölümler geçici olarak pasif bırakılmalıdır."
+                    }),
+                    MakeSection("Ürün kartı minimum bilgileri", new[]
+                    {
+                        "Ürün adı anlaşılır olmalıdır; sadece mutfak içi kısaltmalar kullanılmamalıdır.",
+                        "Fiyat, porsiyon veya boy seçeneğine göre açık yazılmalıdır.",
+                        "Ürün açıklaması karar vermeye yardım eden malzeme, pişirme biçimi veya servis bilgisini içermelidir.",
+                        "Stokta olmayan ürünler yayında tutulmamalıdır."
+                    }),
+                    MakeSection("Güven artıran ek bilgiler", new[]
+                    {
+                        "Alerjen bilgisi özellikle süt, gluten, kuruyemiş, yumurta ve deniz ürünü içeren ürünlerde görünür olmalıdır.",
+                        "Vejetaryen, vegan veya acı seçenekleri ikon ya da kısa etiketle belirtilmelidir.",
+                        "Gerçek ürünü temsil eden görseller kullanılmalı, stok fotoğrafla müşterinin beklentisi yanıltılmamalıdır.",
+                        "Tahmini hazırlık süresi, yoğun olmayan saatlerde gerçekçi ölçülerek girilmelidir."
+                    }),
+                    MakeSection("Aylık bakım rutini", new[]
+                    {
+                        "En çok görüntülenen ürünlerin açıklamalarını gözden geçirin.",
+                        "Fiyat değişikliği yapılan ürünleri rastgele birkaç menü ekranında kontrol edin.",
+                        "Sezonluk ürünlerin süresi bittiyse pasif hale getirin.",
+                        "Müşteriden gelen sık soruları ürün açıklamalarına ekleyin."
+                    })
+                },
+                new[]
+                {
+                    "Menü açıklamaları ne kadar uzun olmalı?|Mobil ekranda rahat okunacak kadar kısa, karar vermeye yetecek kadar açıklayıcı olmalıdır.",
+                    "Her ürüne fotoğraf eklemek zorunlu mu?|Zorunlu değildir; en çok satan ve karar vermesi zor ürünlerden başlamak daha sağlıklıdır.",
+                    "Boş kategoriler SEO için zararlı mı?|Evet. Boş kategori hem kullanıcı deneyimini hem de içerik kalitesi algısını zayıflatır."
+                },
+                "Menü içeriği düzenli kontrol edildiğinde dijital menü yalnızca güncel kalmaz; müşterinin güvenini ve işletmenin profesyonel görünümünü de destekler."),
+
+            new Article(
+                "Dijital Menüde Alerjen ve İçerik Bilgisi Nasıl Yazılır?",
+                "dijital-menude-alerjen-ve-icerik-bilgisi",
+                "Restoran menülerinde alerjen, içerik, vejetaryen-vegan bilgi ve müşteri güvenini artıran açıklamaların nasıl yazılacağını örneklerle anlatır.",
+                "alerjen-bilgisi,dijital-menu,restoran,guven",
+                new DateTime(2026, 4, 14),
+                "Alerjen ve içerik bilgisi, bazı müşteriler için tercih kolaylığı değil doğrudan güvenlik meselesidir.",
+                "Dijital menü, kağıt menüye göre daha fazla açıklama alanı sunduğu için içerik bilgisini düzenli ve anlaşılır şekilde vermek için iyi bir fırsattır. Belirsiz ifadeler ise müşteriyi personel sormaya zorlar ve yanlış anlaşılma riskini artırır.",
+                new[]
+                {
+                    MakeSection("Açıklamayı müşterinin sorusuna göre yazın", new[]
+                    {
+                        "Müşteri çoğu zaman ürünün içinde ne olduğunu, nasıl piştiğini ve kendisine uygun olup olmadığını öğrenmek ister.",
+                        "Sadece yaratıcı ürün isimleri kullanmak yeterli değildir; ana malzemeler kısa ve net şekilde yazılmalıdır.",
+                        "Sos, marinasyon, garnitür ve ekstra seçenekler alerjen açısından önemli olabilir."
+                    }),
+                    MakeSection("Alerjen bilgisinde net olun", new[]
+                    {
+                        "Gluten, süt ürünleri, yumurta, kuruyemiş, soya, balık ve deniz ürünleri gibi yaygın riskleri özellikle belirtin.",
+                        "Emin olmadığınız ürünlerde kesin ifade kullanmak yerine personelden teyit alınmasını öneren not ekleyin.",
+                        "Çapraz bulaşma riski varsa mutfak uygulamasına göre ayrıca açıklama yapılmalıdır."
+                    }),
+                    MakeSection("Vejetaryen ve vegan etiketleri dikkat ister", new[]
+                    {
+                        "Vejetaryen bir ürünün sosunda et suyu veya jelatin bulunuyorsa etiket yanıltıcı olabilir.",
+                        "Vegan ürünlerde süt, yumurta, bal ve tereyağı gibi detaylar kontrol edilmelidir.",
+                        "Etiketleri sadece pazarlama için değil, doğru bilgi vermek için kullanın."
+                    }),
+                    MakeSection("Personel ve menü aynı dili konuşmalı", new[]
+                    {
+                        "Menüde yazan içerik personelin verdiği cevapla çelişmemelidir.",
+                        "Yeni ürün eklendiğinde servis ekibine kısa bilgi verilmelidir.",
+                        "Müşteriden gelen hassasiyet soruları ürün açıklamalarını geliştirmek için kayıt altına alınabilir."
+                    })
+                },
+                new[]
+                {
+                    "Alerjen bilgisi her üründe olmalı mı?|Risk içeren veya müşterinin karıştırabileceği ürünlerde görünür olması özellikle önemlidir.",
+                    "Vegan etiketi otomatik verilmeli mi?|Hayır. İçerik ve hazırlık süreci kontrol edilmeden vegan etiketi kullanılmamalıdır.",
+                    "Alerjen bilgisi satışları düşürür mü?|Genellikle hayır; net bilgi güven oluşturur ve doğru müşterinin kararını kolaylaştırır."
+                },
+                "Alerjen ve içerik bilgisi iyi yazıldığında menü daha kapsayıcı, daha güvenilir ve müşteri sorularına daha hazırlıklı hale gelir."),
+
+            new Article(
+                "QR Kod Restoranda Nereye Konmalı?",
+                "qr-kod-restoranda-nereye-konmali",
+                "Masa, vitrin, kasa önü, paket servis ve sosyal medya gibi alanlarda QR kod yerleşimini müşteri deneyimi ve okunabilirlik açısından açıklar.",
+                "qr-kod,restoran,dijital-menu,musteri-deneyimi",
+                new DateTime(2026, 4, 15),
+                "QR menünün iyi çalışması yalnızca bağlantının doğru olmasına değil, kodun doğru yerde ve doğru biçimde sunulmasına da bağlıdır.",
+                "Kod okunamıyor, ışık yansıyor veya müşteri kodun ne işe yaradığını anlamıyorsa dijital menü deneyimi daha ilk adımda zayıflar. Bu nedenle QR kod yerleşimi küçük ama kritik bir operasyondur.",
+                new[]
+                {
+                    MakeSection("Masa üzeri yerleşim", new[]
+                    {
+                        "Kod müşterinin oturduğu yerden kolay görülebilecek bir noktada olmalıdır.",
+                        "Parlak yüzeylerde yansıma okumayı zorlaştırabilir; mat baskı veya koruyucu yüzey tercih edilmelidir.",
+                        "Kod çok küçük basılmamalı, telefon kamerası masadan kaldırılmadan rahat okuyabilmelidir."
+                    }),
+                    MakeSection("Kasa ve vitrin kullanımı", new[]
+                    {
+                        "Paket servis veya hızlı sipariş alan işletmelerde kasa önü QR kodu menüyü beklerken inceleme imkanı verir.",
+                        "Vitrin yakınındaki QR kod, dışarıdan bakan müşterinin menü ve fiyatları görmesini sağlayabilir.",
+                        "Bu alanlarda kısa bir yönlendirme metni kodun amacını netleştirir."
+                    }),
+                    MakeSection("Paket servis ve sosyal medya", new[]
+                    {
+                        "Paket poşeti veya fiş üzerindeki QR kod tekrar sipariş ve menü inceleme için kullanılabilir.",
+                        "Instagram profilindeki menü bağlantısı, fiziksel QR kodla aynı güncel menüye gitmelidir.",
+                        "Kampanya paylaşımlarında kullanılan bağlantı doğrudan ilgili kategoriye yönlenirse karar süreci hızlanır."
+                    }),
+                    MakeSection("Sık yapılan yerleşim hataları", new[]
+                    {
+                        "Kodun masa süsü veya menü standı arkasında kalması.",
+                        "Baskının çok küçük, düşük kontrastlı veya lekelenmiş olması.",
+                        "Kodun eski menü bağlantısına gitmesi.",
+                        "Menünün açılmadan önce giriş veya üyelik istemesi."
+                    })
+                },
+                new[]
+                {
+                    "QR kod masada kaç tane olmalı?|Masa boyutuna göre bir veya iki görünür nokta yeterlidir.",
+                    "QR kod açıklama metni gerekli mi?|Evet. Kısa bir 'Menüyü görmek için okutun' metni kullanım oranını artırabilir.",
+                    "Kod bozulursa bağlantı değişir mi?|Hayır. Aynı menü bağlantısı yeniden basılabilir; asıl önemli olan linkin güncel kalmasıdır."
+                },
+                "Doğru yerleştirilen QR kod, müşterinin menüye zahmetsiz ulaşmasını sağlar ve dijital menünün değerini görünür hale getirir."),
+
+            new Article(
+                "Restoranlar İçin Online Menü SEO Kontrol Listesi",
+                "restoranlar-icin-online-menu-seo-kontrol-listesi",
+                "Restoranların online menülerini Google ve kullanıcılar için daha anlaşılır hale getirmesine yardımcı olan başlık, açıklama, kategori, görsel ve yerel bilgi kontrol listesi.",
+                "online-menu-seo,restoran,yerel-seo,dijital-menu",
+                new DateTime(2026, 4, 16),
+                "Online menü SEO'su, yalnızca arama motorları için kelime eklemek değil, restoran bilgisini kullanıcıya net ve güvenilir şekilde sunmaktır.",
+                "Müşteri arama sonucunda restoranı gördüğünde menüye, fiyatlara, konuma ve temel bilgilere hızlı ulaşmak ister. Eksik veya tekrarlayan sayfalar ise hem kullanıcıyı hem de arama motorlarını ikna etmekte zorlanır.",
+                new[]
+                {
+                    MakeSection("Sayfa başlığı ve açıklama", new[]
+                    {
+                        "İşletme adı ve şube adı başlıkta açık şekilde yer almalıdır.",
+                        "Meta açıklama yalnızca anahtar kelime değil, menünün ne sunduğunu anlatmalıdır.",
+                        "Her restoran, kategori ve ürün sayfası aynı açıklamayı kullanmamalıdır."
+                    }),
+                    MakeSection("Kategori ve ürün yapısı", new[]
+                    {
+                        "Kategori isimleri müşterinin arayacağı doğal kelimelerle uyumlu olmalıdır.",
+                        "Ürün sayfalarında açıklama, fiyat ve varsa görsel birlikte sunulmalıdır.",
+                        "Boş, test veya eksik ürün sayfaları indekslenmemelidir."
+                    }),
+                    MakeSection("Yerel güven sinyalleri", new[]
+                    {
+                        "Adres, ilçe, şehir ve telefon bilgileri tutarlı olmalıdır.",
+                        "Google işletme profili, sosyal medya ve menü bağlantısı birbirini desteklemelidir.",
+                        "Çalışma saatleri değiştiğinde tüm kanallarda güncellenmelidir."
+                    }),
+                    MakeSection("Teknik kontrol", new[]
+                    {
+                        "Sitemap yalnızca kaliteli ve yayında kalması istenen sayfaları içermelidir.",
+                        "Canonical adresler doğru sayfayı göstermelidir.",
+                        "Test restoranlar, boş kategoriler ve açıklamasız ürünler noindex ya da sitemap dışı olmalıdır.",
+                        "Mobil yükleme hızı ve görsel boyutları düzenli kontrol edilmelidir."
+                    })
+                },
+                new[]
+                {
+                    "Online menü Google'da görünmeli mi?|Evet, ancak yalnızca gerçek ve tamamlanmış menü sayfaları indekslenmelidir.",
+                    "Her ürün için ayrı SEO çalışması gerekir mi?|Çok önemli ürünlerde detaylı açıklama faydalıdır; tüm ürünlerde minimum kalite eşiği korunmalıdır.",
+                    "Boş kategoriler sitemap'te olmalı mı?|Hayır. Boş veya test sayfaları kalite sinyalini zayıflatabilir."
+                },
+                "Online menü SEO'sunda başarı, çok sayfa üretmekten çok doğru, güncel ve kullanıcıya gerçek bilgi veren sayfaları görünür kılmaya bağlıdır.")
         };
 
         return articles.Select(ToPost).ToList();

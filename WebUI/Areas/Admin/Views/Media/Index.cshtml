@@ -33,8 +33,11 @@
         {
             @foreach (var media in Model.Items)
             {
+                var mediaDisplayUrl = media.Slot is "logo" or "banner"
+                    ? ImageUrlBuilder.Build(media.MediaUrl)
+                    : ImageUrlBuilder.Build(media.MediaUrl, width: 320, height: 320, fit: ImageFitMode.CoverCenter);
                 <div class="media-item" data-media-id="@media.Id" data-type="@media.Type">
-                    <img src="@ImageUrlBuilder.Build(media.MediaUrl)" alt="@media.AltText" />
+                    <img src="@mediaDisplayUrl" alt="@media.AltText" />
                     <div class="media-slot-badge">@media.Slot</div>
                     <div class="media-item-overlay">
                         <div class="media-hover-actions d-flex flex-column gap-2 p-2 w-100">
