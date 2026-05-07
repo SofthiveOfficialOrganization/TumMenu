@@ -4,13 +4,58 @@
  */
 
 const TumMenuAlerts = {
+    normalizeMessage: function (message, fallback) {
+        const fallbackMessage = fallback || 'Bir hata oluştu.';
+        if (!message) return fallbackMessage;
+
+        let value = String(message);
+
+        if (/^\s*</.test(value)) {
+            const doc = new DOMParser().parseFromString(value, 'text/html');
+            const title = doc.querySelector('title')?.textContent;
+            const heading = doc.querySelector('h1, h2, h3')?.textContent;
+            const bodyText = doc.body?.textContent;
+            value = title || heading || bodyText || fallbackMessage;
+        }
+
+        value = value
+            .replace(/<[^>]*>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        if (!value) return fallbackMessage;
+
+        return value.length > 180 ? value.slice(0, 177).trimEnd() + '...' : value;
+    },
+
+    getResponseMessage: async function (response, fallback) {
+        const fallbackMessage = fallback || 'Bir hata oluştu.';
+        const contentType = response.headers.get('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+            const payload = await response.json().catch(() => null);
+            const errors = payload?.errors
+                ? Object.values(payload.errors).flat().filter(Boolean).join(' ')
+                : '';
+
+            return this.normalizeMessage(
+                errors || payload?.message || payload?.title || payload?.detail,
+                fallbackMessage
+            );
+        }
+
+        const text = await response.text().catch(() => '');
+        return this.normalizeMessage(text, fallbackMessage);
+    },
+
     /**
      * Shows a toast notification at the top-right
      * @param {string} type - 'success', 'error', 'warning', 'info'
      * @param {string} message - The message to display
      */
     toast: function (type, message) {
-        if (!message) return;
+        const safeMessage = this.normalizeMessage(message, '');
+        if (!safeMessage) return;
         
         const Toast = Swal.mixin({
             toast: true,
@@ -26,7 +71,7 @@ const TumMenuAlerts = {
 
         Toast.fire({
             icon: type,
-            title: message
+            title: safeMessage
         });
     },
 
