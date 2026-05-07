@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using WebUI.Extensions;
 using WebUI.ExternalServices;
@@ -23,6 +24,19 @@ builder.Services
 	.PersistKeysToFileSystem(dataProtectionKeysDirectory)
 	.SetApplicationName("TumMenu.WebUI");
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+	options.ForwardedHeaders =
+		ForwardedHeaders.XForwardedFor |
+		ForwardedHeaders.XForwardedProto |
+		ForwardedHeaders.XForwardedHost;
+
+	// We are behind a reverse proxy (IIS/Cloudflare). Trust forwarded headers.
+	// Actual network restrictions should be enforced at the infrastructure layer.
+	options.KnownNetworks.Clear();
+	options.KnownProxies.Clear();
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/giris";
@@ -34,7 +48,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 	options.Cookie.SameSite = SameSiteMode.Lax;
-	options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+	options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+		? CookieSecurePolicy.SameAsRequest
+		: CookieSecurePolicy.Always;
 
 	options.Events.OnRedirectToLogin = context =>
 	{
@@ -114,6 +130,31 @@ var localizationOptions = new RequestLocalizationOptions()
 	.AddSupportedUICultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
+
+app.UseForwardedHeaders();
+
+// Prevent cached/stale antiforgery tokens on auth-related form pages.
+app.Use(async (context, next) =>
+{
+	var path = context.Request.Path;
+	var isAuthFormPage =
+		path.Equals("/giris", StringComparison.OrdinalIgnoreCase) ||
+		path.Equals("/kayit", StringComparison.OrdinalIgnoreCase) ||
+		path.StartsWithSegments("/Identity/Account", StringComparison.OrdinalIgnoreCase);
+
+	if (isAuthFormPage)
+	{
+		context.Response.OnStarting(() =>
+		{
+			context.Response.Headers.CacheControl = "no-store, no-cache, must-revalidate, max-age=0";
+			context.Response.Headers.Pragma = "no-cache";
+			context.Response.Headers.Expires = "0";
+			return Task.CompletedTask;
+		});
+	}
+
+	await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions

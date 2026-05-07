@@ -123,20 +123,25 @@ public static class SeedExtensions
             .ToListAsync();
 
         var editorialPosts = EditorialBlogPostSeedData.GetPosts();
+        var editorialIds = editorialPosts
+            .Select(p => p.Id)
+            .ToHashSet();
         var editorialSlugs = editorialPosts
             .Select(p => p.Slug)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+        // Match by both Id and Slug to make seeding idempotent even if slugs change over time.
         var existingEditorialPosts = await db.BlogPosts
-            .Where(b => editorialSlugs.Contains(b.Slug))
+            .Where(b => editorialSlugs.Contains(b.Slug) || editorialIds.Contains(b.Id))
             .ToListAsync();
 
         var hasEditorialUpdates = false;
 
         foreach (var seededPost in editorialPosts)
         {
-            var existing = existingEditorialPosts.FirstOrDefault(p =>
-                string.Equals(p.Slug, seededPost.Slug, StringComparison.OrdinalIgnoreCase));
+            var existing = existingEditorialPosts.FirstOrDefault(p => p.Id == seededPost.Id)
+                ?? existingEditorialPosts.FirstOrDefault(p =>
+                    string.Equals(p.Slug, seededPost.Slug, StringComparison.OrdinalIgnoreCase));
 
             if (existing is null)
             {
@@ -148,6 +153,7 @@ public static class SeedExtensions
 
             if (ShouldUpdateEditorialPost(existing, seededPost))
             {
+                existing.Slug = seededPost.Slug;
                 existing.Title = seededPost.Title;
                 existing.Summary = seededPost.Summary;
                 existing.Content = seededPost.Content;
