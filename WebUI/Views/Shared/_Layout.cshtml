@@ -102,13 +102,117 @@
     }
     </script>
     
-    @if (enableAdSense)
-    {
-        <!-- AdSense loader. Manual ad placements are intentionally kept out of the layout to avoid intrusive UX. -->
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349"
-            crossorigin="anonymous">
-            </script>
-    }
+    <style>
+        .cookie-consent {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 1200;
+            width: min(440px, calc(100vw - 36px));
+            border: 1px solid rgba(73, 85, 56, 0.16);
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 18px 45px rgba(25, 31, 18, 0.18);
+            color: var(--color-text, #222);
+        }
+
+        .cookie-consent[hidden] {
+            display: none;
+        }
+
+        .cookie-consent__inner {
+            padding: 18px;
+        }
+
+        .cookie-consent__title {
+            margin: 0 0 8px;
+            color: var(--color-secondary-dark, #2f3926);
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .cookie-consent__text {
+            margin: 0;
+            color: var(--color-text-muted, #60645b);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .cookie-consent__text a {
+            color: var(--color-primary, #688745);
+            font-weight: 700;
+        }
+
+        .cookie-consent__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .cookie-consent__btn {
+            border: 1px solid rgba(73, 85, 56, 0.2);
+            border-radius: 8px;
+            padding: 9px 12px;
+            background: #fff;
+            color: var(--color-primary, #688745);
+            font-weight: 800;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .cookie-consent__btn--primary {
+            border-color: var(--color-primary, #688745);
+            background: var(--color-primary, #688745);
+            color: #fff;
+        }
+
+        .cookie-consent__preferences {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(73, 85, 56, 0.12);
+        }
+
+        .cookie-consent__option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--color-text-muted, #60645b);
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .cookie-consent__option strong {
+            display: block;
+            color: var(--color-secondary-dark, #2f3926);
+        }
+
+        .site-footer__link-button {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        @@media (max-width: 520px) {
+            .cookie-consent {
+                right: 12px;
+                bottom: 12px;
+                width: calc(100vw - 24px);
+            }
+
+            .cookie-consent__actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body class="app-shell @bodyClass">
     <!-- HEADER -->
@@ -207,7 +311,7 @@
                     <h3 class="site-footer__column-title">İşletmeler</h3>
                     <ul class="site-footer__links">
                         <li><a href="/ozellikler">Özellikler</a></li>
-                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
+                        <li><a href="/iletisim">Plan ve destek</a></li>
                         <li><a href="/sss">SSS</a></li>
                         <li><a href="/restoran-kaynaklari">Kaynaklar</a></li>
                         <li><a href="/qr-menu-uygunluk-testi">QR Uygunluk Testi</a></li>
@@ -225,6 +329,7 @@
                         <li><a href="/blog">Blog</a></li>
                         <li><a href="/yasal-bilgiler#privacy">Gizlilik Politikası</a></li>
                         <li><a href="/yasal-bilgiler#cookie">Çerez Politikası</a></li>
+                        <li><button type="button" class="site-footer__link-button" data-cookie-preferences>Çerez tercihleri</button></li>
                         <li><a href="/yasal-bilgiler#terms">Kullanıcı Sözleşmesi</a></li>
                         <li><a href="/yasal-bilgiler#kvkk">KVKK</a></li>
                     </ul>
@@ -251,7 +356,7 @@
                     <summary>İşletmeler</summary>
                     <ul class="site-footer__links">
                         <li><a href="/ozellikler">Özellikler</a></li>
-                        <li><a href="/fiyatlandirma">Fiyatlandırma</a></li>
+                        <li><a href="/iletisim">Plan ve destek</a></li>
                         <li><a href="/sss">SSS</a></li>
                         <li><a href="/restoran-kaynaklari">Kaynaklar</a></li>
                         <li><a href="/qr-menu-uygunluk-testi">QR Uygunluk Testi</a></li>
@@ -269,6 +374,7 @@
                         <li><a href="/blog">Blog</a></li>
                         <li><a href="/yasal-bilgiler#privacy">Gizlilik Politikası</a></li>
                         <li><a href="/yasal-bilgiler#cookie">Çerez Politikası</a></li>
+                        <li><button type="button" class="site-footer__link-button" data-cookie-preferences>Çerez tercihleri</button></li>
                         <li><a href="/yasal-bilgiler#terms">Kullanıcı Sözleşmesi</a></li>
                         <li><a href="/yasal-bilgiler#kvkk">KVKK</a></li>
                     </ul>
@@ -368,6 +474,143 @@
           window.addEventListener("resize", () => {
             if (window.innerWidth > 720) setOpen(false);
           });
+        })();
+    </script>
+
+    <section id="cookieConsent" class="cookie-consent" aria-labelledby="cookieConsentTitle" hidden>
+        <div class="cookie-consent__inner">
+            <h2 id="cookieConsentTitle" class="cookie-consent__title">Çerez tercihleri</h2>
+            <p class="cookie-consent__text">
+                TümMenü zorunlu çerezleri oturum, güvenlik ve form işlemleri için kullanır. Reklam ve analiz amaçlı
+                çerezleri yalnızca izin verirseniz etkinleştiririz. Detaylar için
+                <a href="/yasal-bilgiler#cookie">Çerez Politikası</a> metnini inceleyebilirsiniz.
+            </p>
+
+            <div id="cookiePreferencePanel" class="cookie-consent__preferences" hidden>
+                <label class="cookie-consent__option">
+                    <input type="checkbox" checked disabled />
+                    <span><strong>Zorunlu çerezler</strong> Oturum, güvenlik, antiforgery ve temel site işlevleri için gereklidir.</span>
+                </label>
+                <label class="cookie-consent__option">
+                    <input id="cookieAdsConsent" type="checkbox" />
+                    <span><strong>Reklam ve ölçüm çerezleri</strong> AdSense ve benzeri üçüncü taraf reklam/ölçüm servisleri için kullanılır.</span>
+                </label>
+            </div>
+
+            <div class="cookie-consent__actions">
+                <button type="button" class="cookie-consent__btn cookie-consent__btn--primary" data-cookie-accept>Tümünü kabul et</button>
+                <button type="button" class="cookie-consent__btn" data-cookie-reject>Zorunlu olmayanları reddet</button>
+                <button type="button" class="cookie-consent__btn" data-cookie-toggle>Tercihler</button>
+                <button type="button" class="cookie-consent__btn" data-cookie-save hidden>Tercihleri kaydet</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const storageKey = 'tummenu.cookieConsent.v1';
+            const adsEnabled = @Json.Serialize(enableAdSense);
+            const banner = document.getElementById('cookieConsent');
+            const preferencePanel = document.getElementById('cookiePreferencePanel');
+            const adsCheckbox = document.getElementById('cookieAdsConsent');
+            const saveButton = document.querySelector('[data-cookie-save]');
+            let adsScriptLoaded = false;
+
+            function readConsent() {
+                try {
+                    const raw = window.localStorage.getItem(storageKey);
+                    return raw ? JSON.parse(raw) : null;
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            function writeConsent(consent) {
+                const payload = {
+                    necessary: true,
+                    ads: Boolean(consent.ads),
+                    decidedAt: new Date().toISOString()
+                };
+
+                try {
+                    window.localStorage.setItem(storageKey, JSON.stringify(payload));
+                } catch (_) {
+                    // If localStorage is unavailable, keep the choice for this page view only.
+                }
+
+                applyConsent(payload);
+                hideBanner();
+            }
+
+            function loadAdSense() {
+                if (!adsEnabled || adsScriptLoaded || document.querySelector('script[data-tummenu-adsense]')) {
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349';
+                script.crossOrigin = 'anonymous';
+                script.dataset.tummenuAdsense = 'true';
+                document.head.appendChild(script);
+                adsScriptLoaded = true;
+            }
+
+            function applyConsent(consent) {
+                if (consent && consent.ads) {
+                    loadAdSense();
+                }
+            }
+
+            function showBanner(openPreferences) {
+                if (!banner) return;
+
+                banner.hidden = false;
+                if (openPreferences && preferencePanel && saveButton) {
+                    preferencePanel.hidden = false;
+                    saveButton.hidden = false;
+                    const consent = readConsent();
+                    if (adsCheckbox) {
+                        adsCheckbox.checked = Boolean(consent && consent.ads);
+                    }
+                }
+            }
+
+            function hideBanner() {
+                if (banner) {
+                    banner.hidden = true;
+                }
+            }
+
+            document.querySelectorAll('[data-cookie-preferences]').forEach((trigger) => {
+                trigger.addEventListener('click', () => showBanner(true));
+            });
+
+            document.querySelector('[data-cookie-accept]')?.addEventListener('click', () => {
+                writeConsent({ ads: true });
+            });
+
+            document.querySelector('[data-cookie-reject]')?.addEventListener('click', () => {
+                writeConsent({ ads: false });
+            });
+
+            document.querySelector('[data-cookie-toggle]')?.addEventListener('click', () => {
+                if (!preferencePanel || !saveButton) return;
+                const nextHidden = !preferencePanel.hidden;
+                preferencePanel.hidden = nextHidden;
+                saveButton.hidden = nextHidden;
+            });
+
+            saveButton?.addEventListener('click', () => {
+                writeConsent({ ads: Boolean(adsCheckbox && adsCheckbox.checked) });
+            });
+
+            const existingConsent = readConsent();
+            if (existingConsent) {
+                applyConsent(existingConsent);
+            } else {
+                showBanner(false);
+            }
         })();
     </script>
 

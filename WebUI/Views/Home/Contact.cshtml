@@ -2,7 +2,7 @@
 @model WebUI.Models.ContactViewModel
 @{
     ViewData["Title"] = "İletişim";
-    ViewData["Description"] = "Tüm Menü ile iletişime geçin. Sorularınız, önerileriniz veya destek talepleriniz için bize ulaşın.";
+    ViewData["Description"] = "TümMenü ile iletişime geçin. QR menü kurulumu, işletme hesabı, destek ve önerileriniz için bize ulaşın.";
     var legalVersions = ViewBag.LegalVersions as LegalVersionSettingsDTO ?? new LegalVersionSettingsDTO();
 }
 
@@ -13,10 +13,11 @@
 <!-- HERO -->
 <section class="contact-hero" aria-labelledby="contact-heading" style='background-image: url("@ImageUrlBuilder.Build("~/images/contact-us-background.png")");'>
     <div class="container contact-hero__inner">
-        <p class="contact-hero__eyebrow">Bize Ulaşın</p>
-        <h1 id="contact-heading" class="contact-hero__title">Size nasıl yardımcı olabiliriz?</h1>
+        <p class="contact-hero__eyebrow">İletişim</p>
+        <h1 id="contact-heading" class="contact-hero__title">Sorunuz varsa doğrudan yazın, birlikte netleştirelim</h1>
         <p class="contact-hero__lead">
-            Sorularınız, önerileriniz veya destek talepleriniz için formu doldurun — size en kısa sürede dönüş yapalım.
+            QR menü kurulumu, işletme hesabı, destek talepleri ve önerileriniz için formu doldurabilirsiniz.
+            İşletme adı, şehir/ilçe ve ihtiyacınızı kısaca yazmanız dönüşü hızlandırır.
         </p>
     </div>
 </section>
@@ -27,7 +28,7 @@
 
         <!-- FORM CARD -->
         <div class="contact-card">
-            <h2 class="contact-card__title"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-message")"></use></svg> Mesaj Gönderin</h2>
+            <h2 class="contact-card__title"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-message")"></use></svg> Mesaj gönderin</h2>
 
             <form asp-action="Contact" asp-controller="Home" method="post" class="contact-form" id="contactForm">
                 <div asp-validation-summary="ModelOnly" class="contact-form__errors"></div>
@@ -46,14 +47,14 @@
 
                 <div class="contact-form__group">
                     <label asp-for="Subject" class="contact-form__label"></label>
-                    <input asp-for="Subject" class="contact-form__input" placeholder="Mesajınızın konusu" />
+                    <input asp-for="Subject" class="contact-form__input" placeholder="Kurulum, destek, işletme hesabı..." />
                     <span asp-validation-for="Subject" class="contact-form__validation"></span>
                 </div>
 
                 <div class="contact-form__group">
                     <label asp-for="Message" class="contact-form__label"></label>
                     <textarea asp-for="Message" class="contact-form__input contact-form__textarea" 
-                              rows="5" placeholder="Mesajınızı buraya yazın..."></textarea>
+                              rows="5" placeholder="İşletme adınızı, şehir/ilçenizi ve hangi konuda destek istediğinizi yazabilirsiniz."></textarea>
                     <span asp-validation-for="Message" class="contact-form__validation"></span>
                 </div>
 
@@ -87,20 +88,20 @@
 
             <div class="contact-info__card">
                 <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></div>
-                <h3 class="contact-info__title">Çalışma Saatleri</h3>
-                <p class="contact-info__text">Pazartesi – Cuma</p>
-                <p class="contact-info__text contact-info__text--highlight">09:00 – 18:00</p>
+                <h3 class="contact-info__title">Dönüş süresi</h3>
+                <p class="contact-info__text">Mesajlar çalışma saatleri içinde incelenir.</p>
+                <p class="contact-info__text contact-info__text--highlight">En kısa sürede dönüş yapılır.</p>
             </div>
 
             <div class="contact-info__card">
                 <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg></div>
-                <h3 class="contact-info__title">Adres</h3>
+                <h3 class="contact-info__title">Konum</h3>
                 <p class="contact-info__text">Manisa/Turgutlu, Türkiye</p>
             </div>
 
             <div class="contact-info__card">
                 <div class="contact-info__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-globe")"></use></svg></div>
-                <h3 class="contact-info__title">Sosyal Medya</h3>
+                <h3 class="contact-info__title">Sosyal medya</h3>
                 <div class="contact-info__socials">
                     <a href="https://www.instagram.com/softhive_" class="contact-info__social-link" aria-label="Instagram">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

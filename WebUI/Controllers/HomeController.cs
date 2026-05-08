@@ -231,7 +231,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     [Route("fiyatlandirma")]
     public IActionResult Pricing()
     {
-        return View();
+        return StatusCode(StatusCodes.Status410Gone);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -267,7 +267,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     [Route("Home/Pricing")]
     public IActionResult PricingRedirect()
     {
-        return RedirectPermanent("/fiyatlandirma");
+        return StatusCode(StatusCodes.Status410Gone);
     }
 
     [Route("Home/Features")]
@@ -357,7 +357,6 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             new { Url = "/hakkimizda", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/iletisim", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/yasal-bilgiler", ChangeFreq = "monthly", Priority = "0.5" },
-            new { Url = "/fiyatlandirma", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/ozellikler", ChangeFreq = "monthly", Priority = "0.8" },
             new { Url = "/sss", ChangeFreq = "monthly", Priority = "0.7" },
             new { Url = "/restoran-kaynaklari", ChangeFreq = "weekly", Priority = "0.8" },
