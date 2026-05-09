@@ -1,8 +1,10 @@
 @{
+    var configuration = Context.RequestServices.GetService<Microsoft.Extensions.Configuration.IConfiguration>();
     var enableAdSense = string.Equals(
-        Context.RequestServices.GetService<Microsoft.Extensions.Configuration.IConfiguration>()?["Ads:EnableAdSense"],
+        configuration?["Ads:EnableAdSense"],
         "true",
         StringComparison.OrdinalIgnoreCase);
+    var ga4MeasurementId = configuration?["Analytics:GA4MeasurementId"] ?? string.Empty;
     const string siteTitle = "Tüm Menü";
     var pageTitle = ViewData["Title"] as string ?? siteTitle;
     var fullTitle = string.Equals(pageTitle, siteTitle, StringComparison.OrdinalIgnoreCase)
@@ -224,7 +226,7 @@
                     <source srcset='@ImageUrlBuilder.Build("~/images/tum-menu-logo-safe-3.webp")' type="image/webp" />
                     <img class="site-header__logo-icon"
                          src='@ImageUrlBuilder.Build("~/images/tum-menu-logo-safe-3.png")'
-                         alt=""
+                         alt="Tüm Menü"
                          decoding="async" />
                 </picture>
                 <!-- <span class="site-header__logo-text">Tüm Menü</span> -->
@@ -510,11 +512,13 @@
         (function () {
             const storageKey = 'tummenu.cookieConsent.v1';
             const adsEnabled = @Json.Serialize(enableAdSense);
+            const ga4MeasurementId = @Json.Serialize(ga4MeasurementId);
             const banner = document.getElementById('cookieConsent');
             const preferencePanel = document.getElementById('cookiePreferencePanel');
             const adsCheckbox = document.getElementById('cookieAdsConsent');
             const saveButton = document.querySelector('[data-cookie-save]');
             let adsScriptLoaded = false;
+            let analyticsScriptLoaded = false;
 
             function readConsent() {
                 try {
@@ -556,8 +560,27 @@
                 adsScriptLoaded = true;
             }
 
+            function loadGoogleAnalytics() {
+                if (!ga4MeasurementId || analyticsScriptLoaded || document.querySelector('script[data-tummenu-ga4]')) {
+                    return;
+                }
+
+                window.dataLayer = window.dataLayer || [];
+                window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+                window.gtag('js', new Date());
+                window.gtag('config', ga4MeasurementId, { anonymize_ip: true });
+
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4MeasurementId);
+                script.dataset.tummenuGa4 = 'true';
+                document.head.appendChild(script);
+                analyticsScriptLoaded = true;
+            }
+
             function applyConsent(consent) {
                 if (consent && consent.ads) {
+                    loadGoogleAnalytics();
                     loadAdSense();
                 }
             }
