@@ -4,7 +4,9 @@
         configuration?["Ads:EnableAdSense"],
         "true",
         StringComparison.OrdinalIgnoreCase);
-    var ga4MeasurementId = configuration?["Analytics:GA4MeasurementId"] ?? string.Empty;
+    var adPlaceholderUrl = Url.Content("~/images/AdPlaceholder.png");
+    var ga4Raw = configuration?["Analytics:GA4MeasurementId"]?.Trim() ?? string.Empty;
+    var ga4MeasurementId = TumMenuLayoutHelper.IsValidGa4MeasurementId(ga4Raw) ? ga4Raw : string.Empty;
     const string siteTitle = "Tüm Menü";
     var pageTitle = ViewData["Title"] as string ?? siteTitle;
     var fullTitle = string.Equals(pageTitle, siteTitle, StringComparison.OrdinalIgnoreCase)
@@ -214,6 +216,68 @@
                 flex-direction: column;
             }
         }
+
+        .tummenu-ad-fallback-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .tummenu-ad-fallback-modal[hidden] {
+            display: none !important;
+        }
+
+        .tummenu-ad-fallback-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(25, 31, 18, 0.55);
+            cursor: pointer;
+        }
+
+        .tummenu-ad-fallback-modal__panel {
+            position: relative;
+            z-index: 1;
+            max-width: min(92vw, 560px);
+            max-height: min(88vh, 640px);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+            background: #fff;
+        }
+
+        .tummenu-ad-fallback-modal__close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #2f3926;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .tummenu-ad-fallback-modal__close:hover {
+            background: #fff;
+        }
+
+        .tummenu-ad-fallback-modal__img {
+            display: block;
+            width: 100%;
+            height: auto;
+            vertical-align: middle;
+        }
+
     </style>
 </head>
 <body class="app-shell @bodyClass">
@@ -286,6 +350,28 @@
     <main id="main-content">
         @RenderBody()
     </main>
+
+    @if (enableAdSense)
+    {
+        <div id="tummenu-ad-fallback-modal"
+             class="tummenu-ad-fallback-modal"
+             hidden
+             role="dialog"
+             aria-modal="true"
+             aria-label="Tüm Menü tanıtım görseli">
+            <div class="tummenu-ad-fallback-modal__backdrop" data-tummenu-ad-fallback-close tabindex="-1"></div>
+            <div class="tummenu-ad-fallback-modal__panel">
+                <button type="button" class="tummenu-ad-fallback-modal__close" data-tummenu-ad-fallback-close aria-label="Kapat">&times;</button>
+                <img class="tummenu-ad-fallback-modal__img"
+                     src="@adPlaceholderUrl"
+                     alt="Tüm Menü — yakındaki menüleri keşfet"
+                     width="560"
+                     height="560"
+                     loading="lazy"
+                     asp-append-version="true" />
+            </div>
+        </div>
+    }
 
     @if (!hideFooter)
     {
@@ -519,6 +605,31 @@
             const saveButton = document.querySelector('[data-cookie-save]');
             let adsScriptLoaded = false;
             let analyticsScriptLoaded = false;
+            const adFallbackThrottleMs = 2 * 60 * 60 * 1000;
+            const adFallbackStorageKey = 'tummenu.adFallbackLastShownAt';
+
+            function tumMenuCanShowAdFallbackModal() {
+                try {
+                    const raw = window.localStorage.getItem(adFallbackStorageKey);
+                    if (!raw) {
+                        return true;
+                    }
+                    const last = parseInt(raw, 10);
+                    if (isNaN(last)) {
+                        return true;
+                    }
+                    return Date.now() - last >= adFallbackThrottleMs;
+                } catch (_) {
+                    return true;
+                }
+            }
+
+            function tumMenuMarkAdFallbackShown() {
+                try {
+                    window.localStorage.setItem(adFallbackStorageKey, String(Date.now()));
+                } catch (_) {
+                }
+            }
 
             function readConsent() {
                 try {
@@ -546,8 +657,48 @@
                 hideBanner();
             }
 
+            function tumMenuShowAdFallbackModal() {
+                if (!tumMenuCanShowAdFallbackModal()) {
+                    return;
+                }
+                const el = document.getElementById('tummenu-ad-fallback-modal');
+                if (!el) {
+                    return;
+                }
+                tumMenuMarkAdFallbackShown();
+                el.hidden = false;
+                document.documentElement.classList.add('no-scroll');
+                document.body.classList.add('no-scroll');
+            }
+
+            function tumMenuHideAdFallbackModal() {
+                const el = document.getElementById('tummenu-ad-fallback-modal');
+                if (!el) {
+                    return;
+                }
+                el.hidden = true;
+                document.documentElement.classList.remove('no-scroll');
+                document.body.classList.remove('no-scroll');
+            }
+
+            document.querySelectorAll('[data-tummenu-ad-fallback-close]').forEach(function (node) {
+                node.addEventListener('click', tumMenuHideAdFallbackModal);
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    const el = document.getElementById('tummenu-ad-fallback-modal');
+                    if (el && !el.hidden) {
+                        tumMenuHideAdFallbackModal();
+                    }
+                }
+            });
+
             function loadAdSense() {
-                if (!adsEnabled || adsScriptLoaded || document.querySelector('script[data-tummenu-adsense]')) {
+                if (!adsEnabled || document.querySelector('script[data-tummenu-adsense]')) {
+                    return;
+                }
+                if (adsScriptLoaded) {
                     return;
                 }
 
@@ -556,8 +707,13 @@
                 script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7675210368255349';
                 script.crossOrigin = 'anonymous';
                 script.dataset.tummenuAdsense = 'true';
+                script.onload = function () {
+                    adsScriptLoaded = true;
+                };
+                script.onerror = function () {
+                    tumMenuShowAdFallbackModal();
+                };
                 document.head.appendChild(script);
-                adsScriptLoaded = true;
             }
 
             function loadGoogleAnalytics() {
