@@ -307,6 +307,10 @@ public static class SeedExtensions
 
         var markdownBody = RemoveLeadingTitleHeading(parsed.Body, title);
         var html = Markdown.ToHtml(markdownBody, BlogMarkdownPipeline);
+        var pubDate = publishedAt.Date;
+        // Calendar day at 00:00 in Turkey (UTC+3). Do not use DateTimeOffset(DateTime, offset) with Kind=Local:
+        // CI runners use UTC as "local", which throws when offset is +3.
+        var createdAtTrt = new DateTimeOffset(pubDate.Year, pubDate.Month, pubDate.Day, 0, 0, 0, TimeSpan.FromHours(3));
 
         return new BlogPost
         {
@@ -316,10 +320,10 @@ public static class SeedExtensions
             Summary = summary,
             Content = html,
             CoverImageUrl = GetOptionalFrontMatterValue(parsed.FrontMatter, "coverImageUrl"),
-            PublishedAt = publishedAt.Date,
+            PublishedAt = pubDate,
             IsPublished = ParseBooleanFrontMatter(parsed.FrontMatter, "isPublished", defaultValue: true),
             Tags = GetOptionalFrontMatterValue(parsed.FrontMatter, "tags"),
-            CreatedAt = new DateTimeOffset(publishedAt.Date, TimeSpan.FromHours(3)),
+            CreatedAt = createdAtTrt,
             CreatedBy = "markdown-seed"
         };
     }
