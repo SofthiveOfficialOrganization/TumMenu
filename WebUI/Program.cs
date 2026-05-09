@@ -134,6 +134,43 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseForwardedHeaders();
 
+app.Use(async (context, next) =>
+{
+	context.Response.OnStarting(() =>
+	{
+		var headers = context.Response.Headers;
+
+		headers.TryAdd("X-Content-Type-Options", "nosniff");
+		headers.TryAdd("Referrer-Policy", "strict-origin-when-cross-origin");
+		headers.TryAdd("Permissions-Policy", "camera=(), microphone=(), payment=(), usb=(), geolocation=(self)");
+
+		if (!headers.ContainsKey("Content-Security-Policy"))
+		{
+			headers.ContentSecurityPolicy = string.Join("; ", new[]
+			{
+				"default-src 'self'",
+				"base-uri 'self'",
+				"object-src 'none'",
+				"frame-ancestors 'self'",
+				"form-action 'self'",
+				"img-src 'self' data: blob: https:",
+				"font-src 'self' data: https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.gstatic.com",
+				"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.googleapis.com",
+				"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://pagead2.googlesyndication.com https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+				"connect-src 'self' https: wss:",
+				"frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com",
+				"worker-src 'self' blob:",
+				"media-src 'self'",
+				"upgrade-insecure-requests"
+			});
+		}
+
+		return Task.CompletedTask;
+	});
+
+	await next();
+});
+
 // Prevent cached/stale antiforgery tokens on auth-related form pages.
 app.Use(async (context, next) =>
 {
