@@ -1,13 +1,21 @@
 using Domain.Entities;
 using Application.SystemSettings.Queries;
 using Infrastructure.Persistence;
+using Markdig;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WebUI.Extensions;
 
 public static class SeedExtensions
 {
+    private static readonly MarkdownPipeline BlogMarkdownPipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .Build();
 
 
     public static async Task SeedAdminAsync(this IApplicationBuilder app)
@@ -16,9 +24,10 @@ public static class SeedExtensions
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
         await SeedSystemSettingsAsync(db);
-        await SeedBlogPostsAsync(db);
+        await SeedBlogPostsAsync(db, environment);
         await SeedMenuDesignsAsync(db);
 
         string adminEmail = "yonetim@softhive.com";
@@ -116,13 +125,17 @@ public static class SeedExtensions
             current.StartsWith("https://images.unsplash.com/", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static async Task SeedBlogPostsAsync(ApplicationDbContext db)
+    private static async Task SeedBlogPostsAsync(ApplicationDbContext db, IWebHostEnvironment environment)
     {
         var existingSlugs = await db.BlogPosts
             .Select(b => b.Slug)
             .ToListAsync();
 
-        var editorialPosts = EditorialBlogPostSeedData.GetPosts();
+        var editorialPosts = EditorialBlogPostSeedData.GetPosts()
+            .Concat(GetMarkdownBlogPosts(environment))
+            .GroupBy(p => p.Slug, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.Last())
+            .ToList();
         var editorialIds = editorialPosts
             .Select(p => p.Id)
             .ToHashSet();
@@ -237,6 +250,178 @@ public static class SeedExtensions
             existing.IsPublished != seeded.IsPublished ||
             existing.Tags != seeded.Tags;
     }
+
+    private static List<BlogPost> GetMarkdownBlogPosts(IWebHostEnvironment environment)
+    {
+        var blogsDirectory = FindBlogsDirectory(environment);
+        if (blogsDirectory is null)
+        {
+            return [];
+        }
+
+        return Directory
+            .EnumerateFiles(blogsDirectory, "*.md", SearchOption.TopDirectoryOnly)
+            .Select(TryReadMarkdownBlogPost)
+            .Where(post => post is not null)
+            .Cast<BlogPost>()
+            .OrderByDescending(post => post.PublishedAt)
+            .ThenBy(post => post.Slug)
+            .ToList();
+    }
+
+    private static string? FindBlogsDirectory(IWebHostEnvironment environment)
+    {
+        var candidates = new[]
+        {
+            Path.Combine(environment.ContentRootPath, "Blogs"),
+            Path.GetFullPath(Path.Combine(environment.ContentRootPath, "..", "Blogs")),
+            Path.Combine(AppContext.BaseDirectory, "Blogs")
+        };
+
+        return candidates.FirstOrDefault(Directory.Exists);
+    }
+
+    private static BlogPost? TryReadMarkdownBlogPost(string path)
+    {
+        var content = File.ReadAllText(path);
+        var parsed = ParseMarkdownFrontMatter(content);
+
+        if (!parsed.HasFrontMatter)
+        {
+            return null;
+        }
+
+        var title = GetRequiredFrontMatterValue(parsed.FrontMatter, "title", path);
+        var slug = GetRequiredFrontMatterValue(parsed.FrontMatter, "slug", path);
+        var summary = GetRequiredFrontMatterValue(parsed.FrontMatter, "summary", path);
+        var publishedAtValue = GetRequiredFrontMatterValue(parsed.FrontMatter, "publishedAt", path);
+
+        if (!DateTime.TryParse(
+                publishedAtValue,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeLocal,
+                out var publishedAt))
+        {
+            throw new InvalidOperationException($"Blog markdown publishedAt okunamadi: {path}");
+        }
+
+        var markdownBody = RemoveLeadingTitleHeading(parsed.Body, title);
+        var html = Markdown.ToHtml(markdownBody, BlogMarkdownPipeline);
+
+        return new BlogPost
+        {
+            Id = CreateDeterministicGuid($"markdown-blog:{slug}"),
+            Title = title,
+            Slug = slug,
+            Summary = summary,
+            Content = html,
+            CoverImageUrl = GetOptionalFrontMatterValue(parsed.FrontMatter, "coverImageUrl"),
+            PublishedAt = publishedAt.Date,
+            IsPublished = ParseBooleanFrontMatter(parsed.FrontMatter, "isPublished", defaultValue: true),
+            Tags = GetOptionalFrontMatterValue(parsed.FrontMatter, "tags"),
+            CreatedAt = new DateTimeOffset(publishedAt.Date, TimeSpan.FromHours(3)),
+            CreatedBy = "markdown-seed"
+        };
+    }
+
+    private static ParsedMarkdown ParseMarkdownFrontMatter(string content)
+    {
+        var match = Regex.Match(content, @"\A---\r?\n(?<frontMatter>.*?)\r?\n---\r?\n?", RegexOptions.Singleline);
+        if (!match.Success)
+        {
+            return new ParsedMarkdown(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase), content, false);
+        }
+
+        var frontMatter = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var frontMatterText = match.Groups["frontMatter"].Value;
+        foreach (var rawLine in frontMatterText.Split(["\r\n", "\n"], StringSplitOptions.None))
+        {
+            var line = rawLine.Trim();
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            var separatorIndex = line.IndexOf(':', StringComparison.Ordinal);
+            if (separatorIndex <= 0)
+            {
+                continue;
+            }
+
+            var key = line[..separatorIndex].Trim();
+            var value = line[(separatorIndex + 1)..].Trim();
+            frontMatter[key] = UnquoteFrontMatterValue(value);
+        }
+
+        var body = content[match.Length..];
+        return new ParsedMarkdown(frontMatter, body, true);
+    }
+
+    private static string UnquoteFrontMatterValue(string value)
+    {
+        if (value.Length >= 2 &&
+            ((value.StartsWith('"') && value.EndsWith('"')) ||
+             (value.StartsWith('\'') && value.EndsWith('\''))))
+        {
+            return value[1..^1];
+        }
+
+        return value;
+    }
+
+    private static string GetRequiredFrontMatterValue(
+        IReadOnlyDictionary<string, string> frontMatter,
+        string key,
+        string path)
+    {
+        var value = GetOptionalFrontMatterValue(frontMatter, key);
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new InvalidOperationException($"Blog markdown front matter eksik: {key} ({path})");
+        }
+
+        return value;
+    }
+
+    private static string? GetOptionalFrontMatterValue(IReadOnlyDictionary<string, string> frontMatter, string key)
+    {
+        if (!frontMatter.TryGetValue(key, out var value) || string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value;
+    }
+
+    private static bool ParseBooleanFrontMatter(
+        IReadOnlyDictionary<string, string> frontMatter,
+        string key,
+        bool defaultValue)
+    {
+        var value = GetOptionalFrontMatterValue(frontMatter, key);
+        return bool.TryParse(value, out var parsed) ? parsed : defaultValue;
+    }
+
+    private static string RemoveLeadingTitleHeading(string markdown, string title)
+    {
+        var escapedTitle = Regex.Escape(title.Trim());
+        return Regex.Replace(
+            markdown,
+            $@"\A\s*#\s+{escapedTitle}\s*\r?\n+",
+            string.Empty,
+            RegexOptions.IgnoreCase);
+    }
+
+    private static Guid CreateDeterministicGuid(string input)
+    {
+        var bytes = MD5.HashData(Encoding.UTF8.GetBytes(input));
+        return new Guid(bytes);
+    }
+
+    private sealed record ParsedMarkdown(
+        Dictionary<string, string> FrontMatter,
+        string Body,
+        bool HasFrontMatter);
 
     private static async Task SeedSystemSettingsAsync(ApplicationDbContext db)
     {

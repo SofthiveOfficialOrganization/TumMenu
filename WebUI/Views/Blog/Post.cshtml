@@ -12,6 +12,7 @@
         .FirstOrDefault(tag => !string.IsNullOrWhiteSpace(tag));
     var postCulture = new System.Globalization.CultureInfo("tr-TR");
     var eyebrowText = string.IsNullOrWhiteSpace(primaryTag) ? "TumMenu Rehberi" : primaryTag;
+    var fallbackCoverImageUrl = "/images/hero-illustration-business.png";
     var imageCaption = string.IsNullOrWhiteSpace(Model.Summary)
         ? $"{Model.Title} yazısı için kapak görseli."
         : $"Görsel: {Model.Summary}";
@@ -106,7 +107,7 @@
             ["dateModified"] = Model.PublishedAt.ToString("yyyy-MM-dd"),
             ["inLanguage"] = "tr-TR",
             ["image"] = string.IsNullOrWhiteSpace(Model.CoverImageUrl)
-                ? $"{baseUrl}/images/hero-illustration.png"
+                ? $"{baseUrl}{fallbackCoverImageUrl}"
                 : $"{baseUrl}{Model.CoverImageUrl}",
             ["author"] = new Dictionary<string, object?>
             {
@@ -215,7 +216,7 @@
         </header>
 
         <figure class="blog-post-cover-new">
-            <img src="@ImageUrlBuilder.Build(string.IsNullOrEmpty(Model.CoverImageUrl) ? "/images/hero-illustration.png" : Model.CoverImageUrl)" alt="@Model.Title" class="blog-post-cover-new__img" />
+            <img src="@ImageUrlBuilder.Build(string.IsNullOrEmpty(Model.CoverImageUrl) ? fallbackCoverImageUrl : Model.CoverImageUrl)" alt="@Model.Title" class="blog-post-cover-new__img" />
             <figcaption class="blog-post-cover-new__caption">@imageCaption</figcaption>
         </figure>
 

@@ -10,6 +10,7 @@ using WebUI.ExternalServices;
 using WebUI.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+var seedOnly = args.Any(arg => string.Equals(arg, "--seed-only", StringComparison.OrdinalIgnoreCase));
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -240,6 +241,12 @@ app.MapRazorPages();
 
 
 await app.SeedAdminAsync();
+
+if (seedOnly)
+{
+	return;
+}
+
 await app.RunAsync();
 
 static bool IsApiRequest(HttpRequest request)
