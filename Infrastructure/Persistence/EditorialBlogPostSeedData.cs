@@ -700,7 +700,7 @@ public static class EditorialBlogPostSeedData
             Slug = article.Slug,
             Summary = article.Summary,
             Content = BuildHtml(article),
-            CoverImageUrl = "/images/hero-illustration-business.png",
+            CoverImageUrl = GetCoverImageUrl(article.Slug),
             PublishedAt = article.PublishedAt,
             IsPublished = true,
             Tags = article.Tags,
@@ -708,6 +708,27 @@ public static class EditorialBlogPostSeedData
             CreatedBy = "seed"
         };
     }
+
+    private static string GetCoverImageUrl(string slug) => slug switch
+    {
+        "restoranlar-icin-online-menu-seo-kontrol-listesi" => "/images/blog/restoranlar-icin-online-menu-seo-kontrol-listesi.jpg",
+        "qr-kod-restoranda-nereye-konmali" => "/images/blog/qr-kod-restoranda-nereye-konmali.jpg",
+        "dijital-menude-alerjen-ve-icerik-bilgisi" => "/images/blog/dijital-menude-alerjen-ve-icerik-bilgisi.jpg",
+        "restoran-menu-icerigi-kontrol-listesi" => "/images/blog/restoran-menu-icerigi-kontrol-listesi.jpg",
+        "restoranlar-icin-sosyal-medya-menu-tanitimi" => "/images/blog/restoranlar-icin-sosyal-medya-menu-tanitimi.jpg",
+        "online-siparise-hazirlik-rehberi" => "/images/blog/online-siparise-hazirlik-rehberi.jpg",
+        "restoran-teknolojileri-trendleri" => "/images/blog/restoran-teknolojileri-trendleri.jpg",
+        "kucuk-kafeler-icin-qr-menu-avantajlari" => "/images/blog/kucuk-kafeler-icin-qr-menu-avantajlari.jpg",
+        "menu-fotograflari-dijital-menude-neden-onemlidir" => "/images/blog/menu-fotograflari-dijital-menude-neden-onemlidir.jpg",
+        "restoran-menusu-nasil-tasarlanir" => "/images/blog/restoran-menusu-nasil-tasarlanir.jpg",
+        "restoran-menu-fiyatlandirma-stratejileri" => "/images/blog/restoran-menu-fiyatlandirma-stratejileri.jpg",
+        "qr-menu-musteri-deneyimini-nasil-iyilestirir" => "/images/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir.jpg",
+        "qr-menu-kurulumu-adim-adim-restoran-rehberi" => "/images/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi.jpg",
+        "qr-menu-ile-kagit-menu-karsilastirmasi" => "/images/blog/qr-menu-ile-kagit-menu-karsilastirmasi.jpg",
+        "restoranlar-neden-dijital-menuye-gecmeli" => "/images/blog/restoranlar-neden-dijital-menuye-gecmeli.jpg",
+        "qr-menu-nedir-nasil-calisir" => "/images/blog/qr-menu-nedir-nasil-calisir.jpg",
+        _ => "/images/hero-illustration-business.png"
+    };
 
     private static string BuildHtml(Article article)
     {
