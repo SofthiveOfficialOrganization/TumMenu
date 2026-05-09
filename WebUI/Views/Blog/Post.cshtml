@@ -15,6 +15,76 @@
     var imageCaption = string.IsNullOrWhiteSpace(Model.Summary)
         ? $"{Model.Title} yazısı için kapak görseli."
         : $"Görsel: {Model.Summary}";
+    var ctaLookup = $"{Model.Slug},{Model.Tags}".ToLowerInvariant();
+    var ctaTitle = "QR menüye hazır olup olmadığınızı kontrol edin";
+    var ctaDescription = "İşletmenizin dijital menüye geçiş için hangi bilgileri tamamlaması gerektiğini kısa sorularla değerlendirin.";
+    var ctaHref = "/qr-menu-uygunluk-testi";
+    var ctaLabel = "Uygunluk testini aç";
+    var resourceTitle = "Bu yazıya yakın kaynaklar";
+    var resourceIntro = "Okuduğunuz konuya göre seçilmiş kaynaklarla menünüzü daha somut kontrol edebilirsiniz.";
+    var relatedTools = new[]
+    {
+        new { Title = "QR menü uygunluk testi", Description = "İşletmenizin QR menüye ne kadar hazır olduğunu kısa sorularla değerlendirin.", Href = "/qr-menu-uygunluk-testi", Label = "Teste git" },
+        new { Title = "Kurulum kontrol listesi", Description = "Kategori, ürün, fiyat ve QR yerleşimi için yayına alma adımlarını kontrol edin.", Href = "/qr-menu-kurulum-kontrol-listesi", Label = "Listeyi aç" },
+        new { Title = "Kaynak merkezi", Description = "Kontrol listeleri, blog rehberleri ve karar araçlarını tek sayfada inceleyin.", Href = "/restoran-kaynaklari", Label = "Kaynaklara dön" }
+    };
+
+    if (ctaLookup.Contains("foto"))
+    {
+        ctaTitle = "Ürün fotoğraflarınızı güçlendirin";
+        ctaDescription = "Menü görsellerinizin sipariş kararını nasıl etkilediğini ve hangi karelerin daha iyi çalıştığını kontrol edin.";
+        ctaHref = "/restoran-menu-fotografi-rehberi";
+        ctaLabel = "Fotoğraf rehberini aç";
+        resourceTitle = "Fotoğraf ve içerik kaynakları";
+        relatedTools = new[]
+        {
+            new { Title = "Fotoğraf rehberi", Description = "Işık, açı ve gerçek ürün temsili için pratik kontrol noktaları.", Href = "/restoran-menu-fotografi-rehberi", Label = "Rehberi aç" },
+            new { Title = "Menü tasarımı", Description = "Kategori düzeni, açıklama uzunluğu ve görsel kullanımını birlikte planlayın.", Href = "/blog/restoran-menusu-nasil-tasarlanir", Label = "Yazıyı oku" },
+            new { Title = "İçerik kontrol listesi", Description = "Ürün adı, fiyat, açıklama ve görsel alanlarını yayından önce gözden geçirin.", Href = "/blog/restoran-menu-icerigi-kontrol-listesi", Label = "Listeyi oku" }
+        };
+    }
+    else if (ctaLookup.Contains("seo"))
+    {
+        ctaTitle = "Online menünüzü Google için netleştirin";
+        ctaDescription = "Başlık, açıklama, kategori ve ürün içeriklerini arama motorları ve kullanıcılar için daha anlaşılır hale getirin.";
+        ctaHref = "/restoran-online-menu-seo-rehberi";
+        ctaLabel = "SEO rehberini aç";
+        resourceTitle = "SEO ve yayın kalitesi kaynakları";
+        relatedTools = new[]
+        {
+            new { Title = "Online menü SEO rehberi", Description = "Menü sayfalarının başlık, açıklama ve içerik kalitesini kontrol edin.", Href = "/restoran-online-menu-seo-rehberi", Label = "Rehberi aç" },
+            new { Title = "İçerik kontrol listesi", Description = "Boş kategori, eksik açıklama ve eski fiyat risklerini azaltın.", Href = "/blog/restoran-menu-icerigi-kontrol-listesi", Label = "Listeyi oku" },
+            new { Title = "Kaynak merkezi", Description = "AdSense öncesi içerik ve kullanıcı deneyimi kaynaklarını inceleyin.", Href = "/restoran-kaynaklari", Label = "Kaynaklara dön" }
+        };
+    }
+    else if (ctaLookup.Contains("fiyat") || ctaLookup.Contains("maliyet"))
+    {
+        ctaTitle = "Kağıt menü maliyetinizi hesaplayın";
+        ctaDescription = "Baskı, tasarım ve güncelleme maliyetlerini yıllık düşünerek dijital menü geçişini daha somut değerlendirin.";
+        ctaHref = "/menu-baski-maliyeti-hesaplayici";
+        ctaLabel = "Maliyeti hesapla";
+        resourceTitle = "Maliyet ve geçiş kaynakları";
+        relatedTools = new[]
+        {
+            new { Title = "Baskı maliyeti hesaplayıcı", Description = "Kağıt menünün yıllık tahmini maliyetini kendi verilerinizle görün.", Href = "/menu-baski-maliyeti-hesaplayici", Label = "Hesaplayıcıyı aç" },
+            new { Title = "QR ve kağıt menü", Description = "İki yaklaşımı maliyet, kullanım ve güncelleme açısından karşılaştırın.", Href = "/blog/qr-menu-ile-kagit-menu-karsilastirmasi", Label = "Karşılaştırmayı oku" },
+            new { Title = "Plan soruları", Description = "İşletmenizin kullanım ihtiyacını konuşmak için destek ekibine yazın.", Href = "/iletisim", Label = "İletişime geç" }
+        };
+    }
+    else if (ctaLookup.Contains("sosyal"))
+    {
+        ctaTitle = "Instagram trafiğini menüye bağlayın";
+        ctaDescription = "Bio, hikaye ve gönderi bağlantılarından gelen kullanıcıların güncel ürün ve fiyatlara ulaşmasını kolaylaştırın.";
+        ctaHref = "/blog/restoranlar-icin-sosyal-medya-menu-tanitimi";
+        ctaLabel = "Sosyal medya rehberini oku";
+    }
+    else if (ctaLookup.Contains("alerjen"))
+    {
+        ctaTitle = "Alerjen bilgisini standartlaştırın";
+        ctaDescription = "Ürün açıklamalarında içerik, alerjen ve uygunluk bilgisini aynı dille göstererek müşteri güvenini artırın.";
+        ctaHref = "/blog/dijital-menude-alerjen-ve-icerik-bilgisi";
+        ctaLabel = "Alerjen rehberini oku";
+    }
 }
 
 @section Head {
@@ -154,33 +224,23 @@
         </section>
 
         <aside class="blog-trust-note" aria-labelledby="blog-trust-heading">
-            <h2 id="blog-trust-heading">Editoryal not</h2>
-            <p>
-                Bu içerik, restoranların QR menü ve dijital menü kurulumunda karşılaştığı pratik sorulara yanıt vermek için
-                TumMenu ekibi tarafından hazırlanmıştır. Yazılarda ürün tanıtımından çok uygulanabilir kontrol noktaları,
-                menü yönetimi ve müşteri deneyimi konularına odaklanılır.
-            </p>
+            <h2 id="blog-trust-heading">@ctaTitle</h2>
+            <p>@ctaDescription</p>
+            <p><a href="@ctaHref">@ctaLabel</a></p>
         </aside>
 
         <aside class="blog-related-tools" aria-labelledby="blog-related-tools-heading">
-            <h2 id="blog-related-tools-heading">İlgili araçlar ve kaynaklar</h2>
-            <p>Okuduğunuz konuyu kendi işletmenize uyarlamak için aşağıdaki ücretsiz kaynakları kullanabilirsiniz.</p>
+            <h2 id="blog-related-tools-heading">@resourceTitle</h2>
+            <p>@resourceIntro</p>
             <div class="blog-related-tools__grid">
-                <article>
-                    <h3>QR menü uygunluk testi</h3>
-                    <p>İşletmenizin QR menüye ne kadar hazır olduğunu kısa sorularla değerlendirin.</p>
-                    <a href="/qr-menu-uygunluk-testi">Teste git</a>
-                </article>
-                <article>
-                    <h3>Baskı maliyeti hesaplayıcı</h3>
-                    <p>Kağıt menü baskısının yıllık tahmini maliyetini kendi verilerinizle görün.</p>
-                    <a href="/menu-baski-maliyeti-hesaplayici">Hesaplayıcıyı aç</a>
-                </article>
-                <article>
-                    <h3>Kaynak merkezi</h3>
-                    <p>Kontrol listeleri, blog rehberleri ve karar araçlarını tek sayfada inceleyin.</p>
-                    <a href="/restoran-kaynaklari">Kaynaklara dön</a>
-                </article>
+                @foreach (var tool in relatedTools)
+                {
+                    <article>
+                        <h3>@tool.Title</h3>
+                        <p>@tool.Description</p>
+                        <a href="@tool.Href">@tool.Label</a>
+                    </article>
+                }
             </div>
         </aside>
 

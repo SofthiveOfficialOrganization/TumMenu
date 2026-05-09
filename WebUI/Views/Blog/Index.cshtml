@@ -4,7 +4,7 @@
 @model PaginatedListDTO<BlogPostListDTO>
 @{
     ViewData["Title"] = "Blog";
-    ViewData["Description"] = "Restoran, QR menü ve yemek kültürü hakkında faydalı yazılar.";
+    ViewData["Description"] = "QR menü kurulumu, dijital menü tasarımı, ürün içeriği, restoran pazarlaması ve müşteri deneyimi için pratik TümMenü rehberleri.";
 
     var featured = Model.Items.FirstOrDefault();
     var restPosts = Model.Items.Skip(1).ToList();
@@ -222,16 +222,16 @@
             <div class="blog-topic-heading">
                 <h2 id="blog-topic-heading">Konuya göre rehberler</h2>
                 <p>
-                    QR menüye geçiş, menü tasarımı, fiyatlandırma ve restoran pazarlaması üzerine yazıları
-                    ihtiyacınıza göre grupladık. Böylece yalnızca son yazılara değil, karar sürecinize en yakın
-                    rehberlere de hızlıca ulaşabilirsiniz.
+                    TümMenü blogu; QR menü kurulumu, restoran menü tasarımı, ürün fotoğrafı, alerjen bilgisi,
+                    sosyal medya kullanımı ve online sipariş hazırlığı gibi konuları pratik rehberlere ayırır.
+                    Amaç yalnızca dijital menüyü anlatmak değil, menünün müşteriye güven veren güncel bir vitrine dönüşmesine yardımcı olmaktır.
                 </p>
             </div>
 
             <div class="blog-topic-grid">
                 <article class="blog-topic-card">
                     <h3>QR Menüye Başlangıç</h3>
-                    <p>QR menünün çalışma mantığını, kağıt menüyle farklarını ve kurulum adımlarını öğrenin.</p>
+                    <p>QR menünün ne olduğunu, kağıt menüden farkını, restoranda nasıl uygulanacağını ve yayına almadan önce hangi kontrollerin yapılacağını öğrenin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a>
                         <a href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">QR vs kağıt</a>
@@ -241,7 +241,7 @@
 
                 <article class="blog-topic-card">
                     <h3>Menü Tasarımı ve İçerik</h3>
-                    <p>Ürün açıklaması, fotoğraf, kategori düzeni ve fiyatlandırma kararlarını daha bilinçli planlayın.</p>
+                    <p>Ürün açıklaması, kategori düzeni, alerjen bilgisi, fotoğraf seçimi ve fiyat görünürlüğü gibi karar sürecini etkileyen alanları iyileştirin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/restoran-menusu-nasil-tasarlanir">Menü tasarımı</a>
                         <a href="/blog/menu-fotograflari-dijital-menude-neden-onemlidir">Fotoğraf</a>
@@ -251,7 +251,7 @@
 
                 <article class="blog-topic-card">
                     <h3>İşletme ve Müşteri Deneyimi</h3>
-                    <p>Kafe, restoran ve çok şubeli işletmeler için dijital menünün operasyonel etkisini inceleyin.</p>
+                    <p>Dijital menünün personel yükünü, bekleme hissini, marka algısını ve farklı işletme tiplerinde operasyon akışını nasıl etkilediğini inceleyin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/restoranlar-neden-dijital-menuye-gecmeli">Neden dijital?</a>
                         <a href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">Deneyim</a>
@@ -261,7 +261,7 @@
 
                 <article class="blog-topic-card">
                     <h3>Büyüme ve Pazarlama</h3>
-                    <p>Online siparişe hazırlık, sosyal medya menü tanıtımı ve restoran teknolojisi trendlerini keşfedin.</p>
+                    <p>QR menü bağlantısını sosyal medyada, online sipariş hazırlığında, kampanya tanıtımlarında ve restoran teknolojileri kararlarında nasıl kullanabileceğinizi keşfedin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/online-siparise-hazirlik-rehberi">Online sipariş</a>
                         <a href="/blog/restoranlar-icin-sosyal-medya-menu-tanitimi">Sosyal medya</a>
