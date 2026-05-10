@@ -25,7 +25,7 @@ public class GetHomepageStoresQueryHandler(
 			.Include(s => s.Address)
 			.Include(s => s.Medias)
 			.Include(s => s.Company)
-			.Where(s => !s.IsDeleted);
+			.Where(s => !s.IsDeleted && s.ShowInSearchAndListings);
 
 		// Yeni restoranlar – en son eklenenler
 		var newStores = await baseQuery

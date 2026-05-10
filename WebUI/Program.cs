@@ -261,6 +261,11 @@ app.MapControllerRoute(
 	defaults: new { controller = "Menu", action = "Product" });
 
 app.MapControllerRoute(
+	name: "publicStoreLanding",
+	pattern: "{companySlug}/{storeSlug}/magaza",
+	defaults: new { controller = "Store", action = "Public" });
+
+app.MapControllerRoute(
 	name: "publicCategory",
 	pattern: "{companySlug}/{storeSlug}/{categorySlug}",
 	defaults: new { controller = "Menu", action = "Category" });

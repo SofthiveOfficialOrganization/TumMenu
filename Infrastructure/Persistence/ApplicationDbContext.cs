@@ -224,11 +224,24 @@ namespace Infrastructure.Persistence
 				.HasFilter("[IsDeleted] = 0 AND [OwnerId] IS NOT NULL");
 
 
-			builder.Entity<Store>()
-				.HasIndex(x => new { x.CompanyId, x.Slug })
-				.IsUnique()
-				.HasFilter("[IsDeleted] = 0");
-		}
+		builder.Entity<Store>()
+			.HasIndex(x => new { x.CompanyId, x.Slug })
+			.IsUnique()
+			.HasFilter("[IsDeleted] = 0");
+
+		// Store boolean properties - default values for new stores
+		builder.Entity<Store>()
+			.Property(s => s.ShowInSearchAndListings)
+			.HasDefaultValue(true);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowMenuButton)
+			.HasDefaultValue(true);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowPricesOnMenu)
+			.HasDefaultValue(true);
+	}
 
 		#endregion
 

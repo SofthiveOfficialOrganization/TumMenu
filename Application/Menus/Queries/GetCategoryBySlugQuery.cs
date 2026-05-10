@@ -27,6 +27,11 @@ public sealed class CategoryPageDTO
 	public List<CategoryProductItemDTO> Products { get; set; } = [];
 	public List<CategorySubCategoryItemDTO> SubCategories { get; set; } = [];
 	public MenuDesignDTO? MenuDesign { get; set; }
+	public bool ShowRepresentativeImagesDisclaimer { get; set; }
+
+	// Görünürlük kontrolleri
+	public bool ShowPricesOnMenu { get; set; } = true;   // Menüde fiyatlar gösterilsin mi?
+	public bool ShowMenuButton { get; set; } = true;    // Dükkan detay sayfasında menü butonu
 }
 
 public sealed class CategorySubCategoryItemDTO
@@ -90,6 +95,9 @@ public class GetCategoryBySlugHandler(
 				CategoryDescription = c.CategoryLibraryItem.Description,
 				ParentCategorySlug = c.Parent != null ? c.Parent.CategoryLibraryItem.Slug : null,
 				MenuDesign = c.Menu.MenuDesign == null ? null : c.Menu.MenuDesign.ToDto(),
+				ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
+				ShowPricesOnMenu = store.ShowPricesOnMenu,
+				ShowMenuButton = store.ShowMenuButton,
 				Products = c.Products
 					.Where(p => p.IsActive)
 					.OrderBy(p => p.SortOrder)

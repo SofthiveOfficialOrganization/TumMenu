@@ -1,5 +1,6 @@
 @using Application.Companies.Queries
 @using Application.Stores.Commands
+@using Domain.Entities
 @model Application.Stores.DTOs.StoreDTO
 
 @{
@@ -65,6 +66,40 @@
                     <label asp-for="PhoneNumber" class="form-label fw-bold text-secondary small text-uppercase">Telefon Numarası</label>
                     <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="örn. 0555 555 55 55" />
                     <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="SecondaryPhoneNumber" class="form-label fw-bold text-secondary small text-uppercase">İkinci telefon (isteğe bağlı)</label>
+                    <input asp-for="SecondaryPhoneNumber" type="tel" class="form-control" placeholder="örn. 0212 555 55 55" />
+                    <span asp-validation-for="SecondaryPhoneNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">Görünürlük Ayarları</label>
+                    <div class="form-text text-muted small mb-2">Dükkanın nerede ve nasıl görüneceğini kontrol edin.</div>
+
+                    <div class="form-check mb-2">
+                        <input asp-for="ShowInSearchAndListings" class="form-check-input" />
+                        <label asp-for="ShowInSearchAndListings" class="form-check-label">Arama ve listelerde görünsün</label>
+                        <div class="form-text text-muted small">Ana sayfa vitrinleri, /restoranlar ve harita aramasında çıkar. Kapalı ise sadece doğrudan URL ile erişilebilir.</div>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input asp-for="ShowMenuButton" class="form-check-input" />
+                        <label asp-for="ShowMenuButton" class="form-check-label">Dükkan sayfasında menü butonu göster</label>
+                        <div class="form-text text-muted small">Dükkan detay sayfasında "Menüyü Gör" butonu görünür. Kapalı ise menü sadece doğrudan URL ile açılabilir.</div>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input asp-for="ShowPricesOnMenu" class="form-check-input" />
+                        <label asp-for="ShowPricesOnMenu" class="form-check-label">Menüde fiyatları göster</label>
+                        <div class="form-text text-muted small">Menüde ürün fiyatları görünür. Kapalı ise fiyatlar sadece QR menüde (isQr=true) gösterilir.</div>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input asp-for="ShowRepresentativeImagesDisclaimer" class="form-check-input" />
+                    <label asp-for="ShowRepresentativeImagesDisclaimer" class="form-check-label">Herkese açık menüde «Görseller temsilidir» uyarısını göster</label>
                 </div>
 
                 <div class="row">

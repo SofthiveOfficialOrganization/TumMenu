@@ -15,6 +15,14 @@ public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest, IAu
 	public string Title { get; set; } = string.Empty;
 	public string Slug { get; set; } = string.Empty;
 	public string PhoneNumber { get; set; } = string.Empty;
+	public string? SecondaryPhoneNumber { get; set; }
+	public bool ShowRepresentativeImagesDisclaimer { get; set; }
+
+	// Görünürlük kontrolleri
+	public bool ShowInSearchAndListings { get; set; } = true;
+	public bool ShowMenuButton { get; set; } = true;
+	public bool ShowPricesOnMenu { get; set; } = true;
+
 	public Guid CompanyId { get; set; }
 	public AddressDTO? Address { get; set; }
 }

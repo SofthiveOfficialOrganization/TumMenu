@@ -14,6 +14,12 @@ public sealed record UpdateStoreCommand
 	string Title,
 	string Slug,
 	string PhoneNumber,
+	string? SecondaryPhoneNumber,
+	bool ShowRepresentativeImagesDisclaimer,
+	// Görünürlük kontrolleri
+	bool ShowInSearchAndListings,
+	bool ShowMenuButton,
+	bool ShowPricesOnMenu,
 	AddressDTO? Address
 ) : IRequest<Unit>, ITransactionalRequest, IEntityAuditableCommand
 {

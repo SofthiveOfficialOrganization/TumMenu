@@ -125,6 +125,10 @@
                                     <label for="StorePhone" class="form-label h4 text-body">Telefon Numarası</label>
                                     <input type="tel" class="form-control form-control-xl shadow-sm" id="StorePhone" name="PhoneNumber" required placeholder="0555 555 55 55">
                                 </div>
+                                <div class="mb-4">
+                                    <label for="StorePhone2" class="form-label h5 text-body text-secondary">İkinci telefon (isteğe bağlı)</label>
+                                    <input type="tel" class="form-control form-control-lg shadow-sm" id="StorePhone2" name="SecondaryPhoneNumber" placeholder="0212 555 55 55">
+                                </div>
                                  <div class="mb-5">
                                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
                                         <label for="StoreSlug" class="form-label h6 text-muted mb-0">Şube Linki (Opsiyonel)</label>
@@ -955,6 +959,7 @@
                     CompanyId: $('#StoreCompanyId').val(),
                     Title: $('#StoreTitle').val(),
                     PhoneNumber: $('#StorePhone').val(),
+                    SecondaryPhoneNumber: $('#StorePhone2').val() || null,
                     Slug: $('#StoreSlug').val(),
                     Address: {
                         CityId: $('#citySelect').val(),

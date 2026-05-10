@@ -35,6 +35,11 @@ public sealed class ProductPageDTO
 	public string? Allergens { get; set; }
 	public List<string> ImageUrls { get; set; } = [];
 	public MenuDesignDTO? MenuDesign { get; set; }
+	public bool ShowRepresentativeImagesDisclaimer { get; set; }
+
+	// Görünürlük kontrolleri
+	public bool ShowPricesOnMenu { get; set; } = true;   // Menüde fiyatlar gösterilsin mi?
+	public bool ShowMenuButton { get; set; } = true;    // Dükkan detay sayfasında menü butonu
 }
 
 public class GetProductBySlugHandler(
@@ -116,7 +121,10 @@ public class GetProductBySlugHandler(
 				.OrderBy(m => m.SortOrder)
 				.Select(m => m.MediaUrl)
 				.ToList(),
-			MenuDesign = category.Menu.MenuDesign?.ToDto()
+			MenuDesign = category.Menu.MenuDesign?.ToDto(),
+			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
+			ShowPricesOnMenu = store.ShowPricesOnMenu,
+			ShowMenuButton = store.ShowMenuButton
 		};
 	}
 

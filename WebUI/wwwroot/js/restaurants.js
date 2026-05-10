@@ -932,7 +932,7 @@
 
                 // Click to navigate
                 marker.on('click', function() {
-                    window.location.href = '/' + store.companySlug + '/' + store.slug;
+                    window.location.href = '/' + store.companySlug + '/' + store.slug + '/magaza';
                 });
             }
         });
@@ -947,7 +947,7 @@
 
         var card = document.createElement('a');
         card.className = 'store-card';
-        card.href = '/' + store.companySlug + '/' + store.slug;
+        card.href = '/' + store.companySlug + '/' + store.slug + '/magaza';
 
         // Image
         var imgWrap = document.createElement('div');
