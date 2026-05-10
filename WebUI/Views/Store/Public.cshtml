@@ -1,0 +1,289 @@
+@using WebUI.Services
+@model Application.Stores.Queries.PublicStorePageDTO
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var menuUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
+    var sprite = Url.Content("~/assets/icons/tm-sprite.svg");
+
+    string? mapsUrl = null;
+    string? mapsEmbedUrl = null;
+    var hasCoords = Model.Latitude is double lat0 && Model.Longitude is double lng0
+        && lat0 is >= -90 and <= 90 && lng0 is >= -180 and <= 180;
+
+    if (hasCoords)
+    {
+        var lat = Model.Latitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var lng = Model.Longitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var coordQuery = Uri.EscapeDataString($"{lat},{lng}");
+        mapsUrl = $"https://www.google.com/maps?q={coordQuery}";
+        mapsEmbedUrl = $"https://www.google.com/maps?q={coordQuery}&hl=tr&z=16&output=embed";
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.FullAddress))
+    {
+        var addressQuery = Uri.EscapeDataString(Model.FullAddress);
+        mapsUrl = $"https://www.google.com/maps?q={addressQuery}";
+        mapsEmbedUrl = $"https://www.google.com/maps?q={addressQuery}&hl=tr&z=15&output=embed";
+    }
+
+    static string? TelHref(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var digits = new string(raw.Where(char.IsDigit).ToArray());
+        return digits.Length > 0 ? $"tel:{digits}" : null;
+    }
+
+    var tel1 = TelHref(Model.PhoneNumber);
+    var tel2 = TelHref(Model.SecondaryPhoneNumber);
+
+    var hasGallery = Model.GalleryImages.Count > 0;
+    var hasContact = !string.IsNullOrWhiteSpace(Model.PhoneNumber)
+        || !string.IsNullOrWhiteSpace(Model.SecondaryPhoneNumber)
+        || !string.IsNullOrWhiteSpace(Model.FullAddress)
+        || mapsUrl != null;
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/store-landing.css" asp-append-version="true" />
+}
+
+<div class="sl-page">
+    <header class="sl-hero @(string.IsNullOrEmpty(Model.BannerUrl) ? null : "sl-hero--with-image")">
+        @if (!string.IsNullOrEmpty(Model.BannerUrl))
+        {
+            <img class="sl-hero__img"
+                 src="@ImageUrlBuilder.Build(Model.BannerUrl, width: 1600, height: 686, fit: ImageFitMode.CoverCenter)"
+                 alt="@Model.StoreTitle banner"
+                 width="1600"
+                 height="686"
+                 fetchpriority="high" />
+            <div class="sl-hero__scrim" aria-hidden="true"></div>
+        }
+        <div class="sl-hero__decor" aria-hidden="true"></div>
+    </header>
+
+    <section class="sl-card" aria-label="İşletme bilgileri">
+        <div class="sl-card__logo @(string.IsNullOrEmpty(Model.LogoUrl) ? "sl-card__logo--placeholder" : null)">
+            @if (!string.IsNullOrEmpty(Model.LogoUrl))
+            {
+                <img src="@ImageUrlBuilder.Build(Model.LogoUrl, width: 208, height: 208, fit: ImageFitMode.CoverCenter)"
+                     alt="@Model.StoreTitle logosu"
+                     width="208"
+                     height="208" />
+            }
+            else
+            {
+                <svg class="tm-icon" aria-hidden="true" width="36" height="36"><use href="@($"{sprite}#icon-menu")"></use></svg>
+            }
+        </div>
+
+        <div class="sl-card__head">
+            @if (!string.IsNullOrWhiteSpace(Model.CompanyTitle))
+            {
+                <span class="sl-card__eyebrow">@Model.CompanyTitle</span>
+            }
+            <h1 class="sl-card__title">@Model.StoreTitle</h1>
+        </div>
+
+        <div class="sl-card__meta">
+            @if (tel1 != null)
+            {
+                <a class="sl-chip" href="@tel1" aria-label="Telefon ile ara">
+                    <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-phone")"></use></svg>
+                    <span>@Model.PhoneNumber</span>
+                </a>
+            }
+            @if (mapsUrl != null)
+            {
+                <a class="sl-chip sl-chip--muted" href="#sl-iletisim" aria-label="Konuma git">
+                    <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-location")"></use></svg>
+                    <span>Konum</span>
+                </a>
+            }
+        </div>
+
+        <div class="sl-card__cta">
+            @if (Model.MenuAvailable && Model.ShowMenuButton)
+            {
+                <a class="sl-btn" href="@menuUrl">
+                    <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-menu")"></use></svg>
+                    <span>Menüyü gör</span>
+                </a>
+            }
+            else if (!Model.MenuAvailable)
+            {
+                <span class="sl-btn" aria-disabled="true">
+                    <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-menu")"></use></svg>
+                    <span>Menü yayında değil</span>
+                </span>
+            }
+            @* ShowMenuButton = false ise hiçbir şey gösterme (menü URL ile erişilebilir ama buton görünmez) *@
+        </div>
+
+        @if (!Model.MenuAvailable)
+        {
+            <p class="sl-card__note">Menü hazır olduğunda bu sayfadan erişilebilir olacaktır.</p>
+        }
+    </section>
+
+
+
+    @if (hasGallery)
+    {
+        var first = Model.GalleryImages[0];
+        <section class="sl-section" aria-label="Mağaza fotoğrafları">
+            <div class="sl-section__head">
+                <h2 class="sl-section__title">Fotoğraflar</h2>
+                <span class="sl-section__hint">@Model.GalleryImages.Count görsel</span>
+            </div>
+
+            <div class="sl-gallery" data-sl-carousel>
+                <div class="sl-gallery__main">
+                    <img src="@ImageUrlBuilder.Build(first.Url, width: 1280, height: 800, fit: ImageFitMode.CoverCenter)"
+                         alt="@(first.Alt ?? Model.StoreTitle)"
+                         width="1280"
+                         height="800"
+                         data-sl-main />
+                </div>
+                @if (Model.GalleryImages.Count > 1)
+                {
+                    <div class="sl-gallery__thumbs" role="tablist" aria-label="Mağaza fotoğrafları">
+                        @for (var i = 0; i < Model.GalleryImages.Count; i++)
+                        {
+                            var g = Model.GalleryImages[i];
+                            var thumbSrc = ImageUrlBuilder.Build(g.Url, width: 192, height: 192, fit: ImageFitMode.CoverCenter);
+                            var mainSrc = ImageUrlBuilder.Build(g.Url, width: 1280, height: 800, fit: ImageFitMode.CoverCenter);
+                            <button type="button"
+                                    class="sl-gallery__thumb @(i == 0 ? "is-selected" : null)"
+                                    aria-label="Fotoğraf @(i + 1)"
+                                    data-sl-thumb
+                                    data-full-src="@mainSrc"
+                                    data-alt="@(g.Alt ?? Model.StoreTitle)">
+                                <img src="@thumbSrc" alt="" width="96" height="96" loading="@(i < 4 ? "eager" : "lazy")" />
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+        <script>
+            (function () {
+                var root = document.querySelector('[data-sl-carousel]');
+                if (!root) return;
+                var main = root.querySelector('[data-sl-main]');
+                var thumbs = root.querySelectorAll('[data-sl-thumb]');
+                thumbs.forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var src = btn.getAttribute('data-full-src');
+                        var alt = btn.getAttribute('data-alt') || '';
+                        if (src && main) {
+                            main.src = src;
+                            main.alt = alt;
+                        }
+                        thumbs.forEach(function (t) { t.classList.remove('is-selected'); });
+                        btn.classList.add('is-selected');
+                        btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+                    });
+                });
+            })();
+        </script>
+    }
+
+    @if (hasContact)
+    {
+        <section id="sl-iletisim" class="sl-section" aria-label="İletişim ve konum">
+            <div class="sl-section__head">
+                <h2 class="sl-section__title">İletişim &amp; Konum</h2>
+            </div>
+
+            <div class="sl-contact-grid">
+                <div class="sl-info">
+                    <h3 class="sl-info__title">Bilgiler</h3>
+
+                    @if (tel1 != null || tel2 != null || !string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                    {
+                        <div class="sl-info__row">
+                            <span class="sl-info__icon" aria-hidden="true">
+                                <svg class="tm-icon"><use href="@($"{sprite}#icon-phone")"></use></svg>
+                            </span>
+                            <div class="sl-info__body">
+                                <span class="sl-info__label">Telefon</span>
+                                <div class="sl-info__value">
+                                    @if (tel1 != null)
+                                    {
+                                        <a href="@tel1">@Model.PhoneNumber</a>
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                                    {
+                                        <span>@Model.PhoneNumber</span>
+                                    }
+                                    @if (tel2 != null && !string.IsNullOrWhiteSpace(Model.SecondaryPhoneNumber))
+                                    {
+                                        <span class="sl-divider">·</span>
+                                        <a href="@tel2">@Model.SecondaryPhoneNumber</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model.FullAddress) || mapsUrl != null)
+                    {
+                        <div class="sl-info__row">
+                            <span class="sl-info__icon" aria-hidden="true">
+                                <svg class="tm-icon"><use href="@($"{sprite}#icon-location")"></use></svg>
+                            </span>
+                            <div class="sl-info__body">
+                                <span class="sl-info__label">Adres</span>
+                                <div class="sl-info__value">
+                                    @if (!string.IsNullOrWhiteSpace(Model.FullAddress))
+                                    {
+                                        <span>@Model.FullAddress</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Konum harita üzerinde gösterilmektedir.</span>
+                                    }
+                                </div>
+                                @if (mapsUrl != null)
+                                {
+                                    <a class="sl-info__sub" href="@mapsUrl" target="_blank" rel="noopener noreferrer">
+                                        Haritada aç
+                                        <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-chevron-right")"></use></svg>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="sl-map">
+                    @if (mapsEmbedUrl != null)
+                    {
+                        <iframe src="@mapsEmbedUrl"
+                                title="@Model.StoreTitle konumu"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                allowfullscreen></iframe>
+                    }
+                    else
+                    {
+                        <div class="sl-map__placeholder">
+                            Konum bilgisi henüz eklenmemiş.
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+</div>
+
+@if (Model.MenuAvailable)
+{
+    <div class="sl-sticky-cta" role="region" aria-label="Menüye git">
+        <a class="sl-btn" href="@menuUrl">
+            <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-menu")"></use></svg>
+            <span>Menüyü gör</span>
+        </a>
+    </div>
+}

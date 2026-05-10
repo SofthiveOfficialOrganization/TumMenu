@@ -21,4 +21,9 @@ public sealed class MenuDTO : BaseDTO
 	public string? StoreSlug { get; set; }
 	public string? CompanySlug { get; set; }
 	public bool IsDefaultCompanyMenu { get; set; }
+	public bool ShowRepresentativeImagesDisclaimer { get; set; }
+
+	// Görünürlük kontrolleri
+	public bool ShowPricesOnMenu { get; set; } = true;   // Menüde fiyatlar gösterilsin mi?
+	public bool ShowMenuButton { get; set; } = true;    // Dükkan detay sayfasında menü butonu gösterilsin mi?
 }

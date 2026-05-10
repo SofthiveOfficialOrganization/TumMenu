@@ -18,7 +18,8 @@ public class GetSitemapDataQueryHandler(
         // 1. Stores
         var stores = await storeRepository.Query(tracked: false)
             .Include(s => s.Company)
-            .Where(s => !s.IsDeleted && !s.Company.IsDeleted)
+            .Where(s => !s.IsDeleted && !s.Company.IsDeleted &&
+                        s.ShowInSearchAndListings)
             .Where(s => !EF.Functions.Like(s.Slug, "%test%") &&
                         !EF.Functions.Like(s.Title, "%test%") &&
                         !EF.Functions.Like(s.Company.Slug, "%test%") &&
@@ -42,8 +43,9 @@ public class GetSitemapDataQueryHandler(
         var categories = await categoryRepository.Query(tracked: false)
             .Include(c => c.Menu).ThenInclude(m => m!.Store).ThenInclude(s => s!.Company)
             .Include(c => c.CategoryLibraryItem)
-            .Where(c => c.IsActive && !c.IsDeleted && 
+            .Where(c => c.IsActive && !c.IsDeleted &&
                         c.Menu.Store != null && !c.Menu.Store.IsDeleted &&
+                        c.Menu.Store.ShowInSearchAndListings &&
                         c.Menu.Store.Company != null && !c.Menu.Store.Company.IsDeleted)
             .Where(c => !EF.Functions.Like(c.Menu.Store!.Slug, "%test%") &&
                         !EF.Functions.Like(c.Menu.Store.Title, "%test%") &&
@@ -80,6 +82,7 @@ public class GetSitemapDataQueryHandler(
             .Where(p => p.IsActive && !p.IsDeleted &&
                         p.Category.IsActive && !p.Category.IsDeleted &&
                         p.Category.Menu.Store != null && !p.Category.Menu.Store.IsDeleted &&
+                        p.Category.Menu.Store.ShowInSearchAndListings &&
                         p.Category.Menu.Store.Company != null && !p.Category.Menu.Store.Company.IsDeleted)
             .Where(p => !EF.Functions.Like(p.Category.Menu.Store!.Slug, "%test%") &&
                         !EF.Functions.Like(p.Category.Menu.Store.Title, "%test%") &&

@@ -1,4 +1,5 @@
 @using Application.Categories.DTOs
+@using Domain.Entities
 @model Application.Menus.DTOs.MenuDTO
 
 @{
@@ -9,8 +10,14 @@
     var companySlug = ViewContext.RouteData.Values["companySlug"]?.ToString() ?? "";
     var storeSlug = ViewContext.RouteData.Values["storeSlug"]?.ToString() ?? "";
 
+    // Fiyat görünürlüğü: ShowPricesOnMenu true ise veya isQr=true parametresi varsa göster
+    var isQr = Context.Request.Query["isQr"].ToString().ToLower() == "true";
+    var showPricesOnPublicMenu = Model.ShowPricesOnMenu || isQr;
+
     ViewData["Title"] = $"{storeName} Menüsü";
-    ViewData["Description"] = $"{storeName} dijital menüsü – kategoriler, ürünler ve fiyatlar.";
+    ViewData["Description"] = showPricesOnPublicMenu
+        ? $"{storeName} dijital menüsü – kategoriler, ürünler ve fiyatlar."
+        : $"{storeName} dijital menüsü – kategoriler ve ürünler.";
     ViewData["HideFooter"] = true;
     ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -44,6 +51,10 @@
                             @totalProductCount ürün
                         </span>
                     </div>
+                    @if (Model.ShowRepresentativeImagesDisclaimer)
+                    {
+                        <p class="pm-disclaimer" role="note">Görseller temsilidir</p>
+                    }
 @* 
                     @if (categories.Count > 0)
                     {

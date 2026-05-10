@@ -18,6 +18,14 @@ public sealed class StoreDTO : BaseDTO
 	public string Title { get; set; } = null!;
 	public string Slug { get; set; } = null!;
 	public string PhoneNumber { get; set; } = null!;
+	public string? SecondaryPhoneNumber { get; set; }
+	public bool ShowRepresentativeImagesDisclaimer { get; set; }
+
+	// Görünürlük kontrolleri
+	public bool ShowInSearchAndListings { get; set; } = true;
+	public bool ShowMenuButton { get; set; } = true;
+	public bool ShowPricesOnMenu { get; set; } = true;
+
 	public Guid CompanyId { get; set; }
 	public CompanyDTO? Company { get; set; }
 	public AddressDTO Address { get; set; } = new();

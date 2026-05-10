@@ -156,7 +156,6 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 20px;
   padding: clamp(24px, 4vw, 44px);
 }
 
@@ -267,6 +266,17 @@ body {
   line-height: 1;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(8px);
+}
+
+.pm-disclaimer {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--pm-header-text) 78%, transparent);
+}
+
+.pm-hero .pm-disclaimer {
+  margin-top: 0.5rem;
+  max-width: 100%;
 }
 
 .pm-chip-row {

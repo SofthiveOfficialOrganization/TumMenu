@@ -1,8 +1,15 @@
+@using Domain.Entities
 @model Application.Menus.Queries.CategoryPageDTO
 
 @{
+    // Fiyat görünürlüğü: ShowPricesOnMenu true ise veya isQr=true parametresi varsa göster
+    var isQr = Context.Request.Query["isQr"].ToString().ToLower() == "true";
+    var showPricesOnPublicMenu = Model.ShowPricesOnMenu || isQr;
+
     ViewData["Title"] = $"{Model.CategoryTitle} – {Model.StoreName}";
-    ViewData["Description"] = $"{Model.StoreName} – {Model.CategoryTitle} kategorisindeki ürünler.";
+    ViewData["Description"] = showPricesOnPublicMenu
+        ? $"{Model.StoreName} – {Model.CategoryTitle} kategorisindeki ürünler."
+        : $"{Model.StoreName} – {Model.CategoryTitle} kategorisindeki ürünler (fiyatlar yayında gösterilmiyor).";
     ViewData["HideFooter"] = true;
     ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -53,6 +60,10 @@
                             @productCount Ürün
                         </span>
                     </div>
+                    @if (Model.ShowRepresentativeImagesDisclaimer)
+                    {
+                        <p class="pm-disclaimer" role="note">Görseller temsilidir</p>
+                    }
                 </div>
             </header>
 
@@ -155,7 +166,10 @@
                                             {
                                                 <span class="pm-badge pm-badge-time"><svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg> @product.EstimatedPreparationTimeInMinutes dk</span>
                                             }
-                                            <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
+                                            @if (showPricesOnPublicMenu)
+                                            {
+                                                <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
+                                            }
                                         </div>
                                         @if (product.IsVegan == true || product.IsVegetarian == true)
                                         {

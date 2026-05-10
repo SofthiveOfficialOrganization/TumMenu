@@ -221,7 +221,7 @@
                 {
                     @foreach (var store in homepageStores.NewStores)
                     {
-                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug/magaza">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
@@ -280,7 +280,7 @@
                 {
                     @foreach (var store in homepageStores.PopularStores)
                     {
-                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug/magaza">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
@@ -339,7 +339,7 @@
                 {
                     @foreach (var store in homepageStores.DailyStores)
                     {
-                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug">
+                        <a class="home-store-card" href="/@store.CompanySlug/@store.Slug/magaza">
                             <div class="home-store-card__img-wrap">
                                 @if (!string.IsNullOrEmpty(store.ImageUrl))
                                 {
@@ -775,7 +775,7 @@
                     });
 
                     marker.on('click', function() {
-                        window.location.href = '/' + store.companySlug + '/' + store.slug;
+                        window.location.href = '/' + store.companySlug + '/' + store.slug + '/magaza';
                     });
                 }
             });

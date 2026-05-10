@@ -28,7 +28,7 @@ public class SearchStoresQueryHandler(
 	{
 		// 1. Base Query with minimal data for filtering
 		var query = repoStore.Query(tracked: false)
-			.Where(s => !s.IsDeleted);
+			.Where(s => !s.IsDeleted && s.ShowInSearchAndListings);
 
 		var searchTerm = req.SearchTerm?.Trim().ToLower();
 		bool hasSearchTerm = !string.IsNullOrEmpty(searchTerm);

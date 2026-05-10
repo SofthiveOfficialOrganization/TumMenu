@@ -44,7 +44,7 @@ public class GetActiveMenuBySlugHandler(
 		var storeMenu = store.Menus.FirstOrDefault();
 
 		if (storeMenu is not null)
-			return BuildMenuDTO(storeMenu, store.Title, store.Company.Title);
+			return BuildMenuDTO(storeMenu, store);
 
 		Menu? companyMenu = null;
 
@@ -91,10 +91,10 @@ public class GetActiveMenuBySlugHandler(
 		if (companyMenu is null)
 			throw new NotFoundAppException("Bu dükkan için aktif bir menü bulunamadı.");
 
-		return BuildMenuDTO(companyMenu, store.Title, store.Company.Title);
+		return BuildMenuDTO(companyMenu, store);
 	}
 
-	private static MenuDTO BuildMenuDTO(Menu menu, string storeName, string companyName)
+	private static MenuDTO BuildMenuDTO(Menu menu, Store store)
 	{
 		return new MenuDTO
 		{
@@ -105,9 +105,12 @@ public class GetActiveMenuBySlugHandler(
 			MenuDesignId = menu.MenuDesignId,
 			MenuDesign = menu.MenuDesign?.ToDto(),
 			Status = menu.Status,
-			StoreName = storeName,
-			CompanyName = companyName,
+			StoreName = store.Title,
+			CompanyName = store.Company.Title,
 			IsDefaultCompanyMenu = menu.Company != null && menu.Company.DefaultMainMenuId == menu.Id,
+			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
+			ShowPricesOnMenu = store.ShowPricesOnMenu,
+			ShowMenuButton = store.ShowMenuButton,
 			Categories = menu.Categories
 				.Where(c => c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)
