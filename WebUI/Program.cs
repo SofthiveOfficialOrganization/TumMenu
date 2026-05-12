@@ -134,6 +134,33 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseForwardedHeaders();
 
+// Canonical host: http(s)://*.tummenu.com and http://tummenu.com -> https://tummenu.com
+app.Use(async (context, next) =>
+{
+	if (!app.Environment.IsDevelopment())
+	{
+		var request = context.Request;
+		var host = request.Host.Host.ToLowerInvariant();
+		var isApexHost = string.Equals(host, "tummenu.com", StringComparison.Ordinal);
+		var isSubdomainHost = host.EndsWith(".tummenu.com", StringComparison.Ordinal);
+
+		if (isApexHost || isSubdomainHost)
+		{
+			var needsHttps = !request.IsHttps;
+			var needsCanonicalHost = !isApexHost;
+
+			if (needsHttps || needsCanonicalHost)
+			{
+				var canonicalUrl = $"https://tummenu.com{request.PathBase}{request.Path}{request.QueryString}";
+				context.Response.Redirect(canonicalUrl, permanent: true);
+				return;
+			}
+		}
+	}
+
+	await next();
+});
+
 app.Use(async (context, next) =>
 {
 	context.Response.OnStarting(() =>
