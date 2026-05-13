@@ -10,7 +10,6 @@
     --color-text-main: #333333;
     --color-text-secondary: #F7F2EB;
     --color-muted: #777777;
-    /* Header CTA (QR'l� Ol) */
     --color-accent: #970001;
     --color-accent-dark: #7A0000;
     --radius-card: 24px;
@@ -131,7 +130,6 @@ a {
     width: 100%;
 }
 
-/* Scroll lock (mobil men� a��kken) */
 html.no-scroll,
 body.no-scroll {
     overflow: hidden;
@@ -146,7 +144,6 @@ body.no-scroll {
     }
 }
 
-/* Mobil k���k iyile�tirmeler */
 @media (max-width: 480px) {
     .section {
         padding: 40px 0;
