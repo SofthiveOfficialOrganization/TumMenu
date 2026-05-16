@@ -17,8 +17,8 @@
         ? $"/{Model.CompanySlug}/{Model.StoreSlug}" 
         : $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.ParentCategorySlug}";
     var backLabel = string.IsNullOrEmpty(Model.ParentCategorySlug) ? "Menüye Dön" : "Geri Dön";
-    var productCount = Model.Products?.Count ?? 0;
     var subCategoryCount = Model.SubCategories?.Count ?? 0;
+    var productCount = (Model.Products?.Count ?? 0) + (Model.SubCategories?.Sum(sc => sc.ProductCount) ?? 0);
 }
 
 @section Head {

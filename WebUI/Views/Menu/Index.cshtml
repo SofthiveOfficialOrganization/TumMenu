@@ -6,7 +6,7 @@
     var storeName = Model.StoreName ?? Model.Title;
     var companyName = Model.CompanyName ?? "";
     var categories = Model.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).ToList();
-    var totalProductCount = categories.Sum(c => c.Products.Count(p => p.IsActive));
+    var totalProductCount = categories.Sum(CountActiveProducts);
     var companySlug = ViewContext.RouteData.Values["companySlug"]?.ToString() ?? "";
     var storeSlug = ViewContext.RouteData.Values["storeSlug"]?.ToString() ?? "";
 
@@ -97,7 +97,7 @@
                             @foreach (var cat in categories)
                             {
                                 categoryCounter++;
-                                var productCount = cat.Products.Count(p => p.IsActive);
+                                var productCount = CountActiveProducts(cat);
                                 var categoryUrl = $"/{companySlug}/{storeSlug}/{cat.CategoryLibraryItem.Slug}";
                                 <a href="@categoryUrl" class="pm-cat-card">
                                     <div class="pm-cat-card-photo">
@@ -151,3 +151,13 @@
         </div>
     </main>
 </div>
+
+@functions {
+    private static int CountActiveProducts(CategoryDTO category)
+    {
+        var directProductCount = category.Products?.Count(p => p.IsActive) ?? 0;
+        var subCategoryProductCount = category.SubCategories?.Where(c => c.IsActive).Sum(CountActiveProducts) ?? 0;
+
+        return directProductCount + subCategoryProductCount;
+    }
+}

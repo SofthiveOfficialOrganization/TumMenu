@@ -1,4 +1,5 @@
 using Application.Categories.Commands;
+using Application.Categories.DTOs;
 using Application.Products.Commands;
 using Application.Menus.Queries;
 using MediatR;
@@ -70,7 +71,7 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory, I
     private void ApplyPublicMenuRobots(Application.Menus.DTOs.MenuDTO menu)
     {
         var categories = menu.Categories.Where(c => c.IsActive).ToList();
-        var activeProductCount = categories.Sum(c => c.Products.Count(p => p.IsActive));
+        var activeProductCount = categories.Sum(CountActiveProducts);
 
         if (IsPlaceholderText(menu.CompanySlug) ||
             IsPlaceholderText(menu.CompanyName) ||
@@ -129,5 +130,13 @@ public class MenuController(ISender sender, IServiceScopeFactory scopeFactory, I
             normalized.Contains("ornek") ||
             normalized.Contains("örnek") ||
             normalized.Contains("lorem");
+    }
+
+    private static int CountActiveProducts(CategoryDTO category)
+    {
+        var directProductCount = category.Products?.Count(p => p.IsActive) ?? 0;
+        var subCategoryProductCount = category.SubCategories?.Where(c => c.IsActive).Sum(CountActiveProducts) ?? 0;
+
+        return directProductCount + subCategoryProductCount;
     }
 }

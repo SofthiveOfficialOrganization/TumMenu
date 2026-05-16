@@ -1,7 +1,9 @@
 using Application.Abstractions;
+using Application.Categories.DTOs;
 using Application.Common.Exceptions;
 using Application.MenuDesigns.DTOs;
 using Application.Menus.DTOs;
+using Application.Products.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -96,6 +98,10 @@ public class GetActiveMenuBySlugHandler(
 
 	private static MenuDTO BuildMenuDTO(Menu menu, Store store)
 	{
+		var childrenByParent = menu.Categories
+			.Where(c => c.IsActive)
+			.ToLookup(c => c.ParentId);
+
 		return new MenuDTO
 		{
 			Id = menu.Id,
@@ -112,47 +118,58 @@ public class GetActiveMenuBySlugHandler(
 			ShowPricesOnMenu = store.ShowPricesOnMenu,
 			ShowMenuButton = store.ShowMenuButton,
 			Categories = menu.Categories
-				.Where(c => c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
+				.Where(c => c.IsActive && c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)
-				.Select(c => new Application.Categories.DTOs.CategoryDTO
+				.Select(c => BuildCategoryDTO(c, childrenByParent))
+				.ToList()
+		};
+	}
+
+	private static CategoryDTO BuildCategoryDTO(Category category, ILookup<Guid?, Category> childrenByParent)
+	{
+		return new CategoryDTO
+		{
+			Id = category.Id,
+			MenuId = category.MenuId,
+			CategoryLibraryItemId = category.CategoryLibraryItemId,
+			ParentId = category.ParentId,
+			SortOrder = category.SortOrder,
+			IsActive = category.IsActive,
+			CategoryLibraryItem = new CategoryLibraryItemDTO
+			{
+				Id = category.CategoryLibraryItem.Id,
+				Title = category.CategoryLibraryItem.Title,
+				Slug = category.CategoryLibraryItem.Slug,
+				Description = category.CategoryLibraryItem.Description,
+				IconKey = category.CategoryLibraryItem.IconKey,
+				ImageUrl = category.CategoryLibraryItem.Medias
+					.Where(m => m.Kind == MediaKind.Image)
+					.OrderBy(m => m.SortOrder)
+					.Select(m => m.MediaUrl)
+					.FirstOrDefault()
+			},
+			Products = category.Products
+				.Where(p => p.IsActive)
+				.OrderBy(p => p.SortOrder)
+				.Select(p => new ProductDTO
 				{
-					Id = c.Id,
-					MenuId = c.MenuId,
-					CategoryLibraryItemId = c.CategoryLibraryItemId,
-					ParentId = c.ParentId,
-					SortOrder = c.SortOrder,
-					IsActive = c.IsActive,
-					CategoryLibraryItem = new Application.Categories.DTOs.CategoryLibraryItemDTO
-					{
-						Id = c.CategoryLibraryItem.Id,
-						Title = c.CategoryLibraryItem.Title,
-						Slug = c.CategoryLibraryItem.Slug,
-						Description = c.CategoryLibraryItem.Description,
-						IconKey = c.CategoryLibraryItem.IconKey,
-						ImageUrl = c.CategoryLibraryItem.Medias
-							.Where(m => m.Kind == MediaKind.Image)
-							.OrderBy(m => m.SortOrder)
-							.Select(m => m.MediaUrl)
-							.FirstOrDefault()
-					},
-					Products = c.Products
-						.OrderBy(p => p.SortOrder)
-						.Select(p => new Application.Products.DTOs.ProductDTO
-						{
-							Id = p.Id,
-							Title = p.Title,
-							Description = p.Description,
-							CategoryId = p.CategoryId,
-							BasePrice = p.BasePrice,
-							SortOrder = p.SortOrder,
-							IsActive = p.IsActive,
-							Allergens = p.Allergens,
-							IsVegan = p.IsVegan,
-							IsVegetarian = p.IsVegetarian,
-							EstimatedPreparationTimeInMinutes = p.EstimatedPreparationTimeInMinutes,
-						})
-						.ToList()
+					Id = p.Id,
+					Title = p.Title,
+					Description = p.Description,
+					CategoryId = p.CategoryId,
+					BasePrice = p.BasePrice,
+					SortOrder = p.SortOrder,
+					IsActive = p.IsActive,
+					Allergens = p.Allergens,
+					IsVegan = p.IsVegan,
+					IsVegetarian = p.IsVegetarian,
+					EstimatedPreparationTimeInMinutes = p.EstimatedPreparationTimeInMinutes,
 				})
+				.ToList(),
+			SubCategories = childrenByParent[category.Id]
+				.Where(c => c.IsActive)
+				.OrderBy(c => c.SortOrder)
+				.Select(c => BuildCategoryDTO(c, childrenByParent))
 				.ToList()
 		};
 	}
