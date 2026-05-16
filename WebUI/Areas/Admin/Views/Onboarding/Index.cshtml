@@ -591,6 +591,7 @@
             // --- Address Handling for Store Step ---
             const districtSelect = $('#districtSelect');
             const citySelect = $('#citySelect'); // for select2
+            let provincesLoaded = false;
             
             // Re-initialize Select2
             citySelect.select2({ theme: 'bootstrap-5', width: '100%' });
@@ -685,8 +686,6 @@
                     setDistrictPlaceholder('İlçe listesi yüklenemedi');
                 });
             }
-
-            let provincesLoaded = false;
 
             function loadProvinces(forceReload = false) {
                 if (provincesLoaded && !forceReload) return;
