@@ -16,10 +16,6 @@ public sealed class CloudflareImageUrlBuilder : IImageUrlBuilder
     };
     private static readonly HashSet<string> ExcludedPaths = new(StringComparer.OrdinalIgnoreCase)
     {
-        "/images/hero-illustration-customer.webp",
-        "/images/hero-illustration-customer.png",
-        "/images/hero-illustration-business.webp",
-        "/images/hero-illustration-business.png"
     };
 
     private readonly bool _environmentEnabled;

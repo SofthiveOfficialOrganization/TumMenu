@@ -33,6 +33,8 @@ DOCS/superpowers
 *.user
 *.userosscache
 *.sln.docstates
+*.lscache
+*.bak
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

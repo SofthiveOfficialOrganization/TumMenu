@@ -15,9 +15,9 @@ namespace Domain.Entities
 		public bool ShowRepresentativeImagesDisclaimer { get; set; }
 
 		// Görünürlük kontrolleri
-		public bool ShowInSearchAndListings { get; set; } = true;  // Restoran aramalarda ve listelerde görünsün mü?
-		public bool ShowMenuButton { get; set; } = true;         // Dükkan detay sayfasında menüye git butonu gösterilsin mi?
-		public bool ShowPricesOnMenu { get; set; } = true;       // Menüde fiyatlar gösterilsin mi? (isQr=true hariç)
+		public bool ShowInSearchAndListings { get; set; } = false;  // Restoran aramalarda ve listelerde görünsün mü?
+		public bool ShowMenuButton { get; set; } = false;         // Dükkan detay sayfasında menüye git butonu gösterilsin mi?
+		public bool ShowPricesOnMenu { get; set; } = false;       // Menüde fiyatlar gösterilsin mi? (isQr=true hariç)
 
 		public Guid CompanyId { get; set; }
 		public Company Company { get; set; } = null!;

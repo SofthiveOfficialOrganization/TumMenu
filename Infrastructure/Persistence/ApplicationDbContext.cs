@@ -232,15 +232,15 @@ namespace Infrastructure.Persistence
 		// Store boolean properties - default values for new stores
 		builder.Entity<Store>()
 			.Property(s => s.ShowInSearchAndListings)
-			.HasDefaultValue(true);
+			.HasDefaultValue(false);
 
 		builder.Entity<Store>()
 			.Property(s => s.ShowMenuButton)
-			.HasDefaultValue(true);
+			.HasDefaultValue(false);
 
 		builder.Entity<Store>()
 			.Property(s => s.ShowPricesOnMenu)
-			.HasDefaultValue(true);
+			.HasDefaultValue(false);
 	}
 
 		#endregion

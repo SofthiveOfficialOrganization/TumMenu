@@ -1,5 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WebUI.IntegrationTests.Infrastructure;
 
 namespace WebUI.IntegrationTests.Integration.Onboarding;
@@ -70,5 +73,46 @@ public class OnboardingFlowTests : IClassFixture<TumMenuWebAppFactory>
             storeId = TestDbSeeder.StoreId
         });
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task CreateStore_WithVisibilityOptions_Returns200AndPersistsOptions()
+    {
+        var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
+        client.DefaultRequestHeaders.Accept.Add(
+            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+        var suffix = Guid.NewGuid().ToString("N")[..8];
+        var slug = $"onboarding-{suffix}";
+
+        var response = await client.PostAsJsonAsync("/admin/Onboarding/store", new
+        {
+            companyId = TestDbSeeder.CompanyId,
+            title = "Onboarding Şube",
+            slug,
+            phoneNumber = "05001234567",
+            showInSearchAndListings = true,
+            showMenuButton = false,
+            showPricesOnMenu = true,
+            showRepresentativeImagesDisclaimer = true,
+            address = new
+            {
+                fullAddress = "Test adres",
+                cityName = "İstanbul",
+                districtName = "Kadıköy"
+            }
+        });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var store = await db.Stores.IgnoreQueryFilters()
+            .FirstAsync(s => s.CompanyId == TestDbSeeder.CompanyId && s.Slug == slug);
+
+        Assert.True(store.ShowInSearchAndListings);
+        Assert.False(store.ShowMenuButton);
+        Assert.True(store.ShowPricesOnMenu);
+        Assert.True(store.ShowRepresentativeImagesDisclaimer);
     }
 }

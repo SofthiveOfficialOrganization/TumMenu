@@ -150,6 +150,31 @@
 
                                 <div class="mb-4">
                                     <h5 class="fw-bold text-secondary text-uppercase small mb-3 border-bottom pb-2">
+                                        <i class="fas fa-eye me-2"></i> Görünürlük Ayarları
+                                    </h5>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="StoreShowInSearchAndListings" name="ShowInSearchAndListings">
+                                        <label class="form-check-label fw-semibold" for="StoreShowInSearchAndListings">Arama ve listelerde görünsün</label>
+                                        <div class="form-text text-muted small">Kapalı ise dükkan sadece doğrudan URL ile erişilebilir.</div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="StoreShowMenuButton" name="ShowMenuButton">
+                                        <label class="form-check-label fw-semibold" for="StoreShowMenuButton">Dükkan sayfasında menü butonu göster</label>
+                                        <div class="form-text text-muted small">Kapalı ise menü bağlantısı dükkan detay sayfasında gösterilmez.</div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="StoreShowPricesOnMenu" name="ShowPricesOnMenu">
+                                        <label class="form-check-label fw-semibold" for="StoreShowPricesOnMenu">Menüde fiyatları göster</label>
+                                        <div class="form-text text-muted small">Kapalı ise fiyatlar sadece QR menüde gösterilir.</div>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="StoreShowRepresentativeImagesDisclaimer" name="ShowRepresentativeImagesDisclaimer">
+                                        <label class="form-check-label fw-semibold" for="StoreShowRepresentativeImagesDisclaimer">Herkese açık menüde "Görseller temsilidir" uyarısını göster</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5 class="fw-bold text-secondary text-uppercase small mb-3 border-bottom pb-2">
                                         <i class="fas fa-map-marker-alt me-2"></i> Adres Bilgileri
                                     </h5>
                                     <div class="row g-3">
@@ -961,6 +986,10 @@
                     PhoneNumber: $('#StorePhone').val(),
                     SecondaryPhoneNumber: $('#StorePhone2').val() || null,
                     Slug: $('#StoreSlug').val(),
+                    ShowInSearchAndListings: $('#StoreShowInSearchAndListings').is(':checked'),
+                    ShowMenuButton: $('#StoreShowMenuButton').is(':checked'),
+                    ShowPricesOnMenu: $('#StoreShowPricesOnMenu').is(':checked'),
+                    ShowRepresentativeImagesDisclaimer: $('#StoreShowRepresentativeImagesDisclaimer').is(':checked'),
                     Address: {
                         CityId: $('#citySelect').val(),
                         CityName: $('#cityNameInput').val(),

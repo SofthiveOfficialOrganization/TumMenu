@@ -19,9 +19,9 @@ public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest, IAu
 	public bool ShowRepresentativeImagesDisclaimer { get; set; }
 
 	// Görünürlük kontrolleri
-	public bool ShowInSearchAndListings { get; set; } = true;
-	public bool ShowMenuButton { get; set; } = true;
-	public bool ShowPricesOnMenu { get; set; } = true;
+	public bool ShowInSearchAndListings { get; set; } = false;
+	public bool ShowMenuButton { get; set; } = false;
+	public bool ShowPricesOnMenu { get; set; } = false;
 
 	public Guid CompanyId { get; set; }
 	public AddressDTO? Address { get; set; }
