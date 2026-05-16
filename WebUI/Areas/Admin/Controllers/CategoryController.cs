@@ -184,6 +184,52 @@ public class CategoryController(IMediator mediator) : Controller
 
         return View(category);
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SetVisibility(Guid id, bool isActive, string? returnUrl, CancellationToken ct)
+    {
+        var category = await mediator.Send(new GetCategoryByIdQuery(id), ct);
+
+        // Security Check
+        var menu = await mediator.Send(new GetMenuByIdQuery { Id = category.MenuId }, ct);
+        if (User.IsInRole("Owner"))
+        {
+             var ownerCompany = await mediator.Send(new Application.Companies.Queries.GetCompanyByCurrentOwnerQuery(), ct);
+             bool isOwner = false;
+             if (ownerCompany != null)
+             {
+                 if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+                 else if (menu.StoreId.HasValue)
+                 {
+                     var store = await mediator.Send(new Application.Stores.Queries.GetStoreByIdQuery(menu.StoreId.Value), ct);
+                     if (store.CompanyId == ownerCompany.Id) isOwner = true;
+                 }
+             }
+             if (!isOwner) return Forbid();
+        }
+
+        await mediator.Send(new UpdateCategorySortOrderCommand
+        {
+            Items =
+            [
+                new CategorySortItem
+                {
+                    Id = id,
+                    SortOrder = category.SortOrder,
+                    IsActive = isActive
+                }
+            ]
+        }, ct);
+
+        TempData["Success"] = isActive
+            ? "Kategori müşterilere gösterilecek."
+            : "Kategori müşterilerden gizlendi.";
+
+        return RedirectToLocal(returnUrl, RedirectToAction("Details", "Category", new { id, role = RouteData.Values["role"] }));
+    }
+
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)

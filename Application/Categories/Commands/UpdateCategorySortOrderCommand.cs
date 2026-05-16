@@ -14,6 +14,7 @@ public class CategorySortItem
 {
     public Guid Id { get; set; }
     public int SortOrder { get; set; }
+    public bool? IsActive { get; set; }
 }
 
 public class UpdateCategorySortOrderCommandHandler(IRepository<Category> repoCategory) : IRequestHandler<UpdateCategorySortOrderCommand, bool>
@@ -33,6 +34,10 @@ public class UpdateCategorySortOrderCommandHandler(IRepository<Category> repoCat
             if (item != null)
             {
                 category.SortOrder = item.SortOrder;
+                if (item.IsActive.HasValue)
+                {
+                    category.IsActive = item.IsActive.Value;
+                }
             }
         }
 

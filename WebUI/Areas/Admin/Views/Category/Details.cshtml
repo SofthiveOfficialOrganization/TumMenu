@@ -81,6 +81,20 @@
                 }
             </div>
 
+            <form asp-controller="Category"
+                  asp-action="SetVisibility"
+                  asp-route-id="@Model.Id"
+                  asp-route-isActive="@(!Model.IsActive)"
+                  asp-route-returnUrl="@currentPageUrl"
+                  method="post"
+                  class="mb-3">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn @(Model.IsActive ? "btn-outline-warning" : "btn-outline-success") w-100">
+                    <i class="fas @(Model.IsActive ? "fa-eye-slash" : "fa-eye") me-2"></i>
+                    @(Model.IsActive ? "Kategoriyi Gizle" : "Kategoriyi Göster")
+                </button>
+            </form>
+
             <div class="mb-3">
                 <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Sıralama</label>
                 <div class="p-2 border rounded bg-light text-dark fw-semibold">@Model.SortOrder</div>
