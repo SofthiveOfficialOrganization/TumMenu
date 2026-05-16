@@ -13,7 +13,6 @@
                 <h4 class="fw-bold">Şirket Listesi</h4>
                 <div class="d-flex gap-2">
                      <form method="get" class="d-flex align-items-center">
-                         <!-- Note: Controller likely expects 'Index' or 'PageIndex' depending on query binder, assumes Index based on DTO -->
                         <input type="text" name="Search" class="form-control me-2" placeholder="Şirket ara..." value="@Context.Request.Query["Search"]">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                     </form>
@@ -90,31 +89,14 @@
                 </table>
             </div>
 
-            <!-- Sayfalama -->
-            @if (Model != null && Model.Pages > 1)
-            {
-                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                    <div class="text-secondary small">
-                        @Model.Count kayıttan @Model.Items.Count tanesi gösteriliyor
-                    </div>
-                    <nav aria-label="Sayfa navigasyonu">
-                        <ul class="pagination pagination-sm mb-0">
-                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index - 1)" asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
-                            </li>
-                            @for (int i = 1; i <= Model.Pages; i++)
-                            {
-                                <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="Index" asp-route-PageIndex="@i" asp-route-Search="@Context.Request.Query["Search"]">@i</a>
-                                </li>
-                            }
-                            <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index + 1)" asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            }
+            <tummenu-pagination index="@(Model?.Index ?? 1)"
+                                pages="@(Model?.Pages ?? 0)"
+                                has-previous="@(Model?.HasPrevious ?? false)"
+                                has-next="@(Model?.HasNext ?? false)"
+                                count="@(Model?.Count ?? 0)"
+                                items-count="@(Model?.Items.Count ?? 0)"
+                                show-summary="true"
+                                container-class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top" />
         </div>
     </div>
 </div>

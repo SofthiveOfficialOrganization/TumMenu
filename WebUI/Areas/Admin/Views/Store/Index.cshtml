@@ -156,28 +156,11 @@
                 </table>
             </div>
 
-             <!-- Pagination -->
-            @if (Model != null && Model.Pages > 1)
-            {
-                   <div class="d-flex justify-content-center mt-4">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-sm mb-0">
-                             <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index - 1)" asp-route-companyId="@currentCompanyId">Önceki</a>
-                            </li>
-                             @for (int i = 1; i <= Model.Pages; i++)
-                            {
-                                <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link" asp-action="Index" asp-route-PageIndex="@i" asp-route-companyId="@currentCompanyId">@i</a>
-                                </li>
-                            }
-                            <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" asp-route-PageIndex="@(Model.Index + 1)" asp-route-companyId="@currentCompanyId">Sonraki</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            }
+            <tummenu-pagination index="@(Model?.Index ?? 1)"
+                                pages="@(Model?.Pages ?? 0)"
+                                has-previous="@(Model?.HasPrevious ?? false)"
+                                has-next="@(Model?.HasNext ?? false)"
+                                route-companyId="@currentCompanyId?.ToString()" />
         </div>
     </div>
 </div>

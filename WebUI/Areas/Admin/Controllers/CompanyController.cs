@@ -11,11 +11,11 @@ public sealed class CompanyController(IMediator mediator) : Controller
 {
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet]
-	public async Task<IActionResult> Index(CancellationToken ct)
+	public async Task<IActionResult> Index([FromQuery] GetAllCompaniesPagedQuery req, CancellationToken ct)
 	{
 		if (User.IsInRole("Admin"))
 		{
-			var companies = await mediator.Send(new GetAllCompaniesPagedQuery(), ct);
+			var companies = await mediator.Send(req, ct);
 			return View("AllCompanies", companies);
 		}
 		else

@@ -258,52 +258,16 @@
                 </table>
             </div>
 
-            <!-- Sayfalama -->
-            @if (Model != null && Model.Pages > 1)
-            {
-                <div class="d-flex justify-content-center mt-4">
-                    <nav aria-label="Sayfa navigasyonu">
-                        <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
-                                <a class="page-link"
-                                   asp-action="Index"
-                                   asp-route-page="@(Model.Index - 1)"
-                                   asp-route-Search="@search"
-                                   asp-route-FilterType="@filterType"
-                                   asp-route-CompanyId="@companyId"
-                                   asp-route-StoreId="@storeId"
-                                   asp-route-MenuId="@menuId"
-                                   asp-route-CategoryId="@categoryId">Önceki</a>
-                            </li>
-                            @for (int i = 1; i <= Model.Pages; i++)
-                            {
-                                <li class="page-item @(Model.Index == i ? "active" : "")">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-page="@i"
-                                       asp-route-Search="@search"
-                                       asp-route-FilterType="@filterType"
-                                       asp-route-CompanyId="@companyId"
-                                       asp-route-StoreId="@storeId"
-                                       asp-route-MenuId="@menuId"
-                                       asp-route-CategoryId="@categoryId">@i</a>
-                                </li>
-                            }
-                            <li class="page-item @(Model.HasNext ? "" : "disabled")">
-                                <a class="page-link"
-                                   asp-action="Index"
-                                   asp-route-page="@(Model.Index + 1)"
-                                   asp-route-Search="@search"
-                                   asp-route-FilterType="@filterType"
-                                   asp-route-CompanyId="@companyId"
-                                   asp-route-StoreId="@storeId"
-                                   asp-route-MenuId="@menuId"
-                                   asp-route-CategoryId="@categoryId">Sonraki</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            }
+            <tummenu-pagination index="@(Model?.Index ?? 1)"
+                                pages="@(Model?.Pages ?? 0)"
+                                has-previous="@(Model?.HasPrevious ?? false)"
+                                has-next="@(Model?.HasNext ?? false)"
+                                route-Search="@search"
+                                route-FilterType="@filterType"
+                                route-CompanyId="@companyId"
+                                route-StoreId="@storeId"
+                                route-MenuId="@menuId"
+                                route-CategoryId="@categoryId" />
         </div>
     </div>
 </div>

@@ -113,48 +113,11 @@
             </table>
         </div>
 
-        <!-- Sayfalama -->
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-                @if(Model.HasPrevious)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-action="Index"
-                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
-                           asp-route-page="@(Model.Index - 1)"
-                           asp-route-Search="@Context.Request.Query["Search"]">Önceki</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">Önceki</span>
-                    </li>
-                }
-
-                <li class="page-item disabled">
-                    <span class="page-link">Sayfa @Model.Index / @Model.Pages</span>
-                </li>
-
-                @if(Model.HasNext)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-action="Index"
-                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
-                           asp-route-page="@(Model.Index + 1)"
-                           asp-route-Search="@Context.Request.Query["Search"]">Sonraki</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">Sonraki</span>
-                    </li>
-                }
-            </ul>
-        </nav>
+        <tummenu-pagination index="@Model.Index"
+                            pages="@Model.Pages"
+                            has-previous="@Model.HasPrevious"
+                            has-next="@Model.HasNext"
+                            show-numbers="false" />
 
     }
     else

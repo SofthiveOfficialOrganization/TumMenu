@@ -145,53 +145,19 @@
                 <div class="horizon-card py-2">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <small class="text-secondary">
-                            Sayfa <strong>@(currentPage + 1)</strong> / <strong>@totalPages</strong>
+                            Sayfa <strong>@currentPage</strong> / <strong>@totalPages</strong>
                             &nbsp;·&nbsp; Toplam <strong>@Model.Count</strong> öneri
                         </small>
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0 gap-1">
-                                <!-- Önceki -->
-                                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
-                                    <a class="page-link rounded-2"
-                                       asp-action="Index"
-                                       asp-route-status="@statusFilter"
-                                       asp-route-page="@(currentPage - 1)"
-                                       asp-route-pageSize="@pageSize">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                </li>
-
-                                @for (int i = 1; i <= totalPages; i++)
-                                {
-                                    if (totalPages > 7 && i != 1 && i != totalPages && Math.Abs(i - currentPage) > 2)
-                                    {
-                                        if (i == 2 || i == totalPages - 1)
-                                        {
-                                            <li class="page-item disabled"><span class="page-link border-0 bg-transparent">…</span></li>
-                                        }
-                                        continue;
-                                    }
-                                    <li class="page-item @(i == currentPage ? "active" : "")">
-                                        <a class="page-link rounded-2"
-                                           asp-action="Index"
-                                           asp-route-status="@statusFilter"
-                                           asp-route-page="@i"
-                                           asp-route-pageSize="@pageSize">@i</a>
-                                    </li>
-                                }
-
-                                <!-- Sonraki -->
-                                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
-                                    <a class="page-link rounded-2"
-                                       asp-action="Index"
-                                       asp-route-status="@statusFilter"
-                                       asp-route-page="@(currentPage + 1)"
-                                       asp-route-pageSize="@pageSize">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <tummenu-pagination index="@Model.Index"
+                                            pages="@Model.Pages"
+                                            has-previous="@Model.HasPrevious"
+                                            has-next="@Model.HasNext"
+                                            route-status="@statusFilter?.ToString()"
+                                            route-pageSize="@pageSize.ToString()"
+                                            container-class=""
+                                            list-class="pagination pagination-sm mb-0 gap-1"
+                                            previous-text="Önceki"
+                                            next-text="Sonraki" />
                     </div>
                 </div>
             </div>

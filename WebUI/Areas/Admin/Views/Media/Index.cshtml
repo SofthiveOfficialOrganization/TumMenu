@@ -67,24 +67,14 @@
         }
     </div>
 
-    @if (Model.HasPrevious || Model.HasNext)
-    {
-        <div class="d-flex justify-content-center mt-4">
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item @(!Model.HasPrevious ? "disabled" : "")">
-                        <a class="page-link" href="?page=@(Model.Index - 1)">Geri</a>
-                    </li>
-                    <li class="page-item disabled">
-                        <span class="page-link">Sayfa @Model.Index / @Model.Pages</span>
-                    </li>
-                    <li class="page-item @(!Model.HasNext ? "disabled" : "")">
-                        <a class="page-link" href="?page=@(Model.Index + 1)">İleri</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    }
+    <tummenu-pagination index="@Model.Index"
+                        pages="@Model.Pages"
+                        has-previous="@Model.HasPrevious"
+                        has-next="@Model.HasNext"
+                        show-numbers="false"
+                        previous-text="Geri"
+                        next-text="İleri"
+                        list-class="pagination mb-0" />
 </div>
 
 @Html.AntiForgeryToken()
