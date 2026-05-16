@@ -185,13 +185,14 @@ jobs:
           "@
 
           try {
-            Set-Content -LiteralPath $appOfflinePath -Value $appOfflineContent -Encoding UTF8
-
             $poolState = (Get-WebAppPoolState -Name $env:IIS_APP_POOL_NAME).Value
-            if ($poolState -eq "Started") {
-              Stop-WebAppPool -Name $env:IIS_APP_POOL_NAME
-              Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Stopped"
+            if ($poolState -eq "Stopped") {
+              Start-WebAppPool -Name $env:IIS_APP_POOL_NAME
+              Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Started"
             }
+
+            Set-Content -LiteralPath $appOfflinePath -Value $appOfflineContent -Encoding UTF8
+            Start-Sleep -Seconds 5
 
             $robocopyArgs = @(
               $env:PUBLISH_DIR,
@@ -231,6 +232,9 @@ jobs:
               Remove-Item -LiteralPath $appOfflinePath -Force
             }
 
-            Start-WebAppPool -Name $env:IIS_APP_POOL_NAME
-            Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Started"
+            $finalPoolState = (Get-WebAppPoolState -Name $env:IIS_APP_POOL_NAME).Value
+            if ($finalPoolState -ne "Started") {
+              Start-WebAppPool -Name $env:IIS_APP_POOL_NAME
+              Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Started"
+            }
           }
