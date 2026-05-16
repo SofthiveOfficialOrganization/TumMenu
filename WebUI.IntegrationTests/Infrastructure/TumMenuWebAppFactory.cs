@@ -10,8 +10,14 @@ namespace WebUI.IntegrationTests.Infrastructure;
 
 public class TumMenuWebAppFactory : WebApplicationFactory<Program>
 {
-    public const string TestConnectionString =
+    private const string FallbackTestConnectionString =
         "Server=(localdb)\\MSSQLLocalDB;Database=TumMenuDb_Dev;Trusted_Connection=True;TrustServerCertificate=True";
+
+    public static string TestConnectionString =>
+        FirstNonEmpty(
+            Environment.GetEnvironmentVariable("TEST_DB_CONNECTION_STRING"),
+            Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection"))
+        ?? FallbackTestConnectionString;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -26,7 +32,7 @@ public class TumMenuWebAppFactory : WebApplicationFactory<Program>
 
         builder.ConfigureServices(services =>
         {
-            // Replace the DbContext registration to point to TumMenuDb_Dev
+            // Replace the DbContext registration to point to the isolated test database.
             services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(TestConnectionString));
@@ -41,6 +47,11 @@ public class TumMenuWebAppFactory : WebApplicationFactory<Program>
             services.AddSingleton<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender,
                 NoOpEmailSender>();
         });
+    }
+
+    private static string? FirstNonEmpty(params string?[] values)
+    {
+        return values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
     }
 }
 
