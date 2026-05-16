@@ -19,12 +19,14 @@ jobs:
     runs-on:
       - self-hosted
       - windows
+      - tummenu
+      - iis
 
     env:
-      # GitHub Secrets examples:
-      # IIS_SITE_PATH: C:\inetpub\wwwroot\<example-site>
-      # IIS_APP_POOL_NAME: <example-app-pool>
-      # IIS_SMOKE_URL: https://<example-domain>/smoke.txt
+      # Repository Secrets examples for TumMenu:
+      # IIS_SITE_PATH: C:\inetpub\wwwroot\TumMenu
+      # IIS_APP_POOL_NAME: TumMenu
+      # IIS_SMOKE_URL: https://tummenu.com/smoke.txt
       IIS_SITE_PATH: ${{ secrets.IIS_SITE_PATH }}
       IIS_APP_POOL_NAME: ${{ secrets.IIS_APP_POOL_NAME }}
       IIS_SMOKE_URL: ${{ secrets.IIS_SMOKE_URL }}
@@ -32,12 +34,12 @@ jobs:
 
     steps:
       - name: Write and update smoke.txt
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
 
           if ([string]::IsNullOrWhiteSpace($env:IIS_SITE_PATH)) {
-            throw "Missing IIS_SITE_PATH secret. Example: C:\inetpub\wwwroot\<example-site>"
+            throw "Missing IIS_SITE_PATH secret. Example: C:\inetpub\wwwroot\TumMenu"
           }
 
           if (-not (Test-Path -LiteralPath $env:IIS_SITE_PATH)) {
@@ -48,15 +50,16 @@ jobs:
           $runUrl = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
           $firstUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
 
-          $initialContent = @"
-          TumMenu IIS smoke test
-          Repository: $env:GITHUB_REPOSITORY
-          Commit: $env:GITHUB_SHA
-          Run: $runUrl
-          First write UTC: $firstUtc
-          Content: $env:SMOKE_CONTENT
-          State: created
-          "@
+          $initialContent = @(
+            "TumMenu IIS smoke test"
+            "Repository: $env:GITHUB_REPOSITORY"
+            "Commit: $env:GITHUB_SHA"
+            "Run ID: $env:GITHUB_RUN_ID"
+            "Run: $runUrl"
+            "First write UTC: $firstUtc"
+            "Content: $env:SMOKE_CONTENT"
+            "State: created"
+          ) -join [Environment]::NewLine
 
           Set-Content -LiteralPath $smokePath -Value $initialContent -Encoding UTF8
 
@@ -65,36 +68,41 @@ jobs:
           }
 
           $updateUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-          $updatedContent = @"
-          TumMenu IIS smoke test
-          Repository: $env:GITHUB_REPOSITORY
-          Commit: $env:GITHUB_SHA
-          Run: $runUrl
-          First write UTC: $firstUtc
-          Updated UTC: $updateUtc
-          Content: $env:SMOKE_CONTENT
-          State: updated
-          "@
+          $updatedContent = @(
+            "TumMenu IIS smoke test"
+            "Repository: $env:GITHUB_REPOSITORY"
+            "Commit: $env:GITHUB_SHA"
+            "Run ID: $env:GITHUB_RUN_ID"
+            "Run: $runUrl"
+            "First write UTC: $firstUtc"
+            "Updated UTC: $updateUtc"
+            "Content: $env:SMOKE_CONTENT"
+            "State: updated"
+          ) -join [Environment]::NewLine
 
           Set-Content -LiteralPath $smokePath -Value $updatedContent -Encoding UTF8
 
           $writtenContent = Get-Content -LiteralPath $smokePath -Raw
-          if ($writtenContent -notlike "*State: updated*") {
+          if ($writtenContent -notlike "*State: updated*" -or $writtenContent -notlike "*Run ID: $env:GITHUB_RUN_ID*") {
             throw "smoke.txt update verification failed."
           }
 
           "smoke.txt was created and updated successfully at: $smokePath"
 
       - name: Stop and start IIS app pool
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
 
           if ([string]::IsNullOrWhiteSpace($env:IIS_APP_POOL_NAME)) {
-            throw "Missing IIS_APP_POOL_NAME secret. Example: <example-app-pool>"
+            throw "Missing IIS_APP_POOL_NAME secret. Example: TumMenu"
           }
 
           Import-Module WebAdministration
+
+          if (-not (Test-Path "IIS:\AppPools\$env:IIS_APP_POOL_NAME")) {
+            throw "IIS App Pool was not found: $env:IIS_APP_POOL_NAME"
+          }
 
           function Wait-AppPoolState {
             param(
@@ -143,17 +151,34 @@ jobs:
 
       - name: Verify smoke.txt over HTTP
         if: ${{ env.IIS_SMOKE_URL != '' }}
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
 
-          $response = Invoke-WebRequest -Uri $env:IIS_SMOKE_URL -UseBasicParsing
-          if ($response.StatusCode -lt 200 -or $response.StatusCode -gt 299) {
-            throw "Smoke URL returned status code $($response.StatusCode)."
+          $separator = "?"
+          if ($env:IIS_SMOKE_URL.Contains("?")) {
+            $separator = "&"
           }
 
-          if ($response.Content -notlike "*State: updated*") {
-            throw "Smoke URL content verification failed."
+          $smokeUrl = "$env:IIS_SMOKE_URL${separator}run=$env:GITHUB_RUN_ID"
+          $lastError = $null
+
+          for ($attempt = 1; $attempt -le 10; $attempt++) {
+            try {
+              $response = Invoke-WebRequest -Uri $smokeUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
+
+              if ($response.StatusCode -ge 200 -and $response.StatusCode -le 299 -and $response.Content -like "*State: updated*" -and $response.Content -like "*Run ID: $env:GITHUB_RUN_ID*") {
+                "Smoke URL verification succeeded: $smokeUrl"
+                exit 0
+              }
+
+              $lastError = "Smoke URL content verification failed. Status code: $($response.StatusCode)"
+            }
+            catch {
+              $lastError = $_.Exception.Message
+            }
+
+            Start-Sleep -Seconds 3
           }
 
-          "Smoke URL verification succeeded: $env:IIS_SMOKE_URL"
+          throw "Smoke URL verification failed after retries. Last error: $lastError"
