@@ -1,0 +1,234 @@
+name: IIS WebUI deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Plan lists publish output only; deploy copies it to IIS"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - deploy
+      run_tests:
+        description: "Run WebUI test project before publishing"
+        required: true
+        default: true
+        type: boolean
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: iis-webui-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-test-publish-deploy:
+    name: Build, test, publish, and deploy WebUI
+    runs-on:
+      - self-hosted
+      - windows
+      - tummenu
+      - iis
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "true"
+      CONFIGURATION: Release
+      PUBLISH_DIR: WebUI\bin\Release\net8.0\publish
+      # Repository Secrets examples for TumMenu:
+      # IIS_SITE_PATH: C:\inetpub\wwwroot\TumMenu
+      # IIS_APP_POOL_NAME: TumMenu
+      IIS_SITE_PATH: ${{ secrets.IIS_SITE_PATH }}
+      IIS_APP_POOL_NAME: ${{ secrets.IIS_APP_POOL_NAME }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore WebUI tests
+        run: dotnet restore WebUI.IntegrationTests/WebUI.IntegrationTests.csproj
+
+      - name: Build WebUI tests
+        run: dotnet build WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-restore
+
+      - name: Test WebUI
+        if: ${{ github.event_name == 'push' || inputs.run_tests }}
+        run: dotnet test WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-build --verbosity normal
+
+      - name: Restore WebUI
+        run: dotnet restore WebUI/WebUI.csproj
+
+      - name: Clean publish output
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if (Test-Path -LiteralPath $env:PUBLISH_DIR) {
+            Remove-Item -LiteralPath $env:PUBLISH_DIR -Recurse -Force
+          }
+
+      - name: Publish WebUI
+        run: dotnet publish WebUI/WebUI.csproj --configuration "${{ env.CONFIGURATION }}" --no-restore /p:UseAppHost=false
+
+      - name: Inspect publish output
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if (-not (Test-Path -LiteralPath $env:PUBLISH_DIR)) {
+            throw "Publish directory was not found: $env:PUBLISH_DIR"
+          }
+
+          $files = Get-ChildItem -LiteralPath $env:PUBLISH_DIR -Recurse -File
+          "Publish file count: $($files.Count)"
+          "Top-level publish entries:"
+          Get-ChildItem -LiteralPath $env:PUBLISH_DIR | Sort-Object Name | ForEach-Object { $_.Name }
+
+      - name: Stop before deploy in plan mode
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.action == 'plan' }}
+        shell: powershell
+        run: |
+          "Plan mode complete. No files were copied to IIS."
+
+      - name: Deploy publish output to IIS
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if ([string]::IsNullOrWhiteSpace($env:IIS_SITE_PATH)) {
+            throw "Missing IIS_SITE_PATH secret. Example: C:\inetpub\wwwroot\TumMenu"
+          }
+
+          if ([string]::IsNullOrWhiteSpace($env:IIS_APP_POOL_NAME)) {
+            throw "Missing IIS_APP_POOL_NAME secret. Example: TumMenu"
+          }
+
+          if (-not (Test-Path -LiteralPath $env:PUBLISH_DIR)) {
+            throw "Publish directory was not found: $env:PUBLISH_DIR"
+          }
+
+          if (-not (Test-Path -LiteralPath $env:IIS_SITE_PATH)) {
+            throw "IIS site path was not found: $env:IIS_SITE_PATH"
+          }
+
+          Import-Module WebAdministration
+
+          if (-not (Test-Path "IIS:\AppPools\$env:IIS_APP_POOL_NAME")) {
+            throw "IIS App Pool was not found: $env:IIS_APP_POOL_NAME"
+          }
+
+          function Wait-AppPoolState {
+            param(
+              [Parameter(Mandatory = $true)]
+              [string] $Name,
+              [Parameter(Mandatory = $true)]
+              [string] $ExpectedState,
+              [int] $TimeoutSeconds = 45
+            )
+
+            $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+            do {
+              $state = (Get-WebAppPoolState -Name $Name).Value
+              if ($state -eq $ExpectedState) {
+                return
+              }
+
+              Start-Sleep -Seconds 1
+            } while ((Get-Date) -lt $deadline)
+
+            $currentState = (Get-WebAppPoolState -Name $Name).Value
+            throw "App Pool '$Name' did not reach '$ExpectedState' state. Current state: '$currentState'."
+          }
+
+          $appOfflinePath = Join-Path $env:IIS_SITE_PATH "app_offline.htm"
+          $appOfflineContent = @"
+          <!doctype html>
+          <html lang="tr">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="robots" content="noindex,nofollow">
+            <meta http-equiv="refresh" content="60">
+            <title>Tum Menu guncelleniyor</title>
+            <style>
+              body {
+                min-height: 100vh;
+                margin: 0;
+                display: grid;
+                place-items: center;
+                padding: 24px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                background: #688745;
+                color: #fffdf9;
+              }
+              main { max-width: 680px; }
+              h1 { margin: 0 0 16px; font-size: 42px; line-height: 1; }
+              p { margin: 0; font-size: 18px; line-height: 1.6; }
+            </style>
+          </head>
+          <body>
+            <main>
+              <h1>Tum Menu guncelleniyor.</h1>
+              <p>Kisa bir bakim yapiyoruz. Lutfen birkac dakika sonra tekrar deneyin.</p>
+            </main>
+          </body>
+          </html>
+          "@
+
+          try {
+            Set-Content -LiteralPath $appOfflinePath -Value $appOfflineContent -Encoding UTF8
+
+            $poolState = (Get-WebAppPoolState -Name $env:IIS_APP_POOL_NAME).Value
+            if ($poolState -eq "Started") {
+              Stop-WebAppPool -Name $env:IIS_APP_POOL_NAME
+              Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Stopped"
+            }
+
+            $robocopyArgs = @(
+              $env:PUBLISH_DIR,
+              $env:IIS_SITE_PATH,
+              "/E",
+              "/R:2",
+              "/W:5",
+              "/NFL",
+              "/NDL",
+              "/NP",
+              "/XF",
+              "web.config",
+              "appsettings.json",
+              "appsettings.*.json",
+              "app_offline.htm",
+              "/XD",
+              "Logs",
+              "logs",
+              "wwwroot\uploads",
+              "location-api",
+              "Location-api"
+            )
+
+            & robocopy @robocopyArgs
+            $robocopyExitCode = $LASTEXITCODE
+            if ($robocopyExitCode -gt 7) {
+              throw "Robocopy failed with exit code $robocopyExitCode."
+            }
+
+            "Robocopy completed with exit code $robocopyExitCode."
+            $global:LASTEXITCODE = 0
+          }
+          finally {
+            if (Test-Path -LiteralPath $appOfflinePath) {
+              Remove-Item -LiteralPath $appOfflinePath -Force
+            }
+
+            Start-WebAppPool -Name $env:IIS_APP_POOL_NAME
+            Wait-AppPoolState -Name $env:IIS_APP_POOL_NAME -ExpectedState "Started"
+          }
