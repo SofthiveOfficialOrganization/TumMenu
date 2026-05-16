@@ -208,6 +208,8 @@ jobs:
               "appsettings.*.json",
               "app_offline.htm",
               "/XD",
+              ".well-known",
+              "DataProtectionKeys",
               "Logs",
               "logs",
               "wwwroot\uploads",
