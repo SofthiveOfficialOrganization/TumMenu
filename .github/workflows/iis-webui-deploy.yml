@@ -41,6 +41,7 @@ jobs:
       # Repository Secrets examples for TumMenu:
       # IIS_SITE_PATH: C:\inetpub\wwwroot\TumMenu
       # IIS_APP_POOL_NAME: TumMenu
+      # TEST_DB_CONNECTION_STRING: Server=localhost\SQLEXPRESS;Database=TumMenuDb_CI;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True
       IIS_SITE_PATH: ${{ secrets.IIS_SITE_PATH }}
       IIS_APP_POOL_NAME: ${{ secrets.IIS_APP_POOL_NAME }}
 
@@ -61,6 +62,9 @@ jobs:
 
       - name: Test WebUI
         if: ${{ github.event_name == 'push' || inputs.run_tests }}
+        env:
+          TEST_DB_CONNECTION_STRING: ${{ secrets.TEST_DB_CONNECTION_STRING }}
+          ConnectionStrings__DefaultConnection: ${{ secrets.TEST_DB_CONNECTION_STRING }}
         run: dotnet test WebUI.IntegrationTests/WebUI.IntegrationTests.csproj --configuration "${{ env.CONFIGURATION }}" --no-build --verbosity normal
 
       - name: Restore WebUI
