@@ -4,6 +4,7 @@ using Application.Common.Exceptions;
 using Application.MenuDesigns.DTOs;
 using Application.Menus.DTOs;
 using Application.Products.DTOs;
+using Application.Stores.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ public class GetActiveMenuBySlugHandler(
 		var store = await repoStore.Query()
 			.AsSplitQuery()
 			.Include(s => s.Company)
+			.Include(s => s.Address)
+			.Include(s => s.SocialLinks)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.MenuDesign)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
@@ -113,10 +116,29 @@ public class GetActiveMenuBySlugHandler(
 			Status = menu.Status,
 			StoreName = store.Title,
 			CompanyName = store.Company.Title,
+			StoreSlug = store.Slug,
+			CompanySlug = store.Company.Slug,
+			StorePhoneNumber = store.PhoneNumber,
+			StoreSecondaryPhoneNumber = store.SecondaryPhoneNumber,
+			StoreFullAddress = store.Address?.FullAddress,
 			IsDefaultCompanyMenu = menu.Company != null && menu.Company.DefaultMainMenuId == menu.Id,
 			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
 			ShowPricesOnMenu = store.ShowPricesOnMenu,
 			ShowMenuButton = store.ShowMenuButton,
+			ShowSocialLinksOnMenu = store.ShowSocialLinksOnMenu,
+			ShowPhoneNumberOnMenu = store.ShowPhoneNumberOnMenu,
+			ShowAddressOnMenu = store.ShowAddressOnMenu,
+			SocialLinks = store.SocialLinks
+				.OrderBy(sl => sl.SortOrder)
+				.Select(sl => new StoreSocialLinkDTO
+				{
+					Id = sl.Id,
+					Platform = sl.Platform,
+					DisplayName = sl.DisplayName,
+					Url = sl.Url,
+					SortOrder = sl.SortOrder
+				})
+				.ToList(),
 			Categories = menu.Categories
 				.Where(c => c.IsActive && c.ParentId == null) // ONLY RETURN ROOT CATEGORIES
 				.OrderBy(c => c.SortOrder)

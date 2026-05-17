@@ -36,7 +36,10 @@ public sealed class AuditLogBehavior<TRequest, TResponse>(
         log.Created(userId);
 
         await db.AuditLogs.AddAsync(log, ct);
-        await db.SaveChangesAsync(ct);
+        if (request is not ITransactionalRequest)
+        {
+            await db.SaveChangesAsync(ct);
+        }
 
         return response;
     }

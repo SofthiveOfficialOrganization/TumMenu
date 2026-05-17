@@ -22,9 +22,13 @@ public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest, IAu
 	public bool ShowInSearchAndListings { get; set; } = false;
 	public bool ShowMenuButton { get; set; } = false;
 	public bool ShowPricesOnMenu { get; set; } = false;
+	public bool ShowSocialLinksOnMenu { get; set; } = false;
+	public bool ShowPhoneNumberOnMenu { get; set; } = false;
+	public bool ShowAddressOnMenu { get; set; } = false;
 
 	public Guid CompanyId { get; set; }
 	public AddressDTO? Address { get; set; }
+	public List<StoreSocialLinkDTO> SocialLinks { get; set; } = [];
 }
 
 public class CreateStoreCommandHandler(
@@ -46,6 +50,7 @@ public class CreateStoreCommandHandler(
 			throw new AlreadyExistsAppException("Bu slug zaten kullanılmakta.");
 
 		var store = mapper.Map<Store>(req);
+		StoreSocialLinkSync.Apply(store, req.SocialLinks);
 		await repoStore.AddAsync(store, ct);
 
         // Generate QR Code automatically
