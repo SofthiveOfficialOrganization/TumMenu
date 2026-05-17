@@ -10,4 +10,12 @@ public interface ISystemLogWriter
         string? responseMessage,
         string source,
         CancellationToken ct = default);
+
+    Task WriteSecurityEventAsync(
+        HttpContext httpContext,
+        int statusCode,
+        string? errorCode,
+        string? responseMessage,
+        string source,
+        CancellationToken ct = default);
 }

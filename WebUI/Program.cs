@@ -9,6 +9,8 @@ using WebUI.Contracts;
 using WebUI.Extensions;
 using WebUI.ExternalServices;
 using WebUI.Filters;
+using WebUI.Middleware;
+using WebUI.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 var seedOnly = args.Any(arg => string.Equals(arg, "--seed-only", StringComparison.OrdinalIgnoreCase));
@@ -276,10 +278,11 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/status-code/{0}");
+app.UseMiddleware<SecurityRequestLoggingMiddleware>();
 
 app.Use(async (context, next) =>
 {
-	if (IsKnownSecurityProbe(context.Request))
+	if (SecurityRequestClassifier.IsKnownSecurityProbe(context.Request.Path))
 	{
 		context.Response.StatusCode = StatusCodes.Status404NotFound;
 		return;
@@ -341,45 +344,6 @@ static bool IsApiRequest(HttpRequest request)
 		|| request.Path.StartsWithSegments("/user")
 		|| request.Path.StartsWithSegments("/owner")
 		|| string.Equals(request.Headers.XRequestedWith, "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
-}
-
-static bool IsKnownSecurityProbe(HttpRequest request)
-{
-	var path = request.Path.Value ?? string.Empty;
-	try
-	{
-		path = Uri.UnescapeDataString(path);
-	}
-	catch (UriFormatException)
-	{
-	}
-
-	path = path.TrimEnd('/');
-	if (string.IsNullOrWhiteSpace(path))
-	{
-		return false;
-	}
-
-	if (path.StartsWith("/.git", StringComparison.OrdinalIgnoreCase))
-	{
-		return true;
-	}
-
-	var suspiciousExactPaths = new[]
-	{
-		"/.env",
-		"/.aws/credentials",
-		"/api/.env",
-		"/app/.env",
-		"/app/env",
-		"/aws/credentials",
-		"/backend/.env",
-		"/backend/env",
-		"/config/.env",
-		"/laravel/.env"
-	};
-
-	return suspiciousExactPaths.Contains(path, StringComparer.OrdinalIgnoreCase);
 }
 
 static IResult ApiNotFound(HttpContext context)
