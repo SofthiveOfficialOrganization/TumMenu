@@ -1,6 +1,7 @@
 @using Application.Categories.DTOs
 @using Application.Menus.DTOs
 @using Application.MenuDesigns.DTOs
+@using Application.Products.Commands
 @model MenuDTO
 
 @{
@@ -14,6 +15,28 @@
         .ToList();
     var designs = ViewBag.MenuDesigns as List<MenuDesignDTO> ?? [];
     var currentDesignId = ViewBag.CurrentMenuDesignId as Guid?;
+    var allProductCount = allCategories.Sum(c => c.Products?.Count ?? 0);
+    var productsForPreview = allCategories
+        .OrderBy(c => c.SortOrder)
+        .SelectMany(c => (c.Products ?? [])
+            .OrderBy(p => p.SortOrder)
+            .Select(p => new { Product = p, CategoryTitle = c.CategoryLibraryItem.Title }))
+        .ToList();
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
 
 <div class="row">
@@ -171,6 +194,13 @@
                     <p class="text-secondary small mb-0">Bu menüdeki kategorileri yönetin.</p>
                 </div>
                 <div class="d-flex gap-2">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#bulkPriceUpdateModal"
+                            @(allProductCount == 0 ? "disabled" : null)>
+                        <i class="fas fa-coins me-1"></i> Toplu İşlemler
+                    </button>
                     @if (!string.IsNullOrEmpty(Model.StoreSlug) && !string.IsNullOrEmpty(Model.CompanySlug))
                     {
                         <a href="/@Model.CompanySlug/@Model.StoreSlug"
@@ -255,6 +285,135 @@
     </div>
 </div>
 
+<div class="modal fade" id="bulkPriceUpdateModal" tabindex="-1" aria-labelledby="bulkPriceUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form asp-action="BulkUpdatePrices" asp-route-id="@Model.Id" method="post" id="bulkPriceUpdateForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
+
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title fw-bold" id="bulkPriceUpdateModalLabel">Toplu Fiyat Güncelle</h5>
+                        <p class="text-secondary small mb-0">@allProductCount ürünün ana fiyatı ve varsa fiyat seçenekleri güncellenir.</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="bulk-price-option h-100">
+                                <input class="form-check-input" type="radio" name="UpdateType" value="@BulkPriceUpdateType.FixedAmount" />
+                                <span class="bulk-price-option__body">
+                                    <span class="fw-bold d-block">Sabit olarak artır</span>
+                                    <span class="text-secondary small">Her fiyata aynı TL tutarı eklenir. 200 TL ve 300 TL olan ürünlere +10 TL gibi.</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="bulk-price-option h-100">
+                                <input class="form-check-input" type="radio" name="UpdateType" value="@BulkPriceUpdateType.Percentage" checked />
+                                <span class="bulk-price-option__body">
+                                    <span class="fw-bold d-block">Yüzdelik artır</span>
+                                    <span class="text-secondary small">Her fiyat kendi tutarına göre artar. Küsürat oluşursa aşağıdaki yuvarlama kullanılabilir.</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 align-items-end mb-4">
+                        <div class="col-md-4">
+                            <label for="bulkPriceAmount" class="form-label fw-bold text-secondary small text-uppercase">Artış Değeri</label>
+                            <div class="input-group">
+                                <input id="bulkPriceAmount" name="Amount" class="form-control" type="number" step="0.01" min="0.01" max="1000" value="10" required />
+                                <span class="input-group-text" data-bulk-price-unit>%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold text-secondary small text-uppercase">Yüzdelik Artışta Yuvarlama</label>
+                            <div class="bulk-rounding-options" data-bulk-rounding-options>
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="RoundingStrategy" value="@BulkPriceRoundingStrategy.None" checked />
+                                    Yuvarlama yok
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="RoundingStrategy" value="@BulkPriceRoundingStrategy.Nearest5" />
+                                    En yakın 5 TL
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="RoundingStrategy" value="@BulkPriceRoundingStrategy.Nearest10" />
+                                    En yakın 10 TL
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bulk-price-preview">
+                        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">Fiyat öngösterimi</h6>
+                                <p class="bulk-price-muted small mb-0">Güncellemeden sonra menüde görünecek fiyatlar.</p>
+                            </div>
+                            <span class="bulk-preview-badge" data-bulk-preview-mode>Yüzdelik artış</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0 bulk-preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün</th>
+                                        <th class="text-end">Mevcut fiyat</th>
+                                        <th>İşlem</th>
+                                        <th class="text-end">Yeni fiyat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in productsForPreview)
+                                    {
+                                        var product = item.Product;
+                                        <tr data-preview-price="@product.BasePrice.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                            <td>
+                                                <span class="fw-semibold">@product.Title</span>
+                                                <span class="bulk-price-muted d-block small">@item.CategoryTitle · Ana fiyat</span>
+                                            </td>
+                                            <td class="text-end">@product.BasePrice.ToString("N2") TL</td>
+                                            <td data-preview-operation>%10 artış</td>
+                                            <td class="text-end fw-bold" data-preview-result>@product.BasePrice.ToString("N2") TL</td>
+                                        </tr>
+
+                                        @foreach (var price in product.Prices.OrderBy(p => p.CreatedAt))
+                                        {
+                                            <tr data-preview-price="@price.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                                <td>
+                                                    <span class="fw-semibold">@product.Title</span>
+                                                    <span class="bulk-price-muted d-block small">@item.CategoryTitle · @price.Size</span>
+                                                </td>
+                                                <td class="text-end">@price.Price.ToString("N2") TL</td>
+                                                <td data-preview-operation>%10 artış</td>
+                                                <td class="text-end fw-bold" data-preview-result>@price.Price.ToString("N2") TL</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="bulk-price-muted small mb-0 mt-3" data-bulk-explanation>
+                            Yuvarlama yoksa küsüratlı fiyatlar aynı şekilde kalır. 5 TL veya 10 TL seçerseniz sonuç en yakın katına çekilir.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-2"></i>Fiyatları Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <style>
     .design-option { cursor: pointer; }
     .design-preview {
@@ -271,6 +430,133 @@
     }
     .design-option--active .design-preview { box-shadow: 0 0 0 3px #6366f1; }
     .design-preview__btn { padding: 2px 8px; }
+    #bulkPriceUpdateModal {
+        --bulk-modal-bg: var(--horizon-card-bg);
+        --bulk-modal-text: var(--horizon-text-primary);
+        --bulk-modal-muted: var(--horizon-text-secondary);
+        --bulk-modal-border: rgba(163, 174, 208, 0.28);
+        --bulk-modal-soft-border: rgba(163, 174, 208, 0.2);
+        --bulk-modal-surface: #f8faff;
+        --bulk-modal-surface-strong: #ffffff;
+        --bulk-modal-input-bg: #ffffff;
+        --bulk-modal-table-head-bg: #f4f7fe;
+        --bulk-modal-row-hover: rgba(var(--horizon-primary-rgb), 0.04);
+        --bulk-modal-close-filter: none;
+    }
+    html.dark-mode #bulkPriceUpdateModal,
+    body.dark-mode #bulkPriceUpdateModal {
+        --bulk-modal-bg: var(--horizon-card-bg);
+        --bulk-modal-text: var(--horizon-text-primary);
+        --bulk-modal-muted: var(--horizon-text-secondary);
+        --bulk-modal-border: rgba(255, 255, 255, 0.16);
+        --bulk-modal-soft-border: rgba(255, 255, 255, 0.1);
+        --bulk-modal-surface: rgba(255, 255, 255, 0.045);
+        --bulk-modal-surface-strong: rgba(255, 255, 255, 0.04);
+        --bulk-modal-input-bg: #101943;
+        --bulk-modal-table-head-bg: #101943;
+        --bulk-modal-row-hover: rgba(255, 255, 255, 0.04);
+        --bulk-modal-close-filter: invert(1) grayscale(1);
+    }
+    #bulkPriceUpdateModal .modal-content {
+        background: var(--bulk-modal-bg);
+        color: var(--bulk-modal-text);
+    }
+    #bulkPriceUpdateModal .modal-header,
+    #bulkPriceUpdateModal .modal-footer {
+        border-color: var(--bulk-modal-soft-border);
+    }
+    #bulkPriceUpdateModal .btn-close { filter: var(--bulk-modal-close-filter); opacity: .75; }
+    #bulkPriceUpdateModal .form-label,
+    #bulkPriceUpdateModal .modal-title { color: var(--bulk-modal-text); }
+    #bulkPriceUpdateModal .text-secondary,
+    .bulk-price-muted { color: var(--bulk-modal-muted) !important; }
+    #bulkPriceUpdateModal .form-control,
+    #bulkPriceUpdateModal .input-group-text {
+        background: var(--bulk-modal-input-bg);
+        border-color: var(--bulk-modal-border);
+        color: var(--bulk-modal-text);
+    }
+    .bulk-price-option {
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--bulk-modal-border);
+        border-radius: 8px;
+        cursor: pointer;
+        background: var(--bulk-modal-surface-strong);
+        color: var(--bulk-modal-text);
+        transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .bulk-price-option:has(input:checked) {
+        border-color: var(--horizon-primary);
+        background: rgba(var(--horizon-primary-rgb), 0.12);
+        box-shadow: 0 0 0 3px rgba(var(--horizon-primary-rgb), 0.2);
+    }
+    .bulk-price-option .form-check-input { margin-top: 3px; flex-shrink: 0; }
+    .bulk-price-option__body { display: block; }
+    .bulk-rounding-options {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .bulk-rounding-options .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 38px;
+        white-space: normal;
+        color: var(--bulk-modal-text);
+        border-color: var(--bulk-modal-border);
+        background: var(--bulk-modal-surface-strong);
+    }
+    .bulk-rounding-options .btn:has(input:checked) {
+        color: #fff;
+        background: var(--horizon-primary);
+        border-color: var(--horizon-primary);
+    }
+    .bulk-rounding-options input { margin: 0; }
+    .bulk-price-preview {
+        border: 1px solid var(--bulk-modal-border);
+        border-radius: 8px;
+        padding: 16px;
+        background: var(--bulk-modal-surface);
+    }
+    .bulk-price-preview .table-responsive {
+        max-height: 320px;
+        overflow-y: auto;
+        border: 1px solid var(--bulk-modal-soft-border);
+        border-radius: 8px;
+    }
+    .bulk-preview-table { color: var(--bulk-modal-text); }
+    .bulk-preview-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--bulk-modal-table-head-bg);
+        color: var(--bulk-modal-muted);
+        border-color: var(--bulk-modal-soft-border);
+    }
+    .bulk-preview-table tbody td {
+        color: var(--bulk-modal-text);
+        border-color: var(--bulk-modal-soft-border);
+    }
+    .bulk-preview-table tbody tr:hover { background: var(--bulk-modal-row-hover); }
+    .bulk-preview-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        color: #dce6ff;
+        background: rgba(var(--horizon-primary-rgb), 0.2);
+        border: 1px solid rgba(var(--horizon-primary-rgb), 0.35);
+        font-size: .75rem;
+        font-weight: 700;
+    }
+    @@media (max-width: 576px) {
+        .bulk-rounding-options { grid-template-columns: 1fr; }
+    }
 </style>
 
 @section Scripts {
@@ -285,6 +571,114 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var bulkForm = document.getElementById('bulkPriceUpdateForm');
+            var bulkAmount = document.getElementById('bulkPriceAmount');
+            var bulkUnit = document.querySelector('[data-bulk-price-unit]');
+            var bulkModeBadge = document.querySelector('[data-bulk-preview-mode]');
+            var bulkExplanation = document.querySelector('[data-bulk-explanation]');
+            var roundingOptions = document.querySelector('[data-bulk-rounding-options]');
+            var submitConfirmed = false;
+            var currencyFormatter = new Intl.NumberFormat('tr-TR', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+
+            function selectedValue(name) {
+                return document.querySelector('input[name="' + name + '"]:checked')?.value;
+            }
+
+            function parseAmount() {
+                var raw = (bulkAmount?.value || '0').replace(',', '.');
+                var value = Number.parseFloat(raw);
+                return Number.isFinite(value) ? value : 0;
+            }
+
+            function roundToNearest(value, multiple) {
+                return Math.round(value / multiple) * multiple;
+            }
+
+            function formatTry(value) {
+                return currencyFormatter.format(value) + ' TL';
+            }
+
+            function updateBulkPricePreview() {
+                if (!bulkForm || !bulkAmount) return;
+
+                var updateType = selectedValue('UpdateType');
+                var rounding = selectedValue('RoundingStrategy');
+                var amount = parseAmount();
+                var isPercentage = updateType === '@BulkPriceUpdateType.Percentage';
+
+                bulkUnit.textContent = isPercentage ? '%' : 'TL';
+                bulkModeBadge.textContent = isPercentage ? 'Yüzdelik artış' : 'Sabit artış';
+                roundingOptions.querySelectorAll('input').forEach(function (input) {
+                    input.disabled = !isPercentage;
+                    input.closest('.btn').classList.toggle('disabled', !isPercentage);
+                });
+
+                if (!isPercentage) {
+                    roundingOptions.querySelector('input[value="@BulkPriceRoundingStrategy.None"]').checked = true;
+                }
+
+                document.querySelectorAll('[data-preview-price]').forEach(function (row) {
+                    var oldPrice = Number.parseFloat(row.getAttribute('data-preview-price'));
+                    var newPrice = isPercentage
+                        ? oldPrice + (oldPrice * amount / 100)
+                        : oldPrice + amount;
+
+                    if (isPercentage && rounding === '@BulkPriceRoundingStrategy.Nearest5') {
+                        newPrice = roundToNearest(newPrice, 5);
+                    } else if (isPercentage && rounding === '@BulkPriceRoundingStrategy.Nearest10') {
+                        newPrice = roundToNearest(newPrice, 10);
+                    }
+
+                    row.querySelector('[data-preview-operation]').textContent = isPercentage
+                        ? '%' + currencyFormatter.format(amount) + ' artış'
+                        : '+' + formatTry(amount);
+                    row.querySelector('[data-preview-result]').textContent = formatTry(newPrice);
+                });
+
+                if (!isPercentage) {
+                    bulkExplanation.textContent = 'Sabit artışta tüm fiyatlara aynı TL tutarı eklenir. Yuvarlama kullanılmaz.';
+                } else if (rounding === '@BulkPriceRoundingStrategy.None') {
+                    bulkExplanation.textContent = 'Yuvarlama yoksa küsüratlı fiyatlar aynı şekilde kalır.';
+                } else {
+                    bulkExplanation.textContent = rounding === '@BulkPriceRoundingStrategy.Nearest5'
+                        ? 'Sonuçlar en yakın 5 TL katına yuvarlanır.'
+                        : 'Sonuçlar en yakın 10 TL katına yuvarlanır.';
+                }
+            }
+
+            if (bulkForm) {
+                bulkForm.querySelectorAll('input[name="UpdateType"], input[name="RoundingStrategy"]').forEach(function (input) {
+                    input.addEventListener('change', updateBulkPricePreview);
+                });
+                bulkAmount.addEventListener('input', updateBulkPricePreview);
+                updateBulkPricePreview();
+
+                bulkForm.addEventListener('submit', function (event) {
+                    if (submitConfirmed) return;
+                    event.preventDefault();
+
+                    var doSubmit = function () {
+                        submitConfirmed = true;
+                        bulkForm.requestSubmit();
+                    };
+
+                    if (window.TumMenuAlerts) {
+                        TumMenuAlerts.confirm(
+                            'Toplu fiyat güncellemesi yapılsın mı?',
+                            'Bu işlem menüdeki tüm ürün fiyatlarına uygulanır.',
+                            'Evet, Güncelle!'
+                        ).then(function (res) {
+                            if (res) doSubmit();
+                        });
+                    } else if (window.confirm('Toplu fiyat güncellemesi yapılsın mı?')) {
+                        doSubmit();
+                    }
+                });
+            }
+
             var grid = document.getElementById('category-grid');
             var categoryCards = document.querySelectorAll('.category-card');
 

@@ -1,10 +1,12 @@
 using Application.Companies.Commands;
 using Application.Companies.DTOs;
 using Application.Companies.Queries;
+using Application.Common.Exceptions;
 using Application.MenuDesigns.Commands;
 using Application.MenuDesigns.Queries;
 using Application.Menus.Commands;
 using Application.Menus.Queries;
+using Application.Products.Commands;
 using Application.Stores.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -214,6 +216,43 @@ public sealed class MenuController(IMediator mediator) : Controller
 		ViewBag.MenuDesigns = await mediator.Send(new GetAllMenuDesignsQuery(), ct);
 		ViewBag.CurrentMenuDesignId = menu.MenuDesignId;
 		return View(menu);
+	}
+
+	[Authorize(Policy = "OwnerOrAdmin")]
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	public async Task<IActionResult> BulkUpdatePrices(Guid id, [FromForm] BulkUpdateMenuProductPricesCommand req, string? returnUrl, CancellationToken ct)
+	{
+		req.MenuId = id;
+
+		var menu = await mediator.Send(new GetMenuByIdQuery { Id = id }, ct);
+		if (User.IsInRole("Owner"))
+		{
+			var ownerCompany = await mediator.Send(new GetCompanyByCurrentOwnerQuery(), ct);
+			bool isOwner = false;
+			if (ownerCompany != null)
+			{
+				if (menu.CompanyId == ownerCompany.Id) isOwner = true;
+				else if (menu.StoreId.HasValue)
+				{
+					var store = await mediator.Send(new GetStoreByIdQuery(menu.StoreId.Value), ct);
+					if (store.CompanyId == ownerCompany.Id) isOwner = true;
+				}
+			}
+			if (!isOwner) return Forbid();
+		}
+
+		try
+		{
+			var result = await mediator.Send(req, ct);
+			TempData["Success"] = $"{result.ProductCount} ürün için {result.PriceCount} fiyat güncellendi.";
+		}
+		catch (AppException ex)
+		{
+			TempData["Error"] = ex.Message;
+		}
+
+		return RedirectToLocal(returnUrl, RedirectToAction(nameof(Details), new { id, role = RouteData.Values["role"] }));
 	}
 
 	[Authorize(Policy = "OwnerOrAdmin")]

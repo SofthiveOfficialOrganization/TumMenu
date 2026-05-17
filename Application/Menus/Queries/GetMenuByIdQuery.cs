@@ -29,6 +29,7 @@ public class GetMenuByIdHandler(
 					.ThenInclude(cli => cli.Medias)
 			.Include(x => x.Categories)
 				.ThenInclude(x => x.Products)
+					.ThenInclude(p => p.Prices)
 			.Include(x => x.Store)
 				.ThenInclude(s => s!.Company)
 			.FirstOrDefaultAsync(x => x.Id == req.Id, ct);
