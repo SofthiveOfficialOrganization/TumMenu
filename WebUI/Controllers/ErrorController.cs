@@ -30,7 +30,7 @@ public sealed class ErrorController(
 			nameof(ErrorController),
 			ct);
 
-		if(IsApiRequest(HttpContext))
+		if(IsApiRequest(HttpContext, originalPath))
 		{
 			var payload = new ApiError
 			{
@@ -58,7 +58,7 @@ public sealed class ErrorController(
 		var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 		var originalPath = feature?.OriginalPath ?? string.Empty;
 
-		if(IsApiRequest(HttpContext))
+		if(IsApiRequest(HttpContext, originalPath))
 		{
 			var payload = new ApiError
 			{
@@ -106,9 +106,9 @@ public sealed class ErrorController(
 		return $"~/Views/Shared/{publicPath}.cshtml";
 	}
 
-	private static bool IsApiRequest(HttpContext ctx)
+	private static bool IsApiRequest(HttpContext ctx, string? originalPath = null)
 	{
-		if(ctx.Request.Path.StartsWithSegments("/api"))
+		if(IsApiPath(originalPath) || IsApiPath(ctx.Request.Path.Value))
 			return true;
 
 		var accept = ctx.Request.Headers.Accept.ToString();
@@ -120,5 +120,21 @@ public sealed class ErrorController(
 			return true;
 
 		return false;
+	}
+
+	private static bool IsApiPath(string? path)
+	{
+		if(string.IsNullOrWhiteSpace(path))
+			return false;
+
+		return IsPathOrChild(path, "/api") ||
+		       IsPathOrChild(path, "/user") ||
+		       IsPathOrChild(path, "/owner");
+	}
+
+	private static bool IsPathOrChild(string path, string prefix)
+	{
+		return path.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+		       path.StartsWith(prefix + "/", StringComparison.OrdinalIgnoreCase);
 	}
 }

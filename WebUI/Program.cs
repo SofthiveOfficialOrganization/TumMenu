@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using WebUI.Contracts;
 using WebUI.Extensions;
 using WebUI.ExternalServices;
 using WebUI.Filters;
@@ -276,7 +277,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/status-code/{0}");
 
+app.Use(async (context, next) =>
+{
+	if (IsKnownSecurityProbe(context.Request))
+	{
+		context.Response.StatusCode = StatusCodes.Status404NotFound;
+		return;
+	}
+
+	await next();
+});
+
 app.MapHealthChecks("/health").AllowAnonymous();
+
+app.Map("/api", ApiNotFound).AllowAnonymous();
+app.Map("/api/{**path}", ApiNotFound).AllowAnonymous();
+app.Map("/owner/{**path}", ApiNotFound).AllowAnonymous();
+app.Map("/user/{**path}", ApiNotFound).AllowAnonymous();
 
 app.MapControllerRoute(
 	name: "areas",
@@ -284,22 +301,22 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
 	name: "publicProduct",
-	pattern: "{companySlug}/{storeSlug}/{categorySlug}/{productSlug}",
+	pattern: "{companySlug:regex(^[a-z0-9][a-z0-9-]*$)}/{storeSlug:regex(^[a-z0-9][a-z0-9-]*$)}/{categorySlug:regex(^[a-z0-9][a-z0-9-]*$)}/{productSlug:regex(^[a-z0-9][a-z0-9-]*$)}",
 	defaults: new { controller = "Menu", action = "Product" });
 
 app.MapControllerRoute(
 	name: "publicStoreLanding",
-	pattern: "{companySlug}/{storeSlug}/magaza",
+	pattern: "{companySlug:regex(^[a-z0-9][a-z0-9-]*$)}/{storeSlug:regex(^[a-z0-9][a-z0-9-]*$)}/magaza",
 	defaults: new { controller = "Store", action = "Public" });
 
 app.MapControllerRoute(
 	name: "publicCategory",
-	pattern: "{companySlug}/{storeSlug}/{categorySlug}",
+	pattern: "{companySlug:regex(^[a-z0-9][a-z0-9-]*$)}/{storeSlug:regex(^[a-z0-9][a-z0-9-]*$)}/{categorySlug:regex(^[a-z0-9][a-z0-9-]*$)}",
 	defaults: new { controller = "Menu", action = "Category" });
 
 app.MapControllerRoute(
 	name: "publicStore",
-	pattern: "{companySlug}/{storeSlug}",
+	pattern: "{companySlug:regex(^[a-z0-9][a-z0-9-]*$)}/{storeSlug:regex(^[a-z0-9][a-z0-9-]*$)}",
 	defaults: new { controller = "Menu", action = "Index" });
 
 app.MapControllerRoute(
@@ -324,6 +341,58 @@ static bool IsApiRequest(HttpRequest request)
 		|| request.Path.StartsWithSegments("/user")
 		|| request.Path.StartsWithSegments("/owner")
 		|| string.Equals(request.Headers.XRequestedWith, "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
+}
+
+static bool IsKnownSecurityProbe(HttpRequest request)
+{
+	var path = request.Path.Value ?? string.Empty;
+	try
+	{
+		path = Uri.UnescapeDataString(path);
+	}
+	catch (UriFormatException)
+	{
+	}
+
+	path = path.TrimEnd('/');
+	if (string.IsNullOrWhiteSpace(path))
+	{
+		return false;
+	}
+
+	if (path.StartsWith("/.git", StringComparison.OrdinalIgnoreCase))
+	{
+		return true;
+	}
+
+	var suspiciousExactPaths = new[]
+	{
+		"/.env",
+		"/.aws/credentials",
+		"/api/.env",
+		"/app/.env",
+		"/app/env",
+		"/aws/credentials",
+		"/backend/.env",
+		"/backend/env",
+		"/config/.env",
+		"/laravel/.env"
+	};
+
+	return suspiciousExactPaths.Contains(path, StringComparer.OrdinalIgnoreCase);
+}
+
+static IResult ApiNotFound(HttpContext context)
+{
+	var payload = new ApiError
+	{
+		Status = StatusCodes.Status404NotFound,
+		Code = "not_found",
+		Message = "Bulunamadı",
+		TraceId = context.TraceIdentifier
+	};
+
+	return Results.Json(payload, statusCode: payload.Status);
 }
 
 public partial class Program { }
