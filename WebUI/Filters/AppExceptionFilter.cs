@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebUI.Contracts;
 using WebUI.Models;
+using WebUI.Services.SystemLogs;
 
 namespace WebUI.Filters;
 
 public sealed class AppExceptionFilter(
 	ILogger<AppExceptionFilter> logger,
-	IWebHostEnvironment env
+	IWebHostEnvironment env,
+	ISystemLogWriter systemLogWriter
 ) : IAsyncExceptionFilter
 {
 	private readonly ILogger<AppExceptionFilter> _logger = logger;
 	private readonly IWebHostEnvironment _env = env;
+	private readonly ISystemLogWriter _systemLogWriter = systemLogWriter;
 
 	public Task OnExceptionAsync(ExceptionContext context)
 	{
@@ -161,7 +164,7 @@ public sealed class AppExceptionFilter(
 		}
 	}
 
-	private Task Handle(
+	private async Task Handle(
 		ExceptionContext context,
 		bool wantsJson,
 		int status,
@@ -178,10 +181,19 @@ public sealed class AppExceptionFilter(
 		else
 			_logger.LogWarning(ex, "Handled exception. TraceId: {TraceId}", traceId);
 
+		await _systemLogWriter.WriteExceptionAsync(
+			httpContext,
+			ex,
+			status,
+			payload.Code,
+			payload.Message,
+			nameof(AppExceptionFilter),
+			httpContext.RequestAborted);
+
 		// In development mode, allow unhandled exceptions or DB exceptions to bubble up to the Developer Exception Page
 		if(_env.IsDevelopment() && !wantsJson && (status >= 500 || ex is DbUpdateException))
 		{
-			return Task.CompletedTask;
+			return;
 		}
 
 		httpContext.Response.StatusCode = status;
@@ -193,7 +205,7 @@ public sealed class AppExceptionFilter(
 				StatusCode = status
 			};
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 
 		// --- MVC tarafı ---
@@ -204,7 +216,7 @@ public sealed class AppExceptionFilter(
 			AddModelStateErrors(context, vax.Errors);
 			context.Result = CreateCurrentActionViewResult(context);
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 
 		if(ex is UnprocessableAppException uex)
@@ -216,7 +228,7 @@ public sealed class AppExceptionFilter(
 
 			context.Result = CreateCurrentActionViewResult(context);
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 		if(ex is AlreadyExistsAppException aex)
 		{
@@ -232,13 +244,13 @@ public sealed class AppExceptionFilter(
 			}
 
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 		if(isNotFound)
 		{
 			context.Result = new EmptyResult();
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 
 		if(ex is DbUpdateException dbUpdateEx)
@@ -257,7 +269,7 @@ public sealed class AppExceptionFilter(
 			}
 
 			context.ExceptionHandled = true;
-			return Task.CompletedTask;
+			return;
 		}
 
 		// Diğerleri → Error view
@@ -290,7 +302,6 @@ public sealed class AppExceptionFilter(
 		};
 
 		context.ExceptionHandled = true;
-		return Task.CompletedTask;
 	}
 
 	private static void AddModelStateErrors(ExceptionContext context, IDictionary<string, string[]> errors)

@@ -83,6 +83,7 @@ namespace Infrastructure.Persistence
 		public DbSet<UsageCounter> UsageCounters => Set<UsageCounter>();
 		public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
 		public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
+		public DbSet<SystemLog> SystemLogs => Set<SystemLog>();
 
 		// Many-to-many join
 		public DbSet<ProductTag> ProductTags => Set<ProductTag>();
@@ -540,6 +541,25 @@ namespace Infrastructure.Persistence
 				.HasIndex(s => s.Type)
 				.IsUnique()
 				.HasFilter("[IsDeleted] = 0");
+
+			builder.Entity<SystemLog>(e =>
+			{
+				e.HasIndex(x => x.CreatedAt);
+				e.HasIndex(x => x.StatusCode);
+				e.HasIndex(x => x.UserId);
+				e.HasIndex(x => x.TraceId);
+
+				e.Property(x => x.Level).HasMaxLength(32);
+				e.Property(x => x.Source).HasMaxLength(128);
+				e.Property(x => x.ErrorCode).HasMaxLength(128);
+				e.Property(x => x.ExceptionType).HasMaxLength(512);
+				e.Property(x => x.TraceId).HasMaxLength(128);
+				e.Property(x => x.HttpMethod).HasMaxLength(16);
+				e.Property(x => x.Path).HasMaxLength(1024);
+				e.Property(x => x.UserId).HasMaxLength(450);
+				e.Property(x => x.UserName).HasMaxLength(256);
+				e.Property(x => x.RemoteIp).HasMaxLength(128);
+			});
 
 			// Product Analytics
 			builder.Entity<ProductViewEvent>(e =>

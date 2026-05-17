@@ -1,37 +1,51 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Contracts;
+using WebUI.Services.SystemLogs;
 
 namespace WebUI.Controllers;
 
-public sealed class ErrorController(IWebHostEnvironment env) : Controller
+public sealed class ErrorController(
+	IWebHostEnvironment env,
+	ISystemLogWriter systemLogWriter) : Controller
 {
 	private readonly IWebHostEnvironment _env = env;
+	private readonly ISystemLogWriter _systemLogWriter = systemLogWriter;
 
 	[Route("error")]
-	public IActionResult Error()
+	public async Task<IActionResult> Error(CancellationToken ct)
 	{
 		var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 		var originalPath = feature?.Path ?? string.Empty;
 		var ex = feature?.Error;
+		var statusCode = StatusCodes.Status500InternalServerError;
+		var responseMessage = _env.IsDevelopment() ? ex?.Message ?? "Error" : "Beklenmeyen bir hata oluştu.";
+
+		await _systemLogWriter.WriteExceptionAsync(
+			HttpContext,
+			ex,
+			statusCode,
+			"unknown",
+			responseMessage,
+			nameof(ErrorController),
+			ct);
 
 		if(IsApiRequest(HttpContext))
 		{
 			var payload = new ApiError
 			{
-				Status = StatusCodes.Status500InternalServerError,
+				Status = statusCode,
 				Code = "unknown",
-				Message = _env.IsDevelopment() ? ex?.Message ?? "Error" : "Beklenmeyen bir hata oluştu.",
+				Message = responseMessage,
 				TraceId = HttpContext.TraceIdentifier
 			};
 
 			return new JsonResult(payload) { StatusCode = payload.Status };
 		}
 
-		Response.StatusCode = StatusCodes.Status500InternalServerError;
+		Response.StatusCode = statusCode;
 		var message = ex != null ? $"{ex.Message}" : "Beklenmeyen bir hata oluştu.";
 		ViewData["Message"] = message;
-		// ViewData["Message"] = ex != null ? $"{ex.Message}\n{ex.StackTrace}" : "Beklenmeyen bir hata oluştu.";
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
 		TempData["Error"] = message;
 

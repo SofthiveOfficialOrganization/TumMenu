@@ -1,0 +1,91 @@
+@using Application.SystemLogs.DTOs
+@model SystemLogDetailDTO
+
+@{
+    ViewData["Title"] = "Log Detayı";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="horizon-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Log Detayı</h4>
+                    <p class="text-secondary small mb-0">@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss") · @Model.Source</p>
+                </div>
+                <a asp-action="Index" class="btn btn-sm btn-light">
+                    <i class="fas fa-arrow-left me-1"></i> Geri
+                </a>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="p-3 border rounded">
+                        <div class="small text-secondary">Status</div>
+                        <div class="fw-bold">@Model.StatusCode</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 border rounded">
+                        <div class="small text-secondary">Seviye</div>
+                        <div class="fw-bold">@Model.Level</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded">
+                        <div class="small text-secondary">Trace ID</div>
+                        <code>@Model.TraceId</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive mb-4">
+                <table class="table table-borderless align-middle">
+                    <tbody>
+                        <tr>
+                            <th class="text-secondary small" style="width: 180px;">Response</th>
+                            <td>@(Model.ResponseMessage ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">Error Code</th>
+                            <td>@(Model.ErrorCode ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">Exception Type</th>
+                            <td><code>@(Model.ExceptionType ?? "-")</code></td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">Exception Message</th>
+                            <td>@(Model.ExceptionMessage ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">Request</th>
+                            <td><code>@Model.HttpMethod @Model.Path@Model.QueryString</code></td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">Kullanıcı</th>
+                            <td>
+                                <span>@(Model.UserName ?? "-")</span>
+                                @if (!string.IsNullOrWhiteSpace(Model.UserId))
+                                {
+                                    <code class="ms-2">@Model.UserId</code>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">IP</th>
+                            <td>@(Model.RemoteIp ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-secondary small">User Agent</th>
+                            <td class="small text-secondary">@(Model.UserAgent ?? "-")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5 class="fw-bold mb-3">Stack Trace</h5>
+            <pre class="bg-light border rounded p-3 small" style="white-space: pre-wrap; max-height: 520px; overflow: auto;">@(Model.StackTrace ?? "-")</pre>
+        </div>
+    </div>
+</div>

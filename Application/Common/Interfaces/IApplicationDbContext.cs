@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<BlogPost> BlogPosts { get; }
     DbSet<OwnerIssueReport> OwnerIssueReports { get; }
     DbSet<SystemSetting> SystemSettings { get; }
+    DbSet<SystemLog> SystemLogs { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

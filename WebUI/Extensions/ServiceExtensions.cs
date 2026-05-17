@@ -3,6 +3,7 @@ using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using WebUI.Services;
+using WebUI.Services.SystemLogs;
 using WebUI.Services.Turnstile;
 using WebUI.Validators;
 using Domain.Entities;
@@ -49,6 +50,7 @@ namespace WebUI.Extensions
 
 			// Register EmailTemplateService
 			services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+			services.AddScoped<ISystemLogWriter, SystemLogWriter>();
 			services.AddSingleton<IImageUrlBuilder, CloudflareImageUrlBuilder>();
 
 			// Register TurnstileService

@@ -82,6 +82,12 @@
                             <span>Hata Bildirimleri</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "SystemLogs", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SystemLogs" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-list-alt"></i></div>
+                            <span>Sistem Logları</span>
+                        </a>
+                    </li>
                 }
 
                 @if (!isSingleStore)
