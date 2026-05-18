@@ -68,6 +68,70 @@
 })();
 
 (function () {
+    const interactiveSelector = [
+        'a',
+        'button',
+        'input',
+        'select',
+        'textarea',
+        'form',
+        '[data-bs-toggle]',
+        '[data-tummenu-click-ignore]',
+        '.handle',
+        '.select2-container'
+    ].join(',');
+
+    const getClickableTarget = (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) {
+            return null;
+        }
+
+        const clickable = target.closest('[data-tummenu-click-url]');
+        if (!clickable || target.closest(interactiveSelector)) {
+            return null;
+        }
+
+        const url = clickable.getAttribute('data-tummenu-click-url');
+        return url ? { clickable, url } : null;
+    };
+
+    document.addEventListener('click', (event) => {
+        if (event.defaultPrevented || event.button !== 0) {
+            return;
+        }
+
+        const target = getClickableTarget(event);
+        if (!target) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (event.ctrlKey || event.metaKey) {
+            window.open(target.url, '_blank', 'noopener');
+            return;
+        }
+
+        window.location.assign(target.url);
+    });
+
+    document.addEventListener('auxclick', (event) => {
+        if (event.defaultPrevented || event.button !== 1) {
+            return;
+        }
+
+        const target = getClickableTarget(event);
+        if (!target) {
+            return;
+        }
+
+        event.preventDefault();
+        window.open(target.url, '_blank', 'noopener');
+    });
+})();
+
+(function () {
     const selector = [
         'input[type="tel"]',
         'input[name*="Phone"]',

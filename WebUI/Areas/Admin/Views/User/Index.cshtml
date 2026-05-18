@@ -48,7 +48,7 @@
                         {
                             foreach (var item in Model.Items)
                             {
-                                <tr>
+                                <tr data-tummenu-click-url="@Url.Action("Update", new { id = item.Id })">
                                     <td class="ps-3">
                                         <div class="d-flex align-items-center">
                                             <div>

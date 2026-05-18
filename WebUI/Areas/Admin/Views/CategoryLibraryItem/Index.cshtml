@@ -35,7 +35,7 @@
         @foreach (var item in Model.Items)
         {
             <div class="col">
-                <div class="horizon-card h-100 category-lib-card" style="transition: transform 0.18s, box-shadow 0.18s; cursor:default;">
+                <div class="horizon-card h-100 category-lib-card" data-tummenu-click-url="@Url.Action("Details", new { slug = item.Slug })" style="transition: transform 0.18s, box-shadow 0.18s;">
                     <div class="d-flex align-items-start gap-3">
                         <div class="category-icon-badge flex-shrink-0 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                              style="width:52px; height:52px; font-size:22px;">

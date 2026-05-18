@@ -10,6 +10,7 @@ public record GetQRCodesQuery : IRequest<List<QRListItemDTO>>;
 public class QRListItemDTO
 {
     public Guid Id { get; set; }
+    public Guid? StoreId { get; set; }
     public string PublicKey { get; set; } = null!;
     public string StoreTitle { get; set; } = null!;
     public string CompanyTitle { get; set; } = null!;
@@ -29,6 +30,7 @@ public class GetQRCodesQueryHandler(IRepository<QRCode> repoQR) : IRequestHandle
             .Select(q => new QRListItemDTO
             {
                 Id = q.Id,
+                StoreId = q.StoreId,
                 PublicKey = q.PublicKey,
                 StoreTitle = q.Store != null ? q.Store.Title : "N/A",
                 CompanyTitle = (q.Store != null && q.Store.Company != null) ? q.Store.Company.Title : "N/A",

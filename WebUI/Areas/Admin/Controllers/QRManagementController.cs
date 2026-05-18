@@ -32,7 +32,7 @@ public class QRManagementController(IMediator mediator) : Controller
     [HttpGet]
     public async Task<IActionResult> StoreDetails(Guid storeId, CancellationToken ct)
     {
-        var model = await mediator.Send(new GetQRDetailQuery(storeId), ct);
+        var model = await mediator.Send(new GetQRDetailQuery(storeId, User.IsInRole("Admin")), ct);
         if (model == null)
         {
             return NotFound();
@@ -57,7 +57,6 @@ public class QRManagementController(IMediator mediator) : Controller
         return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] });
     }
 }
-
 
 
 
