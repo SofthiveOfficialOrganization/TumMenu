@@ -115,12 +115,6 @@ public static class SecurityRequestClassifier
             return true;
         }
 
-        if (IsPathOrChild(path, "/admin"))
-        {
-            return httpContext.User.Identity?.IsAuthenticated != true ||
-                   !httpContext.User.IsInRole("Admin");
-        }
-
         return false;
     }
 

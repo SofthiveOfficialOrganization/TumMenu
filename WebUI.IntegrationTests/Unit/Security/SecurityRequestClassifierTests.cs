@@ -45,6 +45,19 @@ public class SecurityRequestClassifierTests
         result.Kind.Should().Be(SecurityRequestKind.None);
     }
 
+    [Theory]
+    [InlineData("/Admin")]
+    [InlineData("/Admin/Dashboard")]
+    [InlineData("/admin/store")]
+    public void ClassifySuccessfulRequest_AdminPaths_ReturnsNone(string path)
+    {
+        var context = CreateContext(path);
+
+        var result = SecurityRequestClassifier.ClassifySuccessfulRequest(context);
+
+        result.Kind.Should().Be(SecurityRequestKind.None);
+    }
+
     [Fact]
     public void ClassifySuccessfulRequest_UnexpectedApiSuccess_ReturnsUnexpectedSensitiveSuccess()
     {

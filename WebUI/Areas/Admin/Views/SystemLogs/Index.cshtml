@@ -18,7 +18,11 @@
                     <h4 class="fw-bold mb-1">Sistem Logları</h4>
                     <p class="text-secondary small mb-0">WebUI hata kayıtlarını filtreleyin ve detaylarını inceleyin.</p>
                 </div>
-                <form asp-action="Index" method="get" class="row g-2 align-items-end">
+                <div class="d-flex flex-column align-items-xl-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger align-self-start align-self-xl-end" data-bs-toggle="modal" data-bs-target="#clearLogsModal">
+                        <i class="fas fa-trash-alt me-1"></i> Logları Sil
+                    </button>
+                    <form asp-action="Index" method="get" class="row g-2 align-items-end">
                     <div class="col-6 col-lg-auto">
                         <label class="form-label small text-secondary mb-1">Başlangıç</label>
                         <input type="date" name="DateFrom" class="form-control form-control-sm" value="@query["DateFrom"]" />
@@ -55,7 +59,8 @@
                     <div class="col-12 col-lg-auto">
                         <a asp-action="Index" class="btn btn-sm btn-light">Temizle</a>
                     </div>
-                </form>
+                    </form>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -156,6 +161,61 @@
                     </nav>
                 </div>
             }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="clearLogsModal" tabindex="-1" aria-labelledby="clearLogsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <div>
+                    <h5 class="modal-title fw-bold" id="clearLogsModalLabel">Logları Sil</h5>
+                    <p class="text-secondary small mb-0">Seçtiğiniz tarih aralığı ve status kodlarına göre log kayıtları silinir.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <form asp-action="Clear" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body pt-0">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">Başlangıç</label>
+                            <input type="date" name="dateFrom" class="form-control" value="@query["DateFrom"]" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">Bitiş</label>
+                            <input type="date" name="dateTo" class="form-control" value="@query["DateTo"]" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Status Kodu</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                @{
+                                    var statusOptions = new[] { 200, 400, 401, 403, 404, 500 };
+                                }
+                                @foreach (var statusCode in statusOptions)
+                                {
+                                    <input type="checkbox" class="btn-check" name="statusCodes" value="@statusCode" id="clearStatus@statusCode" autocomplete="off" />
+                                    <label class="btn btn-outline-secondary btn-sm" for="clearStatus@statusCode">@statusCode</label>
+                                }
+                            </div>
+                            <div class="form-text">Status kodu seçmezseniz tarih aralığındaki tüm loglar silinir.</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="alert alert-warning mb-0 small">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Bu işlem seçili kriterlere uyan log kayıtlarını listeden kaldırır.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i> Logları Sil
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
