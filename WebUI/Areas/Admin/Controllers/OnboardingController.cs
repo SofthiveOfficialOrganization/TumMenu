@@ -50,8 +50,8 @@ public sealed class OnboardingController(IMediator mediator, ILogger<OnboardingC
 
                 if (menus.Items.Any())
                 {
-                    ViewBag.MenuId = menus.Items.First().Id;
-                    ViewBag.InitialStep = 4; // Go to Category creation
+                    await mediator.Send(new Application.Owners.Commands.MarkWizardCompletedCommand(), ct);
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
                 else
                 {

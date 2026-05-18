@@ -267,59 +267,10 @@
                                 </div>
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary btn-xl shadow-lg hover-scale">
-                                        Kategori Ekle <i class="fas fa-arrow-right ms-2"></i>
+                                        Paneli Aç <i class="fas fa-arrow-right ms-2"></i>
                                     </button>
                                 </div>
                             </form>
-                        </div>
-
-                        <!-- Step 4: Select Categories -->
-                        <div class="wizard-step w-100 p-4 p-md-5 fade-in-up" id="step-category">
-                            <input type="hidden" id="CategoryMenuId" name="MenuId">
-                            <div class="text-center mb-4">
-                                <i class="fas fa-tags fa-4x text-warning animate-bounce mb-3"></i>
-                                <h2 class="fs-2 fs-md-1 fw-bold text-warning mb-1 mb-md-2">İlk Kategorilerin!</h2>
-                                <p class="fs-6 fs-md-5 text-muted px-2 px-md-0">Kütüphaneden kategorileri seç ve menüne ekle. Dilediğin zaman tamamla.</p>
-                            </div>
-
-                            <div class="row g-3 category-container">
-                                <!-- Left: Library Search -->
-                                <div class="col-12 col-md-6">
-                                    <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
-                                        <h5 class="fw-bold text-muted text-uppercase mb-3">
-                                            <i class="fas fa-book-open me-2"></i> Kategori Bul
-                                        </h5>
-                                        <input type="text" id="categorySearch" class="form-control form-control-lg mb-3 search-input-lg" placeholder="Ara...">
-                                        <div id="categoryLibraryList" class="flex-grow-1 overflow-auto category-list">
-                                            <div class="text-center text-muted py-5" id="libraryPlaceholder">
-                                                <i class="fas fa-search fa-2x d-block mb-3 opacity-50"></i>
-                                                <span class="fs-6">Aramak için yazmaya başlayın</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right: Added Categories (Sortable 2-col grid) -->
-                                <div class="col-12 col-md-6">
-                                    <div class="border rounded-3 h-100 p-3 bg-transparent shadow-sm d-flex flex-column">
-                                        <h5 class="fw-bold text-muted text-uppercase mb-3">
-                                            <i class="fas fa-list me-2"></i> Menüm
-                                        </h5>
-                                        <div id="addedCategoryList" class="flex-grow-1 overflow-auto row g-2 align-content-start category-list-added">
-                                            <div class="col-12 text-center text-muted py-5" id="addedPlaceholder">
-                                                <i class="fas fa-inbox fa-2x d-block mb-3 opacity-50"></i>
-                                                <span class="fs-6">Henüz kategori eklenmedi</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-grid mt-4">
-                                <button type="button" id="btnCompleteOnboarding" class="btn btn-primary shadow-lg hover-scale py-4 fs-4 fw-bold">
-                                    Kurulumu Tamamla <i class="fas fa-check-circle ms-2"></i>
-                                </button>
-                            </div>
                         </div>
 
                     </div>
@@ -389,7 +340,7 @@
 
     .wizard-step {
         transition: opacity 0.4s ease;
-        width: 20% !important;
+        width: 25% !important;
         flex-shrink: 0;
         padding: 2.5rem 1rem !important;
     }
@@ -438,7 +389,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
             crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
     <script src="~/js/address-map-geocoder.js" asp-append-version="true"></script>
     <script>
@@ -446,8 +396,8 @@
 
             let currentStep = @(ViewBag.InitialStep ?? 0);
             const wizard = $('#onboarding-wizard');
-            const finalStep = 4;
-            const slidePercent = 20;
+            const finalStep = 3;
+            const slidePercent = 25;
             let isSingleStore = @Json.Serialize(ViewBag.IsSingleStore ?? false);
 
             // Pre-fill hidden fields if resuming
@@ -460,11 +410,6 @@
             const existingStoreId = '@ViewBag.StoreId';
             if (existingStoreId) {
                 $('#MenuStoreId').val(existingStoreId);
-            }
-
-            const existingMenuId = '@ViewBag.MenuId';
-            if (existingMenuId) {
-                $('#CategoryMenuId').val(existingMenuId);
             }
 
             function applyStoreModeText() {
@@ -486,11 +431,6 @@
             if (currentStep > 0) {
                  wizard.css('transform', `translateX(-${currentStep * slidePercent}%)`);
             }
-            // If resuming directly on step 4, init the category step
-            if (currentStep === finalStep) {
-                setTimeout(() => initCategoryStep(), 300);
-            }
-            
             // --- Shared Slug Logic ---
             function slugify(text) {
                 const turkishMap = {
@@ -845,14 +785,10 @@
                     districtSelect.trigger('change.select2');
                 }
 
-                // Auto-init category step when reaching step 4
-                if (currentStep === finalStep) {
-                    setTimeout(() => initCategoryStep(), 300);
-                }
             }
             
             // Initial progress & height
-            $('.onboarding-progress-bar').css('width', (@(ViewBag.InitialStep ?? 0) / 4 * 100) + '%');
+            $('.onboarding-progress-bar').css('width', (@(ViewBag.InitialStep ?? 0) / 3 * 100) + '%');
             setTimeout(updateWizardHeight, 500);
             $(window).on('resize', updateWizardHeight);
             
@@ -1059,7 +995,7 @@
                 e.preventDefault();
                 const btn = $(this).find('button[type="submit"]');
                 const originalText = btn.html();
-                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Kaydediliyor...');
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Panel açılıyor...');
 
                 const formData = {
                     CompanyId: $('#MenuCompanyId').val(),
@@ -1077,9 +1013,7 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        $('#CategoryMenuId').val(response.id);
-                        btn.prop('disabled', false).html(originalText);
-                        nextStep();
+                        completeOnboarding(response.id, btn, originalText);
                     },
                     error: function(xhr) {
                         btn.prop('disabled', false).html(originalText);
@@ -1088,165 +1022,7 @@
                 });
             });
 
-            // --- Step 4: Category Library Search + Add + Sort ---
-            let categorySearchTimer = null;
-            const categorySearchUrl  = `/admin/Onboarding/category-library`;
-            const menuCategoriesUrl  = `/admin/Onboarding/menu-categories`;
-            const addCategoryUrl     = `/admin/Onboarding/add-category`;
-            const sortUrl            = `/admin/Onboarding/update-category-sort-order`;
-
-            // Called on step 4 entry: load existing menu categories into right panel,
-            // then load the library (which excludes already-added ones).
-            function initCategoryStep() {
-                const menuId = $('#CategoryMenuId').val();
-                if (!menuId) { loadCategoryLibrary(''); return; }
-
-                $.get(menuCategoriesUrl, { menuId: menuId }, function(existingItems) {
-                    if (existingItems && existingItems.length > 0) {
-                        $('#addedPlaceholder').hide();
-                        existingItems.forEach(function(item) {
-                            appendAddedCategoryCard(item.id, item.title);
-                        });
-                        if (existingItems.length >= 1) initAddedCategoriesSortable();
-                    }
-                }).always(function() {
-                    loadCategoryLibrary('');
-                });
-            }
-
-            // Load library on step 4 entry — called after menu step completes
-            function loadCategoryLibrary(search) {
-                const menuId = $('#CategoryMenuId').val();
-                if (!menuId) return;
-
-                $('#libraryPlaceholder').hide();
-                $('#categoryLibraryList').html('<div class="text-center py-3"><span class="spinner-border spinner-border-sm text-warning"></span></div>');
-
-                $.get(categorySearchUrl, { search: search || '', menuId: menuId }, function(items) {
-                    $('#categoryLibraryList').empty();
-                    if (!items || items.length === 0) {
-                        $('#categoryLibraryList').html('<div class="text-center text-muted py-3 small">Sonuç bulunamadı.</div>');
-                        return;
-                    }
-                    items.forEach(function(item) {
-                        const row = $(`
-                            <div class="d-flex align-items-center justify-content-between p-3 mb-2 library-item onboarding-category-option"
-                                style="cursor: pointer;"
-                                data-id="${item.id}" data-title="${item.title}">
-                                <span class="onboarding-category-title fw-semibold fs-6 pe-2">${item.title}</span>
-                                <button type="button" class="btn btn-add-category px-3 btn-sm fw-bold flex-shrink-0" title="Ekle">
-                                    <i class="fas fa-plus me-1"></i> Ekle
-                                </button>
-                            </div>`);
-                        row.find('.btn-add-category').on('click', function() {
-                            addCategoryToMenu(item.id, item.title, row);
-                        });
-                        $('#categoryLibraryList').append(row);
-                    });
-                }).fail(function() {
-                    $('#categoryLibraryList').html('<div class="text-center text-danger py-3 small">Yükleme hatası.</div>');
-                });
-            }
-
-            // Debounced search input
-            $('#categorySearch').on('input', function() {
-                clearTimeout(categorySearchTimer);
-                categorySearchTimer = setTimeout(function() {
-                    loadCategoryLibrary($('#categorySearch').val());
-                }, 400);
-            });
-
-            function addCategoryToMenu(libraryItemId, title, libraryRow) {
-                const menuId = $('#CategoryMenuId').val();
-                const sortOrder = $('#addedCategoryList .added-category-item').length;
-
-                $.ajax({
-                    url: addCategoryUrl,
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        MenuId: menuId,
-                        StoreId: $('#MenuStoreId').val() || null,
-                        CategoryLibraryItemId: libraryItemId,
-                        SortOrder: sortOrder
-                    }),
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-                    success: function(res) {
-                        // Remove item from library list (already added)
-                        libraryRow.fadeOut(200, function() { $(this).remove(); });
-                        // Append to right panel
-                        appendAddedCategoryCard(res.id, title);
-                        if ($('#addedCategoryList .added-category-item').length === 1) {
-                            initAddedCategoriesSortable();
-                        }
-                        updateWizardHeight();
-                    },
-                    error: function(xhr) { handleError(xhr, 'AddCategory'); }
-                });
-            }
-
-            // Shared helper: build and append a category card to the right panel
-            function appendAddedCategoryCard(categoryId, title) {
-                $('#addedPlaceholder').hide();
-                const colDiv = $('<div>').addClass('col-12 col-sm-6 added-category-item').attr('data-id', categoryId);
-                const card = $('<div>')
-                    .addClass('onboarding-category-selected p-3 h-100 d-flex align-items-center gap-2 position-relative')
-                    .html(`
-                        <i class="fas fa-grip-vertical handle fs-5 flex-shrink-0" style="cursor:grab"></i>
-                        <span class="onboarding-category-title fw-bold flex-grow-1 fs-6 pe-5">${title}</span>
-                        <button type="button" class="btn btn-danger btn-remove-category position-absolute d-flex align-items-center justify-content-center"
-                            style="width:32px;height:32px;padding:0; top: 10px; right: 10px;" title="Kaldır">
-                            <i class="fas fa-times text-white small"></i>
-                        </button>`);
-                card.find('.btn-remove-category').on('click', function() {
-                    const storeId = $('#MenuStoreId').val() || '';
-                    $.post(`/admin/Onboarding/remove-category/${categoryId}?storeId=${encodeURIComponent(storeId)}`, function() {
-                        colDiv.remove();
-                        if ($('#addedCategoryList .added-category-item').length === 0) {
-                            $('#addedPlaceholder').show();
-                        }
-                        loadCategoryLibrary($('#categorySearch').val());
-                        updateWizardHeight();
-                    }).fail(function() {
-                        Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Kaldırma işlemi başarısız.', showConfirmButton: false, timer: 3000 });
-                    });
-                });
-                colDiv.append(card);
-                $('#addedCategoryList').append(colDiv);
-                updateWizardHeight();
-            }
-
-            function initAddedCategoriesSortable() {
-                const el = document.getElementById('addedCategoryList');
-                if (el._sortable) return;
-                el._sortable = new Sortable(el, {
-                    animation: 150,
-                    handle: '.handle',
-                    ghostClass: 'bg-warning',
-                    onEnd: function() {
-                        const items = Array.from(el.querySelectorAll('.added-category-item')).map((item, i) => ({
-                            id: item.getAttribute('data-id'),
-                            sortOrder: i
-                        }));
-                        fetch(sortUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                sourceMenuId: $('#CategoryMenuId').val(),
-                                storeId: $('#MenuStoreId').val() || null,
-                                items: items
-                            })
-                        });
-                    }
-                });
-            }
-
-            // Complete wizard button
-            $('#btnCompleteOnboarding').on('click', function() {
-                const btn = $(this);
-                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Tamamlanıyor...');
-                const menuId = $('#CategoryMenuId').val();
-
+            function completeOnboarding(menuId, btn, originalText) {
                 $.ajax({
                     url: `/admin/Onboarding/complete`,
                     type: 'POST',
@@ -1259,12 +1035,12 @@
                     success: function() {
                         window.location.href = `/admin/Dashboard`;
                     },
-                    error: function() {
-                        btn.prop('disabled', false).html('Kurulumu Tamamla <i class="fas fa-check-circle ms-2"></i>');
-                        Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Hata oluştu', showConfirmButton: false, timer: 3000 });
+                    error: function(xhr) {
+                        btn.prop('disabled', false).html(originalText);
+                        handleError(xhr, 'Onboarding Complete');
                     }
                 });
-            });
+            }
 
             window.TumMenuAddressMapGeocoder.init({
                 buttonSelector: '#findAddressOnMapBtn',
