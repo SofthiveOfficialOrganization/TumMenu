@@ -39,7 +39,7 @@
                         {
                             foreach (var item in Model)
                             {
-                                <tr data-tummenu-click-url="@Url.Action("EditPlacement", new { id = item.Id })">
+                                <tr>
                                     <td class="ps-3 fw-bold">@item.AdSlot.Key</td>
                                     <td>@item.AdCreative.Type</td>
                                     <td>@(item.StartAt?.ToString("g") ?? "-")</td>

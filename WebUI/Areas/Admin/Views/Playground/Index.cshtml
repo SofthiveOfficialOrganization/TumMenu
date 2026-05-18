@@ -1,6 +1,5 @@
 @{
     ViewData["Title"] = "UI Test Playground";
-    var canThrowServerError = ViewData["CanThrowServerError"] as bool? == true;
 }
 
 <div class="row mb-4">
@@ -11,27 +10,6 @@
         </div>
     </div>
 </div>
-
-@if (canThrowServerError && User.IsInRole("Admin"))
-{
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="horizon-card">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div>
-                        <h5 class="fw-bold mb-1"><i class="fas fa-bug me-2 text-danger"></i>500 Hata Simülasyonu</h5>
-                        <p class="text-secondary small mb-0">Admin hata sayfasını ve sistem log kaydını test etmek için kullanın.</p>
-                    </div>
-                    <form asp-area="Admin" asp-controller="Playground" asp-action="ThrowServerError" method="post" class="m-0">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="fas fa-bolt me-1"></i> 500 Hatası Patlat
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 <!-- ==========================================
      SECTION 1: Skeleton / Shimmer Loading

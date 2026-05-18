@@ -3,45 +3,34 @@
 @inject IWebHostEnvironment Env
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Bir Hata Oluştu";
-    var message = ViewData["Message"] as string ?? "Bir hata oluştu, işlemi lütfen tekrar deneyin.";
-    var traceId = ViewData["TraceId"] as string;
+    ViewData["Title"] = "Hata";
 }
 
-<div class="row min-vh-75 d-flex align-items-center justify-content-center">
-    <div class="col-md-7 text-center">
-        <div class="horizon-card py-5 px-4">
-            <div class="mb-4">
-                <i class="fas fa-exclamation-triangle text-danger display-1 opacity-25"></i>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center">
+        <div class="mb-4">
+             <div class="horizon-avatar bg-danger bg-opacity-10 text-danger mx-auto" style="width: 100px; height: 100px; font-size: 40px;">
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
-            <h1 class="fw-bold text-dark display-5 mb-3">Bir hata oluştu</h1>
-            <p class="text-muted mb-5 px-md-5">
-                @message
-            </p>
-            <div class="d-flex flex-wrap gap-3 justify-content-center">
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill">
-                    <i class="fas fa-home me-2"></i> Panele Dön
-                </a>
-                <button data-tummenu-back data-fallback-url="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="btn btn-outline-secondary px-4 py-2 rounded-pill" type="button">
-                    <i class="fas fa-arrow-left me-2"></i> Geri Git
-                </button>
-            </div>
+        </div>
+        <h1 class="fw-bold text-dark mb-2">Bir şeyler ters gitti!</h1>
+        <p class="text-secondary mb-4" style="max-width: 400px; margin: 0 auto;">
+            İsteğiniz işlenirken beklenmeyen bir hata oluştu. Ekibimiz bilgilendirildi.
+        </p>
 
-            @if (!string.IsNullOrWhiteSpace(traceId))
-            {
-                <p class="small text-muted mt-4 mb-0">
-                    <strong>Referans:</strong> <code>@traceId</code>
-                </p>
-            }
-
-            @if (Env.IsDevelopment())
-            {
-                <div class="mt-5 text-start">
-                    <p class="text-danger fw-bold">Hata Detayları:</p>
-                    <pre class="small text-muted" style="white-space: pre-wrap;">@message</pre>
-                </div>
-            }
+        <div class="d-flex justify-content-center gap-3">
+             <a asp-controller="Dashboard" asp-action="Index" asp-area="Admin" data-tummenu-back data-fallback-url="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="btn btn-light text-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Geri Dön
+            </a>
+            <a asp-controller="Dashboard" asp-action="Index" asp-area="Admin" class="btn btn-primary">
+                Panele Dön
+            </a>
+        </div>
+        
+        <div class="mt-5 text-start">
+             <p class="text-danger fw-bold">Hata Detayları:</p>
+             <pre class="small text-muted" style="white-space: pre-wrap;">@ViewData["Message"]</pre>
+             <p class="small text-muted"><strong>İzleme ID:</strong> @ViewData["TraceId"]</p>
         </div>
     </div>
 </div>

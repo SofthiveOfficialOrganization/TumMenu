@@ -2090,20 +2090,3 @@ body.dark-mode .onboarding-category-selected .onboarding-category-title {
     white-space: pre-line;
     line-height: 1.6;
 }
-
-[data-tummenu-click-url] {
-    cursor: pointer;
-}
-
-tr[data-tummenu-click-url]:focus-within,
-tr[data-tummenu-click-url]:hover {
-    --bs-table-hover-bg: rgba(var(--horizon-primary-rgb), 0.045);
-}
-
-[data-tummenu-click-url]:not(tr) {
-    transition: box-shadow 0.18s ease, transform 0.18s ease;
-}
-
-[data-tummenu-click-url]:not(tr):hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}

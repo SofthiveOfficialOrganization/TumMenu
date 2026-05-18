@@ -37,7 +37,7 @@
                         {
                             foreach (var item in Model)
                             {
-                                <tr data-tummenu-click-url="@Url.Action("EditCreative", new { id = item.Id })">
+                                <tr>
                                     <td class="ps-3">
                                         <span class="badge @(item.Type == "image" ? "bg-primary" : "bg-warning")">@item.Type.ToUpper()</span>
                                     </td>

@@ -1,6 +1,5 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
-using Application.Stores.DTOs;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +25,7 @@ public sealed class PublicStorePageDTO
 	public bool MenuAvailable { get; init; }
 	public bool ShowMenuButton { get; init; }           // Menüye git butonu gösterilsin mi?
 	public bool ShowPricesOnMenu { get; init; }         // Menüde fiyatlar gösterilsin mi?
-	public bool ShowSocialLinksOnMenu { get; init; }
 	public bool ShowRepresentativeImagesDisclaimer { get; init; }
-	public IReadOnlyList<StoreSocialLinkDTO> SocialLinks { get; init; } = [];
 }
 
 public sealed class PublicStoreGalleryImageDTO
@@ -49,7 +46,6 @@ public sealed class GetPublicStorePageQueryHandler(
 			.Include(s => s.Address)
 			.Include(s => s.Menus)
 			.Include(s => s.Medias)
-			.Include(s => s.SocialLinks)
 			.FirstOrDefaultAsync(
 				s => s.Slug == req.StoreSlug && s.Company.Slug == req.CompanySlug && !s.IsDeleted,
 				ct);
@@ -94,20 +90,7 @@ public sealed class GetPublicStorePageQueryHandler(
 			MenuAvailable = menuAvailable,
 			ShowMenuButton = store.ShowMenuButton,
 			ShowPricesOnMenu = store.ShowPricesOnMenu,
-			ShowSocialLinksOnMenu = store.ShowSocialLinksOnMenu,
-			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
-			SocialLinks = store.SocialLinks
-				.Where(sl => !string.IsNullOrWhiteSpace(sl.Url))
-				.OrderBy(sl => sl.SortOrder)
-				.Select(sl => new StoreSocialLinkDTO
-				{
-					Id = sl.Id,
-					Platform = sl.Platform,
-					DisplayName = sl.DisplayName,
-					Url = sl.Url,
-					SortOrder = sl.SortOrder
-				})
-				.ToList()
+			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer
 		};
 	}
 

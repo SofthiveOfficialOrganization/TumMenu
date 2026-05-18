@@ -2203,22 +2203,12 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("ShowAddressOnMenu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<bool>("ShowInSearchAndListings")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("ShowMenuButton")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("ShowPhoneNumberOnMenu")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
@@ -2230,11 +2220,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("ShowRepresentativeImagesDisclaimer")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("ShowSocialLinksOnMenu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -2253,55 +2238,6 @@ namespace Infrastructure.Migrations
                         .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Stores");
-                });
-
-            modelBuilder.Entity("Domain.Entities.StoreSocialLink", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("DisplayName")
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Platform")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StoreId", "SortOrder");
-
-                    b.ToTable("StoreSocialLinks");
                 });
 
             modelBuilder.Entity("Domain.Entities.Subscription", b =>
@@ -3172,17 +3108,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Domain.Entities.StoreSocialLink", b =>
-                {
-                    b.HasOne("Domain.Entities.Store", "Store")
-                        .WithMany("SocialLinks")
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Store");
-                });
-
             modelBuilder.Entity("Domain.Entities.Subscription", b =>
                 {
                     b.HasOne("Domain.Entities.Company", "Company")
@@ -3366,8 +3291,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Menus");
 
                     b.Navigation("QRCode");
-
-                    b.Navigation("SocialLinks");
 
                     b.Navigation("Staffs");
                 });

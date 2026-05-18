@@ -27,7 +27,6 @@ public class GetStoreByIdQueryHandler(
 			.AsSplitQuery()
 			.Include(s => s.Company)
 			.Include(s => s.Address)
-			.Include(s => s.SocialLinks)
 			.Include(s => s.Staffs)
 			.Include(s => s.Medias)
 			.Include(s => s.Menus)

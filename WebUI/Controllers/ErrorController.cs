@@ -44,9 +44,7 @@ public sealed class ErrorController(
 		}
 
 		Response.StatusCode = statusCode;
-		var message = _env.IsDevelopment()
-			? ex?.Message ?? "Beklenmeyen bir hata oluştu."
-			: "Bir hata oluştu, işlemi lütfen tekrar deneyin.";
+		var message = ex != null ? $"{ex.Message}" : "Beklenmeyen bir hata oluştu.";
 		ViewData["Message"] = message;
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
 		TempData["Error"] = message;

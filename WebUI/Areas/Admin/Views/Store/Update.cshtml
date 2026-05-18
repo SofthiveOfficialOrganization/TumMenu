@@ -60,30 +60,12 @@
                     <label asp-for="ShowPricesOnMenu" class="form-check-label">Menüde fiyatları göster</label>
                     <div class="form-text text-muted small">Menüde ürün fiyatları görünür. Kapalı ise fiyatlar sadece QR menüde (isQr=true) gösterilir.</div>
                 </div>
+            </div>
+
             <div class="mb-3 form-check">
                 <input asp-for="ShowRepresentativeImagesDisclaimer" class="form-check-input" />
                 <label asp-for="ShowRepresentativeImagesDisclaimer" class="form-check-label">Herkese açık menüde «Görseller temsilidir» uyarısını göster</label>
             </div>
-                <div class="form-check mb-2">
-                    <input asp-for="ShowSocialLinksOnMenu" class="form-check-input" />
-                    <label asp-for="ShowSocialLinksOnMenu" class="form-check-label">Menüde sosyal linkleri göster</label>
-                </div>
-
-                <div class="form-check mb-2">
-                    <input asp-for="ShowAddressOnMenu" class="form-check-input" />
-                    <label asp-for="ShowAddressOnMenu" class="form-check-label">Menüde adresi göster</label>
-                </div>
-                
-                <div class="form-check mb-2">
-                    <input type="hidden" id="ShowPhoneNumberOnMenu" name="ShowPhoneNumberOnMenu" value="@Model.ShowPhoneNumberOnMenu.ToString().ToLowerInvariant()" />
-                    <input type="checkbox" id="ShowPhoneNumberOnMenuToggle" class="form-check-input" @(Model.ShowPhoneNumberOnMenu ? "checked" : "") />
-                    <label for="ShowPhoneNumberOnMenuToggle" class="form-check-label">Menüde telefon numarasını göster</label>
-                </div>
-            </div>
-
-            <partial name="_SocialLinksEditor" model="Model" />
-
-
 
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -220,20 +202,8 @@
     <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
     <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
-    <script src="~/js/store-social-links-editor.js" asp-append-version="true"></script>
     <script>
     $(document).ready(function () {
-        const phoneMenuHidden = $('#ShowPhoneNumberOnMenu');
-        const phoneMenuToggle = $('#ShowPhoneNumberOnMenuToggle');
-
-        function syncPhoneMenuVisibility() {
-            phoneMenuHidden.val(phoneMenuToggle.is(':checked') ? 'true' : 'false');
-        }
-
-        phoneMenuToggle.on('change', syncPhoneMenuVisibility);
-        $('form').on('submit', syncPhoneMenuVisibility);
-        syncPhoneMenuVisibility();
-
         const citySelect = $('#citySelect');
         const districtSelect = $('#districtSelect');
         const cityNameInput = $('#cityNameInput');

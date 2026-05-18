@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.QRs.Queries;
 
-public record GetQRDetailQuery(Guid StoreId, bool IncludeAllStores = false) : IRequest<MyQRDTO?>;
+public record GetQRDetailQuery(Guid StoreId) : IRequest<MyQRDTO?>;
 
 public class GetQRDetailQueryHandler(
     IRepository<Store> repoStore,
@@ -15,15 +15,13 @@ public class GetQRDetailQueryHandler(
     public async Task<MyQRDTO?> Handle(GetQRDetailQuery req, CancellationToken ct)
     {
         var userId = userContext.UserId;
-        if (!req.IncludeAllStores && string.IsNullOrEmpty(userId)) return null;
+        if (string.IsNullOrEmpty(userId)) return null;
 
         var store = await repoStore.Query(tracked: false)
             .Include(s => s.Company)
                 .ThenInclude(c => c.Owner)
             .Include(s => s.QRCode)
-            .Where(s => s.Id == req.StoreId
-                && s.Company != null
-                && (req.IncludeAllStores || (s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId)))
+            .Where(s => s.Id == req.StoreId && s.Company != null && s.Company.Owner != null && s.Company.Owner.ApplicationUserId == userId)
             .FirstOrDefaultAsync(ct);
 
         if (store == null || store.QRCode == null || store.Company == null) return null;

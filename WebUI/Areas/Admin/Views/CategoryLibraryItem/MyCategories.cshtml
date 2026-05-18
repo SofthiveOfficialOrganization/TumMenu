@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Kategorilerim";
-    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 
 <div class="row">
@@ -32,7 +31,7 @@
                         {
                             foreach (var item in Model.Items)
                             {
-                                <tr data-tummenu-click-url="@Url.Action("Details", new { slug = item.Slug, returnUrl = currentPageUrl })">
+                                <tr>
                                     <td class="ps-3">
                                         <div class="d-flex align-items-center">
                                             <div class="horizon-avatar bg-light text-warning me-3">

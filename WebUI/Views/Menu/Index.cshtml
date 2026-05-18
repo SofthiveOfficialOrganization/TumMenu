@@ -13,13 +13,6 @@
     // Fiyat görünürlüğü: ShowPricesOnMenu true ise veya isQr=true parametresi varsa göster
     var isQr = Context.Request.Query["isQr"].ToString().ToLower() == "true";
     var showPricesOnPublicMenu = Model.ShowPricesOnMenu || isQr;
-    var visibleSocialLinks = Model.ShowSocialLinksOnMenu
-        ? Model.SocialLinks.Where(x => !string.IsNullOrWhiteSpace(x.Url)).OrderBy(x => x.SortOrder).ToList()
-        : [];
-    var showMenuPhone = Model.ShowPhoneNumberOnMenu && !string.IsNullOrWhiteSpace(Model.StorePhoneNumber);
-    var showMenuSecondaryPhone = Model.ShowPhoneNumberOnMenu && !string.IsNullOrWhiteSpace(Model.StoreSecondaryPhoneNumber);
-    var showMenuAddress = Model.ShowAddressOnMenu && !string.IsNullOrWhiteSpace(Model.StoreFullAddress);
-    var hasBusinessInfo = visibleSocialLinks.Count > 0 || showMenuPhone || showMenuSecondaryPhone || showMenuAddress;
 
     ViewData["Title"] = $"{storeName} Menüsü";
     ViewData["Description"] = showPricesOnPublicMenu
@@ -61,17 +54,6 @@
                     @if (Model.ShowRepresentativeImagesDisclaimer)
                     {
                         <p class="pm-disclaimer" role="note">Görseller temsilidir</p>
-                    }
-                    @if (hasBusinessInfo)
-                    {
-                        <button type="button" class="pm-info-button" data-pm-info-open>
-                            <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M12 16v-4"></path>
-                                <path d="M12 8h.01"></path>
-                            </svg>
-                            <span>İşletme bilgileri</span>
-                        </button>
                     }
 @* 
                     @if (categories.Count > 0)
@@ -170,123 +152,6 @@
     </main>
 </div>
 
-@if (hasBusinessInfo)
-{
-    <div class="pm-business-info-modal" data-pm-info-modal hidden>
-        <button type="button" class="pm-business-info-backdrop" data-pm-info-close aria-label="İşletme bilgilerini kapat"></button>
-        <section class="pm-business-info-dialog" role="dialog" aria-modal="true" aria-labelledby="businessInfoTitle">
-            <div class="pm-business-info-head">
-                <div>
-                    <p class="pm-business-info-kicker">@companyName</p>
-                    <h2 id="businessInfoTitle">İşletme bilgileri</h2>
-                </div>
-                <button type="button" class="pm-business-info-close" data-pm-info-close aria-label="Kapat">
-                    <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="pm-business-info-body">
-                @if (showMenuPhone || showMenuSecondaryPhone)
-                {
-                    <div class="pm-business-info-group">
-                        <span class="pm-business-info-icon" aria-hidden="true">
-                            <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.35 1.9.66 2.8a2 2 0 0 1-.45 2.11L8.05 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.31 1.84.53 2.8.66A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
-                        </span>
-                        <div>
-                            <h3>Telefon</h3>
-                            @if (showMenuPhone)
-                            {
-                                <a href="@TelHref(Model.StorePhoneNumber)">@Model.StorePhoneNumber</a>
-                            }
-                            @if (showMenuSecondaryPhone)
-                            {
-                                <a href="@TelHref(Model.StoreSecondaryPhoneNumber)">@Model.StoreSecondaryPhoneNumber</a>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (showMenuAddress)
-                {
-                    <div class="pm-business-info-group">
-                        <span class="pm-business-info-icon" aria-hidden="true">
-                            <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                        </span>
-                        <div>
-                            <h3>Adres</h3>
-                            <p>@Model.StoreFullAddress</p>
-                        </div>
-                    </div>
-                }
-
-                @if (visibleSocialLinks.Count > 0)
-                {
-                    <div class="pm-business-info-socials" aria-label="Sosyal medya hesapları">
-                        @foreach (var link in visibleSocialLinks)
-                        {
-                            <a href="@link.Url" target="_blank" rel="noopener noreferrer" class="pm-business-info-social" aria-label="@SocialLabel(link.Platform, link.DisplayName)">
-                                @switch (link.Platform)
-                                {
-                                    case StoreSocialPlatform.Twitter:
-                                        <svg class="tm-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2H21.9l-8 9.14L23.3 22h-7.37l-5.77-6.86L3.56 22H-.1l8.56-9.78L-.55 2h7.56l5.2 6.16L18.24 2Zm-1.28 18.08h2.03L5.9 3.82H3.72l13.24 16.26Z" /></svg>
-                                        break;
-                                    case StoreSocialPlatform.Instagram:
-                                        <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
-                                        break;
-                                    case StoreSocialPlatform.Facebook:
-                                        <svg class="tm-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.6V6.8c0-.86.2-1.3 1.42-1.3H17V2.22A21.3 21.3 0 0 0 14.25 2C11.5 2 9.6 3.68 9.6 6.78V8.6H6.5V12h3.1v10H14V12h2.92l.46-3.4H14Z" /></svg>
-                                        break;
-                                    case StoreSocialPlatform.YouTube:
-                                        <svg class="tm-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.8 2.8 0 0 0-1.97-1.98C18.83 4 12 4 12 4s-6.83 0-8.57.44a2.8 2.8 0 0 0-1.97 1.98A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.8 2.8 0 0 0 1.97 1.98C5.17 20 12 20 12 20s6.83 0 8.57-.44a2.8 2.8 0 0 0 1.97-1.98A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58ZM9.75 15.15v-6.3L15.5 12l-5.75 3.15Z" /></svg>
-                                        break;
-                                    default:
-                                        <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 0 20"></path><path d="M12 2a15.3 15.3 0 0 0 0 20"></path></svg>
-                                        break;
-                                }
-                                <span>@SocialLabel(link.Platform, link.DisplayName)</span>
-                            </a>
-                        }
-                    </div>
-                }
-            </div>
-        </section>
-    </div>
-
-    <script>
-        (() => {
-            const modal = document.querySelector('[data-pm-info-modal]');
-            const openButton = document.querySelector('[data-pm-info-open]');
-            if (!modal || !openButton) return;
-
-            const closeButtons = modal.querySelectorAll('[data-pm-info-close]');
-            const open = () => {
-                modal.hidden = false;
-                requestAnimationFrame(() => modal.classList.add('is-open'));
-                document.body.classList.add('pm-info-modal-open');
-            };
-            const close = () => {
-                modal.classList.remove('is-open');
-                document.body.classList.remove('pm-info-modal-open');
-                window.setTimeout(() => { modal.hidden = true; }, 180);
-            };
-
-            openButton.addEventListener('click', open);
-            closeButtons.forEach(button => button.addEventListener('click', close));
-            document.addEventListener('keydown', event => {
-                if (event.key === 'Escape' && !modal.hidden) close();
-            });
-        })();
-    </script>
-}
-
 @functions {
     private static int CountActiveProducts(CategoryDTO category)
     {
@@ -294,28 +159,5 @@
         var subCategoryProductCount = category.SubCategories?.Where(c => c.IsActive).Sum(CountActiveProducts) ?? 0;
 
         return directProductCount + subCategoryProductCount;
-    }
-
-    private static string TelHref(string? phone)
-    {
-        var digits = new string((phone ?? string.Empty).Where(c => char.IsDigit(c) || c == '+').ToArray());
-        return $"tel:{digits}";
-    }
-
-    private static string SocialLabel(StoreSocialPlatform platform, string? displayName)
-    {
-        if (!string.IsNullOrWhiteSpace(displayName))
-        {
-            return displayName;
-        }
-
-        return platform switch
-        {
-            StoreSocialPlatform.Twitter => "Twitter",
-            StoreSocialPlatform.Instagram => "Instagram",
-            StoreSocialPlatform.Facebook => "Facebook",
-            StoreSocialPlatform.YouTube => "YouTube",
-            _ => "Web sitesi"
-        };
     }
 }

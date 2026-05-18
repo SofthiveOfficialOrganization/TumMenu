@@ -286,18 +286,17 @@ public sealed class AppExceptionFilter(
 			Model = errorModel,
 			["Message"] = _env.IsDevelopment()
 				? ex.Message
-				: "Bir hata oluştu, işlemi lütfen tekrar deneyin.",
-			["TraceId"] = traceId
+				: "Beklenmeyen bir hata oluştu."
 		};
 
 		// Set TempData["Error"] for the toast notification
 		var factory = httpContext.RequestServices.GetRequiredService<ITempDataDictionaryFactory>();
 		var tempData = factory.GetTempData(httpContext);
-		tempData["Error"] = _env.IsDevelopment() ? ex.Message : "Bir hata oluştu, işlemi lütfen tekrar deneyin.";
+		tempData["Error"] = _env.IsDevelopment() ? ex.Message : "Beklenmeyen bir hata oluştu.";
 
 		context.Result = new ViewResult
 		{
-			ViewName = ResolveErrorViewPath(context),
+			ViewName = "~/Views/Shared/Error.cshtml",
 			ViewData = viewDataError,
 			TempData = tempData
 		};
@@ -333,18 +332,6 @@ public sealed class AppExceptionFilter(
 			ViewData = viewData,
 			TempData = tempData
 		};
-	}
-
-	private static string ResolveErrorViewPath(ExceptionContext context)
-	{
-		var area = context.RouteData.Values["area"]?.ToString();
-		var path = context.HttpContext.Request.Path.Value ?? string.Empty;
-		var isAdmin = area?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true ||
-			path.StartsWith("/admin", StringComparison.OrdinalIgnoreCase);
-
-		return isAdmin
-			? "~/Areas/Admin/Views/Shared/Error.cshtml"
-			: "~/Views/Shared/Error.cshtml";
 	}
 
 
