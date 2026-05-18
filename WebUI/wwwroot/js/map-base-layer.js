@@ -2,13 +2,12 @@
     'use strict';
 
     var DEFAULT_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+    var DEFAULT_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var DEFAULT_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
     function ensureDependencies() {
         if (!window.L) {
             throw new Error('Leaflet is required before map-base-layer.js');
-        }
-
-        if (typeof window.L.maplibreGL !== 'function') {
-            throw new Error('MapLibre GL Leaflet is required before map-base-layer.js');
         }
     }
 
@@ -24,13 +23,28 @@
             }).addTo(map);
         }
 
-        if (!map._openFreeMapAttributionApplied) {
-            map._openFreeMapAttributionApplied = true;
+        if (!map._tumMenuMapAttributionApplied) {
+            map._tumMenuMapAttributionApplied = true;
         }
     }
 
-    function createLayer(options) {
+    function createRasterLayer(options) {
         ensureDependencies();
+
+        options = options || {};
+
+        return window.L.tileLayer(options.tileUrl || DEFAULT_TILE_URL, {
+            attribution: options.attribution || DEFAULT_ATTRIBUTION,
+            maxZoom: options.maxZoom || 19
+        });
+    }
+
+    function createVectorLayer(options) {
+        ensureDependencies();
+
+        if (typeof window.L.maplibreGL !== 'function') {
+            throw new Error('MapLibre GL Leaflet is required to use the vector map base layer');
+        }
 
         options = options || {};
 
@@ -39,25 +53,38 @@
         });
     }
 
+    function createLayer(options) {
+        options = options || {};
+
+        if (options.useVector === true) {
+            return createVectorLayer(options);
+        }
+
+        return createRasterLayer(options);
+    }
+
     function addTo(map, options) {
         if (!map) {
             return null;
         }
 
-        if (map._openFreeMapBaseLayer) {
-            return map._openFreeMapBaseLayer;
+        if (map._tumMenuBaseLayer) {
+            return map._tumMenuBaseLayer;
         }
 
         ensureAttributionControl(map);
 
-        map._openFreeMapBaseLayer = createLayer(options).addTo(map);
-        return map._openFreeMapBaseLayer;
+        map._tumMenuBaseLayer = createLayer(options).addTo(map);
+        return map._tumMenuBaseLayer;
     }
 
     window.TumMenuMapBaseLayer = {
         DEFAULT_STYLE_URL: DEFAULT_STYLE_URL,
+        DEFAULT_TILE_URL: DEFAULT_TILE_URL,
         addTo: addTo,
         createLayer: createLayer,
+        createRasterLayer: createRasterLayer,
+        createVectorLayer: createVectorLayer,
         ensureAttributionControl: ensureAttributionControl
     };
 })(window);
