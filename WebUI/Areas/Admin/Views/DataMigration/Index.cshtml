@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Veri Aktarımı";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="horizon-card">
+            <div class="mb-4">
+                <h4 class="fw-bold mb-1">Veri Aktarımı</h4>
+                <p class="text-secondary small mb-0">İki veritabanı arasında tek tablo için bulk satır kopyalama.</p>
+            </div>
+
+            <form id="dm-form" autocomplete="off">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label small">Source Connection String</label>
+                    <input type="text" id="dm-source" class="form-control form-control-sm" spellcheck="false" />
+                    <div id="dm-source-status" class="small mt-1"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small">Target Connection String</label>
+                    <input type="text" id="dm-target" class="form-control form-control-sm" spellcheck="false" />
+                    <div id="dm-target-status" class="small mt-1"></div>
+                </div>
+
+                <div class="d-flex gap-2 mb-4">
+                    <button type="button" id="dm-test" class="btn btn-sm btn-outline-primary">Test Connections</button>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small">Tablo</label>
+                    <select id="dm-table" class="form-select form-select-sm" disabled>
+                        <option value="">— Önce bağlantıları test edin —</option>
+                    </select>
+                </div>
+
+                <div class="d-flex gap-2 mb-4">
+                    <button type="button" id="dm-migrate" class="btn btn-sm btn-primary" disabled>
+                        Bulk Transfer
+                    </button>
+                    <span id="dm-running" class="small text-secondary d-none">
+                        <span class="spinner-border spinner-border-sm"></span> Aktarılıyor...
+                    </span>
+                </div>
+
+                <div id="dm-result" class="border-top pt-3 d-none">
+                    <h6 class="fw-bold">Sonuç</h6>
+                    <div class="row g-2 mb-2 small">
+                        <div class="col-auto">Okunan: <strong id="dm-r-read">0</strong></div>
+                        <div class="col-auto">Mevcut: <strong id="dm-r-exists">0</strong></div>
+                        <div class="col-auto">Eklenen: <strong id="dm-r-inserted">0</strong></div>
+                        <div class="col-auto">Hata: <strong id="dm-r-errors">0</strong></div>
+                    </div>
+                    <div id="dm-r-error-wrap" class="d-none">
+                        <details>
+                            <summary class="small">Hata detayı</summary>
+                            <table class="table table-sm mt-2">
+                                <thead><tr><th>Id</th><th>Message</th></tr></thead>
+                                <tbody id="dm-r-error-rows"></tbody>
+                            </table>
+                        </details>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/data-migration.js" asp-append-version="true"></script>
+}

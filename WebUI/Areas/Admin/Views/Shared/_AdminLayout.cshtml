@@ -88,6 +88,12 @@
                             <span>Sistem Logları</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "DataMigration", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "DataMigration" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <span>Veri Aktarımı</span>
+                        </a>
+                    </li>
                 }
 
                 @if (!isSingleStore)
