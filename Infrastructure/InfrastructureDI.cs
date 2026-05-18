@@ -2,6 +2,7 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Auth;
+using Infrastructure.DataMigration;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,9 @@ namespace Infrastructure
 			services.AddScoped<IStorageService, LocalStorageService>();
 
 			services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+			services.AddSingleton<MigrationTableCatalog>();
+			services.AddScoped<IDataMigrationService, DataMigrationService>();
 
 			return services;
 		}
