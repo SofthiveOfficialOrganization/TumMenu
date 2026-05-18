@@ -188,18 +188,17 @@
                             <input type="date" name="dateTo" class="form-control" value="@query["DateTo"]" required />
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-semibold">Status Kodu</label>
-                            <div class="d-flex flex-wrap gap-2">
-                                @{
-                                    var statusOptions = new[] { 200, 400, 401, 403, 404, 500 };
-                                }
-                                @foreach (var statusCode in statusOptions)
-                                {
-                                    <input type="checkbox" class="btn-check" name="statusCodes" value="@statusCode" id="clearStatus@statusCode" autocomplete="off" />
-                                    <label class="btn btn-outline-secondary btn-sm" for="clearStatus@statusCode">@statusCode</label>
-                                }
-                            </div>
-                            <div class="form-text">Status kodu seçmezseniz tarih aralığındaki tüm loglar silinir.</div>
+                            <label class="form-label small fw-semibold" for="clearStatusCode">Status Kodu</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="clearStatusCode"
+                                   name="statusCodes"
+                                   min="100"
+                                   max="599"
+                                   step="1"
+                                   inputmode="numeric"
+                                   placeholder="Örn. 500" />
+                            <div class="form-text">Boş bırakırsanız tarih aralığındaki tüm loglar silinir.</div>
                         </div>
                         <div class="col-12">
                             <div class="alert alert-warning mb-0 small">
