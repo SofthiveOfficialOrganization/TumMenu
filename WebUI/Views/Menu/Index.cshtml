@@ -1,5 +1,6 @@
 @using Application.Categories.DTOs
 @using Domain.Entities
+@using WebUI.Services
 @model Application.Menus.DTOs.MenuDTO
 
 @{
@@ -20,6 +21,23 @@
     var showMenuSecondaryPhone = Model.ShowPhoneNumberOnMenu && !string.IsNullOrWhiteSpace(Model.StoreSecondaryPhoneNumber);
     var showMenuAddress = Model.ShowAddressOnMenu && !string.IsNullOrWhiteSpace(Model.StoreFullAddress);
     var hasBusinessInfo = visibleSocialLinks.Count > 0 || showMenuPhone || showMenuSecondaryPhone || showMenuAddress;
+    var showQrCover = isQr && Model.ShowCoverPhotoOnQrMenu;
+    var sprite = Url.Content("~/assets/icons/tm-sprite.svg");
+    var qrCoverTelHref = !string.IsNullOrWhiteSpace(Model.StorePhoneNumber) ? TelHref(Model.StorePhoneNumber) : null;
+    string? qrCoverMapsUrl = null;
+    var hasQrCoverCoords = Model.StoreLatitude is double lat0 && Model.StoreLongitude is double lng0
+        && lat0 is >= -90 and <= 90 && lng0 is >= -180 and <= 180;
+
+    if (hasQrCoverCoords)
+    {
+        var lat = Model.StoreLatitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var lng = Model.StoreLongitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        qrCoverMapsUrl = $"https://www.google.com/maps?q={Uri.EscapeDataString($"{lat},{lng}")}";
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.StoreFullAddress))
+    {
+        qrCoverMapsUrl = $"https://www.google.com/maps?q={Uri.EscapeDataString(Model.StoreFullAddress)}";
+    }
 
     ViewData["Title"] = $"{storeName} Menüsü";
     ViewData["Description"] = showPricesOnPublicMenu
@@ -88,9 +106,12 @@
             </header>
 
             <div class="pm-content-area">
-                @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
+                @if (!showQrCover)
+                {
+                    @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
+                }
 
-                <section class="pm-panel pm-panel--spacious">
+                <section id="pm-menu-content" class="pm-panel pm-panel--spacious">
                     <div class="pm-section-head">
                         <div>
                             <h2 class="pm-section-title">Kategoriler</h2>
@@ -169,6 +190,102 @@
         </div>
     </main>
 </div>
+
+@if (showQrCover)
+{
+    <div class="pm-qr-cover-modal" data-pm-qr-cover-modal hidden>
+        <div class="pm-qr-cover-backdrop" aria-hidden="true"></div>
+        <section class="pm-qr-cover-dialog" role="dialog" aria-modal="true" aria-labelledby="qrCoverTitle" aria-label="İşletme bilgileri">
+            @if (!string.IsNullOrWhiteSpace(Model.StoreBannerUrl))
+            {
+                <div class="pm-qr-cover-media" aria-hidden="true">
+                    <img src="@ImageUrlBuilder.Build(Model.StoreBannerUrl, width: 960, height: 420, fit: ImageFitMode.CoverCenter)"
+                         alt=""
+                         width="960"
+                         height="420" />
+                </div>
+            }
+
+            <div class="pm-qr-cover-card">
+                <div class="pm-qr-cover-logo @(string.IsNullOrEmpty(Model.StoreLogoUrl) ? "pm-qr-cover-logo--placeholder" : null)">
+                    @if (!string.IsNullOrEmpty(Model.StoreLogoUrl))
+                    {
+                        <img src="@ImageUrlBuilder.Build(Model.StoreLogoUrl, width: 208, height: 208, fit: ImageFitMode.CoverCenter)"
+                             alt="@storeName logosu"
+                             width="208"
+                             height="208" />
+                    }
+                    else
+                    {
+                        <svg class="tm-icon" aria-hidden="true" width="36" height="36"><use href="@($"{sprite}#icon-menu")"></use></svg>
+                    }
+                </div>
+
+                <div class="pm-qr-cover-head">
+                    @if (!string.IsNullOrWhiteSpace(companyName))
+                    {
+                        <span class="pm-qr-cover-kicker">@companyName</span>
+                    }
+                    <h2 id="qrCoverTitle" class="pm-qr-cover-title">@storeName</h2>
+                </div>
+
+                <div class="pm-qr-cover-meta">
+                    @if (qrCoverTelHref != null)
+                    {
+                        <a class="pm-qr-cover-chip" href="@qrCoverTelHref" aria-label="Telefon ile ara">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-phone")"></use></svg>
+                            <span>@Model.StorePhoneNumber</span>
+                        </a>
+                    }
+                    @if (qrCoverMapsUrl != null)
+                    {
+                        <a class="pm-qr-cover-chip pm-qr-cover-chip--muted" href="@qrCoverMapsUrl" target="_blank" rel="noopener noreferrer" aria-label="Konumu aç">
+                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-location")"></use></svg>
+                            <span>Konum</span>
+                        </a>
+                    }
+                </div>
+
+                <button type="button" class="pm-qr-cover-button" data-pm-qr-cover-enter>
+                    <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-menu")"></use></svg>
+                    <span>Menüyü gör</span>
+                </button>
+            </div>
+
+            <div class="pm-qr-cover-ad">
+                @await Component.InvokeAsync("Ad", new { slotKey = "menu_top" })
+            </div>
+        </section>
+    </div>
+
+    <script>
+        (() => {
+            const modal = document.querySelector('[data-pm-qr-cover-modal]');
+            const enterButton = document.querySelector('[data-pm-qr-cover-enter]');
+            const target = document.getElementById('pm-menu-content');
+            if (!modal || !enterButton) return;
+
+            const open = () => {
+                modal.hidden = false;
+                requestAnimationFrame(() => modal.classList.add('is-open'));
+                document.body.classList.add('pm-qr-cover-open');
+                enterButton.focus({ preventScroll: true });
+            };
+
+            const close = () => {
+                modal.classList.remove('is-open');
+                document.body.classList.remove('pm-qr-cover-open');
+                window.setTimeout(() => {
+                    modal.hidden = true;
+                    target?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                }, 180);
+            };
+
+            enterButton.addEventListener('click', close);
+            window.addEventListener('pageshow', open, { once: true });
+        })();
+    </script>
+}
 
 @if (hasBusinessInfo)
 {

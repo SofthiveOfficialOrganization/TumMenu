@@ -26,6 +26,7 @@ public sealed class UpdateStoreCommand : IRequest<Unit>, ITransactionalRequest, 
 	public bool ShowSocialLinksOnMenu { get; set; }
 	public bool ShowPhoneNumberOnMenu { get; set; }
 	public bool ShowAddressOnMenu { get; set; }
+	public bool ShowCoverPhotoOnQrMenu { get; set; }
 
 	public List<StoreSocialLinkDTO> SocialLinks { get; set; } = [];
 	public AddressDTO? Address { get; set; }
@@ -65,6 +66,7 @@ public class UpdateStoreCommandHandler(
 		store.ShowSocialLinksOnMenu = req.ShowSocialLinksOnMenu;
 		store.ShowPhoneNumberOnMenu = req.ShowPhoneNumberOnMenu;
 		store.ShowAddressOnMenu = req.ShowAddressOnMenu;
+		store.ShowCoverPhotoOnQrMenu = req.ShowCoverPhotoOnQrMenu;
 
 		if(req.Address is not null)
 		{

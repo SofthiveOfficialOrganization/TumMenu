@@ -27,6 +27,7 @@ public class GetActiveMenuBySlugHandler(
 			.AsSplitQuery()
 			.Include(s => s.Company)
 			.Include(s => s.Address)
+			.Include(s => s.Medias)
 			.Include(s => s.SocialLinks)
 			.Include(s => s.Menus.Where(m => m.Status == MenuStatus.Active))
 				.ThenInclude(m => m.MenuDesign)
@@ -121,6 +122,18 @@ public class GetActiveMenuBySlugHandler(
 			StorePhoneNumber = store.PhoneNumber,
 			StoreSecondaryPhoneNumber = store.SecondaryPhoneNumber,
 			StoreFullAddress = store.Address?.FullAddress,
+			StoreLatitude = store.Address?.Latitude,
+			StoreLongitude = store.Address?.Longitude,
+			StoreLogoUrl = store.Medias
+				.Where(m => !m.IsDeleted && m.Kind == MediaKind.Image && m.Slot == "logo")
+				.OrderBy(m => m.SortOrder)
+				.Select(m => m.MediaUrl)
+				.FirstOrDefault(),
+			StoreBannerUrl = store.Medias
+				.Where(m => !m.IsDeleted && m.Kind == MediaKind.Image && m.Slot == "banner")
+				.OrderBy(m => m.SortOrder)
+				.Select(m => m.MediaUrl)
+				.FirstOrDefault(),
 			IsDefaultCompanyMenu = menu.Company != null && menu.Company.DefaultMainMenuId == menu.Id,
 			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
 			ShowPricesOnMenu = store.ShowPricesOnMenu,
@@ -128,6 +141,7 @@ public class GetActiveMenuBySlugHandler(
 			ShowSocialLinksOnMenu = store.ShowSocialLinksOnMenu,
 			ShowPhoneNumberOnMenu = store.ShowPhoneNumberOnMenu,
 			ShowAddressOnMenu = store.ShowAddressOnMenu,
+			ShowCoverPhotoOnQrMenu = store.ShowCoverPhotoOnQrMenu,
 			SocialLinks = store.SocialLinks
 				.OrderBy(sl => sl.SortOrder)
 				.Select(sl => new StoreSocialLinkDTO

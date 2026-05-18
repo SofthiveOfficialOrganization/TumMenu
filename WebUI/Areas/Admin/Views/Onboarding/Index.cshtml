@@ -162,6 +162,11 @@
                                         <div class="form-text text-muted small">Kapalı ise menü bağlantısı dükkan detay sayfasında gösterilmez.</div>
                                     </div>
                                     <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="StoreShowCoverPhotoOnQrMenu" name="ShowCoverPhotoOnQrMenu">
+                                        <label class="form-check-label fw-semibold" for="StoreShowCoverPhotoOnQrMenu">QR menüde kapak kartını göster</label>
+                                        <div class="form-text text-muted small">qr kod okunduğunda dükkanın kapak fotoğrafı gözüksün</div>
+                                    </div>
+                                    <div class="form-check mb-3">
                                         <input class="form-check-input" type="checkbox" id="StoreShowPricesOnMenu" name="ShowPricesOnMenu">
                                         <label class="form-check-label fw-semibold" for="StoreShowPricesOnMenu">Menüde fiyatları göster</label>
                                         <div class="form-text text-muted small">Kapalı ise fiyatlar sadece QR menüde gösterilir.</div>
@@ -991,6 +996,7 @@
                     Slug: $('#StoreSlug').val(),
                     ShowInSearchAndListings: $('#StoreShowInSearchAndListings').is(':checked'),
                     ShowMenuButton: $('#StoreShowMenuButton').is(':checked'),
+                    ShowCoverPhotoOnQrMenu: $('#StoreShowCoverPhotoOnQrMenu').is(':checked'),
                     ShowPricesOnMenu: $('#StoreShowPricesOnMenu').is(':checked'),
                     ShowRepresentativeImagesDisclaimer: $('#StoreShowRepresentativeImagesDisclaimer').is(':checked'),
                     Address: {

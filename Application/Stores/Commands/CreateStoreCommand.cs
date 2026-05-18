@@ -25,6 +25,7 @@ public class CreateStoreCommand : IRequest<StoreDTO>, ITransactionalRequest, IAu
 	public bool ShowSocialLinksOnMenu { get; set; } = false;
 	public bool ShowPhoneNumberOnMenu { get; set; } = false;
 	public bool ShowAddressOnMenu { get; set; } = false;
+	public bool ShowCoverPhotoOnQrMenu { get; set; } = false;
 
 	public Guid CompanyId { get; set; }
 	public AddressDTO? Address { get; set; }

@@ -27,6 +27,7 @@ public sealed class PublicStorePageDTO
 	public bool ShowMenuButton { get; init; }           // Menüye git butonu gösterilsin mi?
 	public bool ShowPricesOnMenu { get; init; }         // Menüde fiyatlar gösterilsin mi?
 	public bool ShowSocialLinksOnMenu { get; init; }
+	public bool ShowCoverPhotoOnQrMenu { get; init; }
 	public bool ShowRepresentativeImagesDisclaimer { get; init; }
 	public IReadOnlyList<StoreSocialLinkDTO> SocialLinks { get; init; } = [];
 }
@@ -95,6 +96,7 @@ public sealed class GetPublicStorePageQueryHandler(
 			ShowMenuButton = store.ShowMenuButton,
 			ShowPricesOnMenu = store.ShowPricesOnMenu,
 			ShowSocialLinksOnMenu = store.ShowSocialLinksOnMenu,
+			ShowCoverPhotoOnQrMenu = store.ShowCoverPhotoOnQrMenu,
 			ShowRepresentativeImagesDisclaimer = store.ShowRepresentativeImagesDisclaimer,
 			SocialLinks = store.SocialLinks
 				.Where(sl => !string.IsNullOrWhiteSpace(sl.Url))

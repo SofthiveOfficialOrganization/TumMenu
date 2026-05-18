@@ -270,6 +270,10 @@ namespace Infrastructure.Persistence
 		builder.Entity<Store>()
 			.Property(s => s.ShowAddressOnMenu)
 			.HasDefaultValue(false);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowCoverPhotoOnQrMenu)
+			.HasDefaultValue(false);
 	}
 
 		#endregion

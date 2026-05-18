@@ -24,6 +24,10 @@ public sealed class MenuDTO : BaseDTO
 	public string? StorePhoneNumber { get; set; }
 	public string? StoreSecondaryPhoneNumber { get; set; }
 	public string? StoreFullAddress { get; set; }
+	public double? StoreLatitude { get; set; }
+	public double? StoreLongitude { get; set; }
+	public string? StoreLogoUrl { get; set; }
+	public string? StoreBannerUrl { get; set; }
 	public bool IsDefaultCompanyMenu { get; set; }
 	public bool ShowRepresentativeImagesDisclaimer { get; set; }
 
@@ -33,5 +37,6 @@ public sealed class MenuDTO : BaseDTO
 	public bool ShowSocialLinksOnMenu { get; set; } = false;
 	public bool ShowPhoneNumberOnMenu { get; set; } = false;
 	public bool ShowAddressOnMenu { get; set; } = false;
+	public bool ShowCoverPhotoOnQrMenu { get; set; } = false;
 	public List<StoreSocialLinkDTO> SocialLinks { get; set; } = [];
 }

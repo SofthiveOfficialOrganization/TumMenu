@@ -21,6 +21,7 @@ namespace Domain.Entities
 		public bool ShowSocialLinksOnMenu { get; set; } = false;  // Menüde sosyal linkler gösterilsin mi?
 		public bool ShowPhoneNumberOnMenu { get; set; } = false;  // Menüde telefon numarası gösterilsin mi?
 		public bool ShowAddressOnMenu { get; set; } = false;      // Menüde adres gösterilsin mi?
+		public bool ShowCoverPhotoOnQrMenu { get; set; } = false; // QR kod okunduğunda dükkan kapak kartı gösterilsin mi?
 
 		public Guid CompanyId { get; set; }
 		public Company Company { get; set; } = null!;

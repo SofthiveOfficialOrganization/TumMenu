@@ -28,6 +28,7 @@ public sealed class StoreDTO : BaseDTO
 	public bool ShowSocialLinksOnMenu { get; set; } = false;
 	public bool ShowPhoneNumberOnMenu { get; set; } = false;
 	public bool ShowAddressOnMenu { get; set; } = false;
+	public bool ShowCoverPhotoOnQrMenu { get; set; } = false;
 
 	public Guid CompanyId { get; set; }
 	public CompanyDTO? Company { get; set; }

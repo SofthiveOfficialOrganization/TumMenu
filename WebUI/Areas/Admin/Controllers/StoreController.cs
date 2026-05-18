@@ -181,6 +181,7 @@ public class StoreController(IMediator mediator) : Controller
 		req.ShowSocialLinksOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowSocialLinksOnMenu));
 		req.ShowPhoneNumberOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowPhoneNumberOnMenu));
 		req.ShowAddressOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowAddressOnMenu));
+		req.ShowCoverPhotoOnQrMenu = IsChecked(nameof(UpdateStoreCommand.ShowCoverPhotoOnQrMenu));
 		req.ShowRepresentativeImagesDisclaimer = IsChecked(nameof(UpdateStoreCommand.ShowRepresentativeImagesDisclaimer));
 	}
 

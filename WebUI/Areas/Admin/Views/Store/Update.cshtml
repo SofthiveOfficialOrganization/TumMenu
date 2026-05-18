@@ -56,6 +56,12 @@
                 </div>
 
                 <div class="form-check mb-2">
+                    <input asp-for="ShowCoverPhotoOnQrMenu" class="form-check-input" />
+                    <label asp-for="ShowCoverPhotoOnQrMenu" class="form-check-label">QR menüde kapak kartını göster</label>
+                    <div class="form-text text-muted small">qr kod okunduğunda dükkanın kapak fotoğrafı gözüksün</div>
+                </div>
+
+                <div class="form-check mb-2">
                     <input asp-for="ShowPricesOnMenu" class="form-check-input" />
                     <label asp-for="ShowPricesOnMenu" class="form-check-label">Menüde fiyatları göster</label>
                     <div class="form-text text-muted small">Menüde ürün fiyatları görünür. Kapalı ise fiyatlar sadece QR menüde (isQr=true) gösterilir.</div>
