@@ -35,5 +35,17 @@ namespace WebUI.Controllers
             var countries = await locationMicroservice.GetAllCountriesAsync();
             return Ok(countries);
         }
+
+        [HttpGet("geocode")]
+        public async Task<IActionResult> Geocode([FromQuery] string q, [FromQuery] int limit = 1)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return BadRequest("Arama sorgusu boş olamaz.");
+            }
+
+            var results = await locationMicroservice.SearchGeocodingAsync(q, Math.Clamp(limit, 1, 5));
+            return Ok(results);
+        }
     }
 }

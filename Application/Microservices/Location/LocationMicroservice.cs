@@ -87,5 +87,31 @@ namespace Application.Microservices.Location
 
 			return null;
 		}
+
+		public async Task<List<GeocodingResultDTO>> SearchGeocodingAsync(string query, int limit = 1)
+		{
+			if (string.IsNullOrWhiteSpace(query))
+			{
+				return [];
+			}
+
+			try
+			{
+				var url = $"api/Geocoding/Search?q={Uri.EscapeDataString(query)}&limit={limit}";
+				var response = await _httpClient.GetAsync(url);
+
+				if (response.IsSuccessStatusCode)
+				{
+					var content = await response.Content.ReadAsStringAsync();
+					if (string.IsNullOrWhiteSpace(content)) return [];
+
+					var result = JsonSerializer.Deserialize<ApiResponse<List<GeocodingResultDTO>>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+					return result?.Data ?? [];
+				}
+			}
+			catch { }
+
+			return [];
+		}
 	}
 }

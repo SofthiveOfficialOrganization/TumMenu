@@ -14,6 +14,8 @@ public interface IGeocodingService
 public class GeocodingService(IHttpClientFactory httpClientFactory) : IGeocodingService
 {
     private const string BaseUrl = "https://nominatim.openstreetmap.org";
+    private static readonly SemaphoreSlim NominatimLock = new(1, 1);
+    private static DateTimeOffset LastRequestAt = DateTimeOffset.MinValue;
 
     public async Task<List<GeocodingResultDto>> SearchAsync(string query, int limit = 5, CancellationToken ct = default)
     {
@@ -23,7 +25,7 @@ public class GeocodingService(IHttpClientFactory httpClientFactory) : IGeocoding
         var client = CreateClient(httpClientFactory);
         var url = $"{BaseUrl}/search?q={Uri.EscapeDataString(query)}&format=json&limit={limit}&countrycodes=tr&addressdetails=1";
 
-        var response = await client.GetStringAsync(url, ct);
+        var response = await GetStringWithRateLimitAsync(client, url, ct);
         var results = JsonSerializer.Deserialize<List<NominatimResult>>(response, JsonOptions);
 
         return results?.Select(Map).ToList() ?? [];
@@ -34,7 +36,7 @@ public class GeocodingService(IHttpClientFactory httpClientFactory) : IGeocoding
         var client = CreateClient(httpClientFactory);
         var url = $"{BaseUrl}/reverse?lat={lat}&lon={lon}&format=json";
 
-        var response = await client.GetStringAsync(url, ct);
+        var response = await GetStringWithRateLimitAsync(client, url, ct);
         var result = JsonSerializer.Deserialize<NominatimResult>(response, JsonOptions);
 
         return result is null ? null : Map(result);
@@ -46,6 +48,27 @@ public class GeocodingService(IHttpClientFactory httpClientFactory) : IGeocoding
         // Nominatim kullanım koşulu: User-Agent zorunlu
         client.DefaultRequestHeaders.UserAgent.ParseAdd("TumMenuLocationService/1.0 (destek@tummenu.com)");
         return client;
+    }
+
+    private static async Task<string> GetStringWithRateLimitAsync(HttpClient client, string url, CancellationToken ct)
+    {
+        await NominatimLock.WaitAsync(ct);
+        try
+        {
+            var elapsed = DateTimeOffset.UtcNow - LastRequestAt;
+            if (elapsed < TimeSpan.FromSeconds(1))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1) - elapsed, ct);
+            }
+
+            var response = await client.GetStringAsync(url, ct);
+            LastRequestAt = DateTimeOffset.UtcNow;
+            return response;
+        }
+        finally
+        {
+            NominatimLock.Release();
+        }
     }
 
     private static GeocodingResultDto Map(NominatimResult r)

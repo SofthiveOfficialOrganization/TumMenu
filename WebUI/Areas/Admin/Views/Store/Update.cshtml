@@ -118,6 +118,12 @@
                 <label asp-for="Address.FullAddress" class="form-label">Açık Adres</label>
                 <textarea asp-for="Address.FullAddress" class="form-control" rows="3" placeholder="Sokak, bina no, kat vb. açık adres bilgilerinizi giriniz"></textarea>
                 <span asp-validation-for="Address.FullAddress" class="text-danger"></span>
+                <div class="d-flex align-items-start gap-2 mt-2 flex-wrap">
+                    <button id="findAddressOnMapBtn" type="button" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-search-location me-2"></i>Haritada Bul
+                    </button>
+                    <span id="addressGeocodeFeedback" class="form-text text-muted small"></span>
+                </div>
             </div>
 
             <div class="mb-4" id="mapSection" style="position: relative;">
@@ -217,6 +223,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
+    <script src="~/js/address-map-geocoder.js" asp-append-version="true"></script>
     <script src="~/js/store-social-links-editor.js" asp-append-version="true"></script>
     <script>
     $(document).ready(function () {
@@ -482,6 +489,36 @@
             console.log('Longitude:', cityLngInput.val());
             console.log('CityId:', citySelect.val());
             console.log('DistrictId:', districtSelect.val());
+        });
+
+        window.TumMenuAddressMapGeocoder.init({
+            buttonSelector: '#findAddressOnMapBtn',
+            feedbackSelector: '#addressGeocodeFeedback',
+            cityNameSelector: '#cityNameInput',
+            districtNameSelector: '#districtNameInput',
+            neighborhoodSelector: '#Address_Neighborhood',
+            fullAddressSelector: '#Address_FullAddress',
+            latitudeSelector: '#cityLatInput',
+            longitudeSelector: '#cityLngInput',
+            onLocated: function(lat, lng) {
+                $('#mapOverlay').hide();
+
+                if (map) {
+                    map.setView([lat, lng], 17);
+                    if (marker) {
+                        marker.setLatLng([lat, lng]);
+                    } else {
+                        marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                        marker.on('dragend', function(e) {
+                            const pos = e.target.getLatLng();
+                            cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
+                            cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
+                        });
+                    }
+                } else {
+                    initMap(lat, lng, 17);
+                }
+            }
         });
 
         // Buraya odakla butonu
