@@ -54,7 +54,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr data-tummenu-click-url="@(item.StoreId.HasValue ? Url.Action("StoreDetails", "QRManagement", new { area = "Admin", storeId = item.StoreId.Value }) : null)">
                         <td>
                             <div class="fw-bold">@item.CompanyTitle</div>
                             <div class="small text-secondary">@item.StoreTitle</div>

@@ -25,7 +25,7 @@
         <tbody>
             @foreach (var post in Model.Items)
             {
-                <tr>
+                <tr data-tummenu-click-url="@Url.Action("Edit", new { id = post.Id })">
                     <td><a href="/blog/@post.Slug" target="_blank">@post.Title</a></td>
                     <td>@post.PublishedAt.ToString("dd.MM.yyyy")</td>
                     <td>@(post.IsPublished ? "Yayında" : "Taslak")</td>

@@ -329,6 +329,62 @@
 }
 
 /* =========================================================
+   Social links
+   ========================================================= */
+.sl-social-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sl-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--sl-brand) 20%, var(--sl-border));
+  background: var(--sl-surface);
+  color: var(--sl-text);
+  box-shadow: var(--sl-shadow);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 800;
+  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.sl-social-link:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--sl-brand) 45%, var(--sl-border));
+  background: color-mix(in srgb, var(--sl-brand) 7%, var(--sl-surface));
+  color: var(--sl-brand-dark);
+}
+
+.sl-social-link__icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--sl-brand-dark);
+  flex-shrink: 0;
+}
+
+.sl-social-link__icon .tm-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.sl-social-link span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================================
    Section + headings
    ========================================================= */
 .sl-section {

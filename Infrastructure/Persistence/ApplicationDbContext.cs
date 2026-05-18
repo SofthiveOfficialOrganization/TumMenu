@@ -33,6 +33,7 @@ namespace Infrastructure.Persistence
 		public DbSet<Staff> Staffs => Set<Staff>();
 		public DbSet<Company> Companies => Set<Company>();
 		public DbSet<Store> Stores => Set<Store>();
+		public DbSet<StoreSocialLink> StoreSocialLinks => Set<StoreSocialLink>();
 		public DbSet<Address> Addresses => Set<Address>();
 
 		// Menu & product
@@ -190,6 +191,21 @@ namespace Infrastructure.Persistence
 				.HasForeignKey(m => m.StoreId)
 				.OnDelete(DeleteBehavior.NoAction);
 
+			// Store(1) -> SocialLinks(n)
+			builder.Entity<Store>()
+				.HasMany(s => s.SocialLinks)
+				.WithOne(sl => sl.Store)
+				.HasForeignKey(sl => sl.StoreId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<StoreSocialLink>(e =>
+			{
+				e.Property(x => x.Platform).HasConversion<int>();
+				e.Property(x => x.DisplayName).HasMaxLength(120);
+				e.Property(x => x.Url).HasMaxLength(500).IsRequired();
+				e.HasIndex(x => new { x.StoreId, x.SortOrder });
+			});
+
 
 			// Company(1) -> Subscription(1)
 			builder.Entity<Company>()
@@ -241,6 +257,18 @@ namespace Infrastructure.Persistence
 
 		builder.Entity<Store>()
 			.Property(s => s.ShowPricesOnMenu)
+			.HasDefaultValue(false);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowSocialLinksOnMenu)
+			.HasDefaultValue(false);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowPhoneNumberOnMenu)
+			.HasDefaultValue(false);
+
+		builder.Entity<Store>()
+			.Property(s => s.ShowAddressOnMenu)
 			.HasDefaultValue(false);
 	}
 

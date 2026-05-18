@@ -78,7 +78,7 @@
                         foreach (var item in Model.Items)
                         {
                             var message = item.ResponseMessage ?? item.ExceptionMessage ?? "-";
-                            <tr>
+                            <tr data-tummenu-click-url="@Url.Action("Details", new { id = item.Id })">
                                 <td class="ps-3 text-nowrap">
                                     <span class="fw-semibold">@item.CreatedAt.ToString("dd.MM.yyyy")</span>
                                     <small class="text-muted d-block">@item.CreatedAt.ToString("HH:mm:ss")</small>

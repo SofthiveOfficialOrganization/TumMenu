@@ -18,12 +18,16 @@ namespace Domain.Entities
 		public bool ShowInSearchAndListings { get; set; } = false;  // Restoran aramalarda ve listelerde görünsün mü?
 		public bool ShowMenuButton { get; set; } = false;         // Dükkan detay sayfasında menüye git butonu gösterilsin mi?
 		public bool ShowPricesOnMenu { get; set; } = false;       // Menüde fiyatlar gösterilsin mi? (isQr=true hariç)
+		public bool ShowSocialLinksOnMenu { get; set; } = false;  // Menüde sosyal linkler gösterilsin mi?
+		public bool ShowPhoneNumberOnMenu { get; set; } = false;  // Menüde telefon numarası gösterilsin mi?
+		public bool ShowAddressOnMenu { get; set; } = false;      // Menüde adres gösterilsin mi?
 
 		public Guid CompanyId { get; set; }
 		public Company Company { get; set; } = null!;
 		public Address? Address { get; set; }
 		public QRCode? QRCode { get; set; }
 		public ICollection<Menu> Menus { get; set; } = [];
+		public ICollection<StoreSocialLink> SocialLinks { get; set; } = [];
 		public ICollection<Staff> Staffs { get; set; } = [];
 		public ICollection<Media> Medias { get; set; } = [];
 	}

@@ -9,6 +9,7 @@ public interface IApplicationDbContext
     DbSet<Owner> Owners { get; }
     DbSet<Company> Companies { get; }
     DbSet<Store> Stores { get; }
+    DbSet<StoreSocialLink> StoreSocialLinks { get; }
     DbSet<Address> Addresses { get; }
     DbSet<QRCode> QRCodes { get; }
     DbSet<Menu> Menus { get; }

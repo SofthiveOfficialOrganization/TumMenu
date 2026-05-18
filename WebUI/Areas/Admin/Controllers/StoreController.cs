@@ -147,8 +147,11 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Update(Guid id, UpdateStoreCommand req, CancellationToken ct)
+	public async Task<IActionResult> Update(Guid id, [FromForm] UpdateStoreCommand req, CancellationToken ct)
 	{
+		req.Id = req.Id == Guid.Empty ? id : req.Id;
+		ApplyStoreVisibilityFormValues(req);
+
 		if (User.IsInRole("Owner"))
 		{
 			// Fetch store to verify company (since req might not have companyId or it might be forged - though command usually just updates fields)
@@ -163,6 +166,30 @@ public class StoreController(IMediator mediator) : Controller
 
 		await mediator.Send(req, ct);
 		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] }); 
+	}
+
+	private void ApplyStoreVisibilityFormValues(UpdateStoreCommand req)
+	{
+		if (!Request.HasFormContentType)
+		{
+			return;
+		}
+
+		req.ShowInSearchAndListings = IsChecked(nameof(UpdateStoreCommand.ShowInSearchAndListings));
+		req.ShowMenuButton = IsChecked(nameof(UpdateStoreCommand.ShowMenuButton));
+		req.ShowPricesOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowPricesOnMenu));
+		req.ShowSocialLinksOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowSocialLinksOnMenu));
+		req.ShowPhoneNumberOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowPhoneNumberOnMenu));
+		req.ShowAddressOnMenu = IsChecked(nameof(UpdateStoreCommand.ShowAddressOnMenu));
+		req.ShowRepresentativeImagesDisclaimer = IsChecked(nameof(UpdateStoreCommand.ShowRepresentativeImagesDisclaimer));
+	}
+
+	private bool IsChecked(string key)
+	{
+		return Request.Form.TryGetValue(key, out var values) &&
+			values.Any(value =>
+				string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(value, "on", StringComparison.OrdinalIgnoreCase));
 	}
 
 	[HttpPost]

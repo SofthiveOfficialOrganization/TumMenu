@@ -25,11 +25,22 @@ public sealed class StoreDTO : BaseDTO
 	public bool ShowInSearchAndListings { get; set; } = false;
 	public bool ShowMenuButton { get; set; } = false;
 	public bool ShowPricesOnMenu { get; set; } = false;
+	public bool ShowSocialLinksOnMenu { get; set; } = false;
+	public bool ShowPhoneNumberOnMenu { get; set; } = false;
+	public bool ShowAddressOnMenu { get; set; } = false;
 
 	public Guid CompanyId { get; set; }
 	public CompanyDTO? Company { get; set; }
 	public AddressDTO Address { get; set; } = new();
+	public List<StoreSocialLinkDTO> SocialLinks { get; set; } = [];
 	public List<StaffDTO> Staffs { get; set; } = new List<StaffDTO>();
 	public List<MediaDTO> Medias { get; set; } = [];
 }
 
+public sealed class StoreSocialLinkDTO : BaseDTO
+{
+	public StoreSocialPlatform Platform { get; set; } = StoreSocialPlatform.Other;
+	public string? DisplayName { get; set; }
+	public string Url { get; set; } = string.Empty;
+	public int SortOrder { get; set; }
+}

@@ -234,7 +234,7 @@
                         );
 
                         <div class="col-md-6 mb-3 category-item" data-id="@category.Id">
-                            <div class="card h-100 shadow-sm border-0 cursor-move category-card" data-details-url="@categoryDetailsUrl">
+                            <div class="card h-100 shadow-sm border-0 cursor-move category-card" data-tummenu-click-url="@categoryDetailsUrl">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="me-3 text-secondary handle">
                                         <i class="fas fa-grip-vertical fa-lg"></i>
@@ -680,21 +680,6 @@
             }
 
             var grid = document.getElementById('category-grid');
-            var categoryCards = document.querySelectorAll('.category-card');
-
-            categoryCards.forEach(function (card) {
-                card.addEventListener('click', function (event) {
-                    if (event.target.closest('.handle, a, button, form')) {
-                        return;
-                    }
-
-                    var detailsUrl = card.getAttribute('data-details-url');
-                    if (detailsUrl) {
-                        window.location.href = detailsUrl;
-                    }
-                });
-            });
-
             if (grid) {
                 new Sortable(grid, {
                     animation: 150,
