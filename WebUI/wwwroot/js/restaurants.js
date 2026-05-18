@@ -923,16 +923,9 @@
                 const marker = L.marker([store.latitude, store.longitude], { icon: customIcon })
                     .addTo(storeLayerGroup);
 
-                // Hover tooltip
-                marker.bindTooltip(store.title, {
-                    permanent: false,
-                    direction: 'top',
-                    offset: [0, -50]
-                });
-
-                // Click to navigate
-                marker.on('click', function() {
-                    window.location.href = '/' + store.companySlug + '/' + store.slug + '/magaza';
+                window.TumMenuPublicMapStoreMarker.bind(marker, store, {
+                    tooltipOffset: [0, -50],
+                    popupOffset: [0, -44]
                 });
             }
         });

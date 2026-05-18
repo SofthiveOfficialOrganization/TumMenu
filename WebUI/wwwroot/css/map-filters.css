@@ -111,3 +111,24 @@
     opacity: 1;
     color: var(--color-accent);
 }
+
+/* ── PUBLIC MAP STORE LABEL ── */
+.leaflet-tooltip.tm-map-store-label {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(104, 135, 69, 0.24);
+    border-radius: 999px;
+    box-shadow: 0 8px 22px rgba(28, 39, 23, 0.16);
+    color: var(--color-text, #1f2a1d);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 150px;
+    overflow: hidden;
+    padding: 5px 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaflet-tooltip-top.tm-map-store-label::before {
+    border-top-color: rgba(255, 255, 255, 0.94);
+}

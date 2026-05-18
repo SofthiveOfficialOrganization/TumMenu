@@ -507,6 +507,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
+    <script src="~/js/public-map-store-marker.js" asp-append-version="true"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
           // Hero toggle
@@ -765,14 +766,9 @@
                     const marker = L.marker([store.latitude, store.longitude], { icon: customIcon })
                         .addTo(homeStoreLayerGroup);
 
-                    marker.bindTooltip(store.title, {
-                        permanent: false,
-                        direction: 'top',
-                        offset: [0, -38]
-                    });
-
-                    marker.on('click', function() {
-                        window.location.href = '/' + store.companySlug + '/' + store.slug + '/magaza';
+                    window.TumMenuPublicMapStoreMarker.bind(marker, store, {
+                        tooltipOffset: [0, -38],
+                        popupOffset: [0, -34]
                     });
                 }
             });
