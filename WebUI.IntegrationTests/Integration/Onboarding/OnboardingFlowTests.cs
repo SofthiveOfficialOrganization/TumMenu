@@ -18,11 +18,12 @@ public class OnboardingFlowTests : IClassFixture<TumMenuWebAppFactory>
     }
 
     [Fact]
-    public async Task GetOnboardingPage_AsOwner_Returns200()
+    public async Task GetOnboardingPage_AsOwnerWithExistingMenu_RedirectsToDashboard()
     {
         var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
         var response = await client.GetAsync("/admin/Onboarding");
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Found, response.StatusCode);
+        Assert.Equal("/Admin/Dashboard", response.Headers.Location?.OriginalString);
     }
 
     [Fact]
