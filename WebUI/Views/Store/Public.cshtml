@@ -1,4 +1,5 @@
 @using WebUI.Services
+@using WebUI.Seo
 @using Domain.Entities
 @model Application.Stores.Queries.PublicStorePageDTO
 @{
@@ -7,24 +8,22 @@
     var menuUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
     var sprite = Url.Content("~/assets/icons/tm-sprite.svg");
 
-    string? mapsUrl = null;
-    string? mapsEmbedUrl = null;
     var hasCoords = Model.Latitude is double lat0 && Model.Longitude is double lng0
         && lat0 is >= -90 and <= 90 && lng0 is >= -180 and <= 180;
+    var hasLocation = hasCoords || !string.IsNullOrWhiteSpace(Model.FullAddress);
 
+    string? googleMapsUrl = null;
+    string? mapLat = null;
+    string? mapLng = null;
     if (hasCoords)
     {
-        var lat = Model.Latitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        var lng = Model.Longitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        var coordQuery = Uri.EscapeDataString($"{lat},{lng}");
-        mapsUrl = $"https://www.google.com/maps?q={coordQuery}";
-        mapsEmbedUrl = $"https://www.google.com/maps?q={coordQuery}&hl=tr&z=16&output=embed";
+        mapLat = Model.Latitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        mapLng = Model.Longitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        googleMapsUrl = $"https://www.google.com/maps/search/?api=1&query={mapLat},{mapLng}";
     }
     else if (!string.IsNullOrWhiteSpace(Model.FullAddress))
     {
-        var addressQuery = Uri.EscapeDataString(Model.FullAddress);
-        mapsUrl = $"https://www.google.com/maps?q={addressQuery}";
-        mapsEmbedUrl = $"https://www.google.com/maps?q={addressQuery}&hl=tr&z=15&output=embed";
+        googleMapsUrl = $"https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(Model.FullAddress)}";
     }
 
     static string? TelHref(string? raw)
@@ -44,11 +43,38 @@
     var hasContact = !string.IsNullOrWhiteSpace(Model.PhoneNumber)
         || !string.IsNullOrWhiteSpace(Model.SecondaryPhoneNumber)
         || !string.IsNullOrWhiteSpace(Model.FullAddress)
-        || mapsUrl != null;
+        || hasLocation;
 }
 
 @section Head {
     <link rel="stylesheet" href="~/css/store-landing.css" asp-append-version="true" />
+    @if (hasCoords)
+    {
+        <link rel="stylesheet" href="~/css/map-filters.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    }
+    @{
+        var storePageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/magaza";
+        var menuPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
+        var breadcrumbs = new List<(string Name, string Url)>
+        {
+            ("Ana Sayfa", "/"),
+            (Model.StoreTitle, storePageUrl)
+        };
+    }
+    @await Html.PartialAsync("Seo/_BreadcrumbJsonLd", breadcrumbs)
+    @await Html.PartialAsync("Seo/_RestaurantJsonLd", new RestaurantJsonLdModel
+    {
+        Name = Model.StoreTitle,
+        PageUrl = storePageUrl,
+        MenuUrl = Model.MenuAvailable ? menuPageUrl : null,
+        ImageUrl = Model.LogoUrl ?? Model.BannerUrl,
+        Description = ViewData["Description"] as string,
+        Telephone = Model.PhoneNumber,
+        StreetAddress = Model.FullAddress,
+        Latitude = Model.Latitude,
+        Longitude = Model.Longitude
+    })
 }
 
 <div class="sl-page">
@@ -97,7 +123,7 @@
                     <span>@Model.PhoneNumber</span>
                 </a>
             }
-            @if (mapsUrl != null)
+            @if (hasLocation)
             {
                 <a class="sl-chip sl-chip--muted" href="#sl-iletisim" aria-label="Konuma git">
                     <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-location")"></use></svg>
@@ -268,7 +294,7 @@
                         </div>
                     }
 
-                    @if (!string.IsNullOrWhiteSpace(Model.FullAddress) || mapsUrl != null)
+                    @if (!string.IsNullOrWhiteSpace(Model.FullAddress) || hasLocation)
                     {
                         <div class="sl-info__row">
                             <span class="sl-info__icon" aria-hidden="true">
@@ -286,9 +312,16 @@
                                         <span>Konum harita üzerinde gösterilmektedir.</span>
                                     }
                                 </div>
-                                @if (mapsUrl != null)
+                                @if (googleMapsUrl != null)
                                 {
-                                    <a class="sl-info__sub" href="@mapsUrl" target="_blank" rel="noopener noreferrer">
+                                    <a class="sl-info__sub js-sl-external-maps"
+                                       href="@googleMapsUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       data-label="@Model.StoreTitle"
+                                       data-lat="@mapLat"
+                                       data-lng="@mapLng"
+                                       data-address="@Model.FullAddress">
                                         Haritada aç
                                         <svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#icon-chevron-right")"></use></svg>
                                     </a>
@@ -299,18 +332,23 @@
                 </div>
 
                 <div class="sl-map">
-                    @if (mapsEmbedUrl != null)
+                    @if (hasCoords)
                     {
-                        <iframe src="@mapsEmbedUrl"
-                                title="@Model.StoreTitle konumu"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                allowfullscreen></iframe>
+                        <div class="map-section sl-store-map-section">
+                            <div id="slStoreMap"
+                                 class="map-section__map"
+                                 data-lat="@Model.Latitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                 data-lng="@Model.Longitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                 data-title="@Model.StoreTitle"
+                                 aria-label="@Model.StoreTitle konumu"></div>
+                        </div>
                     }
                     else
                     {
                         <div class="sl-map__placeholder">
-                            Konum bilgisi henüz eklenmemiş.
+                            @(hasLocation
+                                ? "Harita önizlemesi için işletme konumu kaydedilmelidir. Yönlendirme için «Haritada aç» bağlantısını kullanın."
+                                : "Konum bilgisi henüz eklenmemiş.")
                         </div>
                     }
                 </div>
@@ -327,6 +365,19 @@
             <span>Menüyü gör</span>
         </a>
     </div>
+}
+
+@section Scripts {
+    @if (googleMapsUrl != null)
+    {
+        <script src="~/js/store-open-external-maps.js" asp-append-version="true"></script>
+    }
+    @if (hasCoords)
+    {
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
+        <script src="~/js/store-landing-map.js" asp-append-version="true"></script>
+    }
 }
 
 @functions {

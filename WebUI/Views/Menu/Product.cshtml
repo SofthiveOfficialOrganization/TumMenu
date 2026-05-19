@@ -1,4 +1,5 @@
 @using Domain.Entities
+@using WebUI.Seo
 @model Application.Menus.Queries.ProductPageDTO
 
 @{
@@ -10,6 +11,7 @@
     ViewData["Description"] = showPricesOnPublicMenu
         ? $"{Model.StoreName} – {Model.ProductTitle}"
         : $"{Model.StoreName} – {Model.ProductTitle} (fiyat yayında gösterilmiyor).";
+    ViewData["OgImage"] = Model.ImageUrls.FirstOrDefault();
     ViewData["HideFooter"] = true;
     ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,6 +23,29 @@
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
+    @{
+        var menuPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
+        var categoryPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}";
+        var productPageUrl = $"{categoryPageUrl}/{Model.ProductSlug}";
+        var breadcrumbs = new List<(string Name, string Url)>
+        {
+            ("Ana Sayfa", "/"),
+            ($"{Model.StoreName} Menüsü", menuPageUrl),
+            (Model.CategoryTitle, categoryPageUrl),
+            (Model.ProductTitle, productPageUrl)
+        };
+        var productImage = Model.ImageUrls.FirstOrDefault();
+    }
+    @await Html.PartialAsync("Seo/_BreadcrumbJsonLd", breadcrumbs)
+    @await Html.PartialAsync("Seo/_MenuItemJsonLd", new MenuItemJsonLdModel
+    {
+        Name = Model.ProductTitle,
+        PageUrl = productPageUrl,
+        Description = Model.ProductDescription,
+        ImageUrl = productImage,
+        Price = Model.BasePrice,
+        IncludeOffer = showPricesOnPublicMenu
+    })
 }
 
 <div class="pm-wrapper">

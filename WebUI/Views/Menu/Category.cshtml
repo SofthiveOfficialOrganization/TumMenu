@@ -1,4 +1,5 @@
 @using Domain.Entities
+@using WebUI.Seo
 @model Application.Menus.Queries.CategoryPageDTO
 
 @{
@@ -24,6 +25,17 @@
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
+    @{
+        var menuPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
+        var categoryPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}/{Model.CategorySlug}";
+        var breadcrumbs = new List<(string Name, string Url)>
+        {
+            ("Ana Sayfa", "/"),
+            ($"{Model.StoreName} Menüsü", menuPageUrl),
+            (Model.CategoryTitle, categoryPageUrl)
+        };
+    }
+    @await Html.PartialAsync("Seo/_BreadcrumbJsonLd", breadcrumbs)
 }
 
 <div class="pm-wrapper">

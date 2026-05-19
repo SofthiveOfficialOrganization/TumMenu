@@ -15,6 +15,7 @@ public sealed class StoreController(ISender sender) : Controller
 		ViewData["Title"] = $"{model.StoreTitle} – İşletme";
 		ViewData["Description"] =
 			$"{model.StoreTitle} iletişim, konum ve görseller. Menüye buradan geçebilirsiniz.";
+		ViewData["OgImage"] = model.LogoUrl ?? model.BannerUrl;
 		ViewData["HideFooter"] = true;
 		ViewData["CompactHeader"] = true;
 

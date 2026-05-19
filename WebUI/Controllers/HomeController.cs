@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Xml.Linq;
 using WebUI.Models;
+using WebUI.Seo;
 
 namespace WebUI.Controllers;
 
@@ -181,13 +182,32 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     }
 
     [Route("restoranlar")]
-    public async Task<IActionResult> Restaurants(CancellationToken ct)
+    public Task<IActionResult> Restaurants(CancellationToken ct) =>
+        RestaurantsCore(citySlug: null, ct);
+
+    [Route("restoranlar/{citySlug}")]
+    public Task<IActionResult> RestaurantsByCity(string citySlug, CancellationToken ct)
     {
-        // Load category library items for filter chips
+        var city = CitySeoCatalog.TryGet(citySlug);
+        if (city is null)
+        {
+            return Task.FromResult<IActionResult>(NotFound());
+        }
+
+        return RestaurantsCore(citySlug, ct);
+    }
+
+    private async Task<IActionResult> RestaurantsCore(string? citySlug, CancellationToken ct)
+    {
+        var city = CitySeoCatalog.TryGet(citySlug);
+        if (city is not null)
+        {
+            ViewBag.CitySeo = city;
+        }
+
         var categories = await mediator.Send(
             new GetAllCategoryLibraryItemsPagedQuery { Page = 1, PageSize = 100 }, ct);
         ViewBag.Categories = categories.Items.ToList();
-        // Add platform cookie to identify legitimate platform users
         HttpContext.Response.Cookies.Append("FromTumMenuPlatform", "true", new CookieOptions
         {
             Expires = DateTimeOffset.UtcNow.AddHours(2),
@@ -195,7 +215,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             SameSite = SameSiteMode.Lax
         });
 
-        return View();
+        return View("Restaurants");
     }
 
     [HttpGet("api/stores/search")]
@@ -351,26 +371,31 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         var urlset = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
         
         // 1. Statik Sayfalar
-        var staticPages = new[]
+        var staticPages = new List<(string Url, string ChangeFreq, string Priority)>
         {
-            new { Url = "", ChangeFreq = "daily", Priority = "1.0" },
-            new { Url = "/hakkimizda", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/iletisim", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/yasal-bilgiler", ChangeFreq = "monthly", Priority = "0.5" },
-            new { Url = "/ozellikler", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/sss", ChangeFreq = "monthly", Priority = "0.7" },
-            new { Url = "/restoran-kaynaklari", ChangeFreq = "weekly", Priority = "0.8" },
-            new { Url = "/qr-menu-uygunluk-testi", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/menu-baski-maliyeti-hesaplayici", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/qr-menu-kurulum-kontrol-listesi", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/restoran-menu-fotografi-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/kafe-dijital-menu-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/restoran-online-menu-seo-rehberi", ChangeFreq = "monthly", Priority = "0.8" },
-            new { Url = "/restoranlar", ChangeFreq = "daily", Priority = "0.9" },
-            new { Url = "/qr-kod", ChangeFreq = "monthly", Priority = "0.7" },
-            new { Url = "/ne-yesem", ChangeFreq = "daily", Priority = "0.8" },
-            new { Url = "/blog", ChangeFreq = "daily", Priority = "0.9" }
+            ("", "daily", "1.0"),
+            ("/hakkimizda", "monthly", "0.8"),
+            ("/iletisim", "monthly", "0.8"),
+            ("/yasal-bilgiler", "monthly", "0.5"),
+            ("/ozellikler", "monthly", "0.8"),
+            ("/sss", "monthly", "0.7"),
+            ("/restoran-kaynaklari", "weekly", "0.8"),
+            ("/qr-menu-uygunluk-testi", "monthly", "0.8"),
+            ("/menu-baski-maliyeti-hesaplayici", "monthly", "0.8"),
+            ("/qr-menu-kurulum-kontrol-listesi", "monthly", "0.8"),
+            ("/restoran-menu-fotografi-rehberi", "monthly", "0.8"),
+            ("/kafe-dijital-menu-rehberi", "monthly", "0.8"),
+            ("/restoran-online-menu-seo-rehberi", "monthly", "0.8"),
+            ("/restoranlar", "daily", "0.9"),
+            ("/qr-kod", "monthly", "0.7"),
+            ("/ne-yesem", "daily", "0.8"),
+            ("/blog", "daily", "0.9")
         };
+
+        foreach (var city in CitySeoCatalog.All)
+        {
+            staticPages.Add(($"/restoranlar/{city.Slug}", "daily", "0.85"));
+        }
 
         foreach (var page in staticPages)
         {

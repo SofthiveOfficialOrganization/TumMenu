@@ -1,11 +1,23 @@
 @using Application.Categories.DTOs
+@using WebUI.Seo
 @{
-    ViewData["Title"] = "Restoranlar";
-    ViewData["Description"] = "Yakınındaki restoranları keşfet, menüleri incele, filtrele ve karşılaştır.";
+    var citySeo = ViewBag.CitySeo as CitySeoCatalog.CitySeoEntry;
+    ViewData["Title"] = citySeo is not null
+        ? $"{citySeo.DisplayName} QR Menülü Restoranlar"
+        : "Restoranlar";
+    ViewData["Description"] = citySeo is not null
+        ? $"{citySeo.DisplayName} ve çevresindeki QR menülü restoranları keşfedin. Dijital menü, fiyatlar ve konum bilgisiyle karşılaştırın."
+        : "Yakınındaki restoranları keşfet, menüleri incele, filtrele ve karşılaştır.";
     var categories = ViewBag.Categories as List<CategoryLibraryItemDTO> ?? new List<CategoryLibraryItemDTO>();
 }
 
 @section Head {
+    @if (citySeo is not null)
+    {
+        <script>
+            window.__tumMenuCitySeo = { slug: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(citySeo.Slug)), name: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(citySeo.DisplayName)) };
+        </script>
+    }
     <link rel="stylesheet" href="~/css/restaurants.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/map-filters.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -297,6 +309,16 @@
                 <h3>İşletme sahibi misiniz?</h3>
                 <p>Restoranınızın menüsünü QR kodla yayınlamak ve keşif sayfalarında daha anlaşılır görünmek için QR menü kaynaklarını inceleyebilirsiniz.</p>
                 <p><a href="/restoran-kaynaklari">Kaynak merkezi</a> · <a href="/qr-kod">QR'lı Ol</a></p>
+            </article>
+            <article class="rest-info-card">
+                <h3>Şehre göre keşfet</h3>
+                <p>QR menülü restoranları şehir bazında inceleyin:</p>
+                <div class="rest-empty-links">
+                    @foreach (var city in CitySeoCatalog.All)
+                    {
+                        <a class="btn btn--ghost" href="/restoranlar/@city.Slug">@city.DisplayName</a>
+                    }
+                </div>
             </article>
         </div>
     </div>

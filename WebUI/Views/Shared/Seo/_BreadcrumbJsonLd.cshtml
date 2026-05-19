@@ -1,0 +1,27 @@
+@using WebUI.Seo
+@model IReadOnlyList<(string Name, string Url)>
+@{
+    if (!PublicSeo.IsIndexable(ViewData["Robots"] as string) || Model is null || Model.Count == 0)
+    {
+        return;
+    }
+
+    var request = Context.Request;
+    var items = Model.Select((item, index) => new Dictionary<string, object?>
+    {
+        ["@type"] = "ListItem",
+        ["position"] = index + 1,
+        ["name"] = item.Name,
+        ["item"] = PublicSeo.ToAbsoluteUrl(request, item.Url)
+    }).ToList();
+
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "BreadcrumbList",
+        ["itemListElement"] = items
+    };
+}
+<script type="application/ld+json">
+@Html.Raw(System.Text.Json.JsonSerializer.Serialize(schema))
+</script>

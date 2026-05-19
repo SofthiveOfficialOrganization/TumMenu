@@ -312,6 +312,10 @@
     function readURLParams() {
         const params = new URLSearchParams(window.location.search);
 
+        if (window.__tumMenuCitySeo && window.__tumMenuCitySeo.name) {
+            state.cityName = window.__tumMenuCitySeo.name;
+        }
+
         if (params.has('search')) state.searchTerm = params.get('search');
         if (params.has('cityId')) state.cityId = params.get('cityId');
         if (params.has('cityName')) state.cityName = params.get('cityName');
@@ -463,6 +467,10 @@
                                 geocodeProvinceByName(10);
                             }
                         });
+                    }
+                    if (window.__tumMenuCitySeo) {
+                        resetPagination();
+                        doSearch(false);
                     }
                 }
             });

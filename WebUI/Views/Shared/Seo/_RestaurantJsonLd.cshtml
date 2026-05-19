@@ -1,0 +1,70 @@
+@using WebUI.Seo
+@model RestaurantJsonLdModel
+@{
+    if (!PublicSeo.IsIndexable(ViewData["Robots"] as string))
+    {
+        return;
+    }
+
+    var request = Context.Request;
+    var pageUrl = PublicSeo.ToAbsoluteUrl(request, Model.PageUrl);
+    var menuUrl = string.IsNullOrWhiteSpace(Model.MenuUrl)
+        ? null
+        : PublicSeo.ToAbsoluteUrl(request, Model.MenuUrl);
+
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Restaurant",
+        ["name"] = Model.Name,
+        ["url"] = pageUrl
+    };
+
+    if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+    {
+        schema["image"] = PublicSeo.ToAbsoluteUrl(request, Model.ImageUrl);
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        schema["description"] = Model.Description;
+    }
+
+    if (!string.IsNullOrWhiteSpace(menuUrl))
+    {
+        schema["hasMenu"] = menuUrl;
+        schema["menu"] = menuUrl;
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.Telephone))
+    {
+        schema["telephone"] = Model.Telephone;
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.StreetAddress) || Model.Latitude is not null)
+    {
+        var address = new Dictionary<string, object?> { ["@type"] = "PostalAddress" };
+        if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+        {
+            address["streetAddress"] = Model.StreetAddress;
+        }
+
+        address["addressCountry"] = "TR";
+        schema["address"] = address;
+    }
+
+    if (Model.Latitude is double lat && Model.Longitude is double lng)
+    {
+        schema["geo"] = new Dictionary<string, object?>
+        {
+            ["@type"] = "GeoCoordinates",
+            ["latitude"] = lat,
+            ["longitude"] = lng
+        };
+    }
+
+    schema["priceRange"] = "₺";
+}
+<script type="application/ld+json">
+@Html.Raw(System.Text.Json.JsonSerializer.Serialize(schema))
+</script>

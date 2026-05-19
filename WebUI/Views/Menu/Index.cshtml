@@ -1,6 +1,7 @@
 @using Application.Categories.DTOs
 @using Domain.Entities
 @using WebUI.Services
+@using WebUI.Seo
 @model Application.Menus.DTOs.MenuDTO
 
 @{
@@ -43,6 +44,7 @@
     ViewData["Description"] = showPricesOnPublicMenu
         ? $"{storeName} dijital menüsü – kategoriler, ürünler ve fiyatlar."
         : $"{storeName} dijital menüsü – kategoriler ve ürünler.";
+    ViewData["OgImage"] = Model.StoreLogoUrl ?? Model.StoreBannerUrl;
     ViewData["HideFooter"] = true;
     ViewData["CompactHeader"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -51,6 +53,27 @@
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
+    @{
+        var menuPageUrl = $"/{companySlug}/{storeSlug}";
+        var breadcrumbs = new List<(string Name, string Url)>
+        {
+            ("Ana Sayfa", "/"),
+            ($"{storeName} Menüsü", menuPageUrl)
+        };
+    }
+    @await Html.PartialAsync("Seo/_BreadcrumbJsonLd", breadcrumbs)
+    @await Html.PartialAsync("Seo/_RestaurantJsonLd", new RestaurantJsonLdModel
+    {
+        Name = storeName,
+        PageUrl = menuPageUrl,
+        MenuUrl = menuPageUrl,
+        ImageUrl = Model.StoreLogoUrl ?? Model.StoreBannerUrl,
+        Description = ViewData["Description"] as string,
+        Telephone = Model.StorePhoneNumber,
+        StreetAddress = Model.StoreFullAddress,
+        Latitude = Model.StoreLatitude,
+        Longitude = Model.StoreLongitude
+    })
 }
 
 <div class="pm-wrapper">

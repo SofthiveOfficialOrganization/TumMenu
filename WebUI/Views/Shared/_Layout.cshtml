@@ -1,3 +1,4 @@
+@using WebUI.Seo
 @{
     var configuration = Context.RequestServices.GetService<Microsoft.Extensions.Configuration.IConfiguration>();
     var enableAdSense = string.Equals(
@@ -50,6 +51,8 @@
             || systemNoIndexExactPaths.Any(path => string.Equals(requestPath, path, StringComparison.OrdinalIgnoreCase))
                 ? "noindex,nofollow"
                 : "index,follow");
+
+    var ogImage = PublicSeo.ResolveOgImage(Context.Request, ViewData["OgImage"] as string);
 }
 
 <!doctype html>
@@ -74,6 +77,14 @@
     <meta property="og:description" content="@description" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="tr_TR" />
+    <meta property="og:url" content="@canonical" />
+    <meta property="og:image" content="@ogImage" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@fullTitle" />
+    <meta name="twitter:description" content="@description" />
+    <meta name="twitter:image" content="@ogImage" />
 
     <link rel="stylesheet" href="~/css/global.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer-header.css" asp-append-version="true" />

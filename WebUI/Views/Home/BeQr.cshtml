@@ -1,10 +1,16 @@
 @{
-    ViewData["Title"] = "QR'lı Ol";
-    ViewData["Description"] = "İşletmeni dijital dünyaya taşı. QR menü ile maliyetleri düşür, müşteri memnuniyetini artır, menünü saniyeler içinde güncelle.";
+    ViewData["Title"] = "Ücretsiz QR Menü Oluşturma";
+    ViewData["Description"] = "Dükkanınız veya restoranınız için ücretsiz QR menü oluşturun. Adım adım dijital menü kurulumu, QR kod menü ve online menü güncelleme — teknik bilgi gerekmez.";
+    ViewData["OgImage"] = "/images/hero-illustration-business.webp";
 }
 
 @section Head {
     <link rel="stylesheet" href="~/css/BeQr.css" asp-append-version="true" />
+    <style>
+        .qr-seo-guide { background: #fbfaf7; padding: 56px 0; }
+        .qr-seo-guide__steps { max-width: 720px; margin: 24px auto 0; padding-left: 1.25rem; line-height: 1.75; color: var(--color-text-muted, #444); }
+        .qr-seo-guide__note { max-width: 720px; margin: 20px auto 0; text-align: center; color: var(--color-text-muted, #444); }
+    </style>
 }
 
 <!-- HERO SECTION -->
@@ -526,6 +532,26 @@
                 </a>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="section qr-seo-guide" aria-labelledby="qr-seo-guide-heading">
+    <div class="container">
+        <h2 id="qr-seo-guide-heading" class="section__title">Dükkanım için QR menü nasıl yaparım?</h2>
+        <p class="section__subtitle">
+            Restoran, kafe veya dükkanınız için ücretsiz QR menü oluşturmak teknik bilgi gerektirmez.
+            Aşağıdaki adımlarla dijital menünüzü dakikalar içinde yayına alabilirsiniz.
+        </p>
+        <ol class="qr-seo-guide__steps">
+            <li><strong>Ücretsiz kayıt olun</strong> — işletme ve şube bilgilerinizi girin.</li>
+            <li><strong>Menünüzü oluşturun</strong> — kategori, ürün, açıklama ve isteğe bağlı fotoğraf ekleyin.</li>
+            <li><strong>QR kodunuzu indirin</strong> — sabit QR kod masalarda kalır; menüyü panelden güncellersiniz.</li>
+            <li><strong>Müşterileriniz okutur</strong> — uygulama veya üyelik gerekmez; menü tarayıcıda açılır.</li>
+        </ol>
+        <p class="qr-seo-guide__note">
+            Daha fazla soru için <a href="/sss">sık sorulan sorulara</a> bakın veya
+            <a href="/restoran-kaynaklari">restoran kaynak merkezini</a> inceleyin.
+        </p>
     </div>
 </section>
 
