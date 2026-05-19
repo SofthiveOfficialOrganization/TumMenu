@@ -66,6 +66,26 @@
         return int.TryParse(trimmed, out var n) ? Math.Clamp(n, 0, 100) : fallback;
     }
 
+    string SafeColor(string? value, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return fallback;
+        var v = value.Trim();
+        var isValid =
+            System.Text.RegularExpressions.Regex.IsMatch(v, @"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$") ||
+            v.StartsWith("rgb", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("hsl", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("oklch", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("oklab", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("var(", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("color-mix(", StringComparison.OrdinalIgnoreCase) ||
+            v.StartsWith("color(", StringComparison.OrdinalIgnoreCase) ||
+            v.Equals("transparent", StringComparison.OrdinalIgnoreCase) ||
+            v.Equals("currentColor", StringComparison.OrdinalIgnoreCase) ||
+            v.Equals("inherit", StringComparison.OrdinalIgnoreCase);
+        return isValid ? v : fallback;
+    }
+
     var pageBgTop = ParseOpacityPercent(Model?.PageBackgroundOverlayOpacity, int.Parse(MenuDesignOpacityDefaults.PageBackgroundOverlay));
     var pageBgMid = Math.Clamp(pageBgTop - 14, 0, 100);
     var pageBgEnd = Math.Clamp(pageBgTop + 4, 0, 100);
@@ -78,34 +98,34 @@
     }
     <style>
         :root {
-            --pm-brand:         @Model.PrimaryColor;
-            --pm-brand-dark:    @Model.PrimaryDarkColor;
-            --pm-accent:        @Model.AccentColor;
-            --pm-bg:            @Model.BackgroundColor;
-            --pm-surface:       @Model.SurfaceColor;
-            --pm-surface-solid: @Model.SurfaceColor;
-            --pm-text:          @Model.TextColor;
-            --pm-muted:         @Model.MutedColor;
+            --pm-brand:         @SafeColor(Model.PrimaryColor, "#688745");
+            --pm-brand-dark:    @SafeColor(Model.PrimaryDarkColor, "#4a6130");
+            --pm-accent:        @SafeColor(Model.AccentColor, "#8bc34a");
+            --pm-bg:            @SafeColor(Model.BackgroundColor, "#f8fafc");
+            --pm-surface:       @SafeColor(Model.SurfaceColor, "#ffffff");
+            --pm-surface-solid: @SafeColor(Model.SurfaceColor, "#ffffff");
+            --pm-text:          @SafeColor(Model.TextColor, "#1e293b");
+            --pm-muted:         @SafeColor(Model.MutedColor, "#64748b");
             --pm-radius:        @Model.BorderRadius;
-            --pm-header-bg:     @(Model.HeaderBackgroundColor ?? Model.PrimaryColor);
+            --pm-header-bg:     @SafeColor(Model.HeaderBackgroundColor, SafeColor(Model.PrimaryColor, "#688745"));
             --pm-header-gradient: @(Model.BackgroundGradient ?? "linear-gradient(135deg, var(--pm-header-bg) 0%, var(--pm-brand-dark) 100%)");
-            --pm-header-text:   @(Model.HeaderTextColor ?? "#ffffff");
+            --pm-header-text:   @SafeColor(Model.HeaderTextColor, "#ffffff");
             --pm-bg-image:      @Html.Raw(backgroundImageCss);
-            --pm-footer-bg:     @(Model.FooterBackgroundColor ?? Model.PrimaryDarkColor);
-            --pm-footer-text:   @(Model.FooterTextColor ?? "#ffffff");
-            --pm-footer-button: @(Model.FooterButtonColor ?? Model.AccentColor);
+            --pm-footer-bg:     @SafeColor(Model.FooterBackgroundColor, SafeColor(Model.PrimaryDarkColor, "#4a6130"));
+            --pm-footer-text:   @SafeColor(Model.FooterTextColor, "#ffffff");
+            --pm-footer-button: @SafeColor(Model.FooterButtonColor, SafeColor(Model.AccentColor, "#8bc34a"));
             --pm-button-bg:     @(buttonStyle == "solid" ? "var(--pm-brand)" : "transparent");
-            --pm-button-text:   @buttonTextColor;
-            --pm-button-border: @buttonBorderColor;
+            --pm-button-text:   @SafeColor(buttonTextColor, "#ffffff");
+            --pm-button-border: @SafeColor(buttonBorderColor, "var(--pm-brand)");
             --pm-button-radius: @buttonRadius;
             --pm-button-hover-bg: @(buttonStyle == "solid" ? "var(--pm-brand-dark)" : "color-mix(in srgb, var(--pm-brand) 10%, transparent)");
-            --pm-heading-color: @(Model.HeadingTextColor ?? Model.TextColor);
+            --pm-heading-color: @SafeColor(Model.HeadingTextColor, "var(--pm-text)");
             --pm-heading-border-width: @(string.IsNullOrWhiteSpace(Model.HeadingBorderWidth) ? "0" : Model.HeadingBorderWidth);
-            --pm-heading-border-color: @(Model.HeadingBorderColor ?? Model.PrimaryColor);
+            --pm-heading-border-color: @SafeColor(Model.HeadingBorderColor, "var(--pm-brand)");
             --pm-heading-weight: @(Model.HeadingFontWeight ?? "800");
-            --pm-link:            @(Model.LinkColor ?? Model.PrimaryColor);
-            --pm-price:           @(Model.PriceColor ?? Model.MutedColor);
-            --pm-card-bg:         @(Model.CardBackgroundColor ?? Model.SurfaceColor);
+            --pm-link:            @SafeColor(Model.LinkColor, "var(--pm-brand)");
+            --pm-price:           @SafeColor(Model.PriceColor, "var(--pm-muted)");
+            --pm-card-bg:         @SafeColor(Model.CardBackgroundColor, "var(--pm-surface)");
             --pm-card-border-width: @(string.IsNullOrWhiteSpace(Model.CardBorderWidth) ? "1px" : Model.CardBorderWidth);
             --pm-surface-opacity: @MenuDesignOpacityHelper.ToPercent(Model.SurfaceOpacity, MenuDesignOpacityDefaults.Surface);
             --pm-card-opacity: @MenuDesignOpacityHelper.ToPercent(Model.CardOpacity, MenuDesignOpacityDefaults.Card);
@@ -122,14 +142,14 @@
             --pm-footer-button-text: @(footerButtonStyle == "solid" ? "#ffffff" : "var(--pm-footer-button)");
             --pm-footer-button-border: @(footerButtonStyle == "ghost" ? "transparent" : "var(--pm-footer-button)");
             --pm-footer-button-hover-bg: @(footerButtonStyle == "solid" ? "color-mix(in srgb, var(--pm-footer-button) 82%, #000000)" : "color-mix(in srgb, var(--pm-footer-button) 14%, transparent)");
-            --pm-count-pill-bg: @(Model.CountPillBackgroundColor ?? "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
-            --pm-count-pill-text: @(Model.CountPillTextColor ?? "var(--pm-brand-dark)");
-            --pm-count-pill-border: @(Model.CountPillBorderColor ?? "color-mix(in srgb, var(--pm-brand) 22%, transparent)");
+            --pm-count-pill-bg: @SafeColor(Model.CountPillBackgroundColor, "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
+            --pm-count-pill-text: @SafeColor(Model.CountPillTextColor, "var(--pm-brand-dark)");
+            --pm-count-pill-border: @SafeColor(Model.CountPillBorderColor, "color-mix(in srgb, var(--pm-brand) 22%, transparent)");
             --pm-count-pill-opacity: @MenuDesignOpacityHelper.ToPercent(Model.CountPillOpacity, MenuDesignOpacityDefaults.CountPill);
-            --pm-phone-link: @(Model.PhoneLinkColor ?? "var(--pm-brand-dark)");
-            --pm-social-color: @(Model.SocialIconColor ?? "var(--pm-brand-dark)");
-            --pm-social-bg: @(Model.SocialIconBackgroundColor ?? "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
-            --pm-social-border: @(Model.SocialIconBorderColor ?? "color-mix(in srgb, var(--pm-brand) 24%, var(--pm-border))");
+            --pm-phone-link: @SafeColor(Model.PhoneLinkColor, "var(--pm-brand-dark)");
+            --pm-social-color: @SafeColor(Model.SocialIconColor, "var(--pm-brand-dark)");
+            --pm-social-bg: @SafeColor(Model.SocialIconBackgroundColor, "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
+            --pm-social-border: @SafeColor(Model.SocialIconBorderColor, "color-mix(in srgb, var(--pm-brand) 24%, var(--pm-border))");
             --pm-social-opacity: @MenuDesignOpacityHelper.ToPercent(Model.SocialIconOpacity, MenuDesignOpacityDefaults.SocialIcon);
             @if (!string.IsNullOrEmpty(Model.CardShadow))
             {

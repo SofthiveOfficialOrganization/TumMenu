@@ -108,24 +108,57 @@
                 : 'Varsayılan değer kullanılıyor — özel renk için tıklayın';
         }
 
+        function markInvalidHex(textInput) {
+            const v = (textInput.value || '').trim();
+            const isEmpty = v.length === 0;
+            const isValid = isEmpty || /^#[0-9a-fA-F]{6}$/.test(v);
+            textInput.classList.toggle('is-invalid-hex', !isValid);
+            textInput.title = isValid ? '' : 'Geçersiz renk. Örnek: #ff8800 — boş bırakırsanız varsayılan kullanılır.';
+        }
+
         document.querySelectorAll('.color-trigger').forEach(picker => {
             const targetName = picker.dataset.target;
             const textInput = designForm?.querySelector(`input[name="${targetName}"]`) || document.querySelector(`input[name="${targetName}"]`);
             if (!textInput) return;
 
             syncPickerEmptyState(picker, textInput);
+            markInvalidHex(textInput);
 
             picker.addEventListener('input', () => {
                 textInput.value = picker.value;
                 picker.classList.remove('color-trigger--empty');
                 picker.title = 'Renk seçin';
+                markInvalidHex(textInput);
                 updatePreview();
             });
             textInput.addEventListener('input', () => {
                 syncPickerEmptyState(picker, textInput);
+                markInvalidHex(textInput);
                 updatePreview();
             });
         });
+
+        if (designForm) {
+            designForm.addEventListener('submit', (e) => {
+                const invalids = designForm.querySelectorAll('.color-trigger');
+                let firstInvalid = null;
+                invalids.forEach(picker => {
+                    const targetName = picker.dataset.target;
+                    const input = designForm.querySelector(`input[name="${targetName}"]`);
+                    if (!input) return;
+                    const v = (input.value || '').trim();
+                    if (v.length > 0 && !/^#[0-9a-fA-F]{6}$/.test(v)) {
+                        if (!firstInvalid) firstInvalid = input;
+                    }
+                });
+                if (firstInvalid) {
+                    e.preventDefault();
+                    firstInvalid.focus();
+                    firstInvalid.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    alert('Bir veya daha fazla renk alanı geçersiz. Örnek: #ff8800 ya da boş bırakın.');
+                }
+            });
+        }
 
         function getVal(name) {
             const el = designForm?.querySelector(`[name="${name}"]`) || document.querySelector(`[name="${name}"]`);

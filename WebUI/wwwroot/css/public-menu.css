@@ -497,10 +497,13 @@ body {
 .pm-business-info-group p {
   display: block;
   margin: 0;
-  color: var(--pm-muted-foreground);
   font-size: 0.95rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
+}
+
+.pm-business-info-group p {
+  color: var(--pm-muted-foreground);
 }
 
 .pm-business-info-group a,
@@ -508,6 +511,12 @@ body {
   color: var(--pm-phone-link);
   font-weight: 800;
   text-decoration: none;
+}
+
+.pm-business-info-group a:hover,
+.pm-main a[href^="tel:"]:hover {
+  color: var(--pm-phone-link);
+  text-decoration: underline;
 }
 
 .pm-business-info-socials {
