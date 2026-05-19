@@ -122,6 +122,15 @@
             --pm-footer-button-text: @(footerButtonStyle == "solid" ? "#ffffff" : "var(--pm-footer-button)");
             --pm-footer-button-border: @(footerButtonStyle == "ghost" ? "transparent" : "var(--pm-footer-button)");
             --pm-footer-button-hover-bg: @(footerButtonStyle == "solid" ? "color-mix(in srgb, var(--pm-footer-button) 82%, #000000)" : "color-mix(in srgb, var(--pm-footer-button) 14%, transparent)");
+            --pm-count-pill-bg: @(Model.CountPillBackgroundColor ?? "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
+            --pm-count-pill-text: @(Model.CountPillTextColor ?? "var(--pm-brand-dark)");
+            --pm-count-pill-border: @(Model.CountPillBorderColor ?? "color-mix(in srgb, var(--pm-brand) 22%, transparent)");
+            --pm-count-pill-opacity: @MenuDesignOpacityHelper.ToPercent(Model.CountPillOpacity, MenuDesignOpacityDefaults.CountPill);
+            --pm-phone-link: @(Model.PhoneLinkColor ?? "var(--pm-brand-dark)");
+            --pm-social-color: @(Model.SocialIconColor ?? "var(--pm-brand-dark)");
+            --pm-social-bg: @(Model.SocialIconBackgroundColor ?? "color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid))");
+            --pm-social-border: @(Model.SocialIconBorderColor ?? "color-mix(in srgb, var(--pm-brand) 24%, var(--pm-border))");
+            --pm-social-opacity: @MenuDesignOpacityHelper.ToPercent(Model.SocialIconOpacity, MenuDesignOpacityDefaults.SocialIcon);
             @if (!string.IsNullOrEmpty(Model.CardShadow))
             {
                 <text>--pm-shadow: @Model.CardShadow;</text>

@@ -55,6 +55,15 @@ public static class MenuDesignMappingExtensions
         MutedTextOpacity = design.MutedTextOpacity,
         PanelOpacity = design.PanelOpacity,
         HeaderChipOpacity = design.HeaderChipOpacity,
+        CountPillBackgroundColor = design.CountPillBackgroundColor,
+        CountPillTextColor = design.CountPillTextColor,
+        CountPillBorderColor = design.CountPillBorderColor,
+        CountPillOpacity = design.CountPillOpacity,
+        PhoneLinkColor = design.PhoneLinkColor,
+        SocialIconColor = design.SocialIconColor,
+        SocialIconBackgroundColor = design.SocialIconBackgroundColor,
+        SocialIconBorderColor = design.SocialIconBorderColor,
+        SocialIconOpacity = design.SocialIconOpacity,
         IsDefault = design.IsDefault,
         SortOrder = design.SortOrder
     };

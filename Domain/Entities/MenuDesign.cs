@@ -67,6 +67,21 @@ public class MenuDesign : BaseEntity
     public string? PanelOpacity { get; set; }
     public string? HeaderChipOpacity { get; set; }
 
+    // Count pill (ürün/kategori sayı badge)
+    public string? CountPillBackgroundColor { get; set; }
+    public string? CountPillTextColor { get; set; }
+    public string? CountPillBorderColor { get; set; }
+    public string? CountPillOpacity { get; set; }
+
+    // Phone links (telefon numarası linkleri)
+    public string? PhoneLinkColor { get; set; }
+
+    // Social icons (sosyal medya ikonları)
+    public string? SocialIconColor { get; set; }
+    public string? SocialIconBackgroundColor { get; set; }
+    public string? SocialIconBorderColor { get; set; }
+    public string? SocialIconOpacity { get; set; }
+
     public bool IsDefault { get; set; }
     public int SortOrder { get; set; }
     public ICollection<Menu> Menus { get; set; } = [];

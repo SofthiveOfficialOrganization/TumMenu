@@ -504,7 +504,7 @@ body {
 }
 
 .pm-business-info-group a {
-  color: var(--pm-brand-dark);
+  color: var(--pm-phone-link);
   font-weight: 800;
   text-decoration: none;
 }
@@ -521,18 +521,18 @@ body {
   gap: 8px;
   min-height: 38px;
   padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--pm-brand) 24%, var(--pm-border));
+  border: 1px solid var(--pm-social-border);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pm-brand) 10%, var(--pm-surface-solid));
-  color: var(--pm-brand-dark);
+  background: color-mix(in srgb, var(--pm-social-bg) var(--pm-social-opacity), transparent);
+  color: var(--pm-social-color);
   font-size: 0.88rem;
   font-weight: 850;
   text-decoration: none;
 }
 
 .pm-business-info-social:hover {
-  background: color-mix(in srgb, var(--pm-brand) 18%, var(--pm-surface-solid));
-  color: var(--pm-brand-dark);
+  background: color-mix(in srgb, var(--pm-social-color) 18%, var(--pm-surface-solid));
+  color: var(--pm-social-color);
 }
 
 .pm-content-area {
@@ -809,10 +809,10 @@ body {
 .pm-count-pill {
   flex: 0 0 auto;
   padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--pm-brand) 22%, transparent);
+  border: 1px solid var(--pm-count-pill-border);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pm-brand) 9%, var(--pm-surface-solid));
-  color: var(--pm-brand-dark);
+  background: color-mix(in srgb, var(--pm-count-pill-bg) var(--pm-count-pill-opacity), transparent);
+  color: var(--pm-count-pill-text);
   font-size: 0.82rem;
   font-weight: 800;
 }

@@ -51,6 +51,22 @@ public interface IMenuDesignForm
     string? MutedTextOpacity { get; set; }
     string? PanelOpacity { get; set; }
     string? HeaderChipOpacity { get; set; }
+
+    // Count pill (ürün/kategori sayı badge)
+    string? CountPillBackgroundColor { get; set; }
+    string? CountPillTextColor { get; set; }
+    string? CountPillBorderColor { get; set; }
+    string? CountPillOpacity { get; set; }
+
+    // Phone links (telefon numarası linkleri)
+    string? PhoneLinkColor { get; set; }
+
+    // Social icons (sosyal medya ikonları)
+    string? SocialIconColor { get; set; }
+    string? SocialIconBackgroundColor { get; set; }
+    string? SocialIconBorderColor { get; set; }
+    string? SocialIconOpacity { get; set; }
+
     bool IsDefault { get; set; }
     int SortOrder { get; set; }
 }
