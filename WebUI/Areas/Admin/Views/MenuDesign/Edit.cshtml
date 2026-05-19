@@ -5,7 +5,7 @@
     ViewData["Title"] = "Tasarım Düzenle";
 }
 
-<div class="row">
+<div class="row menu-design-edit-row">
     <div class="col-lg-8">
         <div class="horizon-card">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -36,10 +36,15 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-4 menu-design-preview-column">
         <partial name="_MenuDesignLivePreview" />
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/menu-design-preview.css" asp-append-version="true" />
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

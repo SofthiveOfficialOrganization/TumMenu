@@ -34,4 +34,20 @@
         background: #1e293b;
         color: #e2e8f0;
     }
+
+    .color-trigger.color-trigger--empty {
+        opacity: 0.35;
+        background-image:
+            linear-gradient(45deg, #cbd5e1 25%, transparent 25%),
+            linear-gradient(-45deg, #cbd5e1 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #cbd5e1 75%),
+            linear-gradient(-45deg, transparent 75%, #cbd5e1 75%);
+        background-size: 10px 10px;
+        background-position: 0 0, 0 5px, 5px -5px, -5px 0;
+    }
+
+    .color-trigger.color-trigger--empty:hover,
+    .color-trigger.color-trigger--empty:focus {
+        opacity: 0.7;
+    }
 </style>

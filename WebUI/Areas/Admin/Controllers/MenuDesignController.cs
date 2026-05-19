@@ -85,6 +85,15 @@ public sealed class MenuDesignController(IMediator mediator) : Controller
             MutedTextOpacity = dto.MutedTextOpacity,
             PanelOpacity = dto.PanelOpacity,
             HeaderChipOpacity = dto.HeaderChipOpacity,
+            CountPillBackgroundColor = dto.CountPillBackgroundColor,
+            CountPillTextColor = dto.CountPillTextColor,
+            CountPillBorderColor = dto.CountPillBorderColor,
+            CountPillOpacity = dto.CountPillOpacity,
+            PhoneLinkColor = dto.PhoneLinkColor,
+            SocialIconColor = dto.SocialIconColor,
+            SocialIconBackgroundColor = dto.SocialIconBackgroundColor,
+            SocialIconBorderColor = dto.SocialIconBorderColor,
+            SocialIconOpacity = dto.SocialIconOpacity,
             IsDefault = dto.IsDefault,
             SortOrder = dto.SortOrder
         };

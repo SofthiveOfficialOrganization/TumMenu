@@ -28,10 +28,6 @@ public static class MenuDesignFieldHints
         ["CardBackgroundColor"] = "Kartların arka plan rengi; boş bırakılırsa yüzey rengi kullanılır.",
         ["CardShadow"] = "Kartların gölge efekti (--pm-shadow).",
         ["CardImageBorderRadius"] = "Ürün ve kategori görsellerinin köşe yarıçapı.",
-        ["FooterBackgroundColor"] = "Sayfanın alt kısmındaki site footer’ının arka plan rengi.",
-        ["FooterTextColor"] = "Footer’daki başlık, link ve alt bilgi metinlerinin rengi.",
-        ["FooterButtonColor"] = "Footer’daki sosyal medya ve aksiyon butonlarının ana rengi.",
-        ["FooterButtonStyle"] = "Footer butonlarının stili; boş bırakılırsa genel tuş stili uygulanır.",
         ["FontFamily"] = "Menü gövde metinlerinin yazı tipi (--pm-font).",
         ["BodyFontSize"] = "Genel gövde metin boyutu; örn. 1rem veya 15px.",
         ["HeadingFontFamily"] = "Kategori başlıkları ve bölüm başlıklarının yazı tipi (--pm-heading-font).",
@@ -53,7 +49,16 @@ public static class MenuDesignFieldHints
         ["PageBackgroundOverlayOpacity"] = "Sayfa arka planındaki renk katmanının opaklığı (0–100). Varsayılan: 68.",
         ["MutedTextOpacity"] = "Soluk/ikincil metinlerin görünürlüğü (0–100). Düşük değer = daha silik.",
         ["PanelOpacity"] = "İşletme bilgisi gibi açılır panellerin cam efekti opaklığı (0–100). Varsayılan: 80.",
-        ["HeaderChipOpacity"] = "Header’daki rozet ve istatistik arka planlarının opaklığı (0–100). Varsayılan: 12."
+        ["HeaderChipOpacity"] = "Header’daki rozet ve istatistik arka planlarının opaklığı (0–100). Varsayılan: 12.",
+        ["CountPillBackgroundColor"] = "Ürün detayındaki etiket rozetlerinin (pm-count-pill) arka plan rengi.",
+        ["CountPillTextColor"] = "Count pill üzerindeki metin rengi.",
+        ["CountPillBorderColor"] = "Count pill kenarlık rengi.",
+        ["CountPillOpacity"] = "Count pill arka plan opaklığı (0–100).",
+        ["PhoneLinkColor"] = "İşletme bilgilerindeki telefon bağlantısının rengi.",
+        ["SocialIconColor"] = "Sosyal medya chip’lerindeki ikon ve metin rengi.",
+        ["SocialIconBackgroundColor"] = "Sosyal medya chip’lerinin arka plan rengi.",
+        ["SocialIconBorderColor"] = "Sosyal medya chip’lerinin kenarlık rengi.",
+        ["SocialIconOpacity"] = "Sosyal medya chip arka plan opaklığı (0–100)."
     };
 
     public static string? Get(string fieldName) =>

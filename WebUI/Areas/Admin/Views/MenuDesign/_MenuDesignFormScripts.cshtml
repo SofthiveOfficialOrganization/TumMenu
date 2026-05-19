@@ -2,22 +2,68 @@
 @using Application.MenuDesigns
 @{
     var hintsJson = JsonSerializer.Serialize(MenuDesignFieldHints.All);
+    var targetsJson = JsonSerializer.Serialize(MenuDesignPreviewTargets.All);
 }
 
 <partial name="_MenuDesignFieldHintStyles" />
 
 <script type="application/json" id="menuDesignFieldHints">@Html.Raw(hintsJson)</script>
+<script type="application/json" id="menuDesignPreviewTargets">@Html.Raw(targetsJson)</script>
 
 <script>
     (function () {
         const hints = JSON.parse(document.getElementById('menuDesignFieldHints')?.textContent || '{}');
-        const tooltip = document.createElement('div');
+        const targets = JSON.parse(document.getElementById('menuDesignPreviewTargets')?.textContent || '{}');
+        const previewRoot = document.getElementById('livePreview');
+        const previewViewport = document.getElementById('menuDesignPreviewViewport');
+        const themeStyle = document.getElementById('menuDesignPreviewTheme');
+        const designForm = document.querySelector('form[action*="MenuDesign"]') || document.querySelector('.menu-design-edit-row form');
+
+        const opacityDefaults = {
+            Surface: '94',
+            Card: '100',
+            HeaderSecondaryText: '86',
+            HeaderAccentText: '94',
+            PageBackgroundOverlay: '68',
+            MutedText: '100',
+            Panel: '80',
+            HeaderChip: '12',
+            CountPill: '100',
+            SocialIcon: '100'
+        };
+
+        const tooltip = document.createElement('d' + 'iv');
         tooltip.className = 'design-field-hint';
         tooltip.setAttribute('role', 'tooltip');
         document.body.appendChild(tooltip);
 
+        let highlighted = [];
+
+        function clearHighlights() {
+            highlighted.forEach(el => el.classList.remove('is-field-highlighted'));
+            highlighted = [];
+        }
+
+        function highlightParts(partIds) {
+            if (!previewRoot || !partIds?.length) return;
+            clearHighlights();
+            const seen = new Set();
+            partIds.forEach(id => {
+                previewRoot.querySelectorAll(`[data-prev-part="${id}"]`).forEach(el => {
+                    if (seen.has(el)) return;
+                    seen.add(el);
+                    el.classList.add('is-field-highlighted');
+                    highlighted.push(el);
+                });
+            });
+            if (highlighted[0]) {
+                highlighted[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
         function hideHint() {
             tooltip.classList.remove('is-visible');
+            clearHighlights();
         }
 
         function showHint(text, x, y) {
@@ -30,42 +76,146 @@
         document.querySelectorAll('[data-design-field]').forEach(group => {
             const field = group.dataset.designField;
             const text = hints[field];
-            if (!text) return;
+            const parts = targets[field];
+            if (!text && !parts) return;
 
-            const onEnter = (e) => showHint(text, e.clientX, e.clientY);
-            const onMove = (e) => showHint(text, e.clientX, e.clientY);
+            const onEnter = (e) => {
+                if (text) showHint(text, e.clientX, e.clientY);
+                if (parts) highlightParts(parts);
+            };
+            const onMove = (e) => {
+                if (text) showHint(text, e.clientX, e.clientY);
+            };
 
             group.addEventListener('mouseenter', onEnter);
             group.addEventListener('mousemove', onMove);
             group.addEventListener('mouseleave', hideHint);
             group.addEventListener('focusin', () => {
                 const rect = group.getBoundingClientRect();
-                showHint(text, rect.left, rect.bottom);
+                if (text) showHint(text, rect.left, rect.bottom);
+                if (parts) highlightParts(parts);
             });
             group.addEventListener('focusout', hideHint);
         });
 
+        function syncPickerEmptyState(picker, textInput) {
+            const hex = (textInput.value || '').trim();
+            const isValid = /^#[0-9a-fA-F]{6}$/.test(hex);
+            picker.classList.toggle('color-trigger--empty', !isValid);
+            if (isValid) picker.value = hex;
+            picker.title = isValid
+                ? 'Renk seçin'
+                : 'Varsayılan değer kullanılıyor — özel renk için tıklayın';
+        }
+
         document.querySelectorAll('.color-trigger').forEach(picker => {
             const targetName = picker.dataset.target;
-            const textInput = document.querySelector(`input[name="${targetName}"]`);
+            const textInput = designForm?.querySelector(`input[name="${targetName}"]`) || document.querySelector(`input[name="${targetName}"]`);
             if (!textInput) return;
 
-            const hex = textInput.value.trim();
-            if (/^#[0-9a-fA-F]{6}$/.test(hex)) picker.value = hex;
+            syncPickerEmptyState(picker, textInput);
 
-            picker.addEventListener('input', () => { textInput.value = picker.value; updatePreview(); });
+            picker.addEventListener('input', () => {
+                textInput.value = picker.value;
+                picker.classList.remove('color-trigger--empty');
+                picker.title = 'Renk seçin';
+                updatePreview();
+            });
             textInput.addEventListener('input', () => {
-                const h = textInput.value.trim();
-                if (/^#[0-9a-fA-F]{6}$/.test(h)) picker.value = h;
+                syncPickerEmptyState(picker, textInput);
                 updatePreview();
             });
         });
 
-        function getVal(name) { return document.querySelector(`input[name="${name}"]`)?.value || ''; }
+        function getVal(name) {
+            const el = designForm?.querySelector(`[name="${name}"]`) || document.querySelector(`[name="${name}"]`);
+            if (!el) return '';
+            if (el.type === 'checkbox') return el.checked ? 'true' : '';
+            return (el.value || '').trim();
+        }
+
+        function setPreviewScreen(screen) {
+            if (!previewRoot) return;
+            previewRoot.querySelectorAll('[data-preview-screen]').forEach(el => {
+                const active = el.dataset.previewScreen === screen;
+                el.classList.toggle('is-active', active);
+                el.hidden = !active;
+            });
+            if (previewViewport) previewViewport.scrollTop = 0;
+        }
+
+        function bindPreviewNavigation() {
+            if (!previewRoot) return;
+            previewRoot.querySelectorAll('[data-preview-nav]').forEach(trigger => {
+                const go = (e) => {
+                    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+                    if (e.type === 'keydown') e.preventDefault();
+                    e.stopPropagation();
+                    setPreviewScreen(trigger.dataset.previewNav || 'list');
+                };
+                trigger.addEventListener('click', go);
+                trigger.addEventListener('keydown', go);
+            });
+        }
+
+        let fontsLinkEl = document.getElementById('menuDesignPreviewFonts');
+        function syncPreviewFonts() {
+            const extract = (raw) => (raw || '').split(',')[0]?.trim() || '';
+            const isGeneric = (n) => !n || ['sans-serif', 'serif', 'monospace', 'cursive', 'fantasy'].includes(n.toLowerCase());
+            const body = extract(getVal('FontFamily'));
+            const heading = extract(getVal('HeadingFontFamily'));
+            const families = [];
+            if (!isGeneric(body)) families.push(encodeURIComponent(body) + ':wght@300;400;500;600;700;800');
+            if (!isGeneric(heading) && heading !== body) families.push(encodeURIComponent(heading) + ':wght@400;700');
+            if (!families.length) {
+                if (fontsLinkEl) fontsLinkEl.remove();
+                fontsLinkEl = null;
+                return;
+            }
+            const href = 'https://fonts.googleapis.com/css2?' + families.map(f => 'family=' + f).join('&') + '&display=swap';
+            if (!fontsLinkEl) {
+                fontsLinkEl = document.createElement('link');
+                fontsLinkEl.id = 'menuDesignPreviewFonts';
+                fontsLinkEl.rel = 'stylesheet';
+                document.head.appendChild(fontsLinkEl);
+            }
+            if (fontsLinkEl.href !== href) fontsLinkEl.href = href;
+        }
+
+        function normalizeStyle(style) {
+            const s = (style || '').trim().toLowerCase();
+            if (s === 'outline' || s === 'ghost') return s;
+            return 'solid';
+        }
+
+        function toPercent(value, fallback) {
+            if (!value) return fallback.endsWith('%') ? fallback : `${fallback}%`;
+            const trimmed = value.trim().replace(/%$/, '');
+            const n = parseInt(trimmed, 10);
+            if (Number.isNaN(n)) return fallback.endsWith('%') ? fallback : `${fallback}%`;
+            return `${Math.min(100, Math.max(0, n))}%`;
+        }
+
+        function parseOpacityPercent(value, fallback) {
+            if (!value) return parseInt(fallback, 10);
+            const n = parseInt(String(value).trim().replace(/%$/, ''), 10);
+            return Number.isNaN(n) ? parseInt(fallback, 10) : Math.min(100, Math.max(0, n));
+        }
+
+        function escapeCssUrl(url) {
+            return url.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r|\n/g, '');
+        }
+
+        function cssVar(name, value) {
+            return `  ${name}: ${value};`;
+        }
 
         function updatePreview() {
+            if (!themeStyle || !previewRoot) return;
+
             const primary = getVal('PrimaryColor') || '#688745';
             const primaryDark = getVal('PrimaryDarkColor') || '#4a6130';
+            const accent = getVal('AccentColor') || '#8bc34a';
             const bg = getVal('BackgroundColor') || '#f8fafc';
             const surface = getVal('SurfaceColor') || '#ffffff';
             const cardBg = getVal('CardBackgroundColor') || surface;
@@ -73,55 +223,133 @@
             const headingColor = getVal('HeadingTextColor') || text;
             const muted = getVal('MutedColor') || '#64748b';
             const price = getVal('PriceColor') || muted;
-            const radius = document.querySelector('input[name="BorderRadius"]')?.value || '24px';
+            const radius = getVal('BorderRadius') || '24px';
             const headerBg = getVal('HeaderBackgroundColor') || primary;
             const headerText = getVal('HeaderTextColor') || '#ffffff';
             const headingBorderW = getVal('HeadingBorderWidth') || '0';
             const headingBorderC = getVal('HeadingBorderColor') || primary;
             const headingWeight = getVal('HeadingFontWeight') || '800';
-            const btnText = getVal('ButtonTextColor') || '#ffffff';
+            const buttonStyle = normalizeStyle(getVal('ButtonStyle'));
+            const footerButtonStyle = normalizeStyle(getVal('FooterButtonStyle') || getVal('ButtonStyle'));
+            const btnTextDefault = buttonStyle === 'solid' ? '#ffffff' : primary;
+            const btnText = getVal('ButtonTextColor') || btnTextDefault;
+            const btnBorderDefault = buttonStyle === 'ghost' ? 'transparent' : primary;
+            const btnBorder = getVal('ButtonBorderColor') || btnBorderDefault;
+            const btnRadius = getVal('ButtonBorderRadius') || radius;
+            const footerBg = getVal('FooterBackgroundColor') || primaryDark;
+            const footerText = getVal('FooterTextColor') || '#ffffff';
+            const footerButton = getVal('FooterButtonColor') || accent;
+            const link = getVal('LinkColor') || primary;
+            const cardBorderW = getVal('CardBorderWidth') || '1px';
+            const cardBorderC = getVal('CardBorderColor') || '#e2e8f0';
+            const cardShadow = getVal('CardShadow');
+            const cardImgRadius = getVal('CardImageBorderRadius');
+            const fontFamily = getVal('FontFamily') || '"Outfit", sans-serif';
+            const headingFont = getVal('HeadingFontFamily') || fontFamily;
+            const headingSize = getVal('HeadingFontSize') || '2.45rem';
+            const subheadingSize = getVal('SubheadingFontSize') || '1.6rem';
+            const bodySize = getVal('BodyFontSize') || '1rem';
+            const defaultShadow = '0 18px 50px rgba(24, 18, 12, 0.08)';
+            const resolvedShadow = cardShadow || defaultShadow;
+            const bgGradient = getVal('BackgroundGradient') || 'linear-gradient(135deg, var(--pm-header-bg) 0%, var(--pm-brand-dark) 100%)';
 
-            const live = document.getElementById('livePreview');
-            if (!live) return;
+            const pageBgTop = parseOpacityPercent(getVal('PageBackgroundOverlayOpacity'), opacityDefaults.PageBackgroundOverlay);
+            const pageBgMid = Math.max(0, Math.min(100, pageBgTop - 14));
+            const pageBgEnd = Math.max(0, Math.min(100, pageBgTop + 4));
 
-            live.style.borderColor = primary;
-            const header = document.getElementById('prev-header');
-            if (header) {
-                header.style.background = headerBg;
-                header.querySelectorAll('[data-prev-header-text]').forEach(el => el.style.color = headerText);
+            const countPillBg = getVal('CountPillBackgroundColor') || `color-mix(in srgb, ${primary} 10%, ${surface})`;
+            const countPillText = getVal('CountPillTextColor') || primaryDark;
+            const countPillBorder = getVal('CountPillBorderColor') || `color-mix(in srgb, ${primary} 22%, transparent)`;
+            const phoneLink = getVal('PhoneLinkColor') || primaryDark;
+            const socialColor = getVal('SocialIconColor') || primaryDark;
+            const socialBg = getVal('SocialIconBackgroundColor') || `color-mix(in srgb, ${primary} 10%, ${surface})`;
+            const socialBorder = getVal('SocialIconBorderColor') || `color-mix(in srgb, ${primary} 24%, ${cardBorderC})`;
+
+            let bgImageCss = 'none';
+            const bgImageUrl = getVal('BackgroundImageUrl');
+            if (bgImageUrl) {
+                const url = bgImageUrl.startsWith('~/') ? bgImageUrl.replace('~/', '/') : bgImageUrl;
+                bgImageCss = `url('${escapeCssUrl(url)}')`;
             }
-            document.getElementById('prev-body').style.background = bg;
-            const cat = document.getElementById('prev-category');
-            cat.style.background = cardBg;
-            cat.style.borderRadius = radius;
-            cat.style.borderWidth = getVal('CardBorderWidth') || '1px';
-            cat.style.borderStyle = 'solid';
-            cat.style.borderColor = getVal('CardBorderColor') || '#e2e8f0';
-            const catTitle = document.getElementById('prev-category-title');
-            catTitle.style.color = headingColor;
-            catTitle.style.fontWeight = headingWeight;
-            catTitle.style.borderWidth = headingBorderW;
-            catTitle.style.borderStyle = 'solid';
-            catTitle.style.borderColor = headingBorderC;
-            document.getElementById('prev-muted').style.color = muted;
-            document.getElementById('prev-product-title').style.color = text;
-            document.getElementById('prev-price').style.color = price;
-            const btn = document.getElementById('prev-btn');
-            btn.style.background = primary;
-            btn.style.color = btnText;
-            btn.style.borderRadius = document.querySelector('input[name="ButtonBorderRadius"]')?.value || radius;
-            const footer = document.getElementById('prev-footer');
-            if (footer) {
-                footer.style.background = getVal('FooterBackgroundColor') || primaryDark;
-                footer.style.color = getVal('FooterTextColor') || '#ffffff';
-            }
+
+            const lines = [
+                cssVar('--pm-brand', primary),
+                cssVar('--pm-brand-dark', primaryDark),
+                cssVar('--pm-accent', accent),
+                cssVar('--pm-bg', bg),
+                cssVar('--pm-surface', surface),
+                cssVar('--pm-surface-solid', surface),
+                cssVar('--pm-text', text),
+                cssVar('--pm-muted', muted),
+                cssVar('--pm-radius', radius),
+                cssVar('--pm-header-bg', headerBg),
+                cssVar('--pm-header-gradient', bgGradient),
+                cssVar('--pm-header-text', headerText),
+                cssVar('--pm-bg-image', bgImageCss),
+                cssVar('--pm-footer-bg', footerBg),
+                cssVar('--pm-footer-text', footerText),
+                cssVar('--pm-footer-button', footerButton),
+                cssVar('--pm-button-bg', buttonStyle === 'solid' ? 'var(--pm-brand)' : 'transparent'),
+                cssVar('--pm-button-text', btnText),
+                cssVar('--pm-button-border', btnBorder),
+                cssVar('--pm-button-radius', btnRadius),
+                cssVar('--pm-button-hover-bg', buttonStyle === 'solid' ? 'var(--pm-brand-dark)' : `color-mix(in srgb, ${primary} 10%, transparent)`),
+                cssVar('--pm-heading-color', headingColor),
+                cssVar('--pm-heading-border-width', headingBorderW),
+                cssVar('--pm-heading-border-color', headingBorderC),
+                cssVar('--pm-heading-weight', headingWeight),
+                cssVar('--pm-link', link),
+                cssVar('--pm-price', price),
+                cssVar('--pm-card-bg', cardBg),
+                cssVar('--pm-card-border-width', cardBorderW),
+                cssVar('--pm-surface-opacity', toPercent(getVal('SurfaceOpacity'), opacityDefaults.Surface)),
+                cssVar('--pm-card-opacity', toPercent(getVal('CardOpacity'), opacityDefaults.Card)),
+                cssVar('--pm-header-subtitle-opacity', toPercent(getVal('HeaderSecondaryTextOpacity'), opacityDefaults.HeaderSecondaryText)),
+                cssVar('--pm-header-accent-opacity', toPercent(getVal('HeaderAccentTextOpacity'), opacityDefaults.HeaderAccentText)),
+                cssVar('--pm-page-bg-scrim-top', `${pageBgTop}%`),
+                cssVar('--pm-page-bg-scrim-mid', `${pageBgMid}%`),
+                cssVar('--pm-page-bg-scrim-end', `${pageBgEnd}%`),
+                cssVar('--pm-muted-text-opacity', toPercent(getVal('MutedTextOpacity'), opacityDefaults.MutedText)),
+                cssVar('--pm-panel-opacity', toPercent(getVal('PanelOpacity'), opacityDefaults.Panel)),
+                cssVar('--pm-header-chip-opacity', toPercent(getVal('HeaderChipOpacity'), opacityDefaults.HeaderChip)),
+                cssVar('--pm-muted-foreground', 'color-mix(in srgb, var(--pm-muted) var(--pm-muted-text-opacity), transparent)'),
+                cssVar('--pm-footer-button-bg', footerButtonStyle === 'solid' ? 'var(--pm-footer-button)' : 'transparent'),
+                cssVar('--pm-footer-button-text', footerButtonStyle === 'solid' ? '#ffffff' : 'var(--pm-footer-button)'),
+                cssVar('--pm-footer-button-border', footerButtonStyle === 'ghost' ? 'transparent' : 'var(--pm-footer-button)'),
+                cssVar('--pm-footer-button-hover-bg', footerButtonStyle === 'solid'
+                    ? 'color-mix(in srgb, var(--pm-footer-button) 82%, #000000)'
+                    : 'color-mix(in srgb, var(--pm-footer-button) 14%, transparent)'),
+                cssVar('--pm-count-pill-bg', countPillBg),
+                cssVar('--pm-count-pill-text', countPillText),
+                cssVar('--pm-count-pill-border', countPillBorder),
+                cssVar('--pm-count-pill-opacity', toPercent(getVal('CountPillOpacity'), opacityDefaults.CountPill)),
+                cssVar('--pm-phone-link', phoneLink),
+                cssVar('--pm-social-color', socialColor),
+                cssVar('--pm-social-bg', socialBg),
+                cssVar('--pm-social-border', socialBorder),
+                cssVar('--pm-social-opacity', toPercent(getVal('SocialIconOpacity'), opacityDefaults.SocialIcon))
+            ];
+
+            lines.push(cssVar('--pm-shadow', resolvedShadow));
+            lines.push(cssVar('--pm-border', cardBorderC));
+            if (cardImgRadius) lines.push(cssVar('--pm-card-img-radius', cardImgRadius));
+            lines.push(cssVar('--pm-font', fontFamily));
+            lines.push(cssVar('--pm-heading-font', headingFont));
+            lines.push(cssVar('--pm-heading-size', headingSize));
+            lines.push(cssVar('--pm-subheading-size', subheadingSize));
+            lines.push(cssVar('--pm-body-size', bodySize));
+
+            themeStyle.textContent = `#livePreview.menu-design-preview {\n${lines.join('\n')}\n}`;
+            previewRoot.style.borderColor = primary;
+            syncPreviewFonts();
         }
 
         const radiusInput = document.querySelector('input[name="BorderRadius"]');
         if (radiusInput) radiusInput.addEventListener('input', updatePreview);
-        document.querySelectorAll('input, select, textarea').forEach(el => {
-            if (el.name && el.closest('form')) el.addEventListener('input', updatePreview);
-            if (el.name && el.closest('form')) el.addEventListener('change', updatePreview);
+        (designForm || document).querySelectorAll('input, select, textarea').forEach(el => {
+            if (!el.name) return;
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
         });
 
         const nameInput = document.getElementById('nameInput');
@@ -139,6 +367,8 @@
             slugInput.addEventListener('input', () => { slugInput.dataset.userEdited = '1'; });
         }
 
+        bindPreviewNavigation();
+        setPreviewScreen('list');
         updatePreview();
     })();
 </script>

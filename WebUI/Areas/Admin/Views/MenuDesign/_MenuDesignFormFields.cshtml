@@ -197,39 +197,10 @@
     </div>
 </div>
 
-<h6 class="fw-bold text-secondary text-uppercase small mb-3">Footer</h6>
-<div class="row g-3 mb-4">
-    <div class="col-md-4 design-field-group" data-design-field="FooterBackgroundColor">
-        <label asp-for="FooterBackgroundColor" class="form-label fw-semibold small">Footer Arka Plan <span class="text-muted fw-normal">isteğe bağlı</span></label>
-        <div class="input-group">
-            <input type="color" class="form-control form-control-color color-trigger" data-target="FooterBackgroundColor" />
-            <input asp-for="FooterBackgroundColor" class="form-control font-monospace" placeholder="#1e293b" />
-        </div>
-    </div>
-    <div class="col-md-4 design-field-group" data-design-field="FooterTextColor">
-        <label asp-for="FooterTextColor" class="form-label fw-semibold small">Footer Metin Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
-        <div class="input-group">
-            <input type="color" class="form-control form-control-color color-trigger" data-target="FooterTextColor" />
-            <input asp-for="FooterTextColor" class="form-control font-monospace" placeholder="#ffffff" />
-        </div>
-    </div>
-    <div class="col-md-4 design-field-group" data-design-field="FooterButtonColor">
-        <label asp-for="FooterButtonColor" class="form-label fw-semibold small">Footer Tuş Rengi <span class="text-muted fw-normal">isteğe bağlı</span></label>
-        <div class="input-group">
-            <input type="color" class="form-control form-control-color color-trigger" data-target="FooterButtonColor" />
-            <input asp-for="FooterButtonColor" class="form-control font-monospace" placeholder="Ana renkle aynı" />
-        </div>
-    </div>
-    <div class="col-md-4 design-field-group" data-design-field="FooterButtonStyle">
-        <label asp-for="FooterButtonStyle" class="form-label fw-semibold small">Footer Tuş Stili <span class="text-muted fw-normal">isteğe bağlı</span></label>
-        <select asp-for="FooterButtonStyle" class="form-select">
-            <option value="">Genel tuş stiliyle aynı</option>
-            <option value="solid">Dolu (Solid)</option>
-            <option value="outline">Çerçeveli (Outline)</option>
-            <option value="ghost">Şeffaf (Ghost)</option>
-        </select>
-    </div>
-</div>
+<input type="hidden" asp-for="FooterBackgroundColor" />
+<input type="hidden" asp-for="FooterTextColor" />
+<input type="hidden" asp-for="FooterButtonColor" />
+<input type="hidden" asp-for="FooterButtonStyle" />
 
 <h6 class="fw-bold text-secondary text-uppercase small mb-3">Tipografi & Başlıklar</h6>
 <div class="row g-3 mb-4">

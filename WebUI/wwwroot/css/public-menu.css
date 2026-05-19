@@ -222,7 +222,7 @@ body {
   margin: 0;
   color: var(--pm-header-text);
   font-family: var(--pm-heading-font);
-  font-size: clamp(2.45rem, 6.2vw, 3.45rem);
+  font-size: clamp(2rem, 6.2vw, var(--pm-heading-size, 3.45rem));
   font-weight: 900;
   line-height: 0.96;
   text-shadow: 0 8px 26px rgba(0, 0, 0, 0.28);
@@ -232,7 +232,7 @@ body {
   max-width: 62ch;
   margin: 0;
   color: color-mix(in srgb, var(--pm-header-text) var(--pm-header-subtitle-opacity), transparent);
-  font-size: 1rem;
+  font-size: 1em;
   line-height: 1.6;
 }
 
@@ -262,7 +262,7 @@ body {
   border: 1px solid color-mix(in srgb, var(--pm-header-text) 22%, transparent);
   background: color-mix(in srgb, var(--pm-header-text) var(--pm-header-chip-opacity), transparent);
   color: var(--pm-header-text);
-  font-size: 0.9rem;
+  font-size: 0.9em;
   font-weight: 700;
 }
 
@@ -503,7 +503,8 @@ body {
   overflow-wrap: anywhere;
 }
 
-.pm-business-info-group a {
+.pm-business-info-group a,
+.pm-main a[href^="tel:"] {
   color: var(--pm-phone-link);
   font-weight: 800;
   text-decoration: none;
@@ -813,7 +814,7 @@ body {
   border-radius: 999px;
   background: color-mix(in srgb, var(--pm-count-pill-bg) var(--pm-count-pill-opacity), transparent);
   color: var(--pm-count-pill-text);
-  font-size: 0.82rem;
+  font-size: 0.82em;
   font-weight: 800;
 }
 
@@ -897,7 +898,7 @@ body {
   margin: 0;
   color: var(--pm-heading-color);
   font-family: var(--pm-heading-font);
-  font-size: 1.08rem;
+  font-size: 1.08em;
   font-weight: var(--pm-heading-weight);
   line-height: 1.22;
   border-width: var(--pm-heading-border-width);
@@ -915,7 +916,7 @@ body {
 
 .pm-cat-card-count {
   color: var(--pm-muted-foreground);
-  font-size: 0.88rem;
+  font-size: 0.88em;
   font-weight: 700;
 }
 
@@ -1008,7 +1009,7 @@ body {
 .pm-product-title {
   margin: 0;
   color: var(--pm-text);
-  font-size: 1.02rem;
+  font-size: 1.02em;
   font-weight: 800;
   line-height: 1.28;
 }
@@ -1017,7 +1018,7 @@ body {
 .pm-product-detail-desc {
   margin: 10px 0 0;
   color: var(--pm-muted-foreground);
-  font-size: 0.94rem;
+  font-size: 0.94em;
   line-height: 1.55;
 }
 
@@ -1050,7 +1051,7 @@ body {
   border-radius: 999px;
   background: color-mix(in srgb, var(--pm-accent) 16%, var(--pm-surface-solid));
   color: var(--pm-price);
-  font-size: 0.98rem;
+  font-size: 0.98em;
   font-weight: 900;
   white-space: nowrap;
 }
@@ -1120,7 +1121,7 @@ body {
   min-height: 28px;
   padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.76rem;
+  font-size: 0.76em;
   font-weight: 800;
 }
 
@@ -1341,7 +1342,7 @@ body {
 
   .pm-store {
     max-width: 12ch;
-    font-size: clamp(2.25rem, 10vw, 2.85rem);
+    font-size: clamp(1.75rem, 10vw, var(--pm-heading-size, 2.85rem));
   }
 
   .pm-hero .pm-meta-row {
@@ -1433,7 +1434,7 @@ body {
 
   .pm-product-desc {
     margin-top: 7px;
-    font-size: 0.88rem;
+    font-size: 0.88em;
     line-height: 1.45;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -1451,13 +1452,13 @@ body {
   .pm-badge {
     min-height: 26px;
     padding: 4px 9px;
-    font-size: 0.72rem;
+    font-size: 0.72em;
   }
 
   .pm-product-price {
     min-height: 30px;
     padding: 5px 10px;
-    font-size: 0.88rem;
+    font-size: 0.88em;
   }
 }
 
