@@ -123,11 +123,13 @@
 
                 <div class="mb-4">
                     <label class="text-secondary small text-uppercase fw-bold d-block mb-2">Tasarım</label>
+                    <p class="text-muted small mb-2">Tasarım kartının üzerine gelerek kısa açıklamayı görebilirsiniz.</p>
                     <form asp-action="SetDesign" asp-route-id="@Model.Id" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
                         <div class="d-flex flex-wrap gap-2 mb-2">
-                            <label class="design-option @(currentDesignId == null ? "design-option--active" : "")">
+                            <label class="design-option design-picker-option @(currentDesignId == null ? "design-option--active" : "")"
+                                   data-design-picker-hint="Sistem varsayılan renk paleti. Özel tasarım seçilmediğinde kullanılır.">
                                 <input type="radio" name="menuDesignId" value="" class="d-none"
                                        @(currentDesignId == null ? "checked" : "") />
                                 <div class="design-preview" style="background:#f8fafc; border:2px solid #e2e8f0;">
@@ -138,7 +140,11 @@
                             @foreach (var d in designs)
                             {
                                 var isActive = currentDesignId == d.Id;
-                                <label class="design-option @(isActive ? "design-option--active" : "")">
+                                var designHint = !string.IsNullOrWhiteSpace(d.Description)
+                                    ? d.Description
+                                    : $"{d.Name}: Footer arka planı {(d.FooterBackgroundColor ?? "otomatik")}, sayfa metni {d.TextColor}, başlık {(d.HeadingTextColor ?? d.TextColor)}.";
+                                <label class="design-option design-picker-option @(isActive ? "design-option--active" : "")"
+                                       data-design-picker-hint="@designHint">
                                     <input type="radio" name="menuDesignId" value="@d.Id" class="d-none"
                                            @(isActive ? "checked" : "") />
                                     <div class="design-preview"
@@ -414,8 +420,11 @@
     </div>
 </div>
 
+@await Html.PartialAsync("~/Areas/Admin/Views/MenuDesign/_MenuDesignFieldHintStyles.cshtml")
+
 <style>
     .design-option { cursor: pointer; }
+    .design-picker-option { position: relative; }
     .design-preview {
         display: flex;
         flex-direction: column;
@@ -568,6 +577,29 @@
                 radio.closest('.design-option').classList.add('design-option--active');
             });
         });
+
+        (function initDesignPickerHints() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'design-field-hint';
+            tooltip.setAttribute('role', 'tooltip');
+            document.body.appendChild(tooltip);
+
+            function hide() { tooltip.classList.remove('is-visible'); }
+            function show(text, x, y) {
+                tooltip.textContent = text;
+                tooltip.style.left = Math.min(x + 12, window.innerWidth - 320) + 'px';
+                tooltip.style.top = Math.min(y + 12, window.innerHeight - 80) + 'px';
+                tooltip.classList.add('is-visible');
+            }
+
+            document.querySelectorAll('[data-design-picker-hint]').forEach(el => {
+                const text = el.getAttribute('data-design-picker-hint');
+                if (!text) return;
+                el.addEventListener('mouseenter', e => show(text, e.clientX, e.clientY));
+                el.addEventListener('mousemove', e => show(text, e.clientX, e.clientY));
+                el.addEventListener('mouseleave', hide);
+            });
+        })();
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

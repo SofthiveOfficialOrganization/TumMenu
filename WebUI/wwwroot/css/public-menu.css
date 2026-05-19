@@ -35,6 +35,27 @@
   --pm-heading-font: "Outfit", sans-serif;
   --pm-heading-size: 2.45rem;
   --pm-subheading-size: 1.6rem;
+  --pm-heading-color: var(--pm-text);
+  --pm-heading-border-width: 0;
+  --pm-heading-border-color: var(--pm-brand);
+  --pm-heading-weight: 800;
+  --pm-link: var(--pm-brand);
+  --pm-price: var(--pm-muted);
+  --pm-card-bg: var(--pm-surface-solid);
+  --pm-card-border-width: 1px;
+  --pm-button-radius: var(--pm-radius);
+  --pm-body-size: 1rem;
+  --pm-surface-opacity: 94%;
+  --pm-card-opacity: 100%;
+  --pm-header-subtitle-opacity: 86%;
+  --pm-header-accent-opacity: 94%;
+  --pm-page-bg-scrim-top: 68%;
+  --pm-page-bg-scrim-mid: 54%;
+  --pm-page-bg-scrim-end: 72%;
+  --pm-muted-text-opacity: 100%;
+  --pm-panel-opacity: 80%;
+  --pm-header-chip-opacity: 12%;
+  --pm-muted-foreground: var(--pm-muted);
   --pm-public-header-height: 64px;
   --pm-header-hero-gradient-height: 520px;
 }
@@ -42,14 +63,15 @@
 body {
   min-width: 320px;
   font-family: var(--pm-font);
+  font-size: var(--pm-body-size);
   color: var(--pm-text);
   background-color: var(--pm-bg);
   background-image:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--pm-bg) 68%, transparent) 0%,
-      color-mix(in srgb, var(--pm-bg) 54%, transparent) 280px,
-      color-mix(in srgb, var(--pm-bg) 72%, transparent) 100%
+      color-mix(in srgb, var(--pm-bg) var(--pm-page-bg-scrim-top), transparent) 0%,
+      color-mix(in srgb, var(--pm-bg) var(--pm-page-bg-scrim-mid), transparent) 280px,
+      color-mix(in srgb, var(--pm-bg) var(--pm-page-bg-scrim-end), transparent) 100%
     ),
     var(--pm-bg-image);
   background-attachment: fixed;
@@ -186,7 +208,7 @@ body {
 .pm-eyebrow,
 .pm-company {
   margin: 0;
-  color: color-mix(in srgb, var(--pm-header-text) 94%, transparent);
+  color: color-mix(in srgb, var(--pm-header-text) var(--pm-header-accent-opacity), transparent);
   font-size: clamp(1rem, 2vw, 1.22rem);
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -209,7 +231,7 @@ body {
 .pm-subtitle {
   max-width: 62ch;
   margin: 0;
-  color: color-mix(in srgb, var(--pm-header-text) 86%, transparent);
+  color: color-mix(in srgb, var(--pm-header-text) var(--pm-header-subtitle-opacity), transparent);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -238,7 +260,7 @@ body {
 .pm-stat {
   padding: 8px 13px;
   border: 1px solid color-mix(in srgb, var(--pm-header-text) 22%, transparent);
-  background: color-mix(in srgb, var(--pm-header-text) 12%, transparent);
+  background: color-mix(in srgb, var(--pm-header-text) var(--pm-header-chip-opacity), transparent);
   color: var(--pm-header-text);
   font-size: 0.9rem;
   font-weight: 700;
@@ -384,7 +406,7 @@ body {
   overflow: auto;
   border: 1px solid color-mix(in srgb, var(--pm-brand) 34%, var(--pm-border));
   border-radius: 8px;
-  background: color-mix(in srgb, var(--pm-surface-solid) 80%, transparent);
+  background: color-mix(in srgb, var(--pm-surface-solid) var(--pm-panel-opacity), transparent);
   color: var(--pm-text);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(18px);
@@ -434,7 +456,7 @@ body {
   height: 38px;
   border: 1px solid color-mix(in srgb, var(--pm-brand) 26%, var(--pm-border));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pm-surface-solid) 82%, transparent);
+  background: color-mix(in srgb, var(--pm-surface-solid) var(--pm-surface-opacity), transparent);
   color: var(--pm-text);
   cursor: pointer;
 }
@@ -475,7 +497,7 @@ body {
 .pm-business-info-group p {
   display: block;
   margin: 0;
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
   font-size: 0.95rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
@@ -679,7 +701,7 @@ body {
 
 .pm-qr-cover-chip--muted {
   background: color-mix(in srgb, var(--pm-muted) 8%, var(--pm-surface-solid));
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
 }
 
 .pm-qr-cover-chip .tm-icon {
@@ -705,7 +727,7 @@ body {
   min-height: 46px;
   padding: 0.85rem 1.2rem;
   border: 1px solid var(--pm-button-border);
-  border-radius: max(8px, calc(var(--pm-radius) * 0.72));
+  border-radius: max(8px, calc(var(--pm-button-radius) * 0.72));
   background: var(--pm-button-bg);
   color: var(--pm-button-text);
   font-family: var(--pm-heading-font);
@@ -764,9 +786,13 @@ body {
 .pm-section-title,
 .pm-view-title {
   margin: 0;
-  color: var(--pm-text);
+  color: var(--pm-heading-color);
   font-family: var(--pm-heading-font);
   font-size: clamp(1.35rem, 3vw, var(--pm-subheading-size));
+  font-weight: var(--pm-heading-weight);
+  border-width: var(--pm-heading-border-width);
+  border-style: solid;
+  border-color: var(--pm-heading-border-color);
   font-weight: 800;
   line-height: 1.15;
 }
@@ -775,7 +801,7 @@ body {
 .pm-cat-desc {
   max-width: 720px;
   margin: 8px 0 0;
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
   font-size: 0.98rem;
   line-height: 1.65;
 }
@@ -803,9 +829,9 @@ body {
   grid-template-rows: auto 1fr;
   min-height: 100%;
   overflow: hidden;
-  border: 1px solid var(--pm-border);
+  border: var(--pm-card-border-width) solid var(--pm-border);
   border-radius: 8px;
-  background: var(--pm-surface-solid);
+  background: color-mix(in srgb, var(--pm-card-bg) var(--pm-card-opacity), transparent);
   color: inherit;
   text-decoration: none;
   box-shadow: 0 10px 28px rgba(24, 18, 12, 0.055);
@@ -869,10 +895,14 @@ body {
 
 .pm-cat-card-title {
   margin: 0;
-  color: var(--pm-text);
+  color: var(--pm-heading-color);
+  font-family: var(--pm-heading-font);
   font-size: 1.08rem;
-  font-weight: 800;
+  font-weight: var(--pm-heading-weight);
   line-height: 1.22;
+  border-width: var(--pm-heading-border-width);
+  border-style: solid;
+  border-color: var(--pm-heading-border-color);
 }
 
 .pm-card-footer {
@@ -884,7 +914,7 @@ body {
 }
 
 .pm-cat-card-count {
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
   font-size: 0.88rem;
   font-weight: 700;
 }
@@ -913,9 +943,9 @@ body {
   gap: 14px;
   padding: 10px;
   overflow: hidden;
-  border: 1px solid var(--pm-border);
+  border: var(--pm-card-border-width) solid var(--pm-border);
   border-radius: 8px;
-  background: var(--pm-surface-solid);
+  background: color-mix(in srgb, var(--pm-card-bg) var(--pm-card-opacity), transparent);
   color: inherit;
   text-decoration: none;
   box-shadow: 0 10px 28px rgba(24, 18, 12, 0.05);
@@ -986,7 +1016,7 @@ body {
 .pm-product-desc,
 .pm-product-detail-desc {
   margin: 10px 0 0;
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
   font-size: 0.94rem;
   line-height: 1.55;
 }
@@ -1019,7 +1049,7 @@ body {
   padding: 5px 11px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--pm-accent) 16%, var(--pm-surface-solid));
-  color: color-mix(in srgb, var(--pm-brand-dark) 76%, var(--pm-text));
+  color: var(--pm-price);
   font-size: 0.98rem;
   font-weight: 900;
   white-space: nowrap;
@@ -1052,9 +1082,17 @@ body {
 }
 
 .pm-price-option-price {
-  color: var(--pm-accent);
+  color: var(--pm-price);
   font-weight: 800;
   white-space: nowrap;
+}
+
+.pm-main a:not(.pm-product-card):not(.pm-cat-card):not(.btn):not(.pm-back-link):not(.pm-chip):not(.pm-stat) {
+  color: var(--pm-link);
+}
+
+.pm-main a:not(.pm-product-card):not(.pm-cat-card):not(.btn):not(.pm-back-link):not(.pm-chip):not(.pm-stat):hover {
+  color: color-mix(in srgb, var(--pm-link) 78%, var(--pm-text));
 }
 
 .pm-product-info-row {
@@ -1149,11 +1187,14 @@ body {
 
 .pm-product-detail-title {
   margin: 0;
-  color: var(--pm-text);
+  color: var(--pm-heading-color);
   font-family: var(--pm-heading-font);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 900;
+  font-weight: var(--pm-heading-weight);
   line-height: 1.05;
+  border-width: var(--pm-heading-border-width);
+  border-style: solid;
+  border-color: var(--pm-heading-border-color);
 }
 
 .pm-allergen-box {
@@ -1180,8 +1221,8 @@ body {
   padding: 36px 18px;
   border: 1px dashed var(--pm-border);
   border-radius: var(--pm-radius);
-  background: color-mix(in srgb, var(--pm-surface-solid) 76%, transparent);
-  color: var(--pm-muted);
+  background: color-mix(in srgb, var(--pm-surface-solid) var(--pm-surface-opacity), transparent);
+  color: var(--pm-muted-foreground);
   text-align: center;
 }
 
@@ -1200,14 +1241,14 @@ body {
   padding: 18px;
   border: 1px solid var(--pm-border);
   border-radius: var(--pm-radius);
-  background: color-mix(in srgb, var(--pm-surface-solid) 82%, transparent);
+  background: color-mix(in srgb, var(--pm-surface-solid) var(--pm-surface-opacity), transparent);
   text-align: center;
 }
 
 .pm-ad-label {
   display: inline-flex;
   margin-bottom: 8px;
-  color: var(--pm-muted);
+  color: var(--pm-muted-foreground);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;

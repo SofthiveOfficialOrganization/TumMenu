@@ -29,6 +29,8 @@ public class MenuDesign : BaseEntity
     // Cards (İçerik kartları)
     public string? CardShadow { get; set; }
     public string? CardBorderColor { get; set; }
+    public string? CardBorderWidth { get; set; }
+    public string? CardBackgroundColor { get; set; }
     public string? CardImageBorderRadius { get; set; }
 
     // Footer
@@ -39,9 +41,31 @@ public class MenuDesign : BaseEntity
 
     // Typography (Yazı fontları & başlık büyüklükleri)
     public string? FontFamily { get; set; }
+    public string? BodyFontSize { get; set; }
     public string? HeadingFontFamily { get; set; }
     public string? HeadingFontSize { get; set; }
     public string? SubheadingFontSize { get; set; }
+    public string? HeadingTextColor { get; set; }
+    public string? HeadingBorderWidth { get; set; }
+    public string? HeadingBorderColor { get; set; }
+    public string? HeadingFontWeight { get; set; }
+
+    // Buttons & links
+    public string? LinkColor { get; set; }
+    public string? PriceColor { get; set; }
+    public string? ButtonTextColor { get; set; }
+    public string? ButtonBorderColor { get; set; }
+    public string? ButtonBorderRadius { get; set; }
+
+    // Opacity (0–100, örn. "86" veya "86%")
+    public string? SurfaceOpacity { get; set; }
+    public string? CardOpacity { get; set; }
+    public string? HeaderSecondaryTextOpacity { get; set; }
+    public string? HeaderAccentTextOpacity { get; set; }
+    public string? PageBackgroundOverlayOpacity { get; set; }
+    public string? MutedTextOpacity { get; set; }
+    public string? PanelOpacity { get; set; }
+    public string? HeaderChipOpacity { get; set; }
 
     public bool IsDefault { get; set; }
     public int SortOrder { get; set; }

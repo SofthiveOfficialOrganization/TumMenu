@@ -1,3 +1,4 @@
+@using Application.MenuDesigns
 @using Application.MenuDesigns.DTOs
 @model MenuDesignDTO
 @{
@@ -32,6 +33,9 @@
 
     string buttonStyle = Model is null ? "solid" : normalizeStyle(Model.ButtonStyle);
     string footerButtonStyle = Model is null ? "solid" : normalizeStyle(Model.FooterButtonStyle ?? Model.ButtonStyle);
+    var buttonTextColor = Model?.ButtonTextColor ?? (buttonStyle == "solid" ? "#ffffff" : Model?.PrimaryColor ?? "#ffffff");
+    var buttonBorderColor = Model?.ButtonBorderColor ?? (buttonStyle == "ghost" ? "transparent" : Model?.PrimaryColor ?? "#688745");
+    var buttonRadius = string.IsNullOrWhiteSpace(Model?.ButtonBorderRadius) ? Model?.BorderRadius ?? "18px" : Model.ButtonBorderRadius;
     string? normalizeBackgroundImageUrl(string? url)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -53,6 +57,18 @@
     var backgroundImageCss = backgroundImageUrl is null
         ? "none"
         : $"url('{escapeCssUrl(backgroundImageUrl)}')";
+
+    int ParseOpacityPercent(string? value, int fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return fallback;
+        var trimmed = value.Trim().TrimEnd('%');
+        return int.TryParse(trimmed, out var n) ? Math.Clamp(n, 0, 100) : fallback;
+    }
+
+    var pageBgTop = ParseOpacityPercent(Model?.PageBackgroundOverlayOpacity, int.Parse(MenuDesignOpacityDefaults.PageBackgroundOverlay));
+    var pageBgMid = Math.Clamp(pageBgTop - 14, 0, 100);
+    var pageBgEnd = Math.Clamp(pageBgTop + 4, 0, 100);
 }
 @if (Model is not null)
 {
@@ -79,9 +95,29 @@
             --pm-footer-text:   @(Model.FooterTextColor ?? "#ffffff");
             --pm-footer-button: @(Model.FooterButtonColor ?? Model.AccentColor);
             --pm-button-bg:     @(buttonStyle == "solid" ? "var(--pm-brand)" : "transparent");
-            --pm-button-text:   @(buttonStyle == "solid" ? "#ffffff" : "var(--pm-brand)");
-            --pm-button-border: @(buttonStyle == "ghost" ? "transparent" : "var(--pm-brand)");
+            --pm-button-text:   @buttonTextColor;
+            --pm-button-border: @buttonBorderColor;
+            --pm-button-radius: @buttonRadius;
             --pm-button-hover-bg: @(buttonStyle == "solid" ? "var(--pm-brand-dark)" : "color-mix(in srgb, var(--pm-brand) 10%, transparent)");
+            --pm-heading-color: @(Model.HeadingTextColor ?? Model.TextColor);
+            --pm-heading-border-width: @(string.IsNullOrWhiteSpace(Model.HeadingBorderWidth) ? "0" : Model.HeadingBorderWidth);
+            --pm-heading-border-color: @(Model.HeadingBorderColor ?? Model.PrimaryColor);
+            --pm-heading-weight: @(Model.HeadingFontWeight ?? "800");
+            --pm-link:            @(Model.LinkColor ?? Model.PrimaryColor);
+            --pm-price:           @(Model.PriceColor ?? Model.MutedColor);
+            --pm-card-bg:         @(Model.CardBackgroundColor ?? Model.SurfaceColor);
+            --pm-card-border-width: @(string.IsNullOrWhiteSpace(Model.CardBorderWidth) ? "1px" : Model.CardBorderWidth);
+            --pm-surface-opacity: @MenuDesignOpacityHelper.ToPercent(Model.SurfaceOpacity, MenuDesignOpacityDefaults.Surface);
+            --pm-card-opacity: @MenuDesignOpacityHelper.ToPercent(Model.CardOpacity, MenuDesignOpacityDefaults.Card);
+            --pm-header-subtitle-opacity: @MenuDesignOpacityHelper.ToPercent(Model.HeaderSecondaryTextOpacity, MenuDesignOpacityDefaults.HeaderSecondaryText);
+            --pm-header-accent-opacity: @MenuDesignOpacityHelper.ToPercent(Model.HeaderAccentTextOpacity, MenuDesignOpacityDefaults.HeaderAccentText);
+            --pm-page-bg-scrim-top: @(pageBgTop)%;
+            --pm-page-bg-scrim-mid: @(pageBgMid)%;
+            --pm-page-bg-scrim-end: @(pageBgEnd)%;
+            --pm-muted-text-opacity: @MenuDesignOpacityHelper.ToPercent(Model.MutedTextOpacity, MenuDesignOpacityDefaults.MutedText);
+            --pm-panel-opacity: @MenuDesignOpacityHelper.ToPercent(Model.PanelOpacity, MenuDesignOpacityDefaults.Panel);
+            --pm-header-chip-opacity: @MenuDesignOpacityHelper.ToPercent(Model.HeaderChipOpacity, MenuDesignOpacityDefaults.HeaderChip);
+            --pm-muted-foreground: color-mix(in srgb, var(--pm-muted) var(--pm-muted-text-opacity), transparent);
             --pm-footer-button-bg: @(footerButtonStyle == "solid" ? "var(--pm-footer-button)" : "transparent");
             --pm-footer-button-text: @(footerButtonStyle == "solid" ? "#ffffff" : "var(--pm-footer-button)");
             --pm-footer-button-border: @(footerButtonStyle == "ghost" ? "transparent" : "var(--pm-footer-button)");
@@ -113,6 +149,10 @@
             @if (!string.IsNullOrEmpty(Model.SubheadingFontSize))
             {
                 <text>--pm-subheading-size: @Model.SubheadingFontSize;</text>
+            }
+            @if (!string.IsNullOrEmpty(Model.BodyFontSize))
+            {
+                <text>--pm-body-size: @Model.BodyFontSize;</text>
             }
         }
 

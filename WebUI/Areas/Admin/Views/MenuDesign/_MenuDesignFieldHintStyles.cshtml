@@ -1,0 +1,37 @@
+<style>
+    .design-field-group {
+        position: relative;
+    }
+
+    .design-field-group .form-label {
+        cursor: help;
+    }
+
+    .design-field-hint {
+        position: fixed;
+        z-index: 1080;
+        max-width: min(340px, calc(100vw - 24px));
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #0f172a;
+        color: #f8fafc;
+        font-size: 0.82rem;
+        font-weight: 500;
+        line-height: 1.45;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.28);
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+
+    .design-field-hint.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    body.dark-mode .design-field-hint {
+        background: #1e293b;
+        color: #e2e8f0;
+    }
+</style>

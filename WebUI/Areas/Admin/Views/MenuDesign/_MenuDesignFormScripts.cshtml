@@ -1,0 +1,144 @@
+@using System.Text.Json
+@using Application.MenuDesigns
+@{
+    var hintsJson = JsonSerializer.Serialize(MenuDesignFieldHints.All);
+}
+
+<partial name="_MenuDesignFieldHintStyles" />
+
+<script type="application/json" id="menuDesignFieldHints">@Html.Raw(hintsJson)</script>
+
+<script>
+    (function () {
+        const hints = JSON.parse(document.getElementById('menuDesignFieldHints')?.textContent || '{}');
+        const tooltip = document.createElement('div');
+        tooltip.className = 'design-field-hint';
+        tooltip.setAttribute('role', 'tooltip');
+        document.body.appendChild(tooltip);
+
+        function hideHint() {
+            tooltip.classList.remove('is-visible');
+        }
+
+        function showHint(text, x, y) {
+            tooltip.textContent = text;
+            tooltip.style.left = Math.min(x + 14, window.innerWidth - tooltip.offsetWidth - 12) + 'px';
+            tooltip.style.top = Math.min(y + 14, window.innerHeight - tooltip.offsetHeight - 12) + 'px';
+            tooltip.classList.add('is-visible');
+        }
+
+        document.querySelectorAll('[data-design-field]').forEach(group => {
+            const field = group.dataset.designField;
+            const text = hints[field];
+            if (!text) return;
+
+            const onEnter = (e) => showHint(text, e.clientX, e.clientY);
+            const onMove = (e) => showHint(text, e.clientX, e.clientY);
+
+            group.addEventListener('mouseenter', onEnter);
+            group.addEventListener('mousemove', onMove);
+            group.addEventListener('mouseleave', hideHint);
+            group.addEventListener('focusin', () => {
+                const rect = group.getBoundingClientRect();
+                showHint(text, rect.left, rect.bottom);
+            });
+            group.addEventListener('focusout', hideHint);
+        });
+
+        document.querySelectorAll('.color-trigger').forEach(picker => {
+            const targetName = picker.dataset.target;
+            const textInput = document.querySelector(`input[name="${targetName}"]`);
+            if (!textInput) return;
+
+            const hex = textInput.value.trim();
+            if (/^#[0-9a-fA-F]{6}$/.test(hex)) picker.value = hex;
+
+            picker.addEventListener('input', () => { textInput.value = picker.value; updatePreview(); });
+            textInput.addEventListener('input', () => {
+                const h = textInput.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(h)) picker.value = h;
+                updatePreview();
+            });
+        });
+
+        function getVal(name) { return document.querySelector(`input[name="${name}"]`)?.value || ''; }
+
+        function updatePreview() {
+            const primary = getVal('PrimaryColor') || '#688745';
+            const primaryDark = getVal('PrimaryDarkColor') || '#4a6130';
+            const bg = getVal('BackgroundColor') || '#f8fafc';
+            const surface = getVal('SurfaceColor') || '#ffffff';
+            const cardBg = getVal('CardBackgroundColor') || surface;
+            const text = getVal('TextColor') || '#1e293b';
+            const headingColor = getVal('HeadingTextColor') || text;
+            const muted = getVal('MutedColor') || '#64748b';
+            const price = getVal('PriceColor') || muted;
+            const radius = document.querySelector('input[name="BorderRadius"]')?.value || '24px';
+            const headerBg = getVal('HeaderBackgroundColor') || primary;
+            const headerText = getVal('HeaderTextColor') || '#ffffff';
+            const headingBorderW = getVal('HeadingBorderWidth') || '0';
+            const headingBorderC = getVal('HeadingBorderColor') || primary;
+            const headingWeight = getVal('HeadingFontWeight') || '800';
+            const btnText = getVal('ButtonTextColor') || '#ffffff';
+
+            const live = document.getElementById('livePreview');
+            if (!live) return;
+
+            live.style.borderColor = primary;
+            const header = document.getElementById('prev-header');
+            if (header) {
+                header.style.background = headerBg;
+                header.querySelectorAll('[data-prev-header-text]').forEach(el => el.style.color = headerText);
+            }
+            document.getElementById('prev-body').style.background = bg;
+            const cat = document.getElementById('prev-category');
+            cat.style.background = cardBg;
+            cat.style.borderRadius = radius;
+            cat.style.borderWidth = getVal('CardBorderWidth') || '1px';
+            cat.style.borderStyle = 'solid';
+            cat.style.borderColor = getVal('CardBorderColor') || '#e2e8f0';
+            const catTitle = document.getElementById('prev-category-title');
+            catTitle.style.color = headingColor;
+            catTitle.style.fontWeight = headingWeight;
+            catTitle.style.borderWidth = headingBorderW;
+            catTitle.style.borderStyle = 'solid';
+            catTitle.style.borderColor = headingBorderC;
+            document.getElementById('prev-muted').style.color = muted;
+            document.getElementById('prev-product-title').style.color = text;
+            document.getElementById('prev-price').style.color = price;
+            const btn = document.getElementById('prev-btn');
+            btn.style.background = primary;
+            btn.style.color = btnText;
+            btn.style.borderRadius = document.querySelector('input[name="ButtonBorderRadius"]')?.value || radius;
+            const footer = document.getElementById('prev-footer');
+            if (footer) {
+                footer.style.background = getVal('FooterBackgroundColor') || primaryDark;
+                footer.style.color = getVal('FooterTextColor') || '#ffffff';
+            }
+        }
+
+        const radiusInput = document.querySelector('input[name="BorderRadius"]');
+        if (radiusInput) radiusInput.addEventListener('input', updatePreview);
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            if (el.name && el.closest('form')) el.addEventListener('input', updatePreview);
+            if (el.name && el.closest('form')) el.addEventListener('change', updatePreview);
+        });
+
+        const nameInput = document.getElementById('nameInput');
+        const slugInput = document.getElementById('slugInput');
+        if (nameInput && slugInput && !slugInput.dataset.userEdited) {
+            nameInput.addEventListener('input', function () {
+                if (slugInput.dataset.userEdited === '1') return;
+                slugInput.value = this.value
+                    .toLowerCase()
+                    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+            });
+            slugInput.addEventListener('input', () => { slugInput.dataset.userEdited = '1'; });
+        }
+
+        updatePreview();
+    })();
+</script>
