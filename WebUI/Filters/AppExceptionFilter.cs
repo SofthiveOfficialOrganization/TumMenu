@@ -1,13 +1,18 @@
 ﻿using Application.Common.Errors;
 using Application.Common.Exceptions;
+using Application.Products.Commands;
+using Application.Products.DTOs;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using WebUI.Areas.Admin.Helpers;
 using WebUI.Contracts;
+using WebUI.Infrastructure;
 using WebUI.Models;
 using WebUI.Services.SystemLogs;
 
@@ -136,7 +141,7 @@ public sealed class AppExceptionFilter(
 				return Handle(context, wantsJson, status, payload, ex);
 
 			case DbUpdateException dbex:
-				var (code, msg) = Infrastructure.Persistence.DbErrorTranslator.Translate(dbex);
+				var (code, msg) = global::Infrastructure.Persistence.DbErrorTranslator.Translate(dbex);
 				status = code == ErrorCodes.DbDuplicate || code == ErrorCodes.DbForeignKey
 					? StatusCodes.Status409Conflict
 					: StatusCodes.Status500InternalServerError;
@@ -176,6 +181,14 @@ public sealed class AppExceptionFilter(
 		var httpContext = context.HttpContext;
 		var traceId = httpContext.TraceIdentifier;
 
+		if(!wantsJson)
+		{
+			AdminRouteDetector.StashOriginalRequest(
+				httpContext,
+				context.RouteData.Values["area"]?.ToString(),
+				httpContext.Request.Path.Value);
+		}
+
 		if(status >= 500)
 			_logger.LogError(ex, "Unhandled exception. TraceId: {TraceId}", traceId);
 		else
@@ -196,10 +209,9 @@ public sealed class AppExceptionFilter(
 			return;
 		}
 
-		httpContext.Response.StatusCode = status;
-
 		if(wantsJson)
 		{
+			httpContext.Response.StatusCode = status;
 			context.Result = new JsonResult(payload)
 			{
 				StatusCode = status
@@ -210,11 +222,13 @@ public sealed class AppExceptionFilter(
 
 		// --- MVC tarafı ---
 
-		// Validation / Unprocessable → ModelState doldur, aynı action view'i göster
+		// Validation / Unprocessable → ModelState doldur, aynı action view'i göster (200 OK;
+		// 4xx status would trigger StatusCodePages and replace the form with an error page)
 		if(ex is ValidationAppException vax)
 		{
 			AddModelStateErrors(context, vax.Errors);
-			context.Result = CreateCurrentActionViewResult(context);
+			httpContext.Response.StatusCode = StatusCodes.Status200OK;
+			context.Result = await CreateCurrentActionViewResultAsync(context);
 			context.ExceptionHandled = true;
 			return;
 		}
@@ -226,10 +240,13 @@ public sealed class AppExceptionFilter(
 			else
 				context.ModelState.AddModelError(string.Empty, uex.Message);
 
-			context.Result = CreateCurrentActionViewResult(context);
+			httpContext.Response.StatusCode = StatusCodes.Status200OK;
+			context.Result = await CreateCurrentActionViewResultAsync(context);
 			context.ExceptionHandled = true;
 			return;
 		}
+
+		httpContext.Response.StatusCode = status;
 		if(ex is AlreadyExistsAppException aex)
 		{
 			var aexTempData = GetTempData(httpContext);
@@ -255,7 +272,7 @@ public sealed class AppExceptionFilter(
 
 		if(ex is DbUpdateException dbUpdateEx)
 		{
-			var (dbCode, dbMsg) = Infrastructure.Persistence.DbErrorTranslator.Translate(dbUpdateEx);
+			var (dbCode, dbMsg) = global::Infrastructure.Persistence.DbErrorTranslator.Translate(dbUpdateEx);
 			var dbTempData = GetTempData(httpContext);
 			dbTempData["Error"] = dbMsg;
 
@@ -316,33 +333,150 @@ public sealed class AppExceptionFilter(
 		}
 	}
 
-	private static ViewResult CreateCurrentActionViewResult(ExceptionContext context)
+	private static async Task<ViewResult> CreateCurrentActionViewResultAsync(ExceptionContext context)
 	{
+		var controller = context.RouteData.Values["controller"]?.ToString();
 		var actionName = context.RouteData.Values["action"]?.ToString();
+		var viewName = ResolveActionViewName(controller, actionName);
 
 		var viewData = new ViewDataDictionary(
 			new EmptyModelMetadataProvider(),
 			context.ModelState
 		);
 
+		if(TryGetReturnUrl(context, out var returnUrl))
+			viewData["ReturnUrl"] = returnUrl;
+
+		var model = await TryResolveValidationViewModelAsync(context, controller, actionName);
+		if(model is not null)
+			viewData.Model = model;
+
 		var tempData = GetTempData(context.HttpContext);
 
 		return new ViewResult
 		{
-			ViewName = actionName,
+			ViewName = viewName,
 			ViewData = viewData,
 			TempData = tempData
 		};
+	}
+
+	private static string ResolveActionViewName(string? controller, string? actionName)
+	{
+		if(string.Equals(controller, "Product", StringComparison.OrdinalIgnoreCase) &&
+		   string.Equals(actionName, "Update", StringComparison.OrdinalIgnoreCase))
+			return "Edit";
+
+		return actionName ?? string.Empty;
+	}
+
+	private static async Task<object?> TryResolveValidationViewModelAsync(
+		ExceptionContext context,
+		string? controller,
+		string? actionName)
+	{
+		if(!string.Equals(controller, "Product", StringComparison.OrdinalIgnoreCase))
+			return null;
+
+		if(!string.Equals(actionName, "Edit", StringComparison.OrdinalIgnoreCase) &&
+		   !string.Equals(actionName, "Update", StringComparison.OrdinalIgnoreCase))
+			return null;
+
+		if(!TryGetUpdateProductCommand(context, out var updateReq) ||
+		   updateReq.Id == Guid.Empty)
+			return null;
+
+		var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
+		if(mediator is null)
+			return null;
+
+		try
+		{
+			return await ProductEditViewModelBuilder.BuildAsync(
+				mediator,
+				updateReq,
+				context.HttpContext.RequestAborted);
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	private static bool TryGetUpdateProductCommand(ExceptionContext context, out UpdateProductCommand command)
+	{
+		if(context.HttpContext.Request.HasFormContentType)
+		{
+			var form = context.HttpContext.Request.Form;
+			if(Guid.TryParse(form["Id"], out var id) && id != Guid.Empty)
+			{
+				command = new UpdateProductCommand
+				{
+					Id = id,
+					Title = form["Title"].ToString() ?? string.Empty,
+					Description = form["Description"].ToString(),
+					CategoryId = Guid.TryParse(form["CategoryId"], out var categoryId) ? categoryId : Guid.Empty,
+					BasePrice = decimal.TryParse(form["BasePrice"], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var basePrice) ? basePrice : 0,
+					SortOrder = int.TryParse(form["SortOrder"], out var sortOrder) ? sortOrder : 0,
+					IsActive = form["IsActive"].Contains("true"),
+					Allergens = form["Allergens"].ToString(),
+					IsVegan = form["IsVegan"].Contains("true") ? true : null,
+					IsVegetarian = form["IsVegetarian"].Contains("true") ? true : null,
+					EstimatedPreparationTimeInMinutes = int.TryParse(form["EstimatedPreparationTimeInMinutes"], out var prep) ? prep : null,
+					Prices = ParsePriceInputs(form)
+				};
+				return true;
+			}
+		}
+
+		command = default!;
+		return false;
+	}
+
+	private static List<ProductPriceInputDTO> ParsePriceInputs(IFormCollection form)
+	{
+		var prices = new List<ProductPriceInputDTO>();
+		var index = 0;
+		while(form.ContainsKey($"Prices[{index}].Size") || form.ContainsKey($"Prices[{index}].Price"))
+		{
+			decimal? price = decimal.TryParse(
+				form[$"Prices[{index}].Price"],
+				System.Globalization.NumberStyles.Any,
+				System.Globalization.CultureInfo.InvariantCulture,
+				out var parsedPrice)
+				? parsedPrice
+				: null;
+
+			prices.Add(new ProductPriceInputDTO
+			{
+				Size = form[$"Prices[{index}].Size"].ToString(),
+				Price = price
+			});
+			index++;
+		}
+
+		return prices;
+	}
+
+	private static bool TryGetReturnUrl(ExceptionContext context, out string? returnUrl)
+	{
+		if(context.HttpContext.Request.HasFormContentType)
+		{
+			returnUrl = context.HttpContext.Request.Form["returnUrl"].ToString();
+			if(!string.IsNullOrEmpty(returnUrl))
+				return true;
+		}
+
+		returnUrl = null;
+		return false;
 	}
 
 	private static string ResolveErrorViewPath(ExceptionContext context)
 	{
 		var area = context.RouteData.Values["area"]?.ToString();
 		var path = context.HttpContext.Request.Path.Value ?? string.Empty;
-		var isAdmin = area?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true ||
-			path.StartsWith("/admin", StringComparison.OrdinalIgnoreCase);
 
-		return isAdmin
+		return AdminRouteDetector.IsAdminRequest(area, path)
 			? "~/Areas/Admin/Views/Shared/Error.cshtml"
 			: "~/Views/Shared/Error.cshtml";
 	}

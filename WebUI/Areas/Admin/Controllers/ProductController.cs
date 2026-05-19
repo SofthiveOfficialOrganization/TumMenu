@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WebUI.Areas.Admin.Helpers;
 
 namespace WebUI.Areas.Admin.Controllers;
 
@@ -229,12 +230,14 @@ public class ProductController(IMediator mediator) : Controller
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(UpdateProductCommand req, string? returnUrl, CancellationToken ct)
+    public async Task<IActionResult> Edit(UpdateProductCommand req, string? returnUrl, CancellationToken ct)
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         if (!ModelState.IsValid)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(req);
+            var viewModel = await BuildEditViewModelAsync(req, ct);
+            return View("Edit", viewModel);
         }
 
         await mediator.Send(req, ct);
@@ -242,6 +245,13 @@ public class ProductController(IMediator mediator) : Controller
         var product = await mediator.Send(new GetProductByIdQuery(req.Id), ct);
         return RedirectToLocal(returnUrl, RedirectToAction("Details", "Category", new { id = product.CategoryId, role = RouteData.Values["role"] }));
     }
+
+    [Authorize(Policy = "OwnerOrAdmin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [ActionName("Update")]
+    public Task<IActionResult> Update(UpdateProductCommand req, string? returnUrl, CancellationToken ct)
+        => Edit(req, returnUrl, ct);
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpPost]
@@ -280,6 +290,14 @@ public class ProductController(IMediator mediator) : Controller
                 SortOrder = sortOrder++
             }, ct);
         }
+    }
+
+    private async Task<ProductDTO> BuildEditViewModelAsync(UpdateProductCommand req, CancellationToken ct)
+    {
+        if (req.Id == Guid.Empty)
+            return new ProductDTO { Id = req.Id, CategoryId = req.CategoryId };
+
+        return await ProductEditViewModelBuilder.BuildAsync(mediator, req, ct);
     }
 
     private IActionResult RedirectToLocal(string? returnUrl, IActionResult fallback)

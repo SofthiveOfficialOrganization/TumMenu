@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using WebUI.Filters;
+using WebUI.Infrastructure;
 using WebUI.Services.SystemLogs;
 
 namespace WebUI.IntegrationTests.Unit.Filters;
@@ -29,6 +31,40 @@ public class AppExceptionFilterTests
         Assert.Equal(StatusCodes.Status500InternalServerError, context.HttpContext.Response.StatusCode);
         Assert.Equal("Bir hata oluştu, işlemi lütfen tekrar deneyin.", result.ViewData["Message"]);
         Assert.True(context.ExceptionHandled);
+    }
+
+    [Fact]
+    public async Task OnExceptionAsync_ProductUpdateValidation_ReturnsEditView()
+    {
+        var filter = CreateFilter(environmentName: Environments.Production);
+        var context = CreateExceptionContext("/Admin/Product/Update", area: "Admin");
+        context.RouteData.Values["controller"] = "Product";
+        context.RouteData.Values["action"] = "Update";
+        context.Exception = new ValidationAppException(new Dictionary<string, string[]>
+        {
+            ["BasePrice"] = ["Base price is too high"]
+        });
+
+        await filter.OnExceptionAsync(context);
+
+        var result = Assert.IsType<ViewResult>(context.Result);
+        Assert.Equal("Edit", result.ViewName);
+		Assert.Equal(StatusCodes.Status200OK, context.HttpContext.Response.StatusCode);
+        Assert.True(context.ExceptionHandled);
+    }
+
+    [Fact]
+    public async Task OnExceptionAsync_AdminRequest_StashesOriginalArea()
+    {
+        var filter = CreateFilter(environmentName: Environments.Production);
+        var context = CreateExceptionContext("/Admin/QRManagement", area: "Admin");
+        context.Exception = new NullReferenceException("Object reference test message");
+
+        await filter.OnExceptionAsync(context);
+
+        var (area, path) = AdminRouteDetector.GetStashed(context.HttpContext);
+        Assert.Equal("Admin", area);
+        Assert.Equal("/Admin/QRManagement", path);
     }
 
     [Fact]
@@ -93,6 +129,10 @@ public class AppExceptionFilterTests
             routeData,
             new ActionDescriptor());
 
-        return new ExceptionContext(actionContext, new List<IFilterMetadata>());
+        var exceptionContext = new ExceptionContext(actionContext, new List<IFilterMetadata>());
+        if (area is not null)
+            exceptionContext.RouteData.Values["area"] = area;
+
+        return exceptionContext;
     }
 }

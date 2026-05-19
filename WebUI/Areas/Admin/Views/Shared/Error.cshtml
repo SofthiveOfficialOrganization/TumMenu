@@ -3,7 +3,7 @@
 @inject IWebHostEnvironment Env
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminErrorLayout.cshtml";
     ViewData["Title"] = "Bir Hata Oluştu";
     var message = ViewData["Message"] as string ?? "Bir hata oluştu, işlemi lütfen tekrar deneyin.";
     var traceId = ViewData["TraceId"] as string;

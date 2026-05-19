@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Contracts;
+using WebUI.Infrastructure;
 using WebUI.Services.SystemLogs;
 
 namespace WebUI.Controllers;
@@ -16,7 +17,8 @@ public sealed class ErrorController(
 	public async Task<IActionResult> Error(CancellationToken ct)
 	{
 		var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-		var originalPath = feature?.Path ?? string.Empty;
+		var (stashedArea, stashedPath) = AdminRouteDetector.GetStashed(HttpContext);
+		var originalPath = stashedPath ?? feature?.Path ?? string.Empty;
 		var ex = feature?.Error;
 		var statusCode = StatusCodes.Status500InternalServerError;
 		var responseMessage = _env.IsDevelopment() ? ex?.Message ?? "Error" : "Beklenmeyen bir hata oluştu.";
@@ -51,14 +53,15 @@ public sealed class ErrorController(
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
 		TempData["Error"] = message;
 
-		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
+		return View(ResolveViewPath(originalPath, stashedArea, adminPath: "Error", publicPath: "Error"));
 	}
 
 	[Route("status-code/{code:int}")]
 	public IActionResult StatusCodePage(int code)
 	{
 		var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-		var originalPath = feature?.OriginalPath ?? string.Empty;
+		var (stashedArea, stashedPath) = AdminRouteDetector.GetStashed(HttpContext);
+		var originalPath = stashedPath ?? feature?.OriginalPath ?? string.Empty;
 
 		if(IsApiRequest(HttpContext, originalPath))
 		{
@@ -78,12 +81,12 @@ public sealed class ErrorController(
 		ViewData["TraceId"] = HttpContext.TraceIdentifier;
 
 		if(code == StatusCodes.Status404NotFound)
-			return View(ResolveViewPath(originalPath, adminPath: "NotFound", publicPath: "NotFound"));
+			return View(ResolveViewPath(originalPath, stashedArea, adminPath: "NotFound", publicPath: "NotFound"));
 
 		if(code == StatusCodes.Status400BadRequest)
 		{
 			ViewData["Message"] = "İstek güvenlik veya doğrulama kontrolünden geçemedi. Sayfayı yenileyip tekrar deneyebilirsiniz.";
-			return View(ResolveViewPath(originalPath, adminPath: "BadRequest", publicPath: "BadRequest"));
+			return View(ResolveViewPath(originalPath, stashedArea, adminPath: "BadRequest", publicPath: "BadRequest"));
 		}
 
 		var msg = code == StatusCodes.Status403Forbidden
@@ -91,12 +94,12 @@ public sealed class ErrorController(
 			: "İstek işlenemedi.";
 		ViewData["Message"] = msg;
 		TempData["Error"] = msg;
-		return View(ResolveViewPath(originalPath, adminPath: "Error", publicPath: "Error"));
+		return View(ResolveViewPath(originalPath, stashedArea, adminPath: "Error", publicPath: "Error"));
 	}
 
-	private string ResolveViewPath(string originalPath, string adminPath, string publicPath)
+	private string ResolveViewPath(string originalPath, string? area, string adminPath, string publicPath)
 	{
-		var isAdmin = originalPath.StartsWith("/admin", StringComparison.OrdinalIgnoreCase);
+		var isAdmin = AdminRouteDetector.IsAdminRequest(area, originalPath);
 
 		if(isAdmin)
 		{
