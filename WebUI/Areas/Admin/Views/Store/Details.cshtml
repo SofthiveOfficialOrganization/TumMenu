@@ -4,34 +4,44 @@
 
 @{
     ViewData["Title"] = "Dükkan Detayı";
+    var returnUrl = ViewData["ReturnUrl"] as string ?? Url.Action("Index");
     var socialLinks = Model.SocialLinks
         .Where(x => !string.IsNullOrWhiteSpace(x.Url))
         .OrderBy(x => x.SortOrder)
         .ToList();
 }
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="horizon-card">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                     <h2 class="fw-bold text-primary mb-1">
-                        @Model.Title
-                    </h2>
-                    <div class="text-secondary small">
-                        <i class="fas fa-link me-1"></i> @Model.Slug
-                    </div>
-                </div>
-                <div class="d-flex gap-2 flex-shrink-0">
-                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" data-tummenu-back data-fallback-url="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
-                    </a>
-                </div>
-            </div>
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@returnUrl"
+           data-tummenu-back
+           data-fallback-url="@returnUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
+
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Dükkan Yönetimi</div>
+            <h1 class="tm-page-title">@Model.Title</h1>
+            <p class="tm-page-subtitle"><i class="fas fa-link me-1"></i>@Model.Slug</p>
         </div>
+    </div>
+
+    <div class="tm-page-actions">
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-outline-primary" title="Düzenle">
+            <i class="fas fa-edit me-2"></i>Düzenle
+        </a>
+        <form id="deleteStoreForm" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="button"
+                    class="btn btn-outline-danger"
+                    title="Sil"
+                    onclick="TumMenuAlerts.confirm('Bu dükkanı silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteStoreForm').submit(); })">
+                <i class="fas fa-trash-alt me-2"></i>Sil
+            </button>
+        </form>
     </div>
 </div>
 

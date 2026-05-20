@@ -5,14 +5,44 @@
 @model StoreDTO
 @{
     ViewData["Title"] = "Dükkan Düzenle";
+    var fallbackUrl = Url.Action("Details", new { id = Model.Id });
 }
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Dükkan Düzenle: @Model.Title</h3>
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@fallbackUrl"
+           data-tummenu-back
+           data-fallback-url="@fallbackUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
+
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Dükkan Yönetimi</div>
+            <h1 class="tm-page-title">@Model.Title</h1>
+            <p class="tm-page-subtitle">Dükkan bilgilerini, görünürlük ayarlarını, adresi ve medya alanlarını güncelleyin.</p>
+        </div>
     </div>
-    <div class="card-body">
-        <form asp-action="Update" method="post">
+
+    <div class="tm-page-actions">
+        <button type="submit" form="updateStoreForm" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+        </button>
+    </div>
+</div>
+
+<div class="horizon-card">
+    <div class="tm-section-header">
+        <div>
+            <h2 class="tm-section-title">Genel Bilgiler</h2>
+            <p class="tm-section-subtitle">Dükkanın temel bilgileri, public görünürlüğü ve konumu.</p>
+        </div>
+    </div>
+
+    <div>
+        <form asp-action="Update" method="post" id="updateStoreForm">
             <input type="hidden" asp-for="Id" />
             
             <div class="mb-3">
@@ -166,9 +196,11 @@
                 <input type="text" class="form-control" value="@Model.Company?.Title" disabled readonly />
             </div>
 
-            <div class="form-footer">
-                <button type="submit" class="btn btn-primary">Güncelle</button>
-                <a asp-action="Index" data-tummenu-back data-fallback-url="@Url.Action("Index")" class="btn btn-link">İptal</a>
+            <div class="tm-form-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+                </button>
+                <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">Vazgeç</a>
             </div>
         </form>
     </div>
@@ -176,49 +208,43 @@
 
 <div class="row mt-4">
     <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-light">
-                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
-                    <i class="fas fa-image me-2"></i>Dükkan Logosu
-                </h5>
+        <div class="horizon-card h-100">
+            <div class="tm-section-header">
+                <div>
+                    <h2 class="tm-section-title"><i class="fas fa-image me-2"></i>Dükkan Logosu</h2>
+                    <p class="tm-section-subtitle">Kare formatında görseller önerilir.</p>
+                </div>
             </div>
-            <div class="card-body p-0">
+            <div>
                 <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "logo")' />
-            </div>
-            <div class="card-footer bg-white border-top-0">
-                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Kare formatında (1:1) görseller önerilir.</small>
             </div>
         </div>
     </div>
     
     <div class="col-md-8 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-light">
-                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
-                    <i class="fas fa-panorama me-2"></i>Dükkan Banner / Kapak
-                </h5>
+        <div class="horizon-card h-100">
+            <div class="tm-section-header">
+                <div>
+                    <h2 class="tm-section-title"><i class="fas fa-panorama me-2"></i>Dükkan Banner / Kapak</h2>
+                    <p class="tm-section-subtitle">Geniş formatta yüksek çözünürlüklü görseller önerilir.</p>
+                </div>
             </div>
-            <div class="card-body p-0">
+            <div>
                 <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "banner")' />
-            </div>
-            <div class="card-footer bg-white border-top-0">
-                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Geniş formatta (16:9 veya 21:9) yüksek çözünürlüklü görseller önerilir.</small>
             </div>
         </div>
     </div>
 
     <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="card-title mb-0 small text-uppercase fw-bold text-secondary">
-                    <i class="fas fa-images me-2"></i>Dükkan Galerisi
-                </h5>
+        <div class="horizon-card">
+            <div class="tm-section-header">
+                <div>
+                    <h2 class="tm-section-title"><i class="fas fa-images me-2"></i>Dükkan Galerisi</h2>
+                    <p class="tm-section-subtitle">Dükkanınızın iç ve dış mekan fotoğraflarını buraya yükleyebilirsiniz.</p>
+                </div>
             </div>
-            <div class="card-body p-0">
+            <div>
                 <partial name="_MediaGallery" model='(Model.Id, Domain.Entities.MediaRefType.Store, Model.Medias, "default-gallery")' />
-            </div>
-            <div class="card-footer bg-white border-top-0">
-                <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Dükkanınızın iç ve dış mekan fotoğraflarını buraya yükleyebilirsiniz.</small>
             </div>
         </div>
     </div>

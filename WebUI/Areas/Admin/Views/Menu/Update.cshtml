@@ -1,4 +1,5 @@
 @using Application.Menus.Commands
+@using Application.Menus.DTOs
 @using Application.MenuDesigns.DTOs
 @model UpdateMenuCommand
 
@@ -6,16 +7,121 @@
     ViewData["Title"] = "Menü Düzenle";
     var designs = ViewBag.MenuDesigns as List<MenuDesignDTO> ?? [];
     var currentDesignId = ViewBag.CurrentMenuDesignId as Guid?;
+    var menuInfo = ViewBag.MenuInfo as MenuDTO;
     var returnUrl = ViewData["ReturnUrl"] as string;
     var fallbackUrl = returnUrl ?? Url.Action("Details", new { id = Model.Id });
+    var currentPageUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
+
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@fallbackUrl"
+           data-tummenu-back
+           data-fallback-url="@fallbackUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
+
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Menü Yönetimi</div>
+            <h1 class="tm-page-title">Menü Düzenle</h1>
+            <p class="tm-page-subtitle">Menü adını ve public menü tasarımını güncelleyin.</p>
+        </div>
+    </div>
+
+    <div class="tm-page-actions">
+        <button type="submit" form="updateMenuForm" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+        </button>
+    </div>
+</div>
 
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
-            <h4 class="fw-bold mb-4">Menü Düzenle</h4>
+            <div class="tm-section-header">
+                <div>
+                    <h2 class="tm-section-title">Menü Bilgileri</h2>
+                    <p class="tm-section-subtitle">Menü adını ve bağlı tasarım seçimini düzenleyin.</p>
+                </div>
+            </div>
 
-            <form asp-action="Update" method="post">
+            @if (menuInfo != null)
+            {
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="tm-form-label d-block">Durum</label>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            @if (menuInfo.Status == Domain.Entities.MenuStatus.MainMenu)
+                            {
+                                <span class="badge tm-badge-neutral"><i class="fas fa-star me-1"></i>Ana Menü</span>
+                                @if (menuInfo.IsDefaultCompanyMenu)
+                                {
+                                    <span class="badge tm-badge-warning"><i class="fas fa-thumbtack me-1"></i>Varsayılan</span>
+                                }
+                            }
+                            else if (menuInfo.Status == Domain.Entities.MenuStatus.Active)
+                            {
+                                <span class="badge tm-badge-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge tm-badge-neutral">Pasif</span>
+                                <form asp-action="SetActive" asp-route-id="@Model.Id" method="post" class="d-inline" id="setActiveForm">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="returnUrl" value="@currentPageUrl" />
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-success"
+                                            onclick="TumMenuAlerts.confirm('Bu menüyü aktif yapmak istediğinize emin misiniz?', 'Bu işlem diğer aktif menüyü pasif yapacaktır.', 'Evet, Aktif Yap!').then(res => { if(res) document.getElementById('setActiveForm').submit(); })">
+                                        <i class="fas fa-check me-1"></i>Aktif Yap
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="tm-form-label d-block">Bağlı Olduğu Kayıt</label>
+                        @if (menuInfo.CompanyId.HasValue)
+                        {
+                            <div class="p-2 border rounded bg-light">
+                                <span class="badge bg-primary bg-opacity-10 text-primary"><i class="fas fa-star me-1"></i>Ana Menü</span>
+                                <small class="text-dark fw-medium ms-1">@menuInfo.CompanyName</small>
+                            </div>
+                        }
+                        else if (menuInfo.StoreId.HasValue)
+                        {
+                            <div class="p-2 border rounded bg-light">
+                                <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-store me-1"></i>Dükkan</span>
+                                <small class="text-muted ms-1">@menuInfo.StoreName</small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="p-2 border rounded bg-light text-muted fst-italic">Atanmamış</div>
+                        }
+                    </div>
+
+                    @if (menuInfo.CompanyId.HasValue && menuInfo.Status == Domain.Entities.MenuStatus.MainMenu && !menuInfo.IsDefaultCompanyMenu)
+                    {
+                        <div class="col-12">
+                            <form asp-action="SetDefault" asp-route-id="@Model.Id" method="post" id="setDefaultMenuForm">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="returnUrl" value="@currentPageUrl" />
+                                <button type="button"
+                                        class="btn btn-outline-warning"
+                                        onclick="TumMenuAlerts.confirm('Bu menüyü varsayılan ana menü yapmak istediğinize emin misiniz?', 'Mağazanın kendi menüsü yoksa public tarafta bu menü gösterilir.', 'Evet, Varsayılan Yap!').then(res => { if(res) document.getElementById('setDefaultMenuForm').submit(); })">
+                                    <i class="fas fa-thumbtack me-2"></i>Varsayılan Ana Menü Yap
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            }
+
+            <form asp-action="Update" method="post" id="updateMenuForm">
                 <input type="hidden" name="Id" value="@Model.Id" />
                 <input type="hidden" name="returnUrl" value="@returnUrl" />
 
@@ -62,9 +168,9 @@
                     </div>
                 }
 
-                <div class="d-flex justify-content-end gap-2">
+                <div class="tm-form-footer">
                     <a href="@fallbackUrl" data-tummenu-back data-fallback-url="@fallbackUrl" class="btn btn-outline-secondary">
-                        <i class="fas fa-times me-2"></i>İptal
+                        Vazgeç
                     </a>
                     <button type="submit" class="btn btn-primary px-4">
                         <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet

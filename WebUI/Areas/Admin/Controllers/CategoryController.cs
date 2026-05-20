@@ -232,9 +232,23 @@ public class CategoryController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] string? search, int page = 1, CancellationToken ct = default)
+    public async Task<IActionResult> Index(
+        [FromQuery] string? search,
+        [FromQuery] Guid? companyId,
+        [FromQuery] Guid? storeId,
+        [FromQuery] Guid? menuId,
+        int page = 1,
+        CancellationToken ct = default)
     {
-        var req = new GetCategoriesPagedByCurrentOwnerQuery { Search = search, Page = page, PageSize = 20 };
+        var req = new GetCategoriesPagedByCurrentOwnerQuery
+        {
+            Search = search,
+            CompanyId = companyId,
+            StoreId = storeId,
+            MenuId = menuId,
+            Page = page,
+            PageSize = 20
+        };
         var result = await mediator.Send(req, ct);
         return View("MyCategories", result);
     }

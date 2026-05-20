@@ -7,7 +7,8 @@
 @{
     ViewData["Title"] = "Menü Detayları";
     var menuDetailsReturnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
-    var mutationReturnUrl = ViewData["ReturnUrl"] as string ?? menuDetailsReturnUrl;
+    var backUrl = ViewData["ReturnUrl"] as string
+        ?? (Model.CompanyId.HasValue ? Url.Action("CompanyMenus") : Url.Action("Index"));
     var allCategories = Model.Categories?.ToList() ?? new List<CategoryDTO>();
     var rootCategories = allCategories
         .Where(c => !c.ParentId.HasValue)
@@ -39,160 +40,46 @@
     </div>
 }
 
-<div class="row">
-    <!-- Menu Details Card -->
-    <!-- Menu Details Card -->
-    <div class="col-md-4 mb-4">
-        <div class="horizon-card h-100">
-             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="d-flex align-items-center gap-3">
-                    <h5 class="fw-bold m-0">Menü Bilgileri</h5>
-                    @if (Model.Status == Domain.Entities.MenuStatus.MainMenu)
-                    {
-                        <span class="badge bg-primary"><i class="fas fa-star me-1"></i>ANA MENÜ</span>
-                        @if (Model.IsDefaultCompanyMenu)
-                        {
-                            <span class="badge bg-warning text-dark"><i class="fas fa-thumbtack me-1"></i>VARSAYILAN</span>
-                        }
-                    }
-                    else if (Model.Status == Domain.Entities.MenuStatus.Active)
-                    {
-                        <span class="badge bg-success">AKTİF</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-light text-secondary">PASİF</span>
-                        <form asp-action="SetActive" asp-route-id="@Model.Id" method="post" class="d-inline" id="setActiveForm">
-                            <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
-                            <button type="button" class="btn btn-sm btn-outline-success ms-2" title="Aktif Yap" onclick="TumMenuAlerts.confirm('Bu menüyü aktif yapmak istediğinize emin misiniz?', 'Bu işlem diğer aktif menüyü pasif yapacaktır.', 'Evet, Aktif Yap!').then(res => { if(res) document.getElementById('setActiveForm').submit(); })">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </form>
-                    }
-                </div>
-                
-                <form asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@(ViewData["ReturnUrl"] as string)" method="post" id="deleteMenuForm-@Model.Id" class="d-flex gap-2 flex-shrink-0">
-                    @Html.AntiForgeryToken()
-                    <button type="button" class="btn btn-sm btn-outline-danger shadow-sm" title="Menüyü Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteMenuForm-@Model.Id').submit(); })" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                    @{
-                        var backUrl = ViewData["ReturnUrl"] as string
-                            ?? (Model.CompanyId.HasValue ? Url.Action("CompanyMenus") : Url.Action("Index"));
-                    }
-                    <a href="@backUrl" data-tummenu-back data-fallback-url="@backUrl" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
-                    </a>
-                </form>
-            </div>
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@backUrl"
+           data-tummenu-back
+           data-fallback-url="@backUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
 
-            <form asp-action="Update" method="post">
-                <input type="hidden" name="Id" value="@Model.Id" />
-                <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
-                
-                <div class="mb-3">
-                    <label class="text-secondary small text-uppercase fw-bold d-block mb-1">İsim</label>
-                    <input type="text" name="Title" value="@Model.Title" class="form-control fw-bold text-dark" />
-                </div>
-
-                <div class="mb-3">
-                     <label class="text-secondary small text-uppercase fw-bold d-block mb-1">Bağlı olduğu dükkan/şirket</label>
-                    @if(Model.CompanyId.HasValue)
-                    {
-                         <div class="p-2 border rounded bg-light">
-                            <span class="badge bg-primary bg-opacity-10 text-primary"><i class="fas fa-star me-1"></i> Ana Menü</span>
-                            <small class="text-dark fw-medium ms-1">@Model.CompanyName</small>
-                            @if (Model.IsDefaultCompanyMenu)
-                            {
-                                <span class="badge bg-warning text-dark ms-2"><i class="fas fa-thumbtack me-1"></i>Varsayılan Ana Menü</span>
-                            }
-                         </div>
-                    }
-                    else if(Model.StoreId.HasValue)
-                    {
-                         <div class="p-2 border rounded bg-light">
-                            <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-store me-1"></i> Dükkan</span>
-                            <small class="text-muted ms-1">@Model.StoreName</small>
-                         </div>
-                    }
-                    else
-                    {
-                         <div class="p-2 border rounded bg-light text-muted fst-italic">Atanmamış</div>
-                    }
-                </div>
-
-                <div class="mb-4">
-                    <label class="text-secondary small text-uppercase fw-bold d-block mb-2">Tasarım</label>
-                    <p class="text-muted small mb-2">Tasarım kartının üzerine gelerek kısa açıklamayı görebilirsiniz.</p>
-                    <form asp-action="SetDesign" asp-route-id="@Model.Id" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
-                        <div class="d-flex flex-wrap gap-2 mb-2">
-                            <label class="design-option design-picker-option @(currentDesignId == null ? "design-option--active" : "")"
-                                   data-design-picker-hint="Sistem varsayılan renk paleti. Özel tasarım seçilmediğinde kullanılır.">
-                                <input type="radio" name="menuDesignId" value="" class="d-none"
-                                       @(currentDesignId == null ? "checked" : "") />
-                                <div class="design-preview" style="background:#f8fafc; border:2px solid #e2e8f0;">
-                                    <span class="design-preview__name text-muted" style="font-size:11px;">Varsayılan</span>
-                                    <span class="design-preview__btn" style="background:#688745; border-radius:24px; font-size:10px;">Buton</span>
-                                </div>
-                            </label>
-                            @foreach (var d in designs)
-                            {
-                                var isActive = currentDesignId == d.Id;
-                                var designHint = !string.IsNullOrWhiteSpace(d.Description)
-                                    ? d.Description
-                                    : $"{d.Name}: Footer arka planı {(d.FooterBackgroundColor ?? "otomatik")}, sayfa metni {d.TextColor}, başlık {(d.HeadingTextColor ?? d.TextColor)}.";
-                                <label class="design-option design-picker-option @(isActive ? "design-option--active" : "")"
-                                       data-design-picker-hint="@designHint">
-                                    <input type="radio" name="menuDesignId" value="@d.Id" class="d-none"
-                                           @(isActive ? "checked" : "") />
-                                    <div class="design-preview"
-                                         style="background:@d.BackgroundColor; border:2px solid @d.PrimaryColor; color:@d.TextColor;">
-                                        <span class="design-preview__name" style="font-size:11px;">@d.Name</span>
-                                        <span class="design-preview__btn"
-                                              style="background:@d.PrimaryColor; color:#fff; border-radius:@d.BorderRadius; font-size:10px;">Buton</span>
-                                    </div>
-                                </label>
-                            }
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-outline-primary w-100">
-                            <i class="fas fa-check me-1"></i>Tasarımı Uygula
-                        </button>
-                    </form>
-                </div>
-
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Kaydet
-                    </button>
-                </div>
-            </form>
-
-            @if (Model.CompanyId.HasValue && Model.Status == Domain.Entities.MenuStatus.MainMenu && !Model.IsDefaultCompanyMenu)
-            {
-                <div class="mt-3">
-                    <label class="text-secondary small text-uppercase fw-bold d-block mb-2">Varsayılan Kullanım</label>
-                    <form asp-action="SetDefault" asp-route-id="@Model.Id" method="post" id="setDefaultMenuForm">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
-                        <button type="button"
-                                class="btn btn-outline-warning w-100"
-                                onclick="TumMenuAlerts.confirm('Bu menüyü varsayılan ana menü yapmak istediğinize emin misiniz?', 'Mağazanın kendi menüsü yoksa public tarafta bu menü gösterilir.', 'Evet, Varsayılan Yap!').then(res => { if(res) document.getElementById('setDefaultMenuForm').submit(); })">
-                            <i class="fas fa-thumbtack me-2"></i>Varsayılan Ana Menü Yap
-                        </button>
-                    </form>
-                </div>
-            }
-
-             <div class="mt-4 pt-3 border-top text-center text-muted small">
-                Oluşturuldu: @Model.CreatedAt?.ToString("d")
-             </div>
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Menü Yönetimi</div>
+            <h1 class="tm-page-title">@Model.Title</h1>
+            <p class="tm-page-subtitle">Menü bilgileri, tasarım seçimi, kategoriler ve toplu fiyat işlemleri.</p>
         </div>
     </div>
 
+    <div class="tm-page-actions">
+        @if (!string.IsNullOrEmpty(Model.StoreSlug) && !string.IsNullOrEmpty(Model.CompanySlug))
+        {
+            <a href="/@Model.CompanySlug/@Model.StoreSlug" target="_blank" class="btn btn-outline-secondary">
+                <i class="fas fa-eye me-2"></i>Önizle
+            </a>
+        }
+        <a asp-action="Update" asp-route-id="@Model.Id" asp-route-returnUrl="@menuDetailsReturnUrl" class="btn btn-outline-primary">
+            <i class="fas fa-edit me-2"></i>Düzenle
+        </a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@(ViewData["ReturnUrl"] as string)" method="post" id="deleteMenuForm-@Model.Id" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="button" class="btn btn-outline-danger" title="Menüyü Sil" onclick="TumMenuAlerts.confirm('Bu menüyü silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteMenuForm-@Model.Id').submit(); })">
+                <i class="fas fa-trash-alt me-2"></i>Sil
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
     <!-- Categories Card -->
-    <div class="col-md-8 mb-4">
+    <div class="col-12 mb-4">
         <div class="horizon-card h-100">
              <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
@@ -296,7 +183,7 @@
         <div class="modal-content border-0 shadow">
             <form asp-action="BulkUpdatePrices" asp-route-id="@Model.Id" method="post" id="bulkPriceUpdateForm">
                 @Html.AntiForgeryToken()
-                <input type="hidden" name="returnUrl" value="@mutationReturnUrl" />
+                <input type="hidden" name="returnUrl" value="@menuDetailsReturnUrl" />
 
                 <div class="modal-header">
                     <div>

@@ -311,6 +311,7 @@ public sealed class MenuController(IMediator mediator) : Controller
 
 		ViewBag.MenuDesigns = await mediator.Send(new GetAllMenuDesignsQuery(), ct);
 		ViewBag.CurrentMenuDesignId = menu.MenuDesignId;
+		ViewBag.MenuInfo = menu;
 		return View(new UpdateMenuCommand(menu.Id, menu.Title));
 	}
 

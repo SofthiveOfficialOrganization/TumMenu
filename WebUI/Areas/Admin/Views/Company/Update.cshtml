@@ -3,14 +3,42 @@
 
 @{
     ViewData["Title"] = "Şirket Güncelle";
+    var fallbackUrl = Url.Action("Details", "Company", new { area = "Admin", id = Model?.Id });
 }
+
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@fallbackUrl"
+           data-tummenu-back
+           data-fallback-url="@fallbackUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
+
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Şirket Yönetimi</div>
+            <h1 class="tm-page-title">Şirket Düzenle</h1>
+            <p class="tm-page-subtitle">Şirketinizin adını ve dijital menü bağlantısını güncelleyin.</p>
+        </div>
+    </div>
+
+    <div class="tm-page-actions">
+        <button type="submit" form="updateCompanyForm" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+        </button>
+    </div>
+</div>
 
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="horizon-card">
-            <div class="mb-4 text-center">
-                <h3 class="fw-bold text-primary">Şirket Güncelle</h3>
-                <p class="text-secondary">Şirketinizin bilgilerini aşağıdan güncelleyin</p>
+            <div class="tm-section-header">
+                <div>
+                    <h2 class="tm-section-title">Genel Bilgiler</h2>
+                    <p class="tm-section-subtitle">Şirket adını ve URL yolunu düzenleyin.</p>
+                </div>
             </div>
 
             <form asp-area="Admin" asp-controller="Company" asp-action="Update" method="post" id="updateCompanyForm">
@@ -42,11 +70,16 @@
                     <div class="form-text text-muted small">Dijital menü URL'inizde kullanılacaktır.</div>
                 </div>
 
-                <div class="d-grid gap-3 mt-5">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm" id="submitBtn">
-                        <i class="fas fa-save me-2"></i> Şirketi Güncelle
+                <div class="tm-form-footer">
+                    <a href="@fallbackUrl"
+                       data-tummenu-back
+                       data-fallback-url="@fallbackUrl"
+                       class="btn btn-outline-secondary">
+                        Vazgeç
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
                     </button>
-                    <a asp-area="Admin" asp-controller="Company" asp-action="Details" asp-route-id="@Model?.Id" data-tummenu-back data-fallback-url="@Url.Action("Details", "Company", new { area = "Admin", id = Model?.Id })" class="btn btn-outline-secondary">İptal</a>
                 </div>
             </form>
         </div>

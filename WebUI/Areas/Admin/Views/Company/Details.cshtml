@@ -3,7 +3,40 @@
 
 @{
     ViewData["Title"] = "Şirket Detayları";
+    var returnUrl = ViewData["ReturnUrl"] as string
+        ?? (User.IsInRole("Admin") ? Url.Action("Index") : Url.Action("Index", "Dashboard"));
 }
+
+<div class="horizon-card tm-page-header">
+    <div class="tm-page-header__main">
+        <a href="@returnUrl"
+           data-tummenu-back
+           data-fallback-url="@returnUrl"
+           class="btn btn-outline-secondary tm-back-button"
+           title="Geri Dön">
+            <i class="fas fa-arrow-left"></i>
+            <span>Geri Dön</span>
+        </a>
+
+        <div class="tm-page-heading">
+            <div class="tm-page-eyebrow">Şirket Yönetimi</div>
+            <h1 class="tm-page-title">@Model.Title</h1>
+            <p class="tm-page-subtitle">Şirket profili, medya alanları ve temel bilgileri.</p>
+        </div>
+    </div>
+
+    <div class="tm-page-actions">
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-outline-primary" title="Düzenle">
+            <i class="fas fa-edit me-2"></i>Düzenle
+        </a>
+        <form id="deleteForm" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="button" class="btn btn-outline-danger" title="Sil" onclick="confirmDelete()">
+                <i class="fas fa-trash-alt me-2"></i>Sil
+            </button>
+        </form>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-4 mb-4">
@@ -33,23 +66,6 @@
         <div class="horizon-card h-100">
             <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
                 <h5 class="fw-bold text-dark mb-0">Genel Bilgiler</h5>
-                <div class="d-flex gap-2 flex-shrink-0">
-                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary shadow-sm" title="Düzenle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <form id="deleteForm" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button type="button" class="btn btn-sm btn-outline-danger shadow-sm" title="Sil" onclick="confirmDelete()" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </form>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a href="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" data-tummenu-back data-fallback-url="@(ViewData["ReturnUrl"] ?? Url.Action("Index"))" class="btn btn-sm btn-outline-secondary shadow-sm px-3" title="Geri Dön" style="height: 36px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline ms-2">Geri Dön</span>
-                        </a>
-                    }
-                </div>
             </div>
 
             <div class="row mb-4">

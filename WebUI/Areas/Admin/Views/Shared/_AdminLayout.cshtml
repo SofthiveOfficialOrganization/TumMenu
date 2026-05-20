@@ -159,13 +159,6 @@
                     </a>
                 </li>
 
-                <li class="horizon-menu-item">
-                    <a href="@Url.Action("Index", "Media", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Media" ? "active" : "")">
-                        <div class="horizon-menu-icon"><i class="fas fa-images"></i></div>
-                        <span>@(rolePrefix == "admin" ? "Tüm İçerikler" : "İçeriklerim")</span>
-                    </a>
-                </li>
-
                 @if (rolePrefix == "admin")
                 {
                     <li class="horizon-menu-item">
@@ -293,9 +286,24 @@
                                 @string.Join(", ", roles)
                             </div>
                         </div>
+                        
                         <div class="horizon-avatar">
                             @User.Identity?.Name?.Substring(0, 1).ToUpper()
                         </div>
+                        <div>
+                        @if (isOwnerPanelUser)
+                        {
+                            <button type="button"
+                                    class="owner-issue-report-nav-button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ownerIssueReportModal"
+                                    aria-label="Hata bildir"
+                                    title="Hata bildir">
+                                <i class="fas fa-bug"></i>
+                            </button>
+                        }
+                        </div>
+
                     </div>
                 </div>
             </nav>
@@ -405,15 +413,6 @@
 
     @if (isOwnerPanelUser)
     {
-        <button type="button"
-                class="owner-issue-report-fab"
-                data-bs-toggle="modal"
-                data-bs-target="#ownerIssueReportModal"
-                aria-label="Hata bildir">
-            <i class="fas fa-bug"></i>
-            <span>Hata Bildir</span>
-        </button>
-
         <div class="modal fade owner-issue-report-modal" id="ownerIssueReportModal" tabindex="-1" aria-labelledby="ownerIssueReportModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
