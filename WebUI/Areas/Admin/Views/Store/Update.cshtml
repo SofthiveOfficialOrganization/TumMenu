@@ -5,7 +5,8 @@
 @model StoreDTO
 @{
     ViewData["Title"] = "Dükkan Düzenle";
-    var fallbackUrl = Url.Action("Details", new { id = Model.Id });
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl ?? Url.Action("Details", new { id = Model.Id });
 }
 
 <div class="horizon-card tm-page-header">
@@ -44,6 +45,7 @@
     <div>
         <form asp-action="Update" method="post" id="updateStoreForm">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
             
             <div class="mb-3">
                 <label asp-for="Title" class="form-label">Dükkan Adı</label>

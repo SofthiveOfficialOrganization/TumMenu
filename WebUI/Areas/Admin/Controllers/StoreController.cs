@@ -130,9 +130,10 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Update(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var store = await mediator.Send(new GetStoreByIdQuery(id), ct);
+		ViewData["ReturnUrl"] = returnUrl;
 		
 		if (User.IsInRole("Owner"))
 		{
@@ -147,8 +148,9 @@ public class StoreController(IMediator mediator) : Controller
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Update(Guid id, [FromForm] UpdateStoreCommand req, CancellationToken ct)
+	public async Task<IActionResult> Update(Guid id, [FromForm] UpdateStoreCommand req, string? returnUrl, CancellationToken ct)
 	{
+		ViewData["ReturnUrl"] = returnUrl;
 		req.Id = req.Id == Guid.Empty ? id : req.Id;
 		ApplyStoreVisibilityFormValues(req);
 
@@ -165,6 +167,9 @@ public class StoreController(IMediator mediator) : Controller
 		}
 
 		await mediator.Send(req, ct);
+		if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+			return Redirect(returnUrl);
+
 		return RedirectToAction(nameof(Index), new { role = RouteData.Values["role"] }); 
 	}
 

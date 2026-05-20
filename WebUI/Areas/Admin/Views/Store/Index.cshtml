@@ -72,7 +72,7 @@
                         {
                             foreach (var item in Model.Items)
                             {
-                                <tr data-tummenu-click-url="@Url.Action("Details", new { id = item.Id, returnUrl = currentPageUrl })">
+                                <tr data-tummenu-click-url="@Url.Action("Update", new { id = item.Id, returnUrl = currentPageUrl })">
                                     <td class="ps-3">
                                         <div class="d-flex align-items-center">
                                             <div class="horizon-avatar bg-light text-primary me-3">
@@ -86,7 +86,7 @@
                                                 }
                                             </div>
                                             <div>
-                                                <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="fw-bold text-dark d-block text-decoration-none">@item.Title</a>
+                                                <a asp-action="Update" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="fw-bold text-dark d-block text-decoration-none">@item.Title</a>
                                                 <small class="text-muted">@item.Slug</small>
                                             </div>
                                         </div>
@@ -125,10 +125,11 @@
                                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" class="btn btn-sm btn-outline-secondary me-1" title="Detaylar">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
+                                        <a asp-action="Update" asp-route-id="@item.Id" asp-route-returnUrl="@currentPageUrl" class="btn btn-sm btn-outline-primary me-1" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" id="deleteForm-@item.Id">
+                                            @Html.AntiForgeryToken()
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Sil" onclick="TumMenuAlerts.confirm('Bu dükkanı silmek istediğinize emin misiniz?', 'Bu işlem geri alınamaz!', 'Evet, Sil!').then(res => { if(res) document.getElementById('deleteForm-@item.Id').submit(); })">
                                                 <i class="fas fa-trash"></i>
                                             </button>

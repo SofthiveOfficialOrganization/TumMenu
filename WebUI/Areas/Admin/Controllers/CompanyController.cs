@@ -71,9 +71,10 @@ public sealed class CompanyController(IMediator mediator) : Controller
 
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpGet]
-	public async Task<IActionResult> Update(Guid id, CancellationToken ct)
+	public async Task<IActionResult> Update(Guid id, string? returnUrl, CancellationToken ct)
 	{
 		var company = await mediator.Send(new GetCompanyByIdQuery { Id = id }, ct);
+		ViewData["ReturnUrl"] = returnUrl;
 		
 		if (User.IsInRole("Owner"))
 		{
@@ -94,8 +95,10 @@ public sealed class CompanyController(IMediator mediator) : Controller
 	}
 	[Authorize(Policy = "OwnerOrAdmin")]
 	[HttpPost]
-	public async Task<IActionResult> Update([FromForm] UpdateCompanyCommand req, CancellationToken ct)
+	public async Task<IActionResult> Update([FromForm] UpdateCompanyCommand req, string? returnUrl, CancellationToken ct)
 	{
+		ViewData["ReturnUrl"] = returnUrl;
+
 		if(!ModelState.IsValid)
 			return View(req);
 
@@ -109,6 +112,9 @@ public sealed class CompanyController(IMediator mediator) : Controller
 		}
 
 		var company = await mediator.Send(req, ct);
+		if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+			return Redirect(returnUrl);
+
 		return RedirectToAction(nameof(Details), new { area = "Admin", id = company.Id, role = RouteData.Values["role"] ?? (User.IsInRole("Admin") ? "admin" : "owner") });
 	}
 

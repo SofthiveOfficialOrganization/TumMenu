@@ -3,7 +3,8 @@
 
 @{
     ViewData["Title"] = "Şirket Güncelle";
-    var fallbackUrl = Url.Action("Details", "Company", new { area = "Admin", id = Model?.Id });
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var fallbackUrl = returnUrl ?? Url.Action("Details", "Company", new { area = "Admin", id = Model?.Id });
 }
 
 <div class="horizon-card tm-page-header">
@@ -44,6 +45,7 @@
             <form asp-area="Admin" asp-controller="Company" asp-action="Update" method="post" id="updateCompanyForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
                 
                 <div class="mb-4">
                     <label asp-for="Title" class="form-label fw-bold text-secondary small text-uppercase">Şirket Adı</label>
