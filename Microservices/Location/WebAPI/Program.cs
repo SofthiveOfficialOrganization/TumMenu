@@ -13,7 +13,7 @@ var webApiConfiguration = builder.Configuration.GetSection("WebAPIConfiguration"
 
 builder.Services.AddCors(opt =>
 {
-    opt.AddPolicy("HappencodePolicy", policy =>
+    opt.AddPolicy("TummenuPolicy", policy =>
     {
         policy
             .WithOrigins(webApiConfiguration?.AllowedOrigins ?? Array.Empty<string>())
@@ -62,7 +62,7 @@ await app.MigrateDatabaseAsync();
 await app.SeedDataAsync();
 app.ConfigureCustomExceptionMiddleware();
 app.UseHttpsRedirection();
-app.UseCors("HappencodePolicy");
+app.UseCors("TummenuPolicy");
 app.UseMiddleware<BasicAuthMiddleware>();
 app.MapControllers();
 app.Run();
