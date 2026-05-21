@@ -483,8 +483,12 @@
                 <div class="site-footer__bottom">
                     <span>© @DateTime.Now.Year Tüm Menü. Tüm hakları saklıdır.</span>
                     <div class="site-footer__social">
-                        <a href="https://www.instagram.com/softhive_" aria-label="Instagram">ig</a>
-                        <a href="https://x.com/Softhive_" aria-label="X">x</a>
+                        <a href="https://www.instagram.com/softhive_" aria-label="Instagram">
+                            <svg class="tm-icon" width="18" height="18" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-instagram")"></use></svg>
+                        </a>
+                        <a href="https://x.com/Softhive_" aria-label="X (Twitter)">
+                            <svg class="tm-icon" width="18" height="18" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-x")"></use></svg>
+                        </a>
                     </div>
                 </div>
             </div>

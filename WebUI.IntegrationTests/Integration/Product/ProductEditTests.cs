@@ -65,7 +65,7 @@ public class ProductEditTests : IClassFixture<TumMenuWebAppFactory>
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 		var html = await response.Content.ReadAsStringAsync();
 		Assert.Contains("horizon-admin", html);
-		Assert.Contains("Güncelle", html);
+		Assert.Contains("Değişiklikleri Kaydet", html);
 		Assert.DoesNotContain("Ana sayfaya dön", html);
 	}
 

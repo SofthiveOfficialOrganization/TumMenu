@@ -1,3 +1,4 @@
+@using Domain.Entities
 <div class="horizon-card menu-design-preview-card">
     <h6 class="fw-bold mb-2">Canlı Önizleme</h6>
     <p class="text-muted small menu-design-preview-hint mb-2">
@@ -106,12 +107,20 @@
                                         </div>
                                         <div class="pm-business-info-socials mt-2" aria-label="Sosyal medya">
                                             <span class="pm-business-info-social" data-prev-part="socialLink">
-                                                <svg class="tm-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.6V6.8c0-.86.2-1.3 1.42-1.3H17V2.22A21.3 21.3 0 0 0 14.25 2C11.5 2 9.6 3.68 9.6 6.78V8.6H6.5V12h3.1v10H14V12h2.92l.46-3.4H14Z" /></svg>
+                                                <partial name="_SocialPlatformIcon" model="StoreSocialPlatform.Twitter" />
+                                                <span>X</span>
+                                            </span>
+                                            <span class="pm-business-info-social" data-prev-part="socialLink">
+                                                <partial name="_SocialPlatformIcon" model="StoreSocialPlatform.Instagram" />
+                                                <span>Instagram</span>
+                                            </span>
+                                            <span class="pm-business-info-social" data-prev-part="socialLink">
+                                                <partial name="_SocialPlatformIcon" model="StoreSocialPlatform.Facebook" />
                                                 <span>Facebook</span>
                                             </span>
                                             <span class="pm-business-info-social" data-prev-part="socialLink">
-                                                <svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle></svg>
-                                                <span>Instagram</span>
+                                                <partial name="_SocialPlatformIcon" model="StoreSocialPlatform.YouTube" />
+                                                <span>YouTube</span>
                                             </span>
                                         </div>
                                     </section>

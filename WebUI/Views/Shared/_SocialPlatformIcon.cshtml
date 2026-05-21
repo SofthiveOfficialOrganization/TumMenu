@@ -1,0 +1,14 @@
+@using Domain.Entities
+@model StoreSocialPlatform
+@{
+    var sprite = Url.Content("~/assets/icons/tm-sprite.svg");
+    var iconId = Model switch
+    {
+        StoreSocialPlatform.Twitter => "icon-x",
+        StoreSocialPlatform.Instagram => "icon-instagram",
+        StoreSocialPlatform.Facebook => "icon-facebook",
+        StoreSocialPlatform.YouTube => "icon-youtube",
+        _ => "icon-globe"
+    };
+}
+<svg class="tm-icon" aria-hidden="true"><use href="@($"{sprite}#{iconId}")"></use></svg>
