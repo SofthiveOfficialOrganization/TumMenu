@@ -1,3 +1,4 @@
+@using WebUI.Seo
 @{
     ViewData["Title"] = "Sık Sorulan Sorular";
     ViewData["Description"] = "TümMenü QR menü kurulumu, fiyatlandırma, destek, KVKK, çerezler ve restoranlar için dijital menü kullanımı hakkında sık sorulan sorular.";
@@ -5,7 +6,7 @@
 
 @section Head {
     @{
-        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var baseUrl = PublicSeo.GetCanonicalBaseUrl(Context);
         var faqSchema = new Dictionary<string, object?>
         {
             ["@context"] = "https://schema.org",

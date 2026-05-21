@@ -1,0 +1,165 @@
+@{
+    ViewData["Title"] = "Dijital Menü Sistemi";
+    ViewData["Description"] = "Restoran ve kafeler için dijital menü sistemi: QR menü oluşturma, ürün ve fiyat güncelleme, çoklu şube yönetimi, görsel menü ve temel menü analitiği.";
+}
+
+@section Head {
+    <style>
+        .dms-page {
+            background: #fbfaf7;
+        }
+
+        .dms-hero,
+        .dms-section {
+            padding: 72px 0;
+        }
+
+        .dms-hero__inner {
+            max-width: 920px;
+        }
+
+        .dms-eyebrow {
+            color: var(--color-primary);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .dms-title {
+            color: var(--color-secondary-dark);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+
+        .dms-lead {
+            color: var(--color-text-muted);
+            font-size: 1.15rem;
+            line-height: 1.75;
+            max-width: 780px;
+        }
+
+        .dms-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .dms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .dms-card {
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 24px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .dms-card h2,
+        .dms-card h3 {
+            color: var(--color-secondary-dark);
+            margin-bottom: 12px;
+        }
+
+        .dms-card p,
+        .dms-card li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .dms-card ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .dms-band {
+            border-top: 1px solid rgba(73, 85, 56, 0.12);
+            border-bottom: 1px solid rgba(73, 85, 56, 0.12);
+            background: #fff;
+        }
+    </style>
+}
+
+<div class="dms-page">
+    <section class="dms-hero" aria-labelledby="dms-heading">
+        <div class="container dms-hero__inner">
+            <p class="dms-eyebrow">Restoranlar ve kafeler için dijital menü sistemi</p>
+            <h1 id="dms-heading" class="dms-title">Menünüzü QR kodla yayınlayın, fiyat ve ürünleri tek panelden yönetin.</h1>
+            <p class="dms-lead">
+                TümMenü, yalnızca karekod üreten bir araç değildir. İşletme sahibinin kategori, ürün, fiyat, açıklama, görsel ve şube bilgilerini düzenli yönetmesine yardımcı olan dijital menü sistemidir.
+                Müşteri uygulama indirmeden telefon kamerasıyla menüye ulaşır.
+            </p>
+            <div class="dms-actions">
+                <a class="btn btn--primary" href="/qr-kod">Ücretsiz QR menü oluştur</a>
+                <a class="btn btn--ghost" href="/fiyatlandirma">QR menü fiyatları</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="dms-section dms-band" aria-labelledby="dms-features-heading">
+        <div class="container">
+            <div class="section-heading">
+                <h2 id="dms-features-heading" class="section__title">Dijital menü sistemi hangi işleri kolaylaştırır?</h2>
+                <p class="section__subtitle">Günlük operasyonda en çok değişen menü bilgilerini tek yerde toplar.</p>
+            </div>
+
+            <div class="dms-grid">
+                <article class="dms-card">
+                    <h3>QR menü oluşturma</h3>
+                    <p>İşletmeniz için menü bağlantısı oluşturulur. QR kodu masada, vitrinde, paket servis poşetinde veya Instagram profilinde kullanabilirsiniz.</p>
+                </article>
+                <article class="dms-card">
+                    <h3>Ürün ve fiyat güncelleme</h3>
+                    <p>Fiyat değiştiğinde kağıt menü bastırmak yerine panelden düzenleme yaparsınız. Menü sayfası güncel bilgiyle görüntülenir.</p>
+                </article>
+                <article class="dms-card">
+                    <h3>Kategori ve açıklama düzeni</h3>
+                    <p>Başlangıçlar, ana yemekler, tatlılar ve içecekler gibi kategorileri düzenleyebilir; ürün açıklaması, porsiyon ve alerjen bilgisini daha anlaşılır gösterebilirsiniz.</p>
+                </article>
+                <article class="dms-card">
+                    <h3>Çoklu şube yönetimi</h3>
+                    <p>Birden fazla şubesi olan işletmeler için farklı fiyat, stok veya kampanya düzenlerini ayrı tutmak daha kontrollü hale gelir.</p>
+                </article>
+                <article class="dms-card">
+                    <h3>Fotoğraflı dijital menü</h3>
+                    <p>Ürün fotoğrafları, müşterinin siparişten önce yemeği daha iyi anlamasına yardımcı olur. Görselleri gerçek ürünle uyumlu tutmak güven açısından önemlidir.</p>
+                </article>
+                <article class="dms-card">
+                    <h3>Menü analitiği</h3>
+                    <p>Kategori ve ürün görüntülenme eğilimleri, menü kararlarını tahmin yerine gözleme dayandırmayı kolaylaştırır.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="dms-section" aria-labelledby="dms-who-heading">
+        <div class="container">
+            <div class="dms-grid">
+                <article class="dms-card">
+                    <h2 id="dms-who-heading">Kimler için uygun?</h2>
+                    <p>Restoran, kafe, pastane, burgerci, dönerci, kahvaltıcı, paket servis noktası ve çok şubeli yeme-içme işletmeleri dijital menü sisteminden faydalanabilir.</p>
+                    <p>Özellikle fiyatı sık değişen, sezonluk ürün kullanan veya menüsünü müşteriye daha net göstermek isteyen işletmeler için iyi bir başlangıçtır.</p>
+                </article>
+                <article class="dms-card">
+                    <h2>QR menü ile farkı nedir?</h2>
+                    <p>QR menü müşterinin menüye ulaşma yoludur. Dijital menü sistemi ise menünün arkasındaki yönetim panelidir: ürün, kategori, fiyat, görsel, şube ve yayın kontrollerini düzenler.</p>
+                    <p>Bu yüzden iyi bir karekod menü çözümü yalnızca QR kod üretmemeli; menüyü güncel tutmayı da kolaylaştırmalıdır.</p>
+                </article>
+                <article class="dms-card">
+                    <h2>Başlamak için</h2>
+                    <ul>
+                        <li>İşletme hesabınızı oluşturun.</li>
+                        <li>Şube, kategori ve ürünlerinizi girin.</li>
+                        <li>QR kodunuzu indirip masalara yerleştirin.</li>
+                        <li>Menü değişikliklerini panelden güncelleyin.</li>
+                    </ul>
+                    <p><a href="/qr-kod">Ücretsiz QR menü oluşturma</a>, <a href="/restoran-kaynaklari">kaynak merkezi</a> ve <a href="/sss">SSS</a> sayfalarıyla detayları inceleyebilirsiniz.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

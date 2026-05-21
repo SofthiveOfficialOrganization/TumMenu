@@ -87,3 +87,39 @@ Garsona sözlü bilgi verip mutfağa yazılı tarif göndermemek, tat ve porsiyo
 Sezonluk menü yönetimi, misafire tazelik sunmak kadar mutfak ve kasayı aynı ritme sokmakla ilgilidir. Takvim küçük de olsa yazılı olduğunda hem fire azalır hem masada soru sayısı düşer.
 
 Sezon ürünleri ve fiyat yayınını tek panelden izlemek, çok kalemli listelerde hata riskini azaltır; bu iş TümMenü gibi bir dijital menü altyapısında daha düzenli yürütülebilir.
+
+## Sezon geçişinde menü takvimi nasıl hazırlanır?
+
+Sezonluk menü değişimi yalnızca yeni ürün eklemek değildir. Tedarik, fiyat, stok, personel bilgisi, fotoğraf ve müşteri iletişimi aynı anda güncellenmelidir. Bu yüzden sezon geçişi için küçük bir takvim hazırlamak işletmeyi rahatlatır.
+
+İlk hafta ürün araştırmasına ayrılabilir. Hangi malzeme sezona giriyor, hangi ürünün maliyeti artıyor, hangi ürün artık aynı kaliteyle bulunmuyor? Bu sorular mutfak ve satın alma ekibiyle birlikte cevaplanmalıdır. Antalya’da sahil restoranı için balık ve meze, İzmir’de kahvaltıcı için yeşillik ve peynir, Ankara’da burgerci için sos ve ekmek tedariği farklı dinamiklere sahiptir.
+
+İkinci hafta deneme porsiyonlarına ayrılmalıdır. Yeni ürün menüye girmeden önce porsiyon, hazırlık süresi ve tabak maliyeti test edilir. Ürün lezzetli olsa bile servis hızını çok düşürüyorsa yoğun saatlerde sorun çıkarabilir. Bu aşamada menüye girecek ürün sayısını sınırlı tutmak daha güvenlidir.
+
+Üçüncü hafta fiyat kontrolüdür. Mevsim ürünü ucuzlamış olabilir, fakat işçilik, enerji veya ambalaj maliyeti artmış olabilir. Fiyatı yalnızca malzeme fiyatına göre belirlemek eksik kalır. Menüdeki eski ürünlerle yeni ürünler arasında fiyat dengesi de korunmalıdır.
+
+Dördüncü hafta içerik hazırlığıdır. Ürün adı, kısa açıklama, alerjen notu, porsiyon bilgisi ve fotoğraf bu aşamada tamamlanır. Fotoğraf yetişmediyse ürünü fotoğrafsız yayınlamak bazen yanlış görsel kullanmaktan daha iyidir. Temsilî görsel kullanılıyorsa bunun notu eklenmelidir.
+
+Beşinci adım ekip brifingidir. Yeni sezon ürünü için personelin bir cümlelik anlatımı olmalıdır. “Bu hafta kabaklı mücver eklendi, yoğurt sosla geliyor” gibi kısa bilgi servis sırasında yeterlidir. Ekip ürünü tadarsa müşteriye daha rahat anlatır.
+
+Altıncı adım yayın günüdür. QR menü, kasa, paket servis kanalı, sosyal medya ve varsa kağıt duyuru aynı gün kontrol edilmelidir. En sık hata, dijital menünün güncel olup kasanın eski kalmasıdır. Bu durumda müşteri değil sistem hatalı görünür.
+
+Sezon bittikten sonra da ürünleri kaldırma rutini gerekir. Satışı düşen, maliyeti artan veya tedariki bozulan ürünler menüde görünmeye devam etmemelidir. Dijital menü paneli bu geçişi kolaylaştırır; fakat hangi ürünün ne zaman çıkacağına yine işletmenin takvimi karar verir.
+
+## Sezonluk fiyat değişimi müşteriye nasıl anlatılmalı?
+
+Sezonluk fiyat değişimi yapılırken müşteriye uzun maliyet açıklaması vermek gerekmez. Menüde ve personel dilinde kısa, sakin ve tutarlı bir ifade yeterlidir. “Sezonluk ürün”, “günlük tedarik”, “sınırlı süre” veya “yeni hasat” gibi ifadeler hem ürünün neden değiştiğini hem de neden farklı fiyatlandığını daha doğal anlatır.
+
+Fiyat artışı olan ürünlerde açıklama satırı daha dikkatli yazılmalıdır. Sadece fiyatı yükseltip ürün bilgisini aynı bırakmak müşteriye değerin değişmediği hissini verir. Eğer porsiyon, malzeme kalitesi, tedarik kaynağı veya sunum değiştiyse bu bilgi kısa şekilde eklenmelidir. Örneğin “mevsim domatesi ve taze fesleğenle” gibi bir detay fiyat algısını yumuşatabilir.
+
+Sezonluk ürünlerde “sınırlı stok” ifadesi doğru kullanıldığında faydalıdır; yanlış kullanıldığında güvensiz görünür. Gerçekten sınırlı değilse her ürüne bu etiketi eklemek müşteriyi yorar. Stok azaldığında ürünü pasife almak veya “bugün tükendi” notu düşmek daha dürüst bir deneyim sağlar.
+
+Paket servis tarafında sezonluk ürünlerin taşınabilirliği ayrıca kontrol edilmelidir. Salonda iyi duran bir ürün paket yolculuğunda bozuluyorsa paket menüsünde yer almamalı veya farklı açıklamayla sunulmalıdır. Aynı ürünün salon ve paket fiyatı farklıysa sebep personel tarafından bilinmelidir.
+
+Sezon sonunda kısa değerlendirme yapın. Hangi ürün tekrar gelmeli, hangisi kalıcı menüye alınmalı, hangisi yalnızca kampanya döneminde çalıştı? Bu cevaplar bir sonraki sezonu hızlandırır.
+
+Sezonluk değişimde fotoğraf güncelliği de fiyat kadar önemlidir. Yaz salatasında kullanılan yeşillik, kış çorbasındaki sunum veya mevsim tatlısındaki meyve değiştiyse eski fotoğraf beklentiyi bozabilir. Yeni fotoğraf yetişmiyorsa kısa açıklama ve doğru içerik bilgisi, yanlış görselden daha güvenlidir.
+
+Şube bazlı işletmelerde sezon geçişi aynı gün başlayamayabilir. Sahil şubesi yaz ürününü erken satarken şehir içi şube daha geç talep görebilir. Bu durumda tek merkezden aynı menüyü zorlamak yerine şube bazlı yayın planı yapılmalıdır. Dijital menüde bu ayrımı yönetmek kolaydır; önemli olan hangi şubenin hangi tarihte hangi ürünü göstereceğinin önceden yazılmasıdır.
+
+Sezon ürünü menüden çıkarken müşteriye alternatif göstermek de iyi çalışır. “Kış boyunca bu ürün yerine şu tatlıyı deneyebilirsiniz” gibi kısa öneriler satış boşluğunu azaltır. Ürünü sessizce kaldırmak bazen yeterlidir; ama müdavimi olan ürünlerde alternatif öneri daha yumuşak geçiş sağlar.

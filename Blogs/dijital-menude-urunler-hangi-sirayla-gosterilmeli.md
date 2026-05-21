@@ -90,3 +90,33 @@ Alerjen veya vegan bilgisini ürün adının sonuna gizlemek, özellikle aile mi
 Bu kontroller, menüyü yalnızca güncel tutmakla kalmaz; misafirin ekranda geçirdiği süreyi de anlamlı hale getirir. Haftalık basit iç gözlem (hangi ürün için hâlâ telefon uçuruluyor) sırayı iyileştirmenin en ucuz verisidir.
 
 Dijital menüde kategori ve ürün düzenini panelden yönetmek, şube ve sezon değişiminde sırayı bozmadan güncellemeyi kolaylaştırır; bu iş TümMenü gibi bir dijital menü panelinde daha düzenli izlenebilir.
+
+## Sıralamayı haftalık nasıl gözden geçirmeli?
+
+Ürün sırası bir kez ayarlanıp sonsuza kadar bırakılacak bir alan değildir. Menüdeki ilk ekran, müşterinin neyi fark edeceğini belirler. Bu yüzden haftada bir kısa kontrol yapmak, uzun toplantılardan daha faydalıdır.
+
+İlk olarak her kategori için “müşteri buraya neden giriyor?” sorusunu sorun. Burger kategorisine giren kişi hızlı seçim yapmak ister; kahve kategorisine giren kişi sıcak, soğuk, sütlü veya filtre ayrımını görmek ister. Ürün sırası bu niyete göre şekillenmezse güzel ürünler bile arada kaybolur.
+
+İkinci olarak satış ve soru verisini birlikte düşünün. Çok satan ürün her zaman en üstte olmalı diye bir kural yoktur. Bazen çok satan ürün zaten bilinir; asıl sorun müşterinin yeni veya kârlı ürünü fark etmemesidir. Bu durumda ilk üç sırada bir “bilinen ürün”, bir “imza ürün” ve bir “yeni/önerilen ürün” dengesi kurulabilir.
+
+Üçüncü olarak fiyat algısını kontrol edin. En pahalı ürün sürekli ilk sıradaysa bazı müşteriler kategori genelini pahalı sanabilir. En ucuz ürün ilk sıradaysa da işletmenin asıl güçlü ürünü görünmeyebilir. Özellikle kafe, pizza ve kahvaltı menülerinde fiyat aralığını doğal göstermek gerekir.
+
+Dördüncü olarak ürün açıklamalarına bakın. Üst sıradaki ürünlerin açıklaması zayıfsa müşteri yine karar veremez. Örneğin “Spesiyal Burger” tek başına yeterli değildir; köfte gramajı, sos, peynir ve ekmek türü gibi fark yaratan bilgi kısa yazılmalıdır.
+
+Beşinci olarak stok ve mevsim etkisini hesaba katın. Yazın soğuk kahveleri veya limonataları daha yukarı almak, kışın çorba ve sıcak içecekleri öne çıkarmak mantıklıdır. İzmir’de sahil kafesi ile Erzurum’da esnaf lokantası aynı sıra mantığıyla çalışmaz.
+
+Son adım, değişikliği ölçmektir. İki hafta boyunca hangi ürünlerin daha çok görüntülendiğini, hangi ürünler için personele soru geldiğini ve hangi satırların hiç ilgi görmediğini not edin. Bu notlar ürün sırasını rastgele değil, sahadaki gerçek davranışa göre düzenlemenizi sağlar.
+
+Dijital menü sistemi burada pratik bir avantaj verir: ürünleri sürükleyip yeniden sıralayabilir, stokta olmayanları pasife alabilir ve kategori akışını sezonluk olarak değiştirebilirsiniz. Böylece menü yalnızca liste değil, müşterinin karar yolunu düzenleyen canlı bir ekran olur.
+
+## İlk ekranı test etmek için basit yöntem
+
+Ürün sıralamasını test etmek için karmaşık raporlar şart değildir. Bir telefonu elinize alın, menüyü müşteri gibi açın ve ilk on saniyede ne gördüğünüzü yazın. İşletmenin en güçlü ürünü görünmüyorsa veya ilk ekran sadece genel kategori adlarıyla doluysa sıra yeniden düşünülmelidir.
+
+Bu testi farklı saatlerde yapın. Sabah kahvaltı arayan müşteri ile akşam tatlı bakan müşteri aynı ürünü beklemez. Kafe menüsünde sabah kahvaltı ve sıcak kahve öne çıkabilir; öğleden sonra soğuk içecek ve tatlı daha mantıklı olabilir. Menü sabit olsa bile müşteri niyeti gün içinde değişir.
+
+Personelden de aynı testi istemek faydalıdır. Garson veya kasa çalışanı hangi ürünü ilk üçte görmek ister? Mutfak hangi ürünün daha görünür olmasını ister? Bu cevaplar her zaman satış raporuyla aynı çıkmaz, ama saha hissini gösterir.
+
+Son olarak kategori içindeki en alt ürünlere bakın. Aylarca kimsenin görmediği ürünler varsa ya sırası yanlıştır ya da ürün artık menüde kalmamalıdır. Dijital menüde sıralamayı değiştirmek kolay olduğu için bu denemeyi küçük adımlarla yapmak yeterlidir.
+
+Küçük değişiklikleri aynı anda çok fazla yapmayın. Önce bir kategoride iki ürünü yer değiştirin, sonra sonucu izleyin. Böyle ilerlerseniz hangi düzenlemenin işe yaradığını anlamak kolaylaşır; tüm menüyü aynı gün karıştırmak ise ölçmeyi zorlaştırır. Değişiklik tarihini not etmek, iki hafta sonra doğru karşılaştırma yapmanızı sağlar.

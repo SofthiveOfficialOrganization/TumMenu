@@ -26,7 +26,8 @@
     var description = ViewData["Description"] as string
         ?? "QR menülü restoranları keşfet, menülere gitmeden bak, fiyatları karşılaştır ve işletmen için dijital menü oluştur.";
 
-    var canonical = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var canonicalBase = PublicSeo.GetCanonicalBaseUrl(Context);
+    var canonical = PublicSeo.ToCanonicalUrl(Context.Request, Context.Request.PathBase.Add(Context.Request.Path));
     var requestPath = Context.Request.Path.Value ?? string.Empty;
     var systemNoIndexPrefixes = new[]
     {
@@ -36,7 +37,8 @@
         "/user",
         "/owner",
         "/error",
-        "/status-code"
+        "/status-code",
+        "/blog/etiket"
     };
     var systemNoIndexExactPaths = new[]
     {
@@ -100,8 +102,8 @@
       "@@type": "Organization",
       "name": "Tüm Menü",
       "alternateName": "TumMenu",
-      "url": "https://tummenu.com",
-      "logo": "https://tummenu.com/images/logo.png",
+      "url": "@canonicalBase",
+      "logo": "@($"{canonicalBase}/images/logo.png")",
       "description": "Restoranlar ve kafeler için yeni nesil QR menü ve sipariş yönetim sistemi.",
       "parentOrganization": {
         "@@type": "Organization",
@@ -410,6 +412,8 @@
                     <h3 class="site-footer__column-title">İşletmeler</h3>
                     <ul class="site-footer__links">
                         <li><a href="/ozellikler">Özellikler</a></li>
+                        <li><a href="/dijital-menu-sistemi">Dijital Menü Sistemi</a></li>
+                        <li><a href="/fiyatlandirma">QR Menü Fiyatları</a></li>
                         <li><a href="/iletisim">Plan ve destek</a></li>
                         <li><a href="/sss">SSS</a></li>
                         <li><a href="/restoran-kaynaklari">Kaynaklar</a></li>
@@ -455,6 +459,8 @@
                     <summary>İşletmeler</summary>
                     <ul class="site-footer__links">
                         <li><a href="/ozellikler">Özellikler</a></li>
+                        <li><a href="/dijital-menu-sistemi">Dijital Menü Sistemi</a></li>
+                        <li><a href="/fiyatlandirma">QR Menü Fiyatları</a></li>
                         <li><a href="/iletisim">Plan ve destek</a></li>
                         <li><a href="/sss">SSS</a></li>
                         <li><a href="/restoran-kaynaklari">Kaynaklar</a></li>
@@ -473,7 +479,6 @@
                         <li><a href="/blog">Blog</a></li>
                         <li><a href="/yasal-bilgiler#privacy">Gizlilik Politikası</a></li>
                         <li><a href="/yasal-bilgiler#cookie">Çerez Politikası</a></li>
-                        <li><button type="button" class="site-footer__link-button" data-cookie-preferences>Çerez tercihleri</button></li>
                         <li><a href="/yasal-bilgiler#terms">Kullanıcı Sözleşmesi</a></li>
                         <li><a href="/yasal-bilgiler#kvkk">KVKK</a></li>
                     </ul>

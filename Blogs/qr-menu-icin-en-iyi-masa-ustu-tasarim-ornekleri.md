@@ -85,3 +85,39 @@ TümMenü gibi bir dijital menü panelinde ürün, fiyat ve kampanyayı tek yerd
 - [ ] Şube veya kampanya değişiminde eski kartlar masadan toplanıyor
 
 Masa üstü tasarımı doğru seçtiğinizde QR menü sahada sessizce işini yapar; müşteri menüyü bulur, personel tekrar tekrar yönlendirme yapmaz. Küçük bir baskı veya stand değişimi bazen tüm deneyimi düzeltir; en iyi örnek, mekânınızın gerçek trafiğine uyan örnektir.
+
+## Masa üstü QR tasarımını seçerken servis tipini düşünün
+
+En iyi masa üstü QR tasarımı, işletmenin servis hızına ve masa düzenine uyan tasarımdır. Şık görünen bir stand, dar masada sürekli devriliyorsa iyi çözüm değildir. Ucuz etiket de yağlı ürün çıkan bir masada iki günde okunmaz hale geliyorsa pahalıya patlar.
+
+İlk karar masa boyutudur. Küçük kafe masalarında büyük üçgen tent card alanı daraltabilir. Bu tip yerlerde ince akrilik stand veya küçük metal tutucu daha iyi çalışır. Geniş restoran masalarında ise iki yüzlü kart, masanın farklı tarafından oturan müşterilerin QR kodu görmesini kolaylaştırır.
+
+İkinci karar temizliktir. Dönerci, kebapçı, pideci veya fast food işletmesinde masa üstü materyal yağ, sos ve sıcak tepsiyle temas edebilir. Bu işletmelerde silinebilir yüzey, laminasyon veya değiştirilebilir etiket önemlidir. İnce kağıt tasarım birkaç servis sonunda yıpranır.
+
+Üçüncü karar marka görünürlüğüdür. QR kod çok küçük kalmamalı, fakat tüm yüzeyi de kaplamamalıdır. İşletme adı, kısa yönlendirme cümlesi ve QR kod birlikte görünmelidir. “Kameranı aç, menüyü gör” gibi kısa bir ifade çoğu müşteriye yeter.
+
+Dördüncü karar dil ve erişilebilirliktir. Turistik bölgede İngilizce kısa not gerekebilir. Antalya’da sahil restoranı veya Kapadokya’da kafe işletiyorsanız “Scan for menu” gibi küçük bir ikinci satır faydalı olur. Yazı boyutu yaşlı misafirin okuyabileceği kadar net kalmalıdır.
+
+Beşinci karar yedek konumdur. QR kod yalnızca masada değil, kasa önünde, vitrinde veya paket servis poşetinde de kullanılabilir. Masa doluyken dışarıdan bakan müşteri menüyü görmek isteyebilir. Aynı güncel QR adresinin farklı yüzeylerde kullanılması görünürlüğü artırır.
+
+Altıncı karar test taramasıdır. Baskıdan önce tasarımı telefonda, farklı ışıkta ve farklı mesafede deneyin. Kodun çevresindeki beyaz alan daraldığında veya zemin çok desenli olduğunda kamera okumakta zorlanabilir. Tasarım güzel görünse bile taranmıyorsa görevini yapmıyordur.
+
+Masa üstü tasarımını üç ayda bir gözden geçirmek iyi olur. Yıpranan kartları değiştirin, eski kampanya QR’larını toplayın, şube adı yanlış kalan baskıları kaldırın. QR menü sistemi güncel olsa bile masadaki eski materyal müşteriyi yanlış yere götürüyorsa deneyim bozulur.
+
+TümMenü’de aynı menü bağlantısını güncel tutmak, masa üstü tasarımın ömrünü uzatır. QR kod sabit kalır; menü içeriği panelden değişir. Böylece asıl odak, kodu müşterinin rahat göreceği ve kolay tarayacağı doğru yüzeye yerleştirmek olur.
+
+## Baskıya göndermeden önce son kontrol
+
+Masa üstü QR tasarımını bastırmadan önce küçük bir prova yapmak gerekir. Ekranda güzel görünen tasarım, baskıda düşük kontrastlı çıkabilir veya QR kod beklenenden küçük kalabilir. Bu yüzden tek örnek baskı alıp gerçek masada denemek en güvenli yoldur.
+
+İlk olarak kodu farklı telefonlarla okutun. Eski Android cihaz, yeni iPhone ve düşük ışıklı ortamda deneme yapmak iyi fikir verir. Kod yalnızca sizin telefonunuzda hızlı açılıyorsa tasarım hâlâ risk taşıyabilir.
+
+İkinci olarak masa mesafesini ölçün. Müşteri kodu oturduğu yerden tarayabiliyor mu, yoksa kartı eline almak zorunda mı? Kartı eline almak sorun değildir; fakat yağlı veya ıslak masalarda bu hareket materyali daha hızlı yıpratır.
+
+Üçüncü olarak kısa metni okuyun. “Menüyü görmek için okutun” gibi bir cümle yeterliyken uzun açıklama tasarımı kalabalıklaştırır. Uygulama gerekmediğini belirtmek özellikle ilk kez kullanan müşteriler için yararlıdır.
+
+Dördüncü olarak eski tasarımları toplama planı yapın. Yeni QR veya yeni marka görseli basıldıysa eski kartların masada kalmaması gerekir. En iyi tasarım bile eski linke gidiyorsa müşteri deneyimi bozulur.
+
+Masa üstü tasarımını ayda bir fiziksel olarak kontrol etmek de gerekir. Kod çizilmiş mi, kart yağlanmış mı, güneşten solmuş mu, masa numarası doğru mu? Dijital menü güncel olsa bile okunmayan veya yıpranmış bir kart müşteriye bakımsızlık hissi verir. Küçük baskı yenilemeleri, sistemin güvenilir görünmesini sağlar.
+
+Kartın konumu da tasarımın parçasıdır. Peçetelik arkasında kalan, soslukla kapanan veya güneş yansıması alan QR kod iyi tasarlansa bile az okutulur. Masaya oturan müşterinin doğal görüş alanında duran, garsonun eliyle kolay gösterebildiği ve temizlik sırasında zarar görmeyen konum daha iyi sonuç verir.

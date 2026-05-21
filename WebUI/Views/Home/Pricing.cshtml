@@ -1,0 +1,163 @@
+@{
+    ViewData["Title"] = "QR Menü Fiyatları";
+    ViewData["Description"] = "TümMenü QR menü fiyatları ve ücretsiz başlangıç seçeneklerini inceleyin. Restoran, kafe ve çok şubeli işletmeler için dijital menü planını netleştirin.";
+}
+
+@section Head {
+    <style>
+        .pricing-page {
+            background: #fbfaf7;
+        }
+
+        .pricing-hero,
+        .pricing-section {
+            padding: 72px 0;
+        }
+
+        .pricing-hero__inner {
+            max-width: 900px;
+        }
+
+        .pricing-eyebrow {
+            color: var(--color-primary);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .pricing-title {
+            color: var(--color-secondary-dark);
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+
+        .pricing-lead {
+            color: var(--color-text-muted);
+            font-size: 1.15rem;
+            line-height: 1.75;
+            max-width: 780px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .pricing-card {
+            border: 1px solid rgba(73, 85, 56, 0.12);
+            border-radius: 8px;
+            padding: 24px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
+        }
+
+        .pricing-card h2,
+        .pricing-card h3 {
+            color: var(--color-secondary-dark);
+            margin-bottom: 12px;
+        }
+
+        .pricing-card p,
+        .pricing-card li {
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .pricing-card ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .pricing-band {
+            border-top: 1px solid rgba(73, 85, 56, 0.12);
+            border-bottom: 1px solid rgba(73, 85, 56, 0.12);
+            background: #fff;
+        }
+
+        .pricing-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+    </style>
+}
+
+<div class="pricing-page">
+    <section class="pricing-hero" aria-labelledby="pricing-heading">
+        <div class="container pricing-hero__inner">
+            <p class="pricing-eyebrow">Restoranlar için QR menü fiyatları</p>
+            <h1 id="pricing-heading" class="pricing-title">QR menüye ücretsiz başlayın, ihtiyacınız büyüdükçe planınızı netleştirin.</h1>
+            <p class="pricing-lead">
+                TümMenü, restoran, kafe, pastane ve paket servis işletmelerinin QR menü oluşturmasını kolaylaştırır.
+                İlk hedefiniz menünüzü yayına almaksa ücretsiz başlangıçla ilerleyebilir; çoklu şube, gelişmiş menü düzeni ve destek ihtiyacınız olduğunda bizimle planı birlikte netleştirebilirsiniz.
+            </p>
+            <div class="pricing-actions">
+                <a class="btn btn--primary" href="/kayit">Ücretsiz QR menü oluştur</a>
+                <a class="btn btn--ghost" href="/iletisim">Plan sorusu sor</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section pricing-band" aria-labelledby="pricing-options-heading">
+        <div class="container">
+            <div class="section-heading">
+                <h2 id="pricing-options-heading" class="section__title">Hangi QR menü planı bana uygun?</h2>
+                <p class="section__subtitle">Sabit bir paket isminden önce işletmenin günlük menü ihtiyacını anlamak daha doğru olur.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <article class="pricing-card">
+                    <h3>Ücretsiz başlangıç</h3>
+                    <p>Küçük işletmelerin dijital menüye hızlı geçmesi için uygundur. İşletme bilgilerinizi girip kategori ve ürünlerinizi ekleyerek QR menü sayfanızı yayına alabilirsiniz.</p>
+                    <ul>
+                        <li>QR menü bağlantısı</li>
+                        <li>Kategori ve ürün yönetimi</li>
+                        <li>Mobil uyumlu menü sayfası</li>
+                    </ul>
+                </article>
+                <article class="pricing-card">
+                    <h3>Büyüyen işletmeler</h3>
+                    <p>Fiyatları sık değişen, fotoğraflı ürün kullanan veya menü içeriğini düzenli güncelleyen işletmeler için daha kapsamlı kullanım planlanabilir.</p>
+                    <ul>
+                        <li>Ürün açıklaması ve görsel düzeni</li>
+                        <li>Menü yayın kontrolleri</li>
+                        <li>Kurulum ve içerik desteği</li>
+                    </ul>
+                </article>
+                <article class="pricing-card">
+                    <h3>Çok şubeli işletmeler</h3>
+                    <p>Her şubenin fiyatı, ürünü veya kampanyası farklıysa dijital menü sistemi şube bazlı kontrol gerektirir. Bu kullanım için planı iletişim üzerinden netleştiriyoruz.</p>
+                    <ul>
+                        <li>Şube bazlı menü yönetimi</li>
+                        <li>Farklı fiyat ve kampanya düzeni</li>
+                        <li>Operasyonel destek görüşmesi</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section" aria-labelledby="pricing-factors-heading">
+        <div class="container">
+            <div class="pricing-grid">
+                <article class="pricing-card">
+                    <h2 id="pricing-factors-heading">QR menü fiyatını ne etkiler?</h2>
+                    <p>İhtiyacın kapsamını; şube sayısı, ürün adedi, görsel kullanımı, menü güncelleme sıklığı, kurulum desteği ve raporlama beklentisi belirler.</p>
+                    <p>Tek şubeli bir kafe ile çok şubeli bir restoran zincirinin dijital menü ihtiyacı aynı değildir. Bu yüzden fiyat konuşmadan önce kullanım şeklini netleştirmek gerekir.</p>
+                </article>
+                <article class="pricing-card">
+                    <h2>QR menü maliyeti kağıt menüyle nasıl kıyaslanır?</h2>
+                    <p>Kağıt menüde tasarım, baskı, güncelleme ve yıpranma maliyeti ayrı ayrı düşünülür. QR menüde aynı karekod masada kalır; ürün, fiyat ve açıklamalar panelden güncellenir.</p>
+                    <p><a href="/menu-baski-maliyeti-hesaplayici">Menü baskı maliyeti hesaplayıcı</a> ile kendi tahmini maliyetinizi kontrol edebilirsiniz.</p>
+                </article>
+                <article class="pricing-card">
+                    <h2>Sonraki adım</h2>
+                    <p>Önce ücretsiz QR menünüzü oluşturun. Şube, ürün adedi veya destek ihtiyacınız arttığında bize yazın; planı işletmenizin gerçek kullanımına göre netleştirelim.</p>
+                    <p><a href="/qr-kod">Ücretsiz QR menü oluşturma</a> ve <a href="/dijital-menu-sistemi">dijital menü sistemi</a> sayfaları karar vermenize yardımcı olur.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>

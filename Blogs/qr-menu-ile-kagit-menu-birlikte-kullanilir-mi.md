@@ -83,3 +83,37 @@ TümMenü gibi bir panelde ürün ve fiyatı tek yerden güncellemek, masadaki Q
 - [ ] Telefonu olmayan veya tercih etmeyen misafir için kasada yedek özet var
 
 QR ile kağıdı birlikte kullanmak, işletmeyi yavaşlatmak zorunda değildir; rolleri ayırdığınız sürece masada düzen, mutfakta ise daha az “yanlış sipariş” tartışması kalır. Doğru kurguda ikisi tamamlayıcı olur; yanlış kurguda ise ikisi de birbirinin güvenini zedeler.
+
+## Birlikte kullanımda rol paylaşımı nasıl kurulmalı?
+
+QR menü ile kağıt menü aynı anda kullanılacaksa ikisinin görevi farklı olmalıdır. İki yüzey de aynı bilgiyi farklı fiyatla veya farklı ürünle gösterirse müşteri hangisine güveneceğini bilemez. Bu yüzden önce “hangisi ana kaynak?” sorusu cevaplanmalıdır.
+
+En pratik model, güncel fiyat ve ürün bilgisini QR menüde tutmaktır. Kağıt menü ise kısa vitrin, popüler ürün özeti veya marka anlatımı için kullanılabilir. Böylece fiyat değiştiğinde tüm basılı materyali değiştirmek zorunda kalmazsınız. Kağıt yüzey daha yavaş değişen bilgiyi taşır.
+
+İkinci model, belirli müşteri grupları için kağıt yedek bulundurmaktır. Telefon kullanmak istemeyen, şarjı olmayan veya QR kod okutmakta zorlanan misafir için kasada veya servis alanında sade bir özet menü tutulabilir. Bu menünün üstünde “güncel fiyatlar QR menüdedir” gibi kısa bir not yer almalıdır.
+
+Üçüncü model kampanya ayrımıdır. Günlük kampanyalar QR menüde, sabit ürün grupları kağıtta gösterilebilir. Fakat bu modelde kampanya bitişi çok iyi takip edilmelidir. Masada eski kampanya kartı kalırsa müşteri haklı olarak o fiyatı bekler.
+
+Dördüncü model lokasyon ayrımıdır. Vitrinde veya dış alanda kağıt özet, masada QR menü kullanılabilir. Dışarıdan bakan müşteri hızlıca fiyat aralığını görür; masaya oturduğunda detaylı ürün ve açıklamalara QR üzerinden ulaşır. Bu yöntem özellikle yoğun cadde üstü kafelerde işe yarar.
+
+Birlikte kullanımda personel dili çok önemlidir. Garsonun cümlesi kısa olmalıdır: “Kağıtta öne çıkanlar var, güncel tüm menü QR’da.” Bu cümle her masada aynı söylenirse müşterinin kafası karışmaz. Farklı personel farklı açıklama yaparsa sistem dağınık görünür.
+
+Kağıt menüde fiyat yazacaksanız değişim takvimi belirleyin. Fiyatı sık değişen ürünleri kağıttan çıkarın veya aralık vermeden QR’a yönlendirin. Sabit fiyatlı menülerde bile ayda bir kontrol yapın. Eski kağıt menü, iyi çalışan QR sisteminin güvenini zedeleyebilir.
+
+QR ve kağıt birlikte kullanılabilir; yeter ki her biri kendi görevini bilsin. QR güncel bilgi merkezi, kağıt ise destekleyici yüzey olursa işletme hem dijital kolaylığı hem de alışkanlık konforunu koruyabilir.
+
+## Hangi bilgiyi kağıtta bırakmak daha güvenli?
+
+Kağıtta kalacak bilgiyi seçerken değişim hızına bakın. Sık değişen fiyat, stok, günlük kampanya ve sezon ürünü kağıtta risklidir. Daha yavaş değişen marka hikayesi, imza ürün kategorileri, kısa yönlendirme metni ve iletişim bilgisi ise kağıtta daha güvenli durur. Bu ayrım yapılmadığında her fiyat güncellemesi baskı maliyetine veya masa üstünde eski bilgi kalmasına dönüşür.
+
+Kağıt yüzeyde çok ürün göstermek yerine menünün kapısını açan kısa bir vitrin kullanabilirsiniz. Örneğin “kahvaltı”, “burger”, “tatlı”, “çocuk menüsü” gibi ana gruplar kağıtta yer alır; detay, porsiyon ve güncel fiyat QR menüye bırakılır. Böylece müşteri ilk bakışta işletmenin ne sattığını anlar, karar aşamasında güncel ekrana geçer.
+
+Kağıtta QR kodun yanında uygulama gerekmediğini söylemek önemlidir. “Kameranızla okutun, uygulama gerekmez” cümlesi teknik çekinceyi azaltır. Daha uzun açıklama çoğu zaman tasarımı kalabalıklaştırır. Kodun altına kısa URL eklemek de bazı müşteriler için yedek yol sağlar.
+
+Birlikte kullanımda baskı periyodu da belirlenmelidir. Kağıt materyal yılda bir yenilenecekse fiyat yazmamak daha doğrudur. Ayda bir yenilenebilen küçük masa kartlarında ise sınırlı kampanya bilgisi taşınabilir. Karar, işletmenin baskı disiplinine göre verilmelidir.
+
+Kağıt menünün görevi servis hızını desteklemekse, personelin de aynı rol paylaşımını bilmesi gerekir. Garson kağıdı ana menü gibi anlatıp QR’ı sadece yedek gösterirse müşteri güncel fiyatı kaçırabilir. Tam tersi, kağıdı tamamen önemsiz gösterirse basılı materyal boşa gider. En doğru cümle “özet burada, güncel tüm detay QR’da” gibi kısa ve dengeli bir anlatımdır.
+
+Hijyen ve dayanıklılık da birlikte kullanım kararında etkilidir. Sürekli elde dolaşan kağıt menü hızlı yıpranır ve temizliği zorlaşır. Masa üstünde sabit duran QR kart ise daha kolay silinir, fakat kodun okunur kalması gerekir. Bu yüzden kağıt menüyü az temaslı destek yüzeyi, QR’ı ise ana karar ekranı olarak konumlamak çoğu restoran için daha sürdürülebilirdir.
+
+Son olarak ölçüm yapın. QR okutma oranı düşükse sorun müşteride değil, yerleşim veya anlatımda olabilir. Kağıt menü çok soruluyorsa müşterinin ilk bakışta güvene ihtiyacı vardır. Bu sinyalleri birlikte okumak, iki kanalın gereksiz rekabet etmesini engeller.

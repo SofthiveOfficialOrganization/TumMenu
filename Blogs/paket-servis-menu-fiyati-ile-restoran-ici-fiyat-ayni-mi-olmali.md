@@ -89,3 +89,35 @@ Bu iş, menüyü tek yerden güncel tuttuğunuzda — örneğin TümMenü gibi b
 - [ ] Dijital menü ve basılı materyal aynı tarihte güncellendi mi?
 
 Paket servis fiyatı ile restoran içi fiyatın aynı olması “zorunluluk” değil; doğru iletişim ve tutarlı menü yönetimiyle farklı stratejiler de sürdürülebilir. Kendi işletmenizde marj, kanal maliyeti ve müşteri profilini yan yana koyun; en az sürtünmeyi hangi model getiriyorsa ona yaklaşın. Kararı bir kez verip unutmak yerine üç ayda bir kanal bazlı ciroyu ve iade şikâyetlerini gözden geçirmek, yanlış fiyat politikasından erken dönmeyi kolaylaştırır.
+
+## Kanal bazlı fiyat farkını müşteriye nasıl anlatmalı?
+
+Paket servis ve restoran içi fiyat farklıysa asıl mesele farkın varlığı değil, farkın nasıl anlatıldığıdır. Müşteri fiyatı gördüğünde “beni kandırıyorlar mı?” diye düşünmemeli. Bunun için menüde, kasada ve telefonda aynı dil kullanılmalıdır.
+
+İlk adım maliyet kalemlerini ayırmaktır. Paket serviste ambalaj, kurye, platform komisyonu, iade riski ve hazırlık süresi gibi ek maliyetler olabilir. Restoran içinde ise servis, masa kullanımı ve personel zamanı devreye girer. Hangi kanalın hangi maliyeti taşıdığı netleşmeden fiyat farkı savunulamaz.
+
+İkinci adım ürün bazında karar vermektir. Tüm ürünlerde aynı farkı uygulamak kolaydır, fakat her zaman doğru değildir. Çorba, içecek veya tatlı paket serviste daha düşük maliyetle gidebilir; büyük ana yemek veya hassas sunumlu tabak daha fazla ambalaj isteyebilir. Ürünlerin taşınabilirliği fiyat politikasına dahil edilmelidir.
+
+Üçüncü adım menü notudur. Fiyat farkı varsa uzun açıklama yazmaya gerek yoktur. “Paket servis fiyatları ambalaj ve kanal maliyetine göre farklılık gösterebilir” gibi kısa bir not yeterli olabilir. Daha önemlisi, bu notun her yerde aynı olmasıdır.
+
+Dördüncü adım telefon siparişidir. Telefonda sipariş alan kişi paket fiyatını net söylemelidir. “Menüde öyle ama paket farklı” gibi cümleler güveni zedeler. Bunun yerine “Paket servis fiyatımız şu, ambalaj dahil” gibi sade bir ifade kullanılmalıdır.
+
+Beşinci adım platform ve QR menü ayrımıdır. Yemek platformunda komisyon nedeniyle fiyat farklıysa, restoranın kendi QR menüsü veya web menüsü daha farklı fiyat gösterebilir. Bu ayrım müşteriye karmaşık geliyorsa kendi kanalınızda paket sipariş bilgisini ayrıca anlatmak gerekir.
+
+Altıncı adım kampanya günüdür. Paket servis kampanyası salonda geçerli değilse ya da salondaki öğle menüsü paket servise çıkmıyorsa bunu ürün kartında belirtin. Aksi halde müşteri yalnızca düşük fiyatı hatırlar, koşulu görmez.
+
+Kanal bazlı fiyat farkını üç ayda bir gözden geçirmek iyi bir alışkanlıktır. Komisyon oranı, ambalaj maliyeti, yakıt gideri ve müşteri şikâyetleri değiştikçe fiyat politikası da değişebilir. Dijital menü sistemi bu değişiklikleri hızlı yayınlamaya yardım eder; kararın temeli yine gerçek maliyet ve açık iletişim olmalıdır.
+
+## Kendi kanalınızı güçlendirmek için menü bağlantısını kullanın
+
+Paket servis fiyatı konuşulurken restoranın kendi dijital menü bağlantısı da düşünülmelidir. Müşteri yalnızca platformdaki fiyatı görüyorsa işletmenin kendi kanalındaki avantajı fark etmeyebilir. QR menü veya web menü bağlantısı burada sade bir bilgilendirme yüzeyi olabilir.
+
+Kendi menünüzde ürünleri daha açıklayıcı gösterebilir, paket uygunluğu notu ekleyebilir ve telefonla sipariş için doğru bilgiyi verebilirsiniz. Bu alanı “platforma karşı indirim” gibi agresif kullanmak yerine, güncel ve net bilgi merkezi gibi düşünmek daha sağlıklıdır.
+
+Paket menüsünde teslimat bölgesi, hazırlık süresi ve iletişim bilgisi de görünmelidir. Özellikle küçük işletmelerde müşteri “telefonla sipariş verirsem ne kadar sürede gelir?” sorusunu merak eder. Bu bilgi yoksa fiyat farkı tek başına karar verdirmez.
+
+Restoran içi ve paket fiyatını ayırıyorsanız kendi menünüzde bu ayrımı saklamayın. “Salon”, “paket” veya “gel-al” gibi kısa etiketler kullanılabilir. Müşteri fiyatı görmeden siparişe başlarsa sonradan itiraz ihtimali artar.
+
+Dijital menü bağlantısını Instagram profilinde, Google İşletme Profili’nde ve paket poşetinde kullanmak fiyat bilgisini tek kaynağa toplar. Bu sayede eski görsel, yanlış fiyat ve eksik açıklama riski azalır.
+
+Fiyat ayrımı yaparken personelin kullanacağı cümle de hazır olmalıdır. “Paket fiyatta ambalaj ve teslimat operasyonu farklı olduğu için ayrı fiyat uygulanıyor” gibi sakin bir açıklama çoğu itirazı yumuşatır. Belirsiz veya savunmacı cevaplar ise fiyat farkını olduğundan daha sorunlu gösterir.

@@ -10,6 +10,7 @@ using WebUI.Extensions;
 using WebUI.ExternalServices;
 using WebUI.Filters;
 using WebUI.Middleware;
+using WebUI.Seo;
 using WebUI.Security;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -137,32 +138,30 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseForwardedHeaders();
 
-// Canonical host: http(s)://*.tummenu.com and http://tummenu.com -> https://tummenu.com
-// app.Use(async (context, next) =>
-// {
-// 	if (!app.Environment.IsDevelopment())
-// 	{
-// 		var request = context.Request;
-// 		var host = request.Host.Host.ToLowerInvariant();
-// 		var isApexHost = string.Equals(host, "tummenu.com", StringComparison.Ordinal);
-// 		var isSubdomainHost = host.EndsWith(".tummenu.com", StringComparison.Ordinal);
+app.Use(async (context, next) =>
+{
+	if (!app.Environment.IsDevelopment())
+	{
+		var request = context.Request;
+		var canonicalBase = PublicSeo.GetCanonicalBaseUrl(context);
+		var canonicalUri = new Uri(canonicalBase);
+		var host = request.Host.Host.ToLowerInvariant();
+		var canonicalHost = canonicalUri.Host.ToLowerInvariant();
+		var isCanonicalHost = string.Equals(host, canonicalHost, StringComparison.Ordinal);
+		var isManagedTumMenuHost = isCanonicalHost ||
+			host.EndsWith("." + canonicalHost, StringComparison.Ordinal);
+		var needsCanonicalScheme = !string.Equals(request.Scheme, canonicalUri.Scheme, StringComparison.OrdinalIgnoreCase);
 
-// 		if (isApexHost || isSubdomainHost)
-// 		{
-// 			var needsHttps = !request.IsHttps;
-// 			var needsCanonicalHost = !isApexHost;
+		if (isManagedTumMenuHost && (needsCanonicalScheme || !isCanonicalHost))
+		{
+			var canonicalUrl = $"{canonicalBase}{request.PathBase}{request.Path}{request.QueryString}";
+			context.Response.Redirect(canonicalUrl, permanent: true);
+			return;
+		}
+	}
 
-// 			if (needsHttps || needsCanonicalHost)
-// 			{
-// 				var canonicalUrl = $"https://tummenu.com{request.PathBase}{request.Path}{request.QueryString}";
-// 				context.Response.Redirect(canonicalUrl, permanent: true);
-// 				return;
-// 			}
-// 		}
-// 	}
-
-// 	await next();
-// });
+	await next();
+});
 
 app.Use(async (context, next) =>
 {
@@ -254,7 +253,8 @@ app.Use(async (context, next) =>
         "/user",
         "/owner",
         "/error",
-        "/status-code"
+        "/status-code",
+        "/blog/etiket"
     };
     var noIndexExactPaths = new[]
     {

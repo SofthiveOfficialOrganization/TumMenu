@@ -5,6 +5,7 @@
     var tag = ViewBag.Tag as string;
     ViewData["Title"] = $"{tag} — Blog";
     ViewData["Description"] = $"{tag} etiketi altındaki blog yazıları.";
+    ViewData["Robots"] = "noindex,follow";
 }
 
 <section class="blog-hero blog-hero--compact" aria-labelledby="blog-tag-hero-heading">

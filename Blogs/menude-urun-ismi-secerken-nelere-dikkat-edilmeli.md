@@ -91,3 +91,41 @@ Aşağıdaki listeyi yazıcı çıktısı veya telefon önizlemesiyle birlikte k
 - [ ] Mutfak ve kasa, isimleri aynı şekilde kullanıyor
 
 Ürün adı küçük bir alan gibi görünür; oysa doğru seçildiğinde soru sayısını düşürür, hazırlığı hızlandırır ve menüyü daha güvenilir gösterir. Bugün birkaç ismi sadeleştirmek, yarın daha az geri bildirim demektir.
+
+## Ürün adlarını ekip ve müşteri diliyle test edin
+
+Ürün ismi yalnızca menüde güzel durmak için seçilmez. Kasa, mutfak, servis ve müşteri aynı ürünü aynı isimle anlayabiliyorsa doğru çalışır. Bu yüzden isimleri yayına almadan önce küçük bir ekip testi yapmak gerekir.
+
+İlk test okuma testidir. Ürün adını telefonda iki satırda okuyun. İsim çok uzunsa müşteri kartı tararken ana bilgiyi kaçırır. “Özel Soslu Tavuklu Sandviç Menü” yerine “Tavuklu Sandviç Menü” yazıp özel sosu açıklama satırına almak daha temiz olabilir.
+
+İkinci test benzerlik testidir. Aynı kategoride “Spesiyal Burger”, “Özel Burger”, “Şef Burger” gibi isimler yan yana duruyorsa fark anlaşılmaz. Her ismin ana malzeme, sos, porsiyon veya pişirme farkını taşıması daha iyidir. “Cheddar Burger”, “Füme Etli Burger”, “Acılı Tavuk Burger” daha açıklayıcıdır.
+
+Üçüncü test mutfak testidir. Mutfak ekibi ürünü hangi isimle biliyor? Menüde başka, mutfakta başka, kasada başka isim kullanılırsa sipariş karışır. Özellikle paket serviste bu fark daha görünür olur. Ürün adı ile mutfak fişi aynı mantıkta olmalıdır.
+
+Dördüncü test müşteri sorusudur. Personel son hafta hangi ürün adları için açıklama yaptı? “Bu ne?”, “İçinde ne var?”, “Porsiyon mu tabak mı?”, “Acı mı?” gibi sorular sık geliyorsa isim veya açıklama eksiktir. Ürün adını değiştirmek bazen açıklama eklemekten daha etkili olur.
+
+Beşinci test yerel kullanımdır. Bazı kelimeler şehirden şehre farklı anlaşılır. İzmir’de kumru, Gaziantep’te beyran, Bursa’da iskender, Hatay’da dürüm gibi ürünler kendi yerel beklentisini taşır. Bu ürünlerde fazla yaratıcı isim kullanmak yerine netlik daha güvenlidir.
+
+Altıncı test fiyatla birlikte okumadır. “Mini”, “duble”, “aile boyu”, “tek kişilik” gibi ifadeler fiyat algısını etkiler. Ürün adı porsiyonla uyumlu değilse müşteri fiyatı pahalı veya ucuz sanabilir. Boy veya kişi sayısı gerekiyorsa isimde ya da hemen alt satırda görünmelidir.
+
+Dijital menüde ürün adlarını değiştirmek basılı menüye göre daha kolaydır, ama bu kolaylık disiplinsiz değişiklik anlamına gelmemelidir. İsim değiştiğinde kasa, mutfak, sosyal medya ve paket servis tarafı da aynı gün güncellenmelidir.
+
+TümMenü gibi bir panelde ürün adı, açıklama, alerjen, görsel ve fiyat aynı kartta yönetildiğinde bu kontrol daha düzenli yapılabilir. Yine de en doğru isim, ekibin rahat söylediği ve müşterinin tek bakışta anladığı isimdir.
+
+## Ürün adı değişikliğini yayına alma sırası
+
+Ürün adı değiştirirken yalnızca menü kartını düzeltmek yeterli değildir. Aynı isim kasa, mutfak, paket servis, sosyal medya ve garson dilinde de güncellenmelidir. Aksi halde müşteri yeni adı görür, personel eski adı kullanır ve sipariş akışı karışır.
+
+İlk adım eski ve yeni adı yan yana yazmaktır. “Acılı Tavuk Burger” eski adıyla “Mexican Burger” olarak biliniyorsa ekip bir süre iki ismi de tanımalıdır. Kasa fişinde veya mutfak notunda geçiş açıklaması kısa tutulabilir.
+
+İkinci adım açıklama satırını güncellemektir. Ürün adı sadeleştiyse açıklama daha fazla bilgi taşımalıdır. Tam tersi, ürün adı zaten malzemeyi anlatıyorsa açıklama kısa kalabilir. İsim ve açıklama birbirini tekrar etmemelidir.
+
+Üçüncü adım fotoğraf alt bilgisidir. Fotoğraf eski ürüne ait gibi görünüyorsa müşteri isim değişikliğini yanlış anlayabilir. Görsel, ürün adı ve fiyat aynı gün kontrol edilmelidir.
+
+Dördüncü adım personel duyurusudur. Vardiya başında “şu ürün artık şu adla geçiyor” demek yeterli olabilir. Çok ürünlü işletmelerde bu duyuru yazılı yapılmalıdır. Dijital menüde değişiklik kolaydır; ekip hafızasını güncellemek de aynı derecede önemlidir.
+
+İsim değişikliğini ölçmek için birkaç hafta müşteri sorularını takip edin. Yeni ad daha az açıklama istiyorsa doğru yoldasınız. Eğer müşteri hâlâ “bu ne?” diye soruyorsa sorun isimde, açıklamada veya fotoğrafta olabilir. Ürün adı tek başına satış yapmaz; menü kartındaki diğer bilgilerle birlikte çalışır.
+
+Ürün ismi arama davranışını da etkiler. Dijital menüde müşteri “limonata”, “tavuk”, “vegan” veya “tatlı” gibi kelimelerle arama yapıyorsa ürün adında ve açıklamasında bu kelimelerin doğal şekilde geçmesi gerekir. Çok yaratıcı ama aranmayan isimler, ürünü panel içinde görünmez hale getirebilir.
+
+Bu yüzden isim yaratıcı olsa bile temel malzeme bilgisini tamamen saklamamalıdır.

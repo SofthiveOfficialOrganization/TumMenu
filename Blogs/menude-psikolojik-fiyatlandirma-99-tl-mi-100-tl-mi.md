@@ -75,3 +75,37 @@ Komisyonlu kanallarda görünen son tutar ile masa fiyatını kıyaslayan misafi
 - [ ] Hedef müşteri profili “hızlı tek ürün mü, paylaşımlı hesap mı?” sorusuna göre fiyat stilini gözden geçirdim.
 
 Psikolojik fiyatlandırma, menünüzün tamamını belirleyen ana faktör değildir; ürün kalitesi, porsiyon, açıklama ve güncellik yanınızda yürümelidir. Fiyatı sık güncellediğiniz bir düzende bu işi tek merkezden yönetmek, dağınık Excel ve kağıt notlarından daha az hata çıkarır; bu süreç TümMenü gibi bir dijital menü panelinde kategori ve şube bazında daha kolay takip edilebilir.
+
+## 99 ve yuvarlak fiyatı aynı menüde nasıl birlikte kullanabilirsiniz?
+
+Bir menüde tüm fiyatların aynı mantıkla yazılması şart değildir. Bazı ürünlerde 99 TL gibi eşik fiyat daha iyi çalışır, bazı ürünlerde yuvarlak fiyat daha güvenli görünür. Önemli olan karışık değil, bilinçli bir düzen kurmaktır.
+
+İlk ayrım ürün tipidir. Hızlı karar verilen atıştırmalık, içecek, tost veya küçük tatlı gibi ürünlerde 99 TL etkisi daha belirgin olabilir. Paylaşımlı tabak, ana yemek, kahvaltı serpmesi veya özel et ürünü gibi kalemlerde yuvarlak fiyat daha sade durabilir. Müşteri yüksek fiyatlı üründe fazla oyun hissederse güven azalır.
+
+İkinci ayrım işletme konumudur. Üniversite çevresindeki bir kafe ile fine dining restoran aynı fiyat dilini kullanmaz. İzmir’de genç müşteri ağırlıklı bir kahveci 79 TL, 99 TL gibi fiyatları doğal taşıyabilir. Ankara’da kurumsal öğle yemeği alan bir restoranda 180 TL gibi net fiyat daha rahat okunabilir.
+
+Üçüncü ayrım ödeme anıdır. Masada hesap paylaşımı sık oluyorsa yuvarlak fiyatlar işleri kolaylaştırır. Paket serviste tek ürün seçimi ağır basıyorsa eşik fiyat tercih edilebilir. Kahvaltı tabakları, set menüler ve çok kişilik ürünlerde küsuratlı fiyat fazla dikkat çeker.
+
+Dördüncü ayrım kategori bütünlüğüdür. Aynı kategoride bir ürün 99 TL, biri 100 TL, biri 103 TL, biri 105 TL ise fiyat dili dağınık görünür. Kategorinin genel mantığı belirlenmeli; istisna varsa sebebi olmalıdır. Örneğin “kampanyalı ürünler 99 ile biter, normal ürünler yuvarlak gider” gibi basit kural ekibi de rahatlatır.
+
+Beşinci ayrım güncelleme sıklığıdır. Fiyatlar sık değişiyorsa 99 TL mantığını sürdürmek bazen zorlaşır. Her maliyet artışında yeni eşik seçmek yerine ürün grupları için aralık belirlemek daha pratik olabilir. Kahveler 80-120 TL, tatlılar 140-190 TL, ana yemekler 220-320 TL gibi düşünmek kontrolü kolaylaştırır.
+
+Altıncı ayrım menü tasarımıdır. Dijital menüde fiyat sağa hizalı, okunaklı ve ürün açıklamasından ayrılmış olmalıdır. Küsurat varsa daha fazla yer kaplar; mobil ekranda satır kırılmasına yol açmamalıdır. Fiyat tasarımı zayıfsa 99 veya 100 tercihi tek başına anlamını kaybeder.
+
+En sağlıklı yöntem küçük denemedir. İki hafta boyunca belirli ürün grubunda fiyat dilini değiştirin, sonra soru, sipariş ve iade yorumlarına bakın. Psikolojik fiyatlandırma kesin formül değil, müşteri profilinize göre ayarlanacak bir menü dilidir.
+
+## Fiyat dilini menü tasarımıyla birlikte düşünün
+
+99 veya 100 TL tercihi yalnızca rakamdan ibaret değildir. Rakamın puntoları, hizası, ürün adıyla ilişkisi ve mobil ekranda kapladığı alan da fiyat algısını etkiler. Küçük ekranda karmaşık görünen fiyat, doğru seçilmiş olsa bile müşteriyi yorabilir.
+
+Fiyatları aynı hizada göstermek ilk adımdır. Ürün adları solda, fiyatlar sağda veya ürün kartının sonunda düzenli durmalıdır. Bazı fiyatların açıklama içinde, bazılarının ayrı satırda olması menüyü amatör gösterir.
+
+İkinci adım kuruş kullanımını sınırlamaktır. “99,99 TL” gibi fiyatlar bazı sektörlerde çalışabilir, fakat restoran menüsünde çoğu zaman kalabalık görünür. “99 TL” daha sade okunur. Yuvarlak fiyat tercih ediyorsanız tüm kategoride aynı sadeliği koruyun.
+
+Üçüncü adım fiyat ile porsiyon bilgisini ayırmaktır. “Duble 180 TL”, “tek porsiyon 120 TL” gibi seçenekler varsa müşteri hangi fiyatın hangi boya ait olduğunu hızlı anlamalıdır. Karışık fiyat seçenekleri, rakamın psikolojik etkisini zayıflatır.
+
+Dördüncü adım değişiklik sonrası ekip kontrolüdür. Fiyat dili değiştiğinde kasa ve garson aynı rakamı görmeli. Dijital menü güncel olup kasa eski kalırsa 99 veya 100 seçiminin hiçbir önemi kalmaz; güven problemi daha büyük olur.
+
+Psikolojik fiyat kararını kampanya diliyle de birlikte düşünün. Normal menüde sade yuvarlak fiyat, kısa süreli kampanyada ise daha dikkat çekici fiyat kullanılabilir. Fakat aynı kategoride hem “99 TL”, hem “100 TL”, hem de “99,90 TL” karışık duruyorsa müşteri bilinçli bir strateji değil, düzensizlik görür. Tutarlılık çoğu zaman küçük rakam oyunlarından daha güçlüdür.
+
+Fiyat biçimini değiştirirken eski ekran görüntülerini ve sosyal medya görsellerini de kontrol edin. Menüde 100 TL görünen ürün Instagram’da 99 TL kalırsa psikolojik fiyat değil, güven sorunu oluşur. Bu yüzden fiyat dili kararı yayın yüzeylerinin tamamında aynı gün uygulanmalıdır.

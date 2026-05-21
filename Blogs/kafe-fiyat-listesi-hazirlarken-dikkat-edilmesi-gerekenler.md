@@ -77,3 +77,37 @@ Fiyat değişince sadece ekranı değil, kasa tarifini ve varsa paket servis met
 - [ ] Stokta olmayan ürün listeden kaldırıldı veya işaretlendi mi?
 
 Liste sade bir sayfa gibi görünse de işletmenin finans dili gibidir. Düzenli güncellenen, ekip tarafından okunan bir fiyat listesi, hem kasa hızını hem de misafir güvenini korur. Bu işi panel üzerinden ürün ve fiyatları tek yerden yönetmek, TümMenü gibi bir dijital menü altyapısında güncellemeyi ve şube ayrımını takip etmeyi kolaylaştırabilir.
+
+## Fiyat listesini müşterinin okuyacağı şekilde düzenleme
+
+Kafe fiyat listesi yalnızca kasa için hazırlanmaz; müşteri de aynı listeyle karar verir. Bu yüzden fiyatı doğru yazmak kadar, fiyatın yanında neyin satıldığını anlaşılır göstermek de önemlidir. Bir latte ile filtre kahvenin farkı, sadece isimden anlaşılmıyorsa müşteri personeli çağırır.
+
+İlk kontrol kategori sırasıdır. Kahve, soğuk içecek, tatlı, kahvaltı ve atıştırmalık gibi gruplar işletmenin gerçek satış akışına göre dizilmelidir. Sabah yoğun çalışan bir kafede kahvaltı ve sıcak kahveler yukarıda olabilir. Akşam tatlı ve soğuk kahve satan bir noktada farklı sıra daha iyi çalışır.
+
+İkinci kontrol ölçü bilgisidir. “Küçük”, “orta”, “büyük” gibi boylar varsa mililitre veya bardak karşılığı yazılabilir. Tatlıda dilim, porsiyon veya adet bilgisi net olmalıdır. Müşteri 120 TL’lik cheesecake’in küçük bir dilim mi, büyük porsiyon mu olduğunu tahmin etmek zorunda kalmamalıdır.
+
+Üçüncü kontrol ek ücretlerdir. Laktozsuz süt, bitkisel süt, ekstra shot, şurup, dondurma veya krema gibi ekler ayrı satırda toplanabilir. Bu alan saklanırsa kasa anında tartışma çıkar. Özellikle Kadıköy’de üçüncü dalga kahve satan bir işletmede ek seçeneklerin net yazılması günlük akışı hızlandırır.
+
+Dördüncü kontrol görsel dengedir. Tüm ürünlere fotoğraf eklemek şart değildir; fakat imza tatlı, özel kahve veya kahvaltı tabağı gibi karar etkisi yüksek ürünlerde gerçek fotoğraf faydalı olur. Fotoğraf kullanılacaksa fiyatla ürün aynı kartta görünmeli, müşteri görselin hangi ürüne ait olduğunu karıştırmamalıdır.
+
+Beşinci kontrol zam takvimidir. Tedarik fiyatları değiştiğinde tüm listeyi bir anda değiştirmek yerine ürün gruplarını takip etmek gerekir. Kahve çekirdeği, süt, çikolata, peynir ve un gibi ana maliyet kalemlerinin fiyatı değiştiğinde hangi ürünlerin etkileneceği önceden bilinmelidir.
+
+Altıncı kontrol ekip bilgisidir. Kasa, barista ve servis personeli aynı fiyat listesini kullanmalıdır. Dijital menüde fiyat değiştiğinde ekip “bugün hangi ürün değişti?” sorusunun cevabını kısa bir notla görmelidir. Bu not müşteriye açıklama yaparken de işe yarar.
+
+Dijital menü sistemi fiyat listesini daha kolay güncellemenizi sağlar; ama iyi fiyat listesi hâlâ net kategori, doğru ölçü ve tutarlı ekip bilgisinden oluşur. Panel, bu düzeni koruyan araçtır; menünün dili ise işletmenin kendi disipliniyle oluşur.
+
+## Kafe fiyat listesinde aylık temizlik
+
+Kafe fiyat listesi ayda bir küçük temizlik ister. Bu temizlik yalnızca zam yapmak anlamına gelmez. Satılmayan ürünleri, karışan isimleri, yanlış boy bilgisini ve müşterinin sürekli sorduğu ek ücretleri gözden geçirmek gerekir.
+
+İlk olarak en çok soru gelen ürünleri not edin. “Bu kaç ml?”, “Süt değişimi ücretli mi?”, “Tatlı günlük mü?”, “Kahvaltı saat kaça kadar?” gibi sorular tekrarlanıyorsa fiyat listesi eksik bilgi veriyor demektir. Bu sorular fiyatın yanına kısa açıklama olarak dönebilir.
+
+İkinci olarak düşük hareketli ürünlere bakın. Ay boyunca neredeyse hiç satılmayan bir ürün listede yer kaplıyorsa ya görünürlüğü düşüktür ya da artık menü için doğru ürün değildir. Hemen silmek yerine önce kategori sırasını veya açıklamasını deneyebilirsiniz.
+
+Üçüncü olarak ek seçenekleri kontrol edin. Şurup, ekstra shot, bitkisel süt veya dondurma ekleri kasada ayrı fiyatlanıyorsa menüde de görünmelidir. Küçük ek ücretler gizli kalınca toplam hesapta güven sorunu çıkar.
+
+Son olarak menüdeki fiyat biçimini tekleştirin. Bazı ürünlerde “₺”, bazılarında “TL”, bazılarında kuruşlu, bazılarında yuvarlak gösterim varsa liste dağınık durur. Tek biçim, küçük bir detay gibi görünür ama profesyonel algıyı güçlendirir.
+
+Aylık temizlikte personel notları da toplanmalıdır. Barista hangi ürünün yanlış anlaşıldığını, kasa hangi ek ücretin tartışma yarattığını, servis ekibi hangi tatlının fotoğrafla uyuşmadığını bilir. Bu küçük notlar fiyat listesini yalnızca muhasebe belgesi olmaktan çıkarır; müşterinin kararını kolaylaştıran canlı bir menü aracına dönüştürür.
+
+Kafe fiyat listesinde ayrıca saat bazlı satış farkı da izlenmelidir. Sabah kahvaltı tabakları ve sıcak kahveler öne çıkarken, öğleden sonra tatlı ve soğuk içecekler daha görünür olabilir. Aynı listeyi günün her saatinde aynı sırayla göstermek bazen satış fırsatını kaçırır. Dijital menü kullanıyorsanız kategori sırasını sezonluk veya dönemsel olarak yenilemek, fiyat listesinin müşterinin gerçek niyetine daha yakın durmasını sağlar.

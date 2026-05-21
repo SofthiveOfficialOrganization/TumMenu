@@ -92,3 +92,35 @@ Stokta olmayan ürünü öne çıkarıp sonra özür dilemek, özellikle akşam 
 - [ ] İki hafta sonra aynı sorular hâlâ yoğunsa açıklama veya fiyat netliği gözden geçirilecek mi?
 
 Çok satanı öne çıkarmak, menüyü sürekli canlı tutma alışkanlığının parçasıdır; küçük düzenlemeler bile servis hızını ve sipariş netliğini iyileştirir. Çok şubeli yapıda ürün ve kampanya düzenini panelden izlemek, hangi vitrinin işe yaradığını daha düzenli görmeyi kolaylaştırır; bu iş TümMenü gibi bir dijital menü altyapısında günlük güncellemelerle daha rahat yürütülebilir.
+
+## Çok satan ürünleri öne çıkarırken denge nasıl korunur?
+
+Çok satan ürünleri menünün en görünür yerine koymak çoğu işletme için mantıklıdır; fakat tüm menüyü “en çok satanlar” listesine çevirmek doğru değildir. Müşteri menüye girdiğinde hem hızlı karar verebilmeli hem de işletmenin karakterini görebilmelidir. Bu denge kurulmadığında menü kalabalık bir kampanya afişine döner.
+
+İlk adım, çok satanları kategori bazında düşünmektir. Tüm menünün yıldızı tek bir ürün olabilir, ama her kategorinin kendi güçlü ürünü vardır. Burger kategorisinde klasik burger, tatlılarda supangle, içeceklerde soğuk kahve öne çıkabilir. Bunları aynı blokta toplamak yerine ilgili kategorinin içinde yukarı almak daha doğal görünür.
+
+İkinci adım, rozet kullanımını sınırlamaktır. “Çok satan”, “şef önerisi”, “yeni”, “kampanyalı” gibi etiketler aynı anda çok kullanılırsa hiçbirinin etkisi kalmaz. Her kategoride en fazla bir veya iki etiket kullanmak daha temizdir. Müşteri neyin gerçekten önemli olduğunu tek bakışta anlamalıdır.
+
+Üçüncü adım, fotoğraf kalitesidir. Çok satan ürünün fotoğrafı karanlık, eski veya porsiyondan farklıysa öne çıkarmak ters etki yapar. Görsel yoksa ürünü üst sıraya almak yine mümkündür, ancak açıklama daha güçlü yazılmalıdır. “120 gram dana köfte, cheddar, karamelize soğan ve özel sos” gibi net içerik, boş bir ürün adından daha iyi çalışır.
+
+Dördüncü adım, marjı unutmamaktır. En çok satan ürün işletmeye yeterli kâr bırakmıyorsa onu sürekli öne taşımak tek başına doğru olmayabilir. Yanına daha dengeli bir set, ek ürün veya içecek önerisi eklenebilir. Örneğin Ankara’da burgerci, çok satan burgerin altında patates ve içecekli seti gösterebilir.
+
+Beşinci adım, şube farkını kontrol etmektir. İstanbul’daki şubede çok satan ürün, Antalya’daki şubede aynı etkiyi göstermeyebilir. Çok şubeli işletmelerde her şubenin ilk üç ürünü ayrı takip edilmelidir. Tek merkezden aynı vitrin düzenini dayatmak bazı şubelerde satış akışını bozabilir.
+
+Altıncı adım, iki haftalık deneme süresi belirlemektir. Ürün sırasını değiştirin, rozetleri sadeleştirin ve sonra hangi ürünlerin daha çok tıklandığını veya daha çok sorulduğunu izleyin. Bir değişiklik işe yaramıyorsa eski düzene dönmekten çekinmeyin.
+
+TümMenü gibi dijital menü panelinde çok satanları güncel tutmak, basılı menüye göre daha hızlıdır. Fakat asıl değer, ürünleri yalnızca öne çıkarmakta değil; neyin neden öne çıktığını düzenli olarak gözden geçirmektedir.
+
+## Çok satan etiketi ne zaman kaldırılmalı?
+
+Bir ürüne “çok satan” etiketi vermek kadar, o etiketi zamanında kaldırmak da önemlidir. Etiket aylarca aynı kalırsa müşteri bunun güncel bir öneri mi, eski bir pazarlama metni mi olduğunu anlayamaz. Menü canlı görünmek istiyorsa rozetler de canlı yönetilmelidir.
+
+Etiketi kaldırmak için üç işarete bakabilirsiniz. İlk işaret satış düşüşüdür. Ürün artık kategori içinde ilk sıralarda satmıyorsa “çok satan” demek doğru değildir. İkinci işaret stok sorunudur. Sık sık tükenen bir ürünü öne çıkarmak müşteri beklentisini boşa çıkarır. Üçüncü işaret kalite tutarlılığıdır. Mutfak yoğun saatlerde aynı kaliteyi çıkaramıyorsa ürün bir süre daha sakin görünürlükte kalabilir.
+
+Etiket yerine bazen daha doğru ifadeler kullanılabilir. “Şef önerisi”, “yeni”, “hafif seçenek”, “acılı” veya “vejetaryen” gibi rozetler ürünün gerçek farkını anlatır. Her ürünün çok satan olması gerekmez; bazılarının görevi belirli müşteriye doğru bilgiyi vermektir.
+
+Ayda bir rozet kontrolü yapmak yeterlidir. Hangi ürün öne çıkacak, hangi ürün normal sıraya dönecek, hangi ürün fotoğraf veya açıklama desteği isteyecek? Bu üç karar menünün güvenilirliğini korur.
+
+Bir başka kontrol de personel geri bildirimidir. Garsonlar müşterinin gerçekten hangi ürünü sorduğunu, hangi rozetin dikkat çektiğini ve hangi ürünün beklentiyi karşılamadığını hızlı fark eder. Panel verisi ile servis gözlemi birlikte okunduğunda çok satan ürünleri öne çıkarma kararı daha isabetli olur.
+
+Bu geri bildirimi haftalık kısa notla tutmak yeterlidir. Uzun rapor yerine “soruldu”, “beğenildi”, “karıştı” gibi üç etiket bile karar vermeyi kolaylaştırır.

@@ -99,3 +99,41 @@ TümMenü gibi bir panelde fiyat ve ürünü güncel tutmak, garsonun “menüde
 - [ ] Son baskıdaki kağıt özet ile dijital fiyat çelişmiyor
 
 Garsonun anlatımı kısa ve net olduğunda QR menü “engel” değil, sıradan bir araç gibi durur. İyi eğitim, tek bir doğru cümleyi tekrar ettirmekten geçer; kötü deneyim ise çoğu zaman teknikten çok ton ve güncellikten kaynaklanır.
+
+## Vardiya öncesi üç dakikalık QR menü brifingi
+
+QR menüyü müşteriye anlatmak için uzun eğitim şart değildir. Çoğu işletmede vardiya öncesi üç dakikalık kısa brifing yeterli olur. Ama bu brifing düzenli yapılmazsa her personel kendi cümlesini kurar; müşteri de farklı masalarda farklı bilgi duyar.
+
+İlk cümle her zaman aynı olmalıdır. “Menümüz QR’da, uygulama indirmenize gerek yok; kameranızla okutabilirsiniz.” Bu cümle hem teknik kaygıyı azaltır hem de müşteriye ne yapacağını söyler. Daha uzun anlatım çoğu zaman gereksizdir.
+
+İkinci cümle yardım teklifidir. “İsterseniz yardımcı olayım” demek, özellikle yaşlı misafir veya yabancı müşteri için rahatlatıcıdır. Personel QR kodu müşterinin telefonu yerine kendi telefonuyla göstermeye çalışmamalı; önce izin istemelidir. Küçük bir nezaket, teknolojik direnci azaltır.
+
+Üçüncü cümle güncellik bilgisidir. “Güncel fiyatlar ve stok bilgisi QR menüdedir” ifadesi kağıt özet veya sosyal medya görseliyle çelişki yaşanmasını engeller. Fiyat değişimi dönemlerinde bu cümle özellikle önemlidir.
+
+Brifingde personelin bilmesi gereken ikinci konu yedek plandır. Telefonu olmayan müşteri için ne yapılacak? İnternet çekmeyen masada hangi çözüm kullanılacak? QR kod okunmazsa kasa önündeki yedek kod nerede? Bu soruların cevabı net değilse personel masada panikler.
+
+Üçüncü konu kampanya ve şube farkıdır. Kampanya yalnızca belirli saatlerde geçerliyse, personel bunu menüden önce bilmeli. Çok şubeli işletmede fiyat farklıysa “bu şubede geçerli menü” ifadesi kullanılmalıdır. Müşteri başka şubedeki fiyatı gösterirse ekip sakin ve aynı açıklamayı yapmalıdır.
+
+Dördüncü konu dil desteğidir. Turistik bölgede çalışan ekip için kısa İngilizce cümle hazırlanabilir: “You can scan this code for the menu. No app needed.” Bu kadar kısa bir cümle bile servis hızını artırır. Daha karmaşık anlatım yerine işaret ve yardım teklifi yeterlidir.
+
+Beşinci konu geri bildirimdir. Vardiya sonunda personele şu üç soru sorulabilir: QR okunmayan masa oldu mu, müşteri en çok ne sordu, fiyat veya kampanya karıştı mı? Bu cevaplar menü tasarımını ve masa üstü QR yerleşimini düzeltmek için güçlü veri verir.
+
+TümMenü gibi dijital menü sistemlerinde müşterinin uygulama indirmeden menüye ulaşması anlatımı kolaylaştırır. Yine de deneyimin iyi olması, personelin aynı kısa cümleyi doğru tonla söylemesine bağlıdır.
+
+## Zorlanan müşteriye nasıl destek verilmeli?
+
+QR menü kullanmak istemeyen müşteriye verilen destek, sistemin algısını doğrudan etkiler. Personel önce müşterinin gerçekten yardıma ihtiyacı olup olmadığını anlamalıdır. Bazı misafirler yalnızca kodun nerede olduğunu sorar; bazıları telefonu açıp yardım bekler. İkisine aynı uzun açıklamayı yapmak gereksizdir.
+
+En iyi destek modeli izin istemekle başlar: “İsterseniz gösterebilirim.” Bu cümle hem kibar hem de kontrolü müşteride bırakır. Personel müşterinin telefonunu eline almadan önce izin almalı, mümkünse sadece kamerayı açması ve koda tutması için yönlendirmelidir. Bu küçük sınır, özellikle kişisel cihaz konusunda hassas misafirler için önemlidir.
+
+Telefonu olmayan veya kullanmak istemeyen müşteri için kısa yedek plan hazır olmalıdır. Kasada sade bir menü özeti, personelin kendi cihazından gösterilen menü veya tek sayfalık basılı liste kullanılabilir. Ancak bu yedek bilgi güncel fiyatla çelişmemelidir. Yedek liste eski kalırsa QR menünün güvenilirliği de zedelenir.
+
+Yabancı müşteriler için personelin ezberleyeceği iki kısa cümle yeterlidir. “No app needed” ve “I can help you scan it” gibi ifadeler teknik bariyeri azaltır. Daha karmaşık İngilizce metinler yerine net işaret, güleryüz ve kısa yönlendirme çoğu durumda daha iyi çalışır.
+
+Zorlanan müşterilerden gelen tekrar eden sorular menü tasarımına geri dönmelidir. Her gün “uygulama mı indireceğiz?” sorusu geliyorsa masa kartında bu bilgi eksiktir. Her gün “fiyat nerede?” sorusu geliyorsa ürün kartı düzeni gözden geçirilmelidir.
+
+Personelin müşteriye gösterdiği ekran da önemlidir. Menü yavaş açılıyorsa, ilk ekranda kategori görünmüyorsa veya pop-up benzeri bir alan karışıklık yaratıyorsa garson ne kadar iyi anlatsa da deneyim zorlaşır. Bu nedenle eğitim yalnızca cümle ezberi değil, gerçek menüyü müşteri gibi açıp kontrol etme alışkanlığıdır.
+
+Yoğun saatlerde QR anlatımı daha da kısa olmalıdır. Uzun açıklama servis akışını yavaşlatır. Personel önce kodu işaret eder, uygulama gerekmediğini söyler ve yardım teklif eder. Müşteri kendi hallederse masa gereksiz beklemez; zorlanırsa destek devreye girer.
+
+Vardiya sonunda gelen sorunları not etmek işletmeye hızlı iyileştirme sağlar. Kod geç açıldı mı, bir masada ışık yansıması oldu mu, yabancı müşteri dil desteği istedi mi? Bu notlar masa kartı, menü dili ve kategori düzeni için doğrudan aksiyon üretir.

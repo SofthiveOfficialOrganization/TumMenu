@@ -87,3 +87,35 @@ Stokta olmayan ürünü silmek yerine görünür bırakmak: Boş kategori veya e
 - [ ] Stokta olmayan veya mevsim dışı ürün görünürde kalmadı mı; fiyatlar tek kaynakta mı?
 
 Pide ve lahmacun menüsü, mutfağın tempo dilini ekrana taşıdığında kasa ve paket hattı rahatlar. Kategori ve fiyatı panelden düzenli güncellemek, yoğun saatlerde menünün dağılmasını engeller; bu iş TümMenü gibi bir dijital menü panelinde daha kolay takip edilebilir.
+
+## Pide ve lahmacun menüsünde ürün kartı nasıl yazılmalı?
+
+Pideci ve lahmacuncularda ürün kartı kısa ama net olmalıdır. Müşteri çoğu zaman hızlı karar verir; fakat hamur, iç harç, porsiyon ve acılık gibi detaylar belirsizse personel sürekli açıklama yapmak zorunda kalır. Dijital menüde her ürün kartı bu soruları azaltacak şekilde hazırlanmalıdır.
+
+İlk bilgi ürün tipidir. Lahmacun, fındık lahmacun, kaşarlı pide, kıymalı pide, kuşbaşılı pide, karışık pide gibi temel ayrım ürün adında görünmelidir. “Özel pide” gibi belirsiz isimler ancak açıklama çok netse kullanılmalıdır. Aksi halde müşteri içinde ne olduğunu anlamaz.
+
+İkinci bilgi porsiyondur. Tek kişilik, büyük boy, orta boy, aile boyu, metre pide veya adet bilgisi ürün kartında yer almalıdır. Özellikle paket serviste porsiyon beklentisi uyuşmazsa memnuniyetsizlik artar. “1 adet”, “2 kişilik”, “yaklaşık 35 cm” gibi ifadeler tahmini de olsa karar vermeyi kolaylaştırır.
+
+Üçüncü bilgi acılık ve ek malzemedir. Lahmacunda acılı/acısız seçeneği, pidede yumurta, kaşar, mantar veya ekstra kıyma gibi seçenekler varsa bunlar ayrı fiyat seçeneği olarak gösterilebilir. Tüm bilgiyi ürün adına yığmak yerine açıklama ve seçenek alanlarını kullanmak daha okunur olur.
+
+Dördüncü bilgi yan ürün düzenidir. Ayran, şalgam, salata, turşu, ezme veya çorba gibi tamamlayıcı ürünler menüde doğru yerde durmalıdır. Pide siparişi veren müşteri içeceği ayrıca aramak zorunda kalmamalıdır. Kategori sonunda “yanına iyi gider” mantığında küçük bir blok işe yarar.
+
+Beşinci bilgi görseldir. Pide ve lahmacunda fotoğraf çok güçlüdür, fakat gerçek porsiyonla uyumsuz görsel hızlı şikâyet getirir. Fotoğraf kullanılıyorsa servis tabağı, hamur kalınlığı ve malzeme yoğunluğu ürüne yakın olmalıdır. Temsilî görsel kullanılıyorsa bunu belirtmek daha güvenlidir.
+
+Altıncı bilgi fiyat güncelliğidir. Un, et, peynir ve enerji maliyeti sık değiştiği için pideci menülerinde fiyatlar daha hızlı eskir. Kağıt menüde eski fiyat kalması kasada tartışma çıkarır. QR menüde fiyatı güncellemek kolaydır, ama kasa ve paket kanalı da aynı gün kontrol edilmelidir.
+
+Son kontrol yoğun saat provasıdır. Cuma akşamı, öğle arası veya maç günü gibi yoğun zamanlarda menü en basit haliyle çalışmalıdır. Müşteri ürünü buluyor mu, fiyatı görüyor mu, acılı/acısız seçeneği anlaşılıyor mu? Bu sorulara evet diyorsanız menü yapısı sahaya hazırdır.
+
+## Paket ve salon menüsünü ayırırken nelere dikkat edilmeli?
+
+Pide ve lahmacun işletmelerinde paket servis ile salon deneyimi çoğu zaman farklıdır. Salonda gelen ürün sıcak tabakta, yanında ikramla ve hızlı servisle gelir. Paket serviste ise ambalaj, yol süresi ve ürünün formunu koruması devreye girer. Menü bu farkı görmezden gelmemelidir.
+
+İlk olarak paket için uygun olmayan ürünleri belirleyin. Bazı sıcak mezeler, çıtır ürünler veya özel sunumlu tabaklar yolda kalitesini kaybedebilir. Bu ürünleri pakette göstermemek, müşteri memnuniyetini korur.
+
+İkinci olarak paket setleri oluşturun. Lahmacun + ayran, pide + salata, çorba + lahmacun gibi net setler müşterinin hızlı karar vermesini sağlar. Setlerde dahil olan ürünler açık yazılmalıdır; salata, turşu veya sos ekstra mı dahil mi belli olmalıdır.
+
+Üçüncü olarak fiyat farkını saklamayın. Ambalaj veya platform maliyeti nedeniyle paket fiyatı farklıysa bunu menüde kısa bir notla belirtin. Fark müşteriye son anda söylenirse itiraz çıkar.
+
+Dördüncü olarak yoğun saatlerde stok kontrolü yapın. Paket kanalında görünen ama mutfakta yetişmeyen ürünler sipariş iptaline neden olur. Dijital menüde ürünü geçici pasife almak, müşteriye yanlış beklenti vermekten daha iyidir.
+
+Salon ve paket menüsünü aynı panelde ama ayrı mantıkla yönetmek, pideci ve lahmacuncular için operasyonu sadeleştirir. Müşteri hangi kanaldan bakarsa baksın ürün, fiyat ve açıklama tutarlı kalmalıdır.

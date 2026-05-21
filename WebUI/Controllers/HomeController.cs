@@ -44,8 +44,23 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
         return View();
     }
 
+    [Route("qr-menu-sistemi")]
+    [Route("qr-menu-olusturma")]
+    [Route("ucretsiz-qr-menu")]
+    [Route("karekod-menu")]
+    public IActionResult QrMenuAliasRedirect()
+    {
+        return RedirectPermanent("/qr-kod");
+    }
+
     [Route("ozellikler")]
     public IActionResult Features()
+    {
+        return View();
+    }
+
+    [Route("dijital-menu-sistemi")]
+    public IActionResult DigitalMenuSystem()
     {
         return View();
     }
@@ -251,7 +266,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     [Route("fiyatlandirma")]
     public IActionResult Pricing()
     {
-        return StatusCode(StatusCodes.Status410Gone);
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -287,7 +302,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     [Route("Home/Pricing")]
     public IActionResult PricingRedirect()
     {
-        return StatusCode(StatusCodes.Status410Gone);
+        return RedirectPermanent("/fiyatlandirma");
     }
 
     [Route("Home/Features")]
@@ -366,7 +381,7 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
     [ResponseCache(Duration = 3600)]
     public async Task<IActionResult> Sitemap(CancellationToken ct)
     {
-        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var baseUrl = PublicSeo.GetCanonicalBaseUrl(HttpContext);
         
         var urlset = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
         
@@ -378,6 +393,8 @@ public class HomeController(IMediator mediator, IEmailSender emailSender) : Cont
             ("/iletisim", "monthly", "0.8"),
             ("/yasal-bilgiler", "monthly", "0.5"),
             ("/ozellikler", "monthly", "0.8"),
+            ("/dijital-menu-sistemi", "monthly", "0.9"),
+            ("/fiyatlandirma", "monthly", "0.8"),
             ("/sss", "monthly", "0.7"),
             ("/restoran-kaynaklari", "weekly", "0.8"),
             ("/qr-menu-uygunluk-testi", "monthly", "0.8"),

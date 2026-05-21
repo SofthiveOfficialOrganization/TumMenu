@@ -88,3 +88,39 @@ Kampanya metinlerini ve şube bazlı fiyatları tek yerden güncel tutmak, yoğu
 - [ ] Şube farkı varsa ilgili şube adı veya kodu notta
 
 Kampanya misafiri çekmek içindir; tutarlılık ise onu geri getirmek içindir. Küçük disiplin, büyük indirimden çoğu zaman daha ucuzdur.
+
+## Kampanyayı yayına almadan önce nasıl prova etmeli?
+
+Kampanyalı menü hazırlarken en iyi kontrol, kampanyayı müşteri gibi baştan sona denemektir. Menüde ürünü bulun, fiyatı okuyun, koşulu anlamaya çalışın ve kasada aynı bilginin çıkıp çıkmadığını kontrol edin. Bu kısa prova yapılmadığında küçük bir eksik, servis sırasında büyür.
+
+İlk prova ürün adında başlar. Kampanyalı ürünün adı normal ürünle karışmamalıdır. “Burger Menü” ile “Öğle Burger Menü” ayrıysa içerik ve saat farkı açık yazılmalıdır. Müşteri aynı ürünü daha pahalı gördüğünü sanarsa indirim güven değil, şüphe üretir.
+
+İkinci prova fiyattadır. Eski fiyat, yeni fiyat, set fiyatı veya ek ücret aynı kartta çok kalabalık duruyorsa sadeleştirin. Bazı işletmeler için yalnızca kampanya fiyatını göstermek daha anlaşılırdır; bazıları için “patates + içecek dahil” notu daha önemlidir. Hangi bilgi itirazı azaltıyorsa onu öne alın.
+
+Üçüncü prova stokla ilgilidir. Kampanya ürününün malzemesi gerçekten yeterli mi? Mutfak yoğun saatte aynı ürünü hızlı çıkarabilir mi? Gaziantep’te kebapçı için et hazırlığı, İzmir’de kahvaltıcı için peynir ve zeytin tedariği, İstanbul’da burgerci için ekmek ve sos stoku ayrı düşünülmelidir.
+
+Dördüncü prova kanal farkıdır. Kampanya yalnızca salonda mı, paket serviste mi, QR menüde mi, Instagram’dan gelenlerde mi geçerli? Bu ayrım yazılmadığında personel her masada tekrar açıklama yapmak zorunda kalır. Kural kısa olmalıdır: “Hafta içi 12.00-15.00 arası salonda geçerlidir” gibi.
+
+Beşinci prova görseldir. Kampanya görseli gerçek porsiyonla uyuşmuyorsa beklenti büyür. Fotoğraf temsilîyse bunu belirtmek gerekir. Özellikle set menülerde fotoğraftaki içecek, sos ve yan ürünün fiyata dahil olup olmadığı net olmalıdır.
+
+Altıncı prova personel cümlesidir. Her çalışan kampanyayı aynı şekilde anlatmalıdır. “Bu menüde içecek dahil, ekstra sos ücretli” gibi tek cümlelik açıklama, uzun kampanya metninden daha iyi çalışır. Vardiya öncesi bu cümlenin tekrar edilmesi yeterlidir.
+
+Dijital menüde kampanya yönetmek, bitiş tarihi ve fiyat değişikliğini daha hızlı yayınlamaya yardımcı olur. Yine de kampanyanın başarısı indirim büyüklüğünden çok, menüdeki koşulun ve ekibin açıklamasının tutarlı olmasına bağlıdır.
+
+## Kampanya bittikten sonra yapılacak kapanış kontrolü
+
+Kampanya hazırlığı kadar kampanya kapanışı da önemlidir. Birçok işletmede sorun kampanya yayındayken değil, kampanya bittikten sonra eski görsel veya fiyatın bir yerde kalmasıyla çıkar. Bu yüzden bitiş günü için kısa bir kapanış listesi hazırlanmalıdır.
+
+İlk olarak menüdeki kampanya kartı kaldırılır veya pasife alınır. Eğer kampanya tekrar kullanılacaksa taslakta saklanabilir, fakat müşteriye açık alanda kalmamalıdır. Bitiş tarihi geçen kampanya, müşteriye işletmenin menüsünü takip etmediğini düşündürür.
+
+İkinci olarak sosyal medya ve vitrin yüzeyleri kontrol edilir. Hikaye öne çıkanları, sabit gönderiler, masa kartları ve kasa önü duyuruları unutulabilir. QR menü güncel olsa bile Instagram’da eski fiyat duruyorsa müşteri eski fiyatı referans alır.
+
+Üçüncü olarak kampanya performansı kısa notlanır. Hangi ürün satıldı, hangi saat yoğunlaştı, mutfak zorlandı mı, müşteri koşulu anladı mı? Bu notlar bir sonraki kampanyayı daha doğru yapar.
+
+Dördüncü olarak personelden geri bildirim alınır. En çok hangi cümleyi açıklamak zorunda kaldılar? Hangi koşul yanlış anlaşıldı? Bu cevaplar kampanya metnini sadeleştirmek için en pratik veridir.
+
+Kapanan kampanyayı hemen silmek yerine kısa bir arşiv notu tutmak da faydalıdır. Kampanya tarihi, ürün maliyeti, satış adedi, ortalama sepet etkisi ve müşteri itirazı aynı satırda durursa bir sonraki kampanyada yeniden sıfırdan düşünmezsiniz. Özellikle ramazan, yaz sezonu veya okul dönemi gibi tekrar eden dönemlerde bu arşiv işletmeye hız kazandırır.
+
+Kampanya arşivinde görsel ve metin örneğini de saklayın. Hangi başlık daha netti, hangi görsel ürünü doğru anlattı, hangi koşul müşteriyi yordu? Bu notlar tasarım ekibinden bağımsız olarak operasyonun hafızasını korur. Bir sonraki kampanyada yalnızca fiyatı değil, anlatımı da daha hızlı iyileştirirsiniz.
+
+Küçük bir tarih ve sorumlu alanı bile bu arşivin düzenli kalmasına yeter.

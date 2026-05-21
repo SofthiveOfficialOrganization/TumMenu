@@ -1,6 +1,7 @@
 @using System.Linq
 @using Application.BlogPosts.DTOs
 @using Application.Common.Base.DTOs
+@using WebUI.Seo
 @model PaginatedListDTO<BlogPostListDTO>
 @{
     ViewData["Title"] = "Blog";
@@ -24,7 +25,7 @@
 
 @section Head {
     @{
-        var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+        var baseUrl = PublicSeo.GetCanonicalBaseUrl(Context);
         var blogSchema = new Dictionary<string, object?>
         {
             ["@context"] = "https://schema.org",
@@ -340,6 +341,7 @@
                     <p>QR menünün ne olduğunu, kağıt menüden farkını, restoranda nasıl uygulanacağını ve yayına almadan önce hangi kontrollerin yapılacağını öğrenin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a>
+                        <a href="/qr-kod">Ücretsiz QR menü oluşturma</a>
                         <a href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">QR vs kağıt</a>
                         <a href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">Kurulum</a>
                     </div>
@@ -350,8 +352,10 @@
                     <p>Ürün açıklaması, kategori düzeni, alerjen bilgisi, fotoğraf seçimi ve fiyat görünürlüğü gibi karar sürecini etkileyen alanları iyileştirin.</p>
                     <div class="blog-topic-links">
                         <a href="/blog/restoran-menusu-nasil-tasarlanir">Menü tasarımı</a>
+                        <a href="/dijital-menu-sistemi">Dijital menü sistemi</a>
                         <a href="/blog/menu-fotograflari-dijital-menude-neden-onemlidir">Fotoğraf</a>
                         <a href="/blog/restoran-menu-fiyatlandirma-stratejileri">Fiyatlandırma</a>
+                        <a href="/fiyatlandirma">QR menü fiyatları</a>
                     </div>
                 </article>
 

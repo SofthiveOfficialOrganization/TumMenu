@@ -86,3 +86,37 @@ Farkı gizlemeye çalışmak yerine kısa ve doğru açıklamayı tercih edin. U
 - [ ] Paket kanalı fiyatı ile masa farkı bilinçli; müşteriye çelişki yok
 
 Kısacası çok şubeli işletmede fiyat yönetimi, tek bir rakamdan çok “kim, ne zaman, hangi ürün grubunda dokunur?” sorusunun cevabıdır. Kurallar net, menü güncel ve ekip hizalı olduğunda fark yönetilebilir; dağınık olduğunda ise en küçük fark bile büyük tartışmaya döner.
+
+## Şube fiyatını yayına almadan önce saha rutini
+
+Fiyat farkı yönetiminde en çok işe yarayan şey büyük toplantı değil, küçük ama tekrar eden kontroldür. Merkez ofiste karar alınır, fakat hatayı çoğu zaman şubedeki masa, kasa veya paket hattı görünür hale getirir. Bu yüzden her değişiklikte aynı sırayı izlemek, ekibin kafasını rahatlatır.
+
+Önce ürünleri önem sırasına ayırın. Döner, burger, pide veya kahve gibi ana ciro ürünleri ilk kontrol grubunda olmalı. Yan ürün, ekstra sos, içecek ve tatlı gibi kalemler ikinci gruba alınabilir. Böylece şube müdürü her fiyat değişiminde yüzlerce satıra aynı anda bakmak zorunda kalmaz.
+
+İkinci adım, fiyat farkının sebebini kısa bir notla yazmaktır. “Kira yüksek”, “teslimat komisyonu var”, “porsiyon farklı”, “kampanya sadece bu şubede” gibi net cümleler ekip içinde aynı dili kurar. Müşteri fiyat farkını sorduğunda personel uzun açıklama yapmak yerine doğru cümleyi söyler.
+
+Üçüncü adım yayın zamanıdır. İstanbul’da öğle servisi yoğun olan bir şube ile İzmir’de akşam çalışan bir şubenin güncelleme saati aynı olmayabilir. Fiyatı yoğun servis ortasında değiştirmek yerine vardiya öncesi veya kapanış sonrası yapmak daha az sürtüşme çıkarır.
+
+Dördüncü adım çapraz kontroldür. QR menü, kasa, paket servis platformu, sosyal medya görseli ve camdaki duyuru aynı fiyatı göstermelidir. Bir yüzey eski kalırsa müşteri hangi fiyatın doğru olduğunu değil, işletmeye güvenip güvenemeyeceğini düşünür.
+
+Çok şubeli yapıda her şube için küçük bir fiyat sorumlusu belirlemek de iş yükünü azaltır. Bu kişi fiyatı tek başına belirlemez; yalnızca yayının doğru yerde doğru göründüğünü kontrol eder. Ankara’daki burgerci için bu görev kasa sorumlusunda olabilir, Antalya’daki sahil restoranında vardiya şefinde kalabilir.
+
+Fiyat değişimi sonrası ilk iki gün geri bildirim toplayın. “Müşteri en çok hangi ürünü sordu?”, “Kasada hangi fiyat karıştı?”, “Garson hangi açıklamayı yapmakta zorlandı?” gibi sorular, bir sonraki değişimi daha sakin hale getirir.
+
+TümMenü gibi dijital menü panelinde şube, kategori ve ürün düzeyinde güncelleme yapmak; eski dosya, yanlış çıktı ve unutulan masa kartı riskini azaltır. Yine de panel tek başına yeterli değildir; doğru kural, net sorumlu ve düzenli kontrol birlikte çalışmalıdır.
+
+## Aylık fiyat farkı toplantısında bakılacak üç veri
+
+Ayda bir yapılacak kısa fiyat toplantısında tüm ürünleri tek tek tartışmak gerekmez. Üç veriye bakmak çoğu zaman yeterlidir: satış adedi, brüt marj ve müşteri itirazı. Bu üçü yan yana geldiğinde hangi şubede hangi fiyatın sorun çıkardığı daha net görünür.
+
+Satış adedi tek başına karar verdirmez. Bir ürün çok satıyor ama marjı düşükse fiyat farkı yeniden düşünülmelidir. Tersi de geçerlidir; yüksek marjlı ama az satan ürün için fiyat değil, görünürlük veya açıklama sorunu olabilir.
+
+Müşteri itirazı ise sahadan gelen en pratik işarettir. “Diğer şubede daha ucuzdu”, “Instagram’da farklı gördüm”, “Paket fiyatı neden ayrı?” gibi cümleler bir tabloya yazılmalıdır. İtiraz aynı üründe tekrarlanıyorsa fiyat değil, iletişim bozulmuştur.
+
+Toplantının sonunda yalnızca üç karar çıkmalıdır: hangi fiyat değişecek, hangi açıklama güncellenecek, hangi şube sorumlusu kontrol edecek. Daha fazlası takip edilmez. Az karar, düzenli uygulama ve net sorumluluk çok şubeli fiyat yönetimini daha sürdürülebilir hale getirir.
+
+Bu toplantıdan sonra kararları aynı gün menüye yansıtmak önemlidir. Not alınıp bekletilen fiyat değişikliği, şubeler arasında yeni bir fark daha doğurur. Küçük bir karar listesi ve aynı gün yayın disiplini, çok şubeli işletmede fiyat güveninin temelidir.
+
+Toplantı notlarını şube bazında saklamak da sonraki ayı kolaylaştırır. Hangi fiyat neden değiştiği biliniyorsa aynı tartışma yeniden başlamaz; ekip kararın arkasındaki maliyet, stok veya müşteri iletişimi gerekçesini daha rahat açıklar.
+
+Bu kayıt, yeni şube açılışında da hazır referans olur. Önceki kararlar görüldüğünde başlangıç fiyatı daha kontrollü belirlenir.

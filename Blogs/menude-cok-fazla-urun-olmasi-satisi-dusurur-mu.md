@@ -79,3 +79,35 @@ Bu listeyi ayda bir gözden geçirmek, geniş menüyü kontrol altında tutmaya 
 - [ ] Stokta biten kalemleri panelden kapattım veya “tükendi” olarak işaretledim; personeli bilgilendirdim.
 
 Çok ürünlü menü, disiplin ve okunabilirlikle birlikte gelirse satışı düşürmek zorunda değildir. Liste uzunsa bile her satırın rolü net olmalı; mutfak ritmi, kasa hızı ve müşterinin rahat seçebilmesi aynı tabloda buluşmalıdır.
+
+## Ürün azaltmadan önce yapılacak küçük denemeler
+
+Menü kalabalıksa ilk refleks hemen ürün silmek olmamalıdır. Bazı işletmelerde geniş menü müşteri beklentisinin parçasıdır. Esnaf lokantası, pastane veya kahvaltıcı için ürün çeşitliliği bazen avantajdır. Sorun çeşit sayısı değil, çeşitlerin nasıl sunulduğudur.
+
+İlk deneme kategori başlıklarını sadeleştirmektir. “Ana yemekler”, “ızgaralar”, “et yemekleri” ve “spesiyaller” aynı ürünleri taşıyorsa müşteri nereye bakacağını şaşırır. Benzer başlıkları birleştirmek, ürün silmeden menüyü hafifletir. Bursa’da dönerci için “dönerler”, “menüler” ve “içecekler” çoğu zaman yeterli olabilir.
+
+İkinci deneme ürünleri varyasyon mantığıyla toplamaktır. Aynı tostun kaşarlı, sucuklu, karışık ve kavurmalı hali ayrı ayrı durabilir; fakat aynı kart içinde seçenek olarak da verilebilir. Bu yöntem hem ekranı kısaltır hem müşterinin benzer ürünler arasında kaybolmasını önler.
+
+Üçüncü deneme “imza ürün” alanıdır. Menü uzun olsa bile ilk ekranda işletmenin en güçlü üç-beş ürünü görünürse müşteri karar yolunu daha hızlı kurar. Geri kalan ürünler kategorilerde durabilir. Bu özellikle çok ürünlü kafelerde ve burgercilerde işe yarar.
+
+Dördüncü deneme açıklama kısaltmaktır. Kalabalık menüde her ürün için uzun paragraf yazmak ekranda yorgunluk yaratır. Ürün adı, ana malzeme, porsiyon ve ayırt edici bilgi yeterli olabilir. Alerjen veya vegan bilgisi ise rozet veya ayrı satırla gösterilebilir.
+
+Beşinci deneme stok dışı ürünleri gizlemektir. Müşteri menüde gördüğü ürünü sipariş edemiyorsa seçenek sayısının çok olması fayda sağlamaz. Stokta olmayan ürünü pasife almak, menüyü hem kısa hem güvenilir gösterir.
+
+Altıncı deneme personel sorularını takip etmektir. Garsonlar hangi ürün için en çok açıklama yapıyor? Kasa hangi ürün adını en çok karıştırıyor? Mutfak hangi ürünleri hazırlarken yavaşlıyor? Bu sorular, hangi satırın sorun çıkardığını satış raporundan daha hızlı gösterebilir.
+
+Ürün azaltma kararı en son adımdır. Önce kategori, sıralama, varyasyon, açıklama ve stok görünürlüğünü düzeltin. Hâlâ okunmayan, satılmayan ve mutfağı yavaşlatan ürünler varsa o zaman sezonluk, gizli veya pasif hale getirmek daha sağlıklı olur.
+
+## Ürün sayısı kararını müşteriye hissettirmeden uygulayın
+
+Menü sadeleştirme müşteriye “ürün azalttık” diye duyurulmak zorunda değildir. Doğru uygulandığında müşteri yalnızca daha rahat seçim yaptığını hisseder. Bunun için değişiklikleri küçük dalgalar halinde yapmak daha iyidir.
+
+İlk dalgada yalnızca kategori başlıkları sadeleştirilebilir. İkinci dalgada benzer ürünler seçenek haline getirilebilir. Üçüncü dalgada uzun süredir satılmayan ürünler pasife alınabilir. Hepsini aynı gün yapmak ekip için de müşteri için de fazla büyük değişiklik olur.
+
+Mutfak tarafına da hazırlık süresi bırakılmalıdır. Bir ürün kaldırıldığında onun malzemesi başka üründe kullanılacak mı, stok bitene kadar görünür kalacak mı, paket servis kanalında ne olacak? Bu sorular cevaplanmadan ürün silmek operasyonu karıştırır.
+
+Müşteri alışkanlığı olan ürünlerde daha dikkatli olun. Az satıyor diye her ürünü hemen kaldırmak doğru değildir. Bazı ürünler belirli müdavimler için menüde kalabilir. Bu durumda ürünü ana ekrandan çekip ilgili kategori içinde daha geriye almak daha yumuşak bir geçiş sağlar.
+
+Dijital menüde pasife alma, yeniden sıralama ve açıklama güncelleme kolay olduğu için bu denemeler düşük riskle yapılabilir. Önemli olan her değişikliğin tarihini ve sebebini not etmek, sonra etkisine bakmaktır.
+
+Sadeleşme sonrası müşterinin verdiği tepkiyi izlemek gerekir. Eğer sık sorulan bir ürün kaybolduysa tamamen silmek yerine ilgili kategoriye geri eklenebilir. Ama kimse fark etmiyorsa menüden çıkan ürün muhtemelen zaten görünür değer üretmiyordu. Bu ayrımı görmek, sonraki sadeleşme kararlarını daha cesur ve daha doğru hale getirir.
