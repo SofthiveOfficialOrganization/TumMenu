@@ -38,28 +38,29 @@ public class GetCompanyListForSearchHandler(
         }
 
         var totalCount = await query.CountAsync(cancellationToken);
-        
-        // PageRequest.Page is typically 0-based in this project architecture based on previous observation (PaginatedListDTOBase.Index)
-        // Ensure PageSize is valid
-        if (request.PageSize <= 0) request.PageSize = 10;
+
+        var pageSize = request.PageSize <= 0 ? 10 : request.PageSize;
+        var page = Math.Max(request.Page, request.From);
 
         var items = await query
             .OrderBy(c => c.Title)
-            .Skip((request.Page - request.From) * request.PageSize)
-            .Take(request.PageSize)
+            .Skip((page - request.From) * pageSize)
+            .Take(pageSize)
             .Select(c => new CompanyFilterDTO(c.Id, c.Title))
             .ToListAsync(cancellationToken);
+
+        var pages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
         return new PaginatedListDTO<CompanyFilterDTO>
         {
             Items = items,
-            Index = request.Page,
-            Size = request.PageSize,
+            Index = page,
+            Size = pageSize,
             From = request.From,
             Count = totalCount,
-            Pages = (int)Math.Ceiling(totalCount / (double)request.PageSize),
-            HasPrevious = request.Page > request.From,
-            HasNext = request.Page < (int)Math.Ceiling(totalCount / (double)request.PageSize) + request.From - 1
+            Pages = pages,
+            HasPrevious = page > request.From,
+            HasNext = page - request.From + 1 < pages
         };
     }
 }

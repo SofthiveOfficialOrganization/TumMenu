@@ -203,8 +203,9 @@ public sealed class AppExceptionFilter(
 			nameof(AppExceptionFilter),
 			httpContext.RequestAborted);
 
-		// In development mode, allow unhandled exceptions or DB exceptions to bubble up to the Developer Exception Page
-		if(_env.IsDevelopment() && !wantsJson && (status >= 500 || ex is DbUpdateException))
+		// In development mode, keep unexpected exceptions on the Developer Exception Page,
+		// but still route translated database errors through TempData so form posts show toasts.
+		if(_env.IsDevelopment() && !wantsJson && status >= 500 && ex is not DbUpdateException)
 		{
 			return;
 		}

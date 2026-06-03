@@ -151,4 +151,49 @@ public class CreateStoreCommandTests
         result.CompanyId.Should().Be(company2.Id);
         (await _db.Stores.IgnoreQueryFilters().CountAsync()).Should().Be(2);
     }
+
+    [Fact]
+    public async Task Handle_EmptySlug_GeneratesSlugFromTitle()
+    {
+        var company = new Company { Title = "Test Co", Slug = "test-co" };
+        await _db.Companies.AddAsync(company);
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "Merkez Şube",
+            Slug = null,
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        };
+
+        var result = await handler.Handle(command, CancellationToken.None);
+        await _db.SaveChangesAsync();
+
+        result.Slug.Should().Be("merkez-sube");
+        var saved = await _db.Stores.IgnoreQueryFilters().FirstAsync();
+        saved.Slug.Should().Be("merkez-sube");
+    }
+
+    [Fact]
+    public async Task Handle_TitleCannotProduceSlug_ThrowsValidationAppException()
+    {
+        var company = new Company { Title = "Test Co", Slug = "test-co" };
+        await _db.Companies.AddAsync(company);
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "---",
+            Slug = null,
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        };
+
+        var act = () => handler.Handle(command, CancellationToken.None);
+
+        await act.Should().ThrowAsync<ValidationAppException>();
+    }
 }

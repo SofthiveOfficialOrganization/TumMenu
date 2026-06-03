@@ -39,7 +39,7 @@
 
 <script>
     const CompanySelector = (function() {
-        let currentPage = 0;
+        let currentPage = 1;
         let currentSearchTerm = '';
         let onSelectCallback = null;
         const pageSize = 10;
@@ -52,7 +52,7 @@
             
             if (modalEl) {
                 modalEl.addEventListener('show.bs.modal', function() {
-                    loadCompanies(0);
+                    loadCompanies(1);
                     searchInput.value = '';
                     searchInput.focus();
                 });
@@ -64,7 +64,7 @@
                     clearTimeout(debounceTimer);
                     debounceTimer = setTimeout(() => {
                         currentSearchTerm = e.target.value;
-                        loadCompanies(0);
+                        loadCompanies(1);
                     }, 300);
                 });
             }
@@ -135,6 +135,9 @@
                 return;
             }
 
+            const from = data.from ?? 1;
+            const displayPage = data.index - from + 1;
+
             let html = '<nav><ul class="pagination pagination-sm mb-0">';
             
             // Previous
@@ -149,7 +152,7 @@
             html += `
                 <li class="page-item disabled">
                     <span class="page-link text-dark border-0">
-                        ${data.index + 1} / ${data.pages}
+                        ${displayPage} / ${data.pages}
                     </span>
                 </li>`;
 

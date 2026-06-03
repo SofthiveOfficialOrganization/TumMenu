@@ -4,6 +4,7 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Stores.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ public sealed class UpdateStoreCommand : IRequest<Unit>, ITransactionalRequest, 
 {
 	public Guid Id { get; set; }
 	public string Title { get; set; } = string.Empty;
-	public string Slug { get; set; } = string.Empty;
+	public string? Slug { get; set; }
 	public string PhoneNumber { get; set; } = string.Empty;
 	public string? SecondaryPhoneNumber { get; set; }
 	public bool ShowRepresentativeImagesDisclaimer { get; set; }
@@ -35,6 +36,27 @@ public sealed class UpdateStoreCommand : IRequest<Unit>, ITransactionalRequest, 
 	public Guid EntityId => Id;
 }
 
+public sealed class UpdateStoreCommandValidator : AbstractValidator<UpdateStoreCommand>
+{
+	public UpdateStoreCommandValidator()
+	{
+		RuleFor(x => x.Id)
+			.NotEmpty().WithMessage("Dükkan bulunamadı.");
+
+		RuleFor(x => x.Title)
+			.NotEmpty().WithMessage("Dükkan adı boş olamaz.")
+			.MaximumLength(200).WithMessage("Dükkan adı en fazla 200 karakter olabilir.");
+
+		RuleFor(x => x.Slug)
+			.NotEmpty().WithMessage("Dükkan slug'ı boş olamaz.")
+			.MaximumLength(30).WithMessage("Dükkan slug'ı en fazla 30 karakter olabilir.")
+			.Matches("^[a-z0-9-]+$").WithMessage("Dükkan slug'ı sadece küçük harf, rakam ve tire (-) karakterlerinden oluşabilir.");
+
+		RuleFor(x => x.PhoneNumber)
+			.NotEmpty().WithMessage("Telefon numarası boş olamaz.");
+	}
+}
+
 public class UpdateStoreCommandHandler(
 	IRepository<Store> repoStore,
 	IApplicationDbContext db,
@@ -47,16 +69,23 @@ public class UpdateStoreCommandHandler(
 					.Include(s => s.Address)
 					.FirstOrDefaultAsync(s => s.Id == req.Id, ct) ?? throw new NotFoundAppException("Dükkan bulunamadı.");
 
-		if(req.Slug != store.Slug)
+		var slug = req.Slug?.Trim();
+		if(string.IsNullOrWhiteSpace(slug))
+			throw new ValidationAppException(new Dictionary<string, string[]>
+			{
+				[nameof(req.Slug)] = ["Dükkan slug'ı boş olamaz."]
+			});
+
+		if(slug != store.Slug)
 		{
 			var slugExistsInCompany = await repoStore.Query()
-				.AnyAsync(s => s.CompanyId == store.CompanyId && s.Slug == req.Slug && s.Id != req.Id, ct);
+				.AnyAsync(s => s.CompanyId == store.CompanyId && s.Slug == slug && s.Id != req.Id, ct);
 			if(slugExistsInCompany)
 				throw new AlreadyExistsAppException("Bu slug zaten kullanılmakta.");
 		}
 
 		store.Title = req.Title;
-		store.Slug = req.Slug;
+		store.Slug = slug;
 		store.PhoneNumber = req.PhoneNumber;
 		store.SecondaryPhoneNumber = req.SecondaryPhoneNumber;
 		store.ShowRepresentativeImagesDisclaimer = req.ShowRepresentativeImagesDisclaimer;

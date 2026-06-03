@@ -2,6 +2,7 @@ using Application.Abstractions;
 using Application.Common.Exceptions;
 using Application.Menus.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,19 @@ public class CreateMenuToCompanyCommand : IRequest<MenuDTO>, ITransactionalReque
 	public string ActionName => "Ana menü oluşturuldu";
 	public string Title { get; set; } = string.Empty;
 	public Guid CompanyId { get; set; }
+}
+
+public sealed class CreateMenuToCompanyCommandValidator : AbstractValidator<CreateMenuToCompanyCommand>
+{
+	public CreateMenuToCompanyCommandValidator()
+	{
+		RuleFor(x => x.Title)
+			.NotEmpty().WithMessage("Ana menü adı boş olamaz.")
+			.MaximumLength(200).WithMessage("Ana menü adı en fazla 200 karakter olabilir.");
+
+		RuleFor(x => x.CompanyId)
+			.NotEmpty().WithMessage("Şirket seçilmelidir.");
+	}
 }
 
 public class CreateMenuToCompanyCommandHandler(
@@ -31,7 +45,7 @@ public class CreateMenuToCompanyCommandHandler(
 
 		var menu = new Menu
 		{
-			Title = req.Title,
+			Title = req.Title.Trim(),
 			CompanyId = req.CompanyId,
 			Status = MenuStatus.MainMenu
 		};

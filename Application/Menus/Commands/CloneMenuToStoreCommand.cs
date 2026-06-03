@@ -1,6 +1,8 @@
 using Application.Abstractions;
+using Application.Common.Exceptions;
 using Application.Menus.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,18 @@ public class CloneMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest,
 	public string ActionName => "Menü kopyalandı";
 	public Guid SourceMenuId { get; set; }
 	public Guid StoreId { get; set; }
+}
+
+public sealed class CloneMenuToStoreCommandValidator : AbstractValidator<CloneMenuToStoreCommand>
+{
+	public CloneMenuToStoreCommandValidator()
+	{
+		RuleFor(x => x.SourceMenuId)
+			.NotEmpty().WithMessage("Kaynak menü seçilmelidir.");
+
+		RuleFor(x => x.StoreId)
+			.NotEmpty().WithMessage("Dükkan seçilmelidir.");
+	}
 }
 
 public class CloneMenuToStoreCommandHandler(
@@ -29,9 +43,9 @@ public class CloneMenuToStoreCommandHandler(
 			.Include(m => m.Categories)
 				.ThenInclude(c => c.Products)
 			.FirstOrDefaultAsync(m => m.Id == req.SourceMenuId, ct)
-			?? throw new KeyNotFoundException("Kaynak menü bulunamadı.");
+			?? throw new NotFoundAppException("Kaynak menü bulunamadı.");
 		var store = await repoStore.GetByIdAsync(req.StoreId, ct)
-			?? throw new KeyNotFoundException("Dükkan bulunamadı.");
+			?? throw new NotFoundAppException("Dükkan bulunamadı.");
 		var clonedAtTr = DateTime.UtcNow.AddHours(3);
 
 		// Deactivate other active menus for this store

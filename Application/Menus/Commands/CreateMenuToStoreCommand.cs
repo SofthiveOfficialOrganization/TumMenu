@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions;
 using Application.Menus.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,23 @@ public class CreateMenuToStoreCommand : IRequest<MenuDTO>, ITransactionalRequest
 	public string Title { get; set; } = string.Empty;
 	public Guid StoreId { get; set; }
 	public MenuStatus Status { get; set; } = MenuStatus.Inactive;
+}
+
+public sealed class CreateMenuToStoreCommandValidator : AbstractValidator<CreateMenuToStoreCommand>
+{
+	public CreateMenuToStoreCommandValidator()
+	{
+		RuleFor(x => x.Title)
+			.NotEmpty().WithMessage("Menü adı boş olamaz.")
+			.MaximumLength(200).WithMessage("Menü adı en fazla 200 karakter olabilir.");
+
+		RuleFor(x => x.StoreId)
+			.NotEmpty().WithMessage("Dükkan seçilmelidir.");
+
+		RuleFor(x => x.Status)
+			.Must(status => status is MenuStatus.Active or MenuStatus.Inactive or MenuStatus.Draft or MenuStatus.Archived)
+			.WithMessage("Geçersiz menü durumu.");
+	}
 }
 
 public class CreateMenuToStoreCommandHandler(
@@ -47,6 +65,7 @@ public class CreateMenuToStoreCommandHandler(
 		}
 
 		var menu = mapper.Map<Menu>(req);
+		menu.Title = req.Title.Trim();
 		await repoMenu.AddAsync(menu, ct);
 		var menuDTO = mapper.Map<MenuDTO>(menu);
 		return menuDTO;

@@ -1,5 +1,6 @@
 using Application.Abstractions;
 using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,15 @@ namespace Application.Menus.Commands;
 public class SetMenuActiveCommand : IRequest<bool>, ITransactionalRequest
 {
     public Guid Id { get; set; }
+}
+
+public sealed class SetMenuActiveCommandValidator : AbstractValidator<SetMenuActiveCommand>
+{
+    public SetMenuActiveCommandValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Menü bulunamadı.");
+    }
 }
 
 public class SetMenuActiveCommandHandler(IRepository<Menu> repoMenu) : IRequestHandler<SetMenuActiveCommand, bool>

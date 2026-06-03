@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -78,6 +79,22 @@ public class AppExceptionFilterTests
 
         var result = Assert.IsType<ViewResult>(context.Result);
         Assert.Equal("~/Views/Shared/Error.cshtml", result.ViewName);
+    }
+
+    [Fact]
+    public async Task OnExceptionAsync_DevelopmentDbUpdateException_RedirectsBackWithToast()
+    {
+        var filter = CreateFilter(environmentName: Environments.Development);
+        var context = CreateExceptionContext("/Admin/Store/Create", area: "Admin");
+        context.HttpContext.Request.Headers.Referer = "/Admin/Store/Create";
+        context.Exception = new DbUpdateException("Database update failed.");
+
+        await filter.OnExceptionAsync(context);
+
+        var result = Assert.IsType<RedirectResult>(context.Result);
+        Assert.Equal("/Admin/Store/Create", result.Url);
+        Assert.Equal(StatusCodes.Status500InternalServerError, context.HttpContext.Response.StatusCode);
+        Assert.True(context.ExceptionHandled);
     }
 
     private static AppExceptionFilter CreateFilter(string environmentName)

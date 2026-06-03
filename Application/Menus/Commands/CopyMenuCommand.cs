@@ -2,6 +2,7 @@
 using Application.Common.Exceptions;
 using Application.Menus.DTOs;
 using Domain.Entities;
+using FluentValidation;
 using MapsterMapper;
 using MediatR;
 
@@ -12,6 +13,18 @@ public class CopyMenuCommand : IRequest<MenuDTO>, ITransactionalRequest, IAudita
 	public string ActionName => "Menü kopyalandı";
 	public Guid SourceMenuId { get; set; }
 	public Guid TargetMenuId { get; set; }
+}
+
+public sealed class CopyMenuCommandValidator : AbstractValidator<CopyMenuCommand>
+{
+	public CopyMenuCommandValidator()
+	{
+		RuleFor(x => x.SourceMenuId)
+			.NotEmpty().WithMessage("Kaynak menü seçilmelidir.");
+
+		RuleFor(x => x.TargetMenuId)
+			.NotEmpty().WithMessage("Hedef menü seçilmelidir.");
+	}
 }
 
 public class CopyMenuCommandHandler(

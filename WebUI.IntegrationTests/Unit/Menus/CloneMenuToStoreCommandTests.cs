@@ -1,4 +1,5 @@
 using Application.Menus.Commands;
+using Application.Common.Exceptions;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Persistence;
@@ -84,7 +85,7 @@ public class CloneMenuToStoreCommandTests
     }
 
     [Fact]
-    public async Task Handle_StoreNotFound_ThrowsKeyNotFoundException()
+    public async Task Handle_StoreNotFound_ThrowsNotFoundAppException()
     {
         // Arrange
         var sourceMenu = new Menu
@@ -114,7 +115,7 @@ public class CloneMenuToStoreCommandTests
         Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<KeyNotFoundException>()
+        await act.Should().ThrowAsync<NotFoundAppException>()
             .WithMessage("Dükkan bulunamadı.");
     }
 }

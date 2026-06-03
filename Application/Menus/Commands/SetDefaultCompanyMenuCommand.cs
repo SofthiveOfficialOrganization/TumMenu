@@ -1,6 +1,7 @@
 using Application.Abstractions;
 using Application.Common.Exceptions;
 using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,15 @@ namespace Application.Menus.Commands;
 public class SetDefaultCompanyMenuCommand : IRequest<bool>, ITransactionalRequest
 {
 	public Guid Id { get; set; }
+}
+
+public sealed class SetDefaultCompanyMenuCommandValidator : AbstractValidator<SetDefaultCompanyMenuCommand>
+{
+	public SetDefaultCompanyMenuCommandValidator()
+	{
+		RuleFor(x => x.Id)
+			.NotEmpty().WithMessage("Menü bulunamadı.");
+	}
 }
 
 public class SetDefaultCompanyMenuCommandHandler(
