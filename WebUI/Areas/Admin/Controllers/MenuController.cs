@@ -481,15 +481,25 @@ public sealed class MenuController(IMediator mediator) : Controller
 
     [Authorize(Policy = "OwnerOrAdmin")]
     [HttpGet]
-    public async Task<IActionResult> SearchMainMenus(string? search, int page = 1, int pageSize = 10, CancellationToken ct = default)
+    public async Task<IActionResult> SearchMainMenus(string? search, Guid? companyId, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
-        var menus = await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
-        {
-            Search = search,
-            Page = page,
-            PageSize = pageSize,
-            OnlyCompanyMenus = true
-        }, ct);
+        var menus = User.IsInRole("Admin")
+            ? await mediator.Send(new GetAllMenusPagedQuery
+            {
+                Search = search,
+                CompanyId = companyId,
+                Page = page,
+                PageSize = pageSize,
+                OnlyCompanyMenus = true
+            }, ct)
+            : await mediator.Send(new GetMenusPagedByCurrentOwnerQuery
+            {
+                Search = search,
+                CompanyId = companyId,
+                Page = page,
+                PageSize = pageSize,
+                OnlyCompanyMenus = true
+            }, ct);
 
         var items = menus.Items.Select(m => new
         {

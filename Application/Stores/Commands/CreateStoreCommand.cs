@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions;
 using Application.Addresses.DTOs;
 using Application.Common.Exceptions;
+using Application.Menus.Commands;
 using Application.Stores.DTOs;
 using Domain.Entities;
 using Domain.Helpers;
@@ -64,8 +65,9 @@ public class CreateStoreCommandHandler(
 {
 	public async Task<StoreDTO> Handle(CreateStoreCommand req, CancellationToken ct)
 	{
-		bool companyExists = await repoCompany.ExistsAsync(c => c.Id == req.CompanyId, ct);
-		if(!companyExists)
+		var company = await repoCompany.Query()
+			.FirstOrDefaultAsync(c => c.Id == req.CompanyId, ct);
+		if(company is null)
 			throw new UnprocessableAppException("Dükkanın ekleneceği şirket bulunamadı.");
 
 		var slug = string.IsNullOrWhiteSpace(req.Slug)
@@ -84,12 +86,33 @@ public class CreateStoreCommandHandler(
 			throw new AlreadyExistsAppException("Bu slug zaten kullanılmakta.");
 
 		var store = mapper.Map<Store>(req);
+		if (store.Id == Guid.Empty)
+			store.Id = Guid.NewGuid();
+
 		store.Slug = slug;
 		StoreSocialLinkSync.Apply(store, req.SocialLinks);
 		await repoStore.AddAsync(store, ct);
 
         // Generate QR Code automatically
         await mediator.Send(new Application.QRs.Commands.GenerateQRCodeCommand { StoreId = store.Id }, ct);
+
+		if (company.DefaultMainMenuId.HasValue)
+		{
+			await mediator.Send(new SyncMainMenuToStoreMenuCommand
+			{
+				SourceMenuId = company.DefaultMainMenuId.Value,
+				StoreId = store.Id
+			}, ct);
+		}
+		else
+		{
+			await mediator.Send(new CreateMenuToStoreCommand
+			{
+				Title = $"{store.Title} Menü",
+				StoreId = store.Id,
+				Status = MenuStatus.Active
+			}, ct);
+		}
         
         var storeDTO = mapper.Map<StoreDTO>(store);
 		return storeDTO;

@@ -1,4 +1,6 @@
 using Application.Common.Exceptions;
+using Application.Menus.Commands;
+using Application.Menus.DTOs;
 using Application.Stores.Commands;
 using Domain.Entities;
 using FluentAssertions;
@@ -38,6 +40,12 @@ public class CreateStoreCommandTests
         _mediator
             .Setup(m => m.Send(It.IsAny<Application.QRs.Commands.GenerateQRCodeCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Guid.NewGuid());
+        _mediator
+            .Setup(m => m.Send(It.IsAny<SyncMainMenuToStoreMenuCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MenuDTO());
+        _mediator
+            .Setup(m => m.Send(It.IsAny<CreateMenuToStoreCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MenuDTO());
     }
 
     private EfRepository<T> Repo<T>() where T : class => new(_db);
@@ -71,6 +79,58 @@ public class CreateStoreCommandTests
         savedCount.Should().Be(1);
         var saved = await _db.Stores.IgnoreQueryFilters().FirstAsync();
         saved.CompanyId.Should().Be(company.Id);
+    }
+
+    [Fact]
+    public async Task Handle_WhenCompanyHasDefaultMainMenu_SyncsMainMenuToStore()
+    {
+        var defaultMainMenuId = Guid.NewGuid();
+        var company = new Company { Title = "Test Co", Slug = "test-co", DefaultMainMenuId = defaultMainMenuId };
+        await _db.Companies.AddAsync(company);
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "Test Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        };
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        _mediator.Verify(m => m.Send(
+            It.Is<SyncMainMenuToStoreMenuCommand>(x => x.SourceMenuId == defaultMainMenuId && x.StoreId == result.Id),
+            It.IsAny<CancellationToken>()), Times.Once);
+        _mediator.Verify(m => m.Send(It.IsAny<CreateMenuToStoreCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_WhenCompanyHasNoDefaultMainMenu_CreatesEmptyActiveStoreMenu()
+    {
+        var company = new Company { Title = "Test Co", Slug = "test-co" };
+        await _db.Companies.AddAsync(company);
+        await _db.SaveChangesAsync();
+
+        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var command = new CreateStoreCommand
+        {
+            Title = "Test Store",
+            Slug = "test-store",
+            PhoneNumber = "05001234567",
+            CompanyId = company.Id
+        };
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        _mediator.Verify(m => m.Send(
+            It.Is<CreateMenuToStoreCommand>(x =>
+                x.Title == "Test Store Menü" &&
+                x.StoreId == result.Id &&
+                x.Status == MenuStatus.Active),
+            It.IsAny<CancellationToken>()), Times.Once);
+        _mediator.Verify(m => m.Send(It.IsAny<SyncMainMenuToStoreMenuCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]

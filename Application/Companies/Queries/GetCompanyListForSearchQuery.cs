@@ -26,6 +26,8 @@ public class GetCompanyListForSearchHandler(
 
         var query = repoCompany.Query();
 
+        query = query.Where(c => !c.IsSingleStore || !c.Stores.Any());
+
         if (!isAdmin)
         {
             query = query.Where(c => c.Owner != null && c.Owner.ApplicationUserId == userId);
