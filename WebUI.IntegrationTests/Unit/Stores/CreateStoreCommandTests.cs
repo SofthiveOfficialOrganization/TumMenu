@@ -1,6 +1,4 @@
 using Application.Common.Exceptions;
-using Application.Menus.Commands;
-using Application.Menus.DTOs;
 using Application.Stores.Commands;
 using Domain.Entities;
 using FluentAssertions;
@@ -40,15 +38,11 @@ public class CreateStoreCommandTests
         _mediator
             .Setup(m => m.Send(It.IsAny<Application.QRs.Commands.GenerateQRCodeCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Guid.NewGuid());
-        _mediator
-            .Setup(m => m.Send(It.IsAny<SyncMainMenuToStoreMenuCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MenuDTO());
-        _mediator
-            .Setup(m => m.Send(It.IsAny<CreateMenuToStoreCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MenuDTO());
     }
 
     private EfRepository<T> Repo<T>() where T : class => new(_db);
+    private CreateStoreCommandHandler Handler() =>
+        new(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object, Repo<Menu>(), Repo<Category>(), Repo<Product>());
 
     [Fact]
     public async Task Handle_ValidCommand_StoreIsPersistedAndLinkedToCompany()
@@ -58,7 +52,7 @@ public class CreateStoreCommandTests
         await _db.Companies.AddAsync(company);
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "Test Store",
@@ -84,12 +78,21 @@ public class CreateStoreCommandTests
     [Fact]
     public async Task Handle_WhenCompanyHasDefaultMainMenu_SyncsMainMenuToStore()
     {
-        var defaultMainMenuId = Guid.NewGuid();
-        var company = new Company { Title = "Test Co", Slug = "test-co", DefaultMainMenuId = defaultMainMenuId };
+        var company = new Company { Id = Guid.NewGuid(), Title = "Test Co", Slug = "test-co" };
+        var defaultMainMenu = new Menu
+        {
+            Id = Guid.NewGuid(),
+            Title = "Ana Menü",
+            CompanyId = company.Id,
+            Status = MenuStatus.MainMenu
+        };
+        company.DefaultMainMenuId = defaultMainMenu.Id;
+
         await _db.Companies.AddAsync(company);
+        await _db.Menus.AddAsync(defaultMainMenu);
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "Test Store",
@@ -99,11 +102,12 @@ public class CreateStoreCommandTests
         };
 
         var result = await handler.Handle(command, CancellationToken.None);
+        await _db.SaveChangesAsync();
 
-        _mediator.Verify(m => m.Send(
-            It.Is<SyncMainMenuToStoreMenuCommand>(x => x.SourceMenuId == defaultMainMenuId && x.StoreId == result.Id),
-            It.IsAny<CancellationToken>()), Times.Once);
-        _mediator.Verify(m => m.Send(It.IsAny<CreateMenuToStoreCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        var menu = await _db.Menus.SingleAsync(m => m.StoreId == result.Id);
+        menu.Title.Should().Be("Ana Menü");
+        menu.Status.Should().Be(MenuStatus.Active);
+        menu.CompanyId.Should().BeNull();
     }
 
     [Fact]
@@ -113,7 +117,7 @@ public class CreateStoreCommandTests
         await _db.Companies.AddAsync(company);
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "Test Store",
@@ -123,21 +127,19 @@ public class CreateStoreCommandTests
         };
 
         var result = await handler.Handle(command, CancellationToken.None);
+        await _db.SaveChangesAsync();
 
-        _mediator.Verify(m => m.Send(
-            It.Is<CreateMenuToStoreCommand>(x =>
-                x.Title == "Test Store Menü" &&
-                x.StoreId == result.Id &&
-                x.Status == MenuStatus.Active),
-            It.IsAny<CancellationToken>()), Times.Once);
-        _mediator.Verify(m => m.Send(It.IsAny<SyncMainMenuToStoreMenuCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        var menu = await _db.Menus.SingleAsync(m => m.StoreId == result.Id);
+        menu.Title.Should().Be("Test Store Menü");
+        menu.Status.Should().Be(MenuStatus.Active);
+        menu.CompanyId.Should().BeNull();
     }
 
     [Fact]
     public async Task Handle_CompanyNotFound_ThrowsUnprocessableAppException()
     {
         // Arrange — no company in DB
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "Test Store",
@@ -167,7 +169,7 @@ public class CreateStoreCommandTests
         });
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "New Store",
@@ -196,7 +198,7 @@ public class CreateStoreCommandTests
         });
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "New Store",
@@ -219,7 +221,7 @@ public class CreateStoreCommandTests
         await _db.Companies.AddAsync(company);
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "Merkez Şube",
@@ -243,7 +245,7 @@ public class CreateStoreCommandTests
         await _db.Companies.AddAsync(company);
         await _db.SaveChangesAsync();
 
-        var handler = new CreateStoreCommandHandler(Repo<Store>(), _mapper, Repo<Company>(), _mediator.Object);
+        var handler = Handler();
         var command = new CreateStoreCommand
         {
             Title = "---",

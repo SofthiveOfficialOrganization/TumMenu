@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Addresses.DTOs;
 using Application.Common.Exceptions;
-using Application.Menus.Commands;
 using Application.Stores.DTOs;
 using Domain.Entities;
 using Domain.Helpers;
@@ -60,7 +59,10 @@ public class CreateStoreCommandHandler(
 	IRepository<Store> repoStore,
 	IMapper mapper,
 	IRepository<Company> repoCompany,
-    IMediator mediator
+    IMediator mediator,
+	IRepository<Menu> repoMenu,
+	IRepository<Category> repoCategory,
+	IRepository<Product> repoProduct
 ) : IRequestHandler<CreateStoreCommand, StoreDTO>
 {
 	public async Task<StoreDTO> Handle(CreateStoreCommand req, CancellationToken ct)
@@ -98,16 +100,13 @@ public class CreateStoreCommandHandler(
 
 		if (company.DefaultMainMenuId.HasValue)
 		{
-			await mediator.Send(new SyncMainMenuToStoreMenuCommand
-			{
-				SourceMenuId = company.DefaultMainMenuId.Value,
-				StoreId = store.Id
-			}, ct);
+			await CreateStoreMenuFromMainMenuAsync(company.DefaultMainMenuId.Value, store.Id, ct);
 		}
 		else
 		{
-			await mediator.Send(new CreateMenuToStoreCommand
+			await repoMenu.AddAsync(new Menu
 			{
+				Id = Guid.NewGuid(),
 				Title = $"{store.Title} Menü",
 				StoreId = store.Id,
 				Status = MenuStatus.Active
@@ -116,5 +115,70 @@ public class CreateStoreCommandHandler(
         
         var storeDTO = mapper.Map<StoreDTO>(store);
 		return storeDTO;
+	}
+
+	private async Task CreateStoreMenuFromMainMenuAsync(Guid sourceMenuId, Guid storeId, CancellationToken ct)
+	{
+		var source = await repoMenu.Query()
+			.AsSplitQuery()
+			.Include(m => m.Categories)
+				.ThenInclude(c => c.Products)
+			.FirstOrDefaultAsync(m => m.Id == sourceMenuId, ct)
+			?? throw new NotFoundAppException("Kaynak ana menü bulunamadı.");
+
+		var target = new Menu
+		{
+			Id = Guid.NewGuid(),
+			Title = source.Title,
+			StoreId = storeId,
+			MenuDesignId = source.MenuDesignId,
+			Status = MenuStatus.Active
+		};
+
+		await repoMenu.AddAsync(target, ct);
+
+		var categoryIdMap = new Dictionary<Guid, Guid>();
+		var sourceCategories = source.Categories
+			.OrderBy(c => c.ParentId.HasValue ? 1 : 0)
+			.ThenBy(c => c.SortOrder)
+			.ToList();
+
+		foreach (var sourceCategory in sourceCategories)
+		{
+			var targetCategory = new Category
+			{
+				Id = Guid.NewGuid(),
+				MenuId = target.Id,
+				CategoryLibraryItemId = sourceCategory.CategoryLibraryItemId,
+				SortOrder = sourceCategory.SortOrder,
+				IsActive = sourceCategory.IsActive,
+				ParentId = sourceCategory.ParentId.HasValue &&
+					categoryIdMap.TryGetValue(sourceCategory.ParentId.Value, out var targetParentId)
+						? targetParentId
+						: null
+			};
+
+			await repoCategory.AddAsync(targetCategory, ct);
+			categoryIdMap[sourceCategory.Id] = targetCategory.Id;
+
+			foreach (var sourceProduct in sourceCategory.Products.OrderBy(p => p.SortOrder))
+			{
+				await repoProduct.AddAsync(new Product
+				{
+					Id = Guid.NewGuid(),
+					CategoryId = targetCategory.Id,
+					Title = sourceProduct.Title,
+					Slug = sourceProduct.Slug,
+					Description = sourceProduct.Description,
+					BasePrice = sourceProduct.BasePrice,
+					SortOrder = sourceProduct.SortOrder,
+					IsActive = sourceProduct.IsActive,
+					Allergens = sourceProduct.Allergens,
+					IsVegan = sourceProduct.IsVegan,
+					IsVegetarian = sourceProduct.IsVegetarian,
+					EstimatedPreparationTimeInMinutes = sourceProduct.EstimatedPreparationTimeInMinutes
+				}, ct);
+			}
+		}
 	}
 }
