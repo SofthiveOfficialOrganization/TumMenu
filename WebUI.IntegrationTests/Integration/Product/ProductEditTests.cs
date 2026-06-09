@@ -1,6 +1,7 @@
 using System.Net;
 using Domain.Entities;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebUI.IntegrationTests.Infrastructure;
 
@@ -41,6 +42,87 @@ public class ProductEditTests : IClassFixture<TumMenuWebAppFactory>
 		Assert.True(
 			response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.Found,
 			$"Expected redirect but got {response.StatusCode}. Body: {await response.Content.ReadAsStringAsync()}");
+
+		using var scope = _factory.Services.CreateScope();
+		var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		var saved = await db.Products
+			.AsNoTracking()
+			.Include(p => p.Prices)
+			.FirstAsync(p => p.Id == productId);
+
+		Assert.Equal("Karışık Ayvalık Tost", saved.Title);
+		Assert.Equal("Sucuk, Kaşar", saved.Description);
+		Assert.Equal(170m, saved.BasePrice);
+		Assert.Single(saved.Prices);
+		Assert.Equal("Menü (Patates ve İçecek)", saved.Prices.Single().Size);
+		Assert.Equal(320m, saved.Prices.Single().Price);
+	}
+
+	[Fact]
+	public async Task GetEdit_RendersDecimalPriceWithHtmlNumberCompatibleValue()
+	{
+		var (productId, _) = await SeedProductAsync(basePrice: 100.50m);
+		var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
+
+		var response = await client.GetAsync($"/Admin/Product/Edit?id={productId}");
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		var html = await response.Content.ReadAsStringAsync();
+		Assert.Contains("name=\"BasePrice\"", html);
+		Assert.Contains("value=\"100.50\"", html);
+		Assert.DoesNotContain("value=\"100,50\"", html);
+	}
+
+	[Fact]
+	public async Task PostEdit_WithBrowserInvariantFields_UpdatesProduct()
+	{
+		var (productId, categoryId) = await SeedProductAsync();
+		var client = await AuthHelper.GetAuthenticatedClientAsync(_factory, "Owner");
+		var editUrl = $"/Admin/Product/Edit?id={productId}";
+		var token = await AntiforgeryHelper.GetTokenAsync(client, editUrl);
+		var returnUrl = $"/Admin/Category/Details/{categoryId}?returnUrl=%2FAdmin%2FMenu";
+
+		var response = await client.PostAsync("/Admin/Product/Edit", CreateFormContent(
+			("Id", productId.ToString()),
+			("CategoryId", categoryId.ToString()),
+			("returnUrl", returnUrl),
+			("Title", "Kıymalı Pide "),
+			("Description", ""),
+			("BasePrice", "240.00"),
+			("__Invariant", "BasePrice"),
+			("EstimatedPreparationTimeInMinutes", "60"),
+			("__Invariant", "EstimatedPreparationTimeInMinutes"),
+			("SortOrder", "1"),
+			("__Invariant", "SortOrder"),
+			("Prices[0].Size", "1.5 Porsiyon"),
+			("Prices[0].Price", "330.00"),
+			("Allergens", ""),
+			("IsActive", "true"),
+			("IsActive", "false"),
+			("IsVegan", "false"),
+			("IsVegetarian", "false"),
+			("__RequestVerificationToken", token)));
+
+		Assert.True(
+			response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.Found,
+			$"Expected redirect but got {response.StatusCode}. Body: {await response.Content.ReadAsStringAsync()}");
+
+		using var scope = _factory.Services.CreateScope();
+		var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		var saved = await db.Products
+			.AsNoTracking()
+			.Include(p => p.Prices)
+			.FirstAsync(p => p.Id == productId);
+
+		Assert.Equal("Kıymalı Pide ", saved.Title);
+		Assert.Equal(240m, saved.BasePrice);
+		Assert.Equal(60, saved.EstimatedPreparationTimeInMinutes);
+		Assert.True(saved.IsActive);
+		Assert.False(saved.IsVegan);
+		Assert.False(saved.IsVegetarian);
+		Assert.Single(saved.Prices);
+		Assert.Equal("1.5 Porsiyon", saved.Prices.Single().Size);
+		Assert.Equal(330m, saved.Prices.Single().Price);
 	}
 
 	[Fact]
@@ -99,7 +181,7 @@ public class ProductEditTests : IClassFixture<TumMenuWebAppFactory>
 		return new FormUrlEncodedContent(pairs);
 	}
 
-	private async Task<(Guid ProductId, Guid CategoryId)> SeedProductAsync()
+	private async Task<(Guid ProductId, Guid CategoryId)> SeedProductAsync(decimal basePrice = 100m)
 	{
 		using var scope = _factory.Services.CreateScope();
 		var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -121,7 +203,7 @@ public class ProductEditTests : IClassFixture<TumMenuWebAppFactory>
 		{
 			Title = "Test Tost",
 			Slug = $"test-tost-edit-{suffix}",
-			BasePrice = 100m,
+			BasePrice = basePrice,
 			CategoryId = category.Id,
 			SortOrder = 1,
 			IsActive = true

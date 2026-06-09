@@ -10,6 +10,7 @@ using WebUI.Extensions;
 using WebUI.ExternalServices;
 using WebUI.Filters;
 using WebUI.Middleware;
+using WebUI.ModelBinding;
 using WebUI.Seo;
 using WebUI.Security;
 
@@ -98,10 +99,14 @@ builder.Services.AddAuthorizationBuilder()
 		);
 	});
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+	options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+});
 builder.Services.AddRazorPages()
 	.AddMvcOptions(options =>
 	{
+		options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
 		options.Filters.Add<AppExceptionFilter>();
 		options.Filters.Add<ValidationLoggingFilter>();
 		options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
