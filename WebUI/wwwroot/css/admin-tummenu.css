@@ -1883,7 +1883,7 @@ body.dark-mode .select2-container--bootstrap-5 .select2-results__option--highlig
 .onboarding-wizard {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), height 0.4s ease;
-    width: 500%;
+    width: 400%;
     align-items: flex-start;
 }
 
