@@ -59,9 +59,11 @@
         initCategorySelect2();
         readURLParams();
         
-        // Try to hydrate location from cache
+        // Try to hydrate location from cache for passive page load only.
         if (window.locationService && !state.cityId && !state.districtId && !state.userLat && !state.userLng) {
-            const cachedPosition = window.locationService.getCachedPosition();
+            const cachedPosition = window.locationService.getPositionForPageLoad
+                ? window.locationService.getPositionForPageLoad()
+                : window.locationService.getCachedPosition();
             if (cachedPosition) {
                 state.userLat = cachedPosition.coords.latitude;
                 state.userLng = cachedPosition.coords.longitude;
@@ -75,8 +77,7 @@
             doSearch(false);
         } else {
             initRestMap(39.0, 35.0, 5, false);
-            // Konum izni sadece butona tıklandığında istensin
-            // requestUserLocation(false);
+            doSearch(false);
         }
 
         // Handle browser back-forward cache issues
@@ -244,17 +245,37 @@
         doSearch(false);
     }
 
+    function geocodeLocation(query) {
+        if (!query) {
+            return Promise.resolve(null);
+        }
+
+        return fetch('/api/location/geocode?q=' + encodeURIComponent(query) + '&limit=1')
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                const results = data && data.data ? data.data : data;
+                if (!Array.isArray(results) || results.length === 0) {
+                    return null;
+                }
+
+                const result = results.find(item =>
+                    item &&
+                    Number.isFinite(Number(item.latitude)) &&
+                    Number.isFinite(Number(item.longitude)));
+
+                return result || null;
+            });
+    }
+
     function geocodeProvinceByName(zoom = 10) {
         if (!state.cityName) {
             return;
         }
 
-        var url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    applyLocationSelection(parseFloat(data[0].lat), parseFloat(data[0].lon), zoom);
+        geocodeLocation([state.cityName, 'Türkiye'].join(', '))
+            .then(result => {
+                if (result) {
+                    applyLocationSelection(Number(result.latitude), Number(result.longitude), zoom);
                 }
             })
             .catch(err => {
@@ -523,7 +544,7 @@
                         restMarker = null;
                     }
                 }
-                showLocationRequiredState();
+                doSearch(false);
             }
         });
 
@@ -537,31 +558,31 @@
             console.log('Sectiginiz İlçe:', state.districtName, 'ID:', state.districtId);
 
             if (state.cityId && state.districtId) {
-                var url = '';
+                var query = '';
                 if (state.districtName.toLowerCase() === 'merkez') {
-                    url = `https://nominatim.openstreetmap.org/search?format=json&city=${encodeURIComponent(state.cityName)}&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
+                    query = [state.cityName, 'Türkiye'].join(', ');
                 } else {
-                    url = `https://nominatim.openstreetmap.org/search?format=json&county=${encodeURIComponent(state.districtName)}&state=${encodeURIComponent(state.cityName)}&country=Türkiye&limit=1`;
+                    query = [state.districtName, state.cityName, 'Türkiye'].join(', ');
                 }
                 
-                console.log('Nominatim Sorgusu (Harita için):', url);
+                console.log('Konum proxy sorgusu (Harita için):', query);
 
-                fetch(url).then(res => res.json()).then(data => {
-                    console.log('Nominatim Cevabı:', data);
-                    if (data && data.length > 0) {
-                        state.userLat = parseFloat(data[0].lat);
-                        state.userLng = parseFloat(data[0].lon);
+                geocodeLocation(query).then(result => {
+                    console.log('Konum proxy cevabı:', result);
+                    if (result) {
+                        state.userLat = Number(result.latitude);
+                        state.userLng = Number(result.longitude);
                         console.log('Haritaya gönderilen koordinat:', state.userLat, state.userLng);
                         initRestMap(state.userLat, state.userLng, 13);
                         resetPagination();
                         doSearch(false);
                     } else {
-                        console.warn('Nominatim koordinat bulamadı!');
+                        console.warn('Konum proxy koordinat bulamadı!');
                         resetPagination();
                         doSearch(false);
                    }
                 }).catch(err => {
-                    console.error('Nominatim Hatası:', err);
+                    console.error('Konum proxy hatası:', err);
                     resetPagination();
                     doSearch(false);
                 });
@@ -581,7 +602,7 @@
                             restMarker = null;
                         }
                     }
-                    showLocationRequiredState();
+                    doSearch(false);
                  }
             }
         });
@@ -598,6 +619,8 @@
                 window.locationService.getLocation({
                     showLoading: true,
                     buttonId: 'useMapLocationBtn',
+                    forceFresh: true,
+                    enableHighAccuracy: true,
                     showErrorPopup: false, // Popup gösterme, sadece log yap
                     onSuccess: function (position) {
                         hideMapPermissionWarning();
@@ -623,9 +646,9 @@
                             showMapPermissionWarning();
                         }
 
-                        // Ana sayfadaki davranışla aynı: popup yok, yalnızca gerçekten konum yoksa boş durum.
                         if (!state.cityId && !state.userLat && !state.userLng) {
-                            showLocationRequiredState();
+                            resetPagination();
+                            doSearch(false);
                         }
                     }
                 }).catch(function(error) {
@@ -696,11 +719,7 @@
                }
             }
 
-            resultGrid.innerHTML = '';
-            resultCount.textContent = '';
-            loadMoreWrap.hidden = true;
-            emptyEl.hidden = true;
-            showLocationRequiredState();
+            doSearch(false);
         });
 
         // Load more
@@ -769,7 +788,7 @@
     // ── Geolocation ──
     function requestUserLocation(forcePrompt, callback) {
         if (!window.locationService) {
-             if (!forcePrompt && !state.cityId && !state.userLat) showLocationRequiredState();
+             if (!state.cityId && !state.userLat) doSearch(false);
              if (callback) callback();
              return;
         }
@@ -783,7 +802,7 @@
             window.locationService.getLocation({
                 showLoading: forcePrompt,
                 buttonId: buttonId,
-                forceFresh: forcePrompt,
+                forceFresh: true,
                 enableHighAccuracy: true,
                 showErrorPopup: false, // Hataları manuel handle et
                 onSuccess: function (position) {
@@ -818,9 +837,9 @@
                         showMapPermissionWarning();
                     }
 
-                    // Restoran sayfasında hata popup'ı göstermeyelim; yalnızca konum yoksa boş durum göster.
                     if (!state.cityId && !state.userLat && !state.userLng) {
-                        showLocationRequiredState();
+                        resetPagination();
+                        doSearch(false);
                     }
                     if (callback) callback();
                 }
@@ -830,7 +849,8 @@
                     showMapPermissionWarning();
                 }
                 if (!state.cityId && !state.userLat && !state.userLng) {
-                    showLocationRequiredState();
+                    resetPagination();
+                    doSearch(false);
                 }
                 if (callback) callback();
             });
@@ -841,11 +861,6 @@
 
     // ── API Call ──
     function doSearch(append) {
-        if (!state.userLat && !state.cityId) {
-            showLocationRequiredState();
-            return;
-        }
-
         if (state.loading) return;
         state.loading = true;
 
@@ -892,7 +907,11 @@
 
                 state.page = requestedPage;
 
-                resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu';
+                if (data.isFallback && data.fallbackMessage) {
+                    resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu<br><span>' + escapeHtml(data.fallbackMessage) + '</span>';
+                } else {
+                    resultCount.innerHTML = '<strong>' + data.totalCount + '</strong> restoran bulundu';
+                }
 
                 updateMapMarkers(data.items);
 

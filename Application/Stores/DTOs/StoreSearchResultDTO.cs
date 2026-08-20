@@ -32,4 +32,6 @@ public sealed class StoreSearchResultListDTO
 	public int Page { get; set; }
 	public int PageSize { get; set; }
 	public bool HasNext { get; set; }
+	public bool IsFallback { get; set; }
+	public string? FallbackMessage { get; set; }
 }

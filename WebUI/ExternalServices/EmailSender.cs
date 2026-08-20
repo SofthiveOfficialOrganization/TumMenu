@@ -50,6 +50,18 @@ namespace WebUI.ExternalServices
             return match.Success ? match.Groups[1].Value : "Link bulunamadı";
         }
 
+        private SecureSocketOptions GetSecureSocketOptions()
+        {
+            if (!_emailSettings.EnableSsl)
+            {
+                return SecureSocketOptions.None;
+            }
+
+            return _emailSettings.Port == 465
+                ? SecureSocketOptions.SslOnConnect
+                : SecureSocketOptions.StartTls;
+        }
+
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var requestId = Guid.NewGuid().ToString("N")[..8];
@@ -72,8 +84,7 @@ namespace WebUI.ExternalServices
                 
                 LogToFile($"Connecting to {_emailSettings.SmtpServer}:{_emailSettings.Port} with SSL...");
                 // Connect to SMTP server
-                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, 
-                    _emailSettings.Port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls);
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, GetSecureSocketOptions());
                 LogToFile("Connected successfully");
                 
                 LogToFile($"Authenticating as {_emailSettings.Username}...");
@@ -161,10 +172,18 @@ namespace WebUI.ExternalServices
                     LogToFile($"SMTP Protocol Error: {ex.Message}");
                     throw new Exception($"SMTP Protokolü başarısız oldu: {ex.Message}", ex);
                 }
+                catch (MailKit.Security.SslHandshakeException ex)
+                {
+                    stopwatch.Stop();
+                    LogToFile($"SMTP TLS/SSL Certificate Error: {ex.Message}");
+                    LogToFile($"Inner Exception: {ex.InnerException?.Message}");
+                    throw new Exception("SMTP sunucusunun TLS/SSL sertifikası doğrulanamadı. Mail sunucusundaki sertifikayı yenileyin veya EmailSettings__SmtpServer değerini geçerli sertifikası olan SMTP ana makine adıyla güncelleyin.", ex);
+                }
             }
             catch (Exception ex) when (!(ex is MailKit.Security.AuthenticationException) && 
                                          !(ex is MailKit.Net.Smtp.SmtpCommandException) && 
-                                         !(ex is MailKit.Net.Smtp.SmtpProtocolException))
+                                         !(ex is MailKit.Net.Smtp.SmtpProtocolException) &&
+                                         !(ex is MailKit.Security.SslHandshakeException))
             {
                 LogToFile($"GENERAL ERROR [{requestId}]:");
                 LogToFile($"  Message: {ex.Message}");

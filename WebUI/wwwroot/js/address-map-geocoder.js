@@ -136,8 +136,8 @@
                     var lat = Number(result.latitude);
                     var lng = Number(result.longitude);
 
-                    $(options.latitudeSelector).val(lat.toFixed(6).replace('.', ','));
-                    $(options.longitudeSelector).val(lng.toFixed(6).replace('.', ','));
+                    $(options.latitudeSelector).val(lat.toFixed(6));
+                    $(options.longitudeSelector).val(lng.toFixed(6));
 
                     if (typeof options.onLocated === 'function') {
                         options.onLocated(lat, lng, result);

@@ -81,6 +81,7 @@ public class SearchStoresQueryHandler(
 				Latitude = s.Address != null ? s.Address.Latitude : null,
 				Longitude = s.Address != null ? s.Address.Longitude : null,
 				FullAddress = s.Address != null ? s.Address.FullAddress : null,
+				s.CreatedAt,
 				MatchedProductId = hasSearchTerm ? s.Menus
 					.Where(m => m.Status == MenuStatus.Active)
 					.SelectMany(m => m.Categories)
@@ -102,10 +103,10 @@ public class SearchStoresQueryHandler(
 			if (hasUserLocation && s.Latitude.HasValue && s.Longitude.HasValue)
 			{
 				bool coordsValid = s.Latitude >= -90 && s.Latitude <= 90 && s.Longitude >= -180 && s.Longitude <= 180;
-				if (!coordsValid) continue;
-
-				distance = CalculateHaversineDistance(req.UserLatitude!.Value, req.UserLongitude!.Value, s.Latitude.Value, s.Longitude.Value);
-				if (req.MaxDistanceKm.HasValue && distance > req.MaxDistanceKm.Value) continue;
+				if (coordsValid)
+				{
+					distance = CalculateHaversineDistance(req.UserLatitude!.Value, req.UserLongitude!.Value, s.Latitude.Value, s.Longitude.Value);
+				}
 			}
 
 			candidateResults.Add(new StoreSearchMatch
@@ -119,14 +120,33 @@ public class SearchStoresQueryHandler(
 				Longitude = s.Longitude,
 				FullAddress = s.FullAddress,
 				DistanceKm = distance,
+				CreatedAt = s.CreatedAt,
 				MatchedProductId = s.MatchedProductId
 			});
 		}
 
 		// 5. Sorting
-		var sortedResults = hasUserLocation 
-			? candidateResults.OrderBy(r => r.DistanceKm ?? double.MaxValue).ToList() 
-			: candidateResults.OrderBy(r => r.Title).ToList();
+		var distanceFilteredResults = candidateResults;
+		if (hasUserLocation && req.MaxDistanceKm.HasValue)
+		{
+			distanceFilteredResults = candidateResults
+				.Where(r => r.DistanceKm.HasValue && r.DistanceKm.Value <= req.MaxDistanceKm.Value)
+				.ToList();
+		}
+
+		var isFallback = false;
+		var fallbackMessage = (string?)null;
+		var resultsToPage = distanceFilteredResults;
+		if (hasUserLocation && req.MaxDistanceKm.HasValue && distanceFilteredResults.Count == 0 && candidateResults.Count > 0)
+		{
+			isFallback = true;
+			fallbackMessage = "Yakınlarda restoran bulunamadı. En son kaydedilen restoranlar gösteriliyor.";
+			resultsToPage = candidateResults;
+		}
+
+		var sortedResults = isFallback || !hasUserLocation
+			? resultsToPage.OrderByDescending(r => r.CreatedAt).ThenBy(r => r.Title).ToList()
+			: resultsToPage.OrderBy(r => r.DistanceKm ?? double.MaxValue).ThenByDescending(r => r.CreatedAt).ToList();
 
 		var totalCount = sortedResults.Count;
 		var page = req.Page;
@@ -141,7 +161,14 @@ public class SearchStoresQueryHandler(
 
 		if (!pagedMatches.Any())
 		{
-			return new StoreSearchResultListDTO { Page = page, PageSize = pageSize, TotalCount = totalCount };
+			return new StoreSearchResultListDTO
+			{
+				Page = page,
+				PageSize = pageSize,
+				TotalCount = totalCount,
+				IsFallback = isFallback,
+				FallbackMessage = fallbackMessage
+			};
 		}
 
 		// 7. Deferred load of heavy data (Images) ONLY for the result page
@@ -221,7 +248,9 @@ public class SearchStoresQueryHandler(
 			TotalCount = totalCount,
 			Page = page,
 			PageSize = pageSize,
-			HasNext = (page - from + 1) * pageSize < totalCount
+			HasNext = (page - from + 1) * pageSize < totalCount,
+			IsFallback = isFallback,
+			FallbackMessage = fallbackMessage
 		};
 	}
 
@@ -236,6 +265,7 @@ public class SearchStoresQueryHandler(
 		public double? Longitude { get; set; }
 		public string? FullAddress { get; set; }
 		public double? DistanceKm { get; set; }
+		public DateTimeOffset CreatedAt { get; set; }
 		public Guid? MatchedProductId { get; set; }
 	}
 

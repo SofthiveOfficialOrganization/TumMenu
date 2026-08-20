@@ -214,6 +214,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="~/js/map-base-layer.js" asp-append-version="true"></script>
     <script src="~/js/address-map-geocoder.js" asp-append-version="true"></script>
+    <script src="~/js/admin-store-location-map.js" asp-append-version="true"></script>
     <script src="~/js/store-social-links-editor.js" asp-append-version="true"></script>
     <script>
     $(document).ready(function () {
@@ -367,282 +368,22 @@
             }
         });
 
-        // Location Logic
-        const citySelect = $('#citySelect');
-        const districtSelect = $('#districtSelect');
-        const cityNameInput = $('#cityNameInput');
-        const districtNameInput = $('#districtNameInput');
-        const cityLatInput = $('#cityLatInput');
-        const cityLngInput = $('#cityLngInput');
-        let selectedProvinceId = null;
-
-        let map = null;
-        let marker = null;
-
-        function initMap(lat, lng, zoom = 10) {
-            console.log("initMap called with:", {lat, lng, zoom, mapExists: !!map});
-            
-            // Check for invalid coordinates
-            if (isNaN(lat) || isNaN(lng)) {
-                console.error("Invalid coordinates provided to initMap:", lat, lng);
-                lat = 39.0;
-                lng = 35.0;
-                zoom = 5;
-            }
-
-            if(!map) {
-                map = L.map('map').setView([lat, lng], zoom);
-                window.TumMenuMapBaseLayer.addTo(map);
-
-                marker = L.marker([lat, lng], {draggable: true}).addTo(map);
-
-                marker.on('dragend', function (e) {
-                    const pos = marker.getLatLng();
-                    cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
-                    cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
-                });
-                
-                setTimeout(function () {
-                    map.invalidateSize();
-                }, 250);
-            } else {
-                map.setView([lat, lng], zoom);
-                marker.setLatLng([lat, lng]);
-                setTimeout(function () {
-                    map.invalidateSize();
-                }, 250);
-            }
-        }
-
-        // Initialize Select2
-        citySelect.select2({
-            theme: 'bootstrap-5',
-            width: '100%'
-        });
-
-        districtSelect.select2({
-            theme: 'bootstrap-5',
-            width: '100%'
-        });
-
-        // Load Provinces
-        $.get('/api/location/provinces', function(data) {
-            data.forEach(p => {
-                citySelect.append($('<option>', {
-                    value: p.id,
-                    text: p.name,
-                    'data-lat': p.latitude,
-                    'data-lng': p.longitude
-                }));
-            });
-            citySelect.trigger('change');
-        });
-
-        citySelect.on('change', function() {
-            const selectedOption = $(this).find('option:selected');
-            selectedProvinceId = $(this).val();
-            
-            districtSelect.empty().append('<option value="">İlçe Seçiniz</option>');
-            
-            if (selectedProvinceId) {
-                const rawLat = selectedOption.data('lat');
-                const rawLng = selectedOption.data('lng');
-                console.log("Selected Province Data:", {id: selectedProvinceId, rawLat, rawLng});
-
-                const lat = parseFloat(rawLat) || 39.0;
-                const lng = parseFloat(rawLng) || 35.0;
-                
-                cityNameInput.val(selectedOption.text());
-                
-                // Sadece kullanıcı haritayı hiç ellemediyse veya il değiştirdiyse merkezle
-                // Ancak form yollanırken veya hata durumunda geri dönüldüğünde eski değer varsa onu koru!
-                const existingLat = parseFloat(cityLatInput.val());
-                const existingLng = parseFloat(cityLngInput.val());
-
-                console.log("Existing inputs:", {existingLat, existingLng});
-                $('#mapOverlay').hide();
-
-                // Nominatim API ile il merkezini bul
-                const cityName = selectedOption.text();
-                if (cityName) {
-                    const url = `https://nominatim.openstreetmap.org/search?format=json&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
-                    $.get(url, function(data) {
-                        if (data && data.length > 0) {
-                            const newLat = parseFloat(data[0].lat);
-                            const newLng = parseFloat(data[0].lon);
-                            
-                            if (!existingLat || isNaN(existingLat)) {
-                                cityLatInput.val(newLat.toFixed(6).replace('.', ','));
-                                cityLngInput.val(newLng.toFixed(6).replace('.', ','));
-                            }
-                            
-                            if (!map) {
-                                initMap(newLat, newLng, 10);
-                            } else {
-                                map.setView([newLat, newLng], 10);
-                                if (marker) marker.setLatLng([newLat, newLng]);
-                            }
-                        } else {
-                            // Fallback
-                            if (!map) initMap(lat, lng, 10);
-                        }
-                    });
-                } else {
-                    if (!map) initMap(lat, lng, 10);
-                }
-                
-                districtSelect.prop('disabled', false);
-                
-                $.get(`/api/location/districts/${selectedProvinceId}`, function(data) {
-                    data.forEach(d => {
-                        districtSelect.append($('<option>', {
-                            value: d.id,
-                            text: d.name
-                        }));
-                    });
-                    districtSelect.trigger('change');
-                });
-            } else {
-                cityNameInput.val('');
-                cityLatInput.val('');
-                cityLngInput.val('');
-                districtSelect.prop('disabled', true);
-                districtSelect.empty().append('<option value="">Önce İl Seçiniz</option>').trigger('change');
-                districtNameInput.val('');
-                $('#mapOverlay').show();
-            }
-        });
-
-        districtSelect.on('change', function() {
-             const selectedOption = $(this).find('option:selected');
-             if($(this).val()){
-                 const districtName = selectedOption.text();
-                 districtNameInput.val(districtName);
-                 const cityName = cityNameInput.val();
-                 
-                 // Nominatim (OpenStreetMap) API ile ilçe koordinatını bul
-                 if (cityName && districtName) {
-                    let url = '';
-                    if (districtName.toLowerCase() === 'merkez') {
-                        // Eğer ilçe "Merkez" ise doğrudan ili aratıp biraz daha yaklaştırıyoruz
-                        url = `https://nominatim.openstreetmap.org/search?format=json&city=${encodeURIComponent(cityName)}&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
-                    } else {
-                        url = `https://nominatim.openstreetmap.org/search?format=json&county=${encodeURIComponent(districtName)}&state=${encodeURIComponent(cityName)}&country=Türkiye&limit=1`;
-                    }
-                    
-                    $.get(url, function(data) {
-                        if (data && data.length > 0) {
-                            const lat = parseFloat(data[0].lat);
-                            const lng = parseFloat(data[0].lon);
-                            cityLatInput.val(lat.toFixed(6).replace('.', ','));
-                            cityLngInput.val(lng.toFixed(6).replace('.', ','));
-                            $('#mapOverlay').hide();
-                            if (map) {
-                                map.setView([lat, lng], 13);
-                                if (marker) marker.setLatLng([lat, lng]);
-                            } else {
-                                initMap(lat, lng, 13);
-                            }
-                        }
-                    });
-                 }
-             } else {
-                 districtNameInput.val('');
-             }
-        });
-
-        window.TumMenuAddressMapGeocoder.init({
-            buttonSelector: '#findAddressOnMapBtn',
-            feedbackSelector: '#addressGeocodeFeedback',
+        window.TumMenuAdminStoreLocationMap.init({
+            mapId: 'map',
+            citySelector: '#citySelect',
+            districtSelector: '#districtSelect',
             cityNameSelector: '#cityNameInput',
             districtNameSelector: '#districtNameInput',
-            neighborhoodSelector: '#Address_Neighborhood',
-            fullAddressSelector: '#Address_FullAddress',
             latitudeSelector: '#cityLatInput',
             longitudeSelector: '#cityLngInput',
-            onLocated: function(lat, lng) {
-                $('#mapOverlay').hide();
-
-                if (map) {
-                    map.setView([lat, lng], 17);
-                    if (marker) {
-                        marker.setLatLng([lat, lng]);
-                    } else {
-                        marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-                        marker.on('dragend', function(e) {
-                            const pos = e.target.getLatLng();
-                            cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
-                            cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
-                        });
-                    }
-                } else {
-                    initMap(lat, lng, 17);
-                }
-            }
-        });
-
-        // Buraya odakla butonu
-        $('#centerMapBtn').on('click', function() {
-            if (map) {
-                const center = map.getCenter();
-                const lat = center.lat;
-                const lng = center.lng;
-                
-                // Pin'i haritanın merkezine taşı
-                if (marker) {
-                    marker.setLatLng([lat, lng]);
-                } else {
-                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
-                    marker.on('dragend', function(e) {
-                        const pos = e.target.getLatLng();
-                        cityLatInput.val(pos.lat.toFixed(6).replace('.', ','));
-                        cityLngInput.val(pos.lng.toFixed(6).replace('.', ','));
-                    });
-                }
-                
-                // Koordinatları inputlara yaz
-                cityLatInput.val(lat.toFixed(6).replace('.', ','));
-                cityLngInput.val(lng.toFixed(6).replace('.', ','));
-                
-                // Overlay'i gizle
-                $('#mapOverlay').hide();
-            }
-        });
-
-        // Konumu kullan butonu
-        $('#useMyLocationBtn').on('click', function() {
-            const btn = $(this);
-            const originalContent = btn.html();
-            
-            window.locationService.getLocation({
-                showLoading: true,
-                buttonId: 'useMyLocationBtn',
-                showErrorPopup: true,
-                onSuccess: function (pos) {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    
-                    cityLatInput.val(lat.toFixed(6).replace('.', ','));
-                    cityLngInput.val(lng.toFixed(6).replace('.', ','));
-                    
-                    if (map) {
-                        map.setView([lat, lng], 15);
-                        if (marker) marker.setLatLng([lat, lng]);
-                    } else {
-                        initMap(lat, lng, 15);
-                    }
-                    
-                    // Overlay'i gizle
-                    $('#mapOverlay').hide();
-                },
-                onError: function (err, message) {
-                    console.warn('Geolocation error:', err);
-                    alert('Konum alınamadı. Lütfen tarayıcınızın konum izinlerini kontrol edin.');
-                }
-            }).catch(function(error) {
-                console.warn('Location request failed:', error);
-                alert('Tarayıcınız konum özelliğini desteklemiyor.');
-            });
+            overlaySelector: '#mapOverlay',
+            findAddressButtonSelector: '#findAddressOnMapBtn',
+            feedbackSelector: '#addressGeocodeFeedback',
+            neighborhoodSelector: '#Address_Neighborhood',
+            fullAddressSelector: '#Address_FullAddress',
+            centerButtonSelector: '#centerMapBtn',
+            useMyLocationButtonSelector: '#useMyLocationBtn',
+            useMyLocationButtonId: 'useMyLocationBtn'
         });
     });
     </script>
