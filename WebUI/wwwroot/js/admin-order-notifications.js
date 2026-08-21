@@ -2,8 +2,12 @@
     const badge = document.querySelector('[data-order-notification-badge]');
     const list = document.querySelector('[data-order-notification-list]');
     const bell = document.querySelector('[data-order-notification-bell]');
+    const soundButton = document.querySelector('[data-order-notification-sound]');
+    const soundText = document.querySelector('[data-order-notification-sound-text]');
     let unseenCount = Number(sessionStorage.getItem('tummenu.orderNotificationCount') || '0');
+    let audioContext = null;
     let audioUnlocked = false;
+    let soundEnabled = localStorage.getItem('tummenu.orderNotificationSound') === 'enabled';
 
     function renderBadge() {
         if (!badge) return;
@@ -32,23 +36,74 @@
         }
     }
 
-    function playSound() {
-        if (!audioUnlocked) return;
+    function renderSoundState() {
+        if (!soundButton || !soundText) return;
+        soundButton.classList.toggle('is-enabled', audioUnlocked);
+        soundText.textContent = audioUnlocked ? 'Ses açık' : 'Sesi aç';
+        soundButton.title = audioUnlocked
+            ? 'Yeni siparişlerde ses çalacak'
+            : 'Tarayıcı sesini etkinleştir';
+    }
+
+    function getAudioContext() {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return null;
+        audioContext = audioContext || new AudioContext();
+        return audioContext;
+    }
+
+    async function unlockAudio(playTestTone) {
         try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(0.001, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.3);
+            const ctx = getAudioContext();
+            if (!ctx) return false;
+            if (ctx.state === 'suspended') {
+                await ctx.resume();
+            }
+
+            audioUnlocked = ctx.state === 'running';
+            if (audioUnlocked) {
+                soundEnabled = true;
+                localStorage.setItem('tummenu.orderNotificationSound', 'enabled');
+                if (playTestTone) playSound();
+            }
+        } catch (_) {
+            audioUnlocked = false;
+        }
+
+        renderSoundState();
+        return audioUnlocked;
+    }
+
+    function playSound() {
+        if (!soundEnabled || !audioUnlocked) return;
+        try {
+            const ctx = getAudioContext();
+            if (!ctx || ctx.state !== 'running') return;
+            const master = ctx.createGain();
+            master.gain.setValueAtTime(0.55, ctx.currentTime);
+            master.connect(ctx.destination);
+
+            [
+                { start: 0, frequency: 880, duration: 0.22 },
+                { start: 0.28, frequency: 1175, duration: 0.28 },
+                { start: 0.68, frequency: 988, duration: 0.38 }
+            ].forEach(tone => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const start = ctx.currentTime + tone.start;
+                const end = start + tone.duration;
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(tone.frequency, start);
+                gain.gain.setValueAtTime(0.001, start);
+                gain.gain.exponentialRampToValueAtTime(0.22, start + 0.025);
+                gain.gain.exponentialRampToValueAtTime(0.001, end);
+
+                osc.connect(gain);
+                gain.connect(master);
+                osc.start(start);
+                osc.stop(end + 0.02);
+            });
         } catch (_) {
         }
     }
@@ -96,8 +151,16 @@
         return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value || 0)) + ' TL';
     }
 
-    document.addEventListener('click', function () {
-        audioUnlocked = true;
+    soundButton?.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        unlockAudio(true);
+    });
+
+    document.addEventListener('pointerdown', function () {
+        if (soundEnabled && !audioUnlocked) {
+            unlockAudio(false);
+        }
     }, { once: true });
 
     bell?.addEventListener('click', function () {
@@ -107,5 +170,6 @@
     });
 
     renderBadge();
+    renderSoundState();
     connect();
 })();

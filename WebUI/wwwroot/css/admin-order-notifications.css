@@ -38,6 +38,29 @@
   box-shadow: 0 20px 50px rgba(22, 28, 45, 0.16);
 }
 
+.tm-admin-order-notification-sound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 9px 10px;
+  border: 1px solid #d8def0;
+  border-radius: 8px;
+  background: #fff;
+  color: #1b254b;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tm-admin-order-notification-sound:hover,
+.tm-admin-order-notification-sound.is-enabled {
+  border-color: var(--horizon-primary);
+  background: #f4f7fe;
+  color: var(--horizon-primary);
+}
+
 .tm-admin-order-notification-item,
 .tm-admin-order-notification-empty,
 .tm-admin-order-notification-all {
