@@ -214,6 +214,14 @@
 
     async function submitOrder(event) {
         event.preventDefault();
+        const form = event.currentTarget instanceof HTMLFormElement
+            ? event.currentTarget
+            : event.target?.closest('form');
+        if (!form) {
+            toast('error', 'Sipariş formu okunamadı. Sayfayı yenileyip tekrar deneyin.');
+            return;
+        }
+
         const items = readCart();
         if (items.length === 0) {
             toast('warning', 'Sepetiniz boş.');
@@ -221,7 +229,6 @@
         }
         if (!(await ensureSession())) return;
 
-        const form = event.currentTarget;
         const formData = new FormData(form);
         const payload = {
             storeId: config.storeId,
@@ -237,8 +244,10 @@
         };
 
         const submitButton = form.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.textContent = 'Gönderiliyor...';
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Gönderiliyor...';
+        }
 
         try {
             const response = await fetch('/siparis/olustur', {
@@ -258,8 +267,10 @@
         } catch (error) {
             toast('error', error.message || 'Sipariş talebi gönderilemedi.');
         } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Sipariş Talebini Gönder';
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Sipariş Talebini Gönder';
+            }
             refreshSession();
         }
     }
@@ -289,8 +300,15 @@
 
         document.querySelector('[data-order-product-form]')?.addEventListener('submit', async event => {
             event.preventDefault();
+            const form = event.currentTarget instanceof HTMLFormElement
+                ? event.currentTarget
+                : event.target?.closest('form');
+            if (!form) {
+                toast('error', 'Ürün formu okunamadı. Sayfayı yenileyip tekrar deneyin.');
+                return;
+            }
+
             if (!(await ensureSession())) return;
-            const form = event.currentTarget;
             const formData = new FormData(form);
             const priceSelect = form.querySelector('[name="priceOption"]');
             const priceOption = priceSelect?.selectedOptions?.[0];
