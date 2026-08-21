@@ -79,30 +79,56 @@
         try {
             const ctx = getAudioContext();
             if (!ctx || ctx.state !== 'running') return;
-            const master = ctx.createGain();
-            master.gain.setValueAtTime(0.55, ctx.currentTime);
-            master.connect(ctx.destination);
 
-            [
-                { start: 0, frequency: 880, duration: 0.22 },
-                { start: 0.28, frequency: 1175, duration: 0.28 },
-                { start: 0.68, frequency: 988, duration: 0.38 }
-            ].forEach(tone => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+            const master = ctx.createGain();
+            const toneFilter = ctx.createBiquadFilter();
+            const delay = ctx.createDelay();
+            const wet = ctx.createGain();
+
+            master.gain.setValueAtTime(0.36, ctx.currentTime);
+            toneFilter.type = 'lowpass';
+            toneFilter.frequency.setValueAtTime(4200, ctx.currentTime);
+            delay.delayTime.setValueAtTime(0.09, ctx.currentTime);
+            wet.gain.setValueAtTime(0.08, ctx.currentTime);
+
+            master.connect(toneFilter);
+            toneFilter.connect(ctx.destination);
+            toneFilter.connect(delay);
+            delay.connect(wet);
+            wet.connect(ctx.destination);
+
+            const melody = [
+                { start: 0.00, frequency: 523.25, duration: 0.18 },
+                { start: 0.20, frequency: 659.25, duration: 0.18 },
+                { start: 0.40, frequency: 783.99, duration: 0.18 },
+                { start: 0.65, frequency: 880.00, duration: 0.30 },
+                { start: 1.00, frequency: 783.99, duration: 0.55 }
+            ];
+
+            melody.forEach((tone, index) => {
                 const start = ctx.currentTime + tone.start;
                 const end = start + tone.duration;
+                const noteGain = ctx.createGain();
+                const body = ctx.createOscillator();
+                const sparkle = ctx.createOscillator();
 
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(tone.frequency, start);
-                gain.gain.setValueAtTime(0.001, start);
-                gain.gain.exponentialRampToValueAtTime(0.22, start + 0.025);
-                gain.gain.exponentialRampToValueAtTime(0.001, end);
+                body.type = 'triangle';
+                body.frequency.setValueAtTime(tone.frequency, start);
+                sparkle.type = 'sine';
+                sparkle.frequency.setValueAtTime(tone.frequency * 2, start);
 
-                osc.connect(gain);
-                gain.connect(master);
-                osc.start(start);
-                osc.stop(end + 0.02);
+                noteGain.gain.setValueAtTime(0.001, start);
+                noteGain.gain.exponentialRampToValueAtTime(index === melody.length - 1 ? 0.2 : 0.24, start + 0.018);
+                noteGain.gain.exponentialRampToValueAtTime(0.055, start + Math.min(tone.duration * 0.55, 0.16));
+                noteGain.gain.exponentialRampToValueAtTime(0.001, end);
+
+                body.connect(noteGain);
+                sparkle.connect(noteGain);
+                noteGain.connect(master);
+                body.start(start);
+                sparkle.start(start);
+                body.stop(end + 0.03);
+                sparkle.stop(end + 0.03);
             });
         } catch (_) {
         }
