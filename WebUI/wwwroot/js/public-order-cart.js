@@ -222,11 +222,12 @@
         if (!(await ensureSession())) return;
 
         const form = event.currentTarget;
+        const formData = new FormData(form);
         const payload = {
             storeId: config.storeId,
-            customerName: form.customerName.value,
-            tableNumber: form.tableNumber.value,
-            note: form.note.value,
+            customerName: String(formData.get('customerName') || '').trim(),
+            tableNumber: String(formData.get('tableNumber') || '').trim(),
+            note: String(formData.get('note') || '').trim(),
             items: items.map(item => ({
                 productId: item.productId,
                 productPriceId: item.productPriceId || null,
@@ -290,16 +291,18 @@
             event.preventDefault();
             if (!(await ensureSession())) return;
             const form = event.currentTarget;
-            const priceOption = form.priceOption?.selectedOptions?.[0];
-            const quantity = Math.max(1, Math.min(99, Number(form.quantity.value || 1)));
+            const formData = new FormData(form);
+            const priceSelect = form.querySelector('[name="priceOption"]');
+            const priceOption = priceSelect?.selectedOptions?.[0];
+            const quantity = Math.max(1, Math.min(99, Number(formData.get('quantity') || 1)));
             addItem({
-                productId: form.productId.value,
+                productId: String(formData.get('productId') || ''),
                 productPriceId: priceOption?.value || '',
-                title: form.productTitle.value,
+                title: String(formData.get('productTitle') || ''),
                 size: priceOption?.dataset.size || '',
-                unitPrice: Number(priceOption?.dataset.price || form.basePrice.value || 0),
+                unitPrice: Number(priceOption?.dataset.price || formData.get('basePrice') || 0),
                 quantity,
-                note: form.note.value || null
+                note: String(formData.get('note') || '').trim() || null
             });
         });
     }
