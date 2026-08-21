@@ -621,6 +621,8 @@
                     buttonId: 'useMapLocationBtn',
                     forceFresh: true,
                     enableHighAccuracy: true,
+                    allowCachedFallbackOnError: true,
+                    fallbackMaxAgeMs: 10 * 60 * 1000,
                     showErrorPopup: false, // Popup gösterme, sadece log yap
                     onSuccess: function (position) {
                         hideMapPermissionWarning();
@@ -804,6 +806,8 @@
                 buttonId: buttonId,
                 forceFresh: true,
                 enableHighAccuracy: true,
+                allowCachedFallbackOnError: true,
+                fallbackMaxAgeMs: 10 * 60 * 1000,
                 showErrorPopup: false, // Hataları manuel handle et
                 onSuccess: function (position) {
                     hideMapPermissionWarning();

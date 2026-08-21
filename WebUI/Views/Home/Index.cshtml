@@ -794,6 +794,8 @@
                 buttonId: 'homeUseMyLocation',
                 forceFresh: true,
                 enableHighAccuracy: true,
+                allowCachedFallbackOnError: true,
+                fallbackMaxAgeMs: 10 * 60 * 1000,
                 showErrorPopup: false, // Handle errors manually
                 onSuccess: function (position) {
                     if (btn) btn.innerHTML = originalContent;
@@ -829,7 +831,7 @@
             initHomeCategorySelect2();
 
             // Sayfa açılışında izin isteme: varsa cache konumu kullan, yoksa default konuma düş.
-            const cachedPosition = window.locationService?.getCachedPosition?.();
+            const cachedPosition = window.locationService?.getPositionForPageLoad?.() || window.locationService?.getCachedPosition?.();
             if (cachedPosition?.coords?.latitude && cachedPosition?.coords?.longitude) {
                 const lat = cachedPosition.coords.latitude;
                 const lng = cachedPosition.coords.longitude;

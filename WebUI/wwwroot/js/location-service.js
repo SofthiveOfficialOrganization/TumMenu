@@ -95,6 +95,26 @@
             return this.pendingRequest;
         }
 
+        getFreshPositionOrCachedFallback(options = {}) {
+            var fallbackMaxAgeMs = options.fallbackMaxAgeMs || (10 * 60 * 1000);
+
+            return this.getFreshPosition(options)
+                .catch((error) => {
+                    if (!this.canUseCachedFallback(error)) {
+                        throw error;
+                    }
+
+                    var cached = this.getCachedPosition(fallbackMaxAgeMs) || this.lastKnownPosition;
+                    if (!cached || !cached.coords) {
+                        throw error;
+                    }
+
+                    cached.fromFallback = true;
+                    cached.fallbackReason = this.getErrorMessage(error);
+                    return cached;
+                });
+        }
+
         getLocation(options = {}) {
             var {
                 showLoading = false,
@@ -105,7 +125,9 @@
                 forceFresh = false,
                 maxAgeMs = this.cacheTtlMs,
                 enableHighAccuracy = false,
-                timeout = enableHighAccuracy ? 10000 : 5000
+                timeout = enableHighAccuracy ? 10000 : 5000,
+                allowCachedFallbackOnError = false,
+                fallbackMaxAgeMs = 10 * 60 * 1000
             } = options;
 
             var button = showLoading && buttonId ? document.getElementById(buttonId) : null;
@@ -115,10 +137,18 @@
                 button.innerHTML = '<span class="rest-spinner" style="width:14px;height:14px;border-width:2px;margin-right:5px;display:inline-block;border-top-color:var(--color-primary);"></span><span>Bulunuyor...</span>';
             }
 
+            var freshRequest = allowCachedFallbackOnError
+                ? this.getFreshPositionOrCachedFallback({
+                    enableHighAccuracy: enableHighAccuracy,
+                    timeout: timeout,
+                    fallbackMaxAgeMs: fallbackMaxAgeMs
+                })
+                : this.getFreshPosition({ enableHighAccuracy: enableHighAccuracy, timeout: timeout });
+
             var request = forceFresh
-                ? this.getFreshPosition({ enableHighAccuracy: enableHighAccuracy, timeout: timeout })
+                ? freshRequest
                 : Promise.resolve(this.getPositionForPageLoad({ maxAgeMs: maxAgeMs }))
-                    .then((cached) => cached || this.getFreshPosition({ enableHighAccuracy: enableHighAccuracy, timeout: timeout }));
+                    .then((cached) => cached || freshRequest);
 
             return request
                 .then((position) => {
@@ -174,6 +204,10 @@
                 default:
                     return error.message || 'Konum alınamadı.';
             }
+        }
+
+        canUseCachedFallback(error) {
+            return error && (error.code === 1 || error.code === 2 || error.code === 3);
         }
 
         showErrorPopup(message) {
