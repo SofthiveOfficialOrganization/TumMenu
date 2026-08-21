@@ -17,6 +17,7 @@ public sealed class CategoryPageDTO
 {
 	public string CompanySlug { get; set; } = null!;
 	public string StoreSlug { get; set; } = null!;
+	public Guid StoreId { get; set; }
 	public string StoreName { get; set; } = null!;
 	public string CompanyName { get; set; } = null!;
 	public string CategorySlug { get; set; } = null!;
@@ -87,6 +88,7 @@ public class GetCategoryBySlugHandler(
 			{
 				CompanySlug = store.Company.Slug,
 				StoreSlug = store.Slug,
+				StoreId = store.Id,
 				StoreName = store.Title,
 				CompanyName = store.Company.Title,
 				CategorySlug = c.CategoryLibraryItem.Slug,

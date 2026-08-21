@@ -24,6 +24,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/public-order-cart.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
     @{
         var menuPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
@@ -36,6 +37,13 @@
         };
     }
     @await Html.PartialAsync("Seo/_BreadcrumbJsonLd", breadcrumbs)
+}
+
+@section Scripts {
+    <script>
+        window.TumMenuPublicOrder = { storeId: '@Model.StoreId' };
+    </script>
+    <script src="~/js/public-order-cart.js" asp-append-version="true"></script>
 }
 
 <div class="pm-wrapper">
@@ -183,6 +191,17 @@
                                                 <span class="pm-product-price">@product.BasePrice.ToString("N2") ₺</span>
                                             }
                                         </div>
+                                        <span class="tm-order-add-button"
+                                              role="button"
+                                              tabindex="0"
+                                              data-order-add
+                                              data-product-id="@product.Id"
+                                              data-title="@product.Title"
+                                              data-price="@product.BasePrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                              data-quantity="1">
+                                            <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg>
+                                            Sepete ekle
+                                        </span>
                                         @if (product.IsVegan == true || product.IsVegetarian == true)
                                         {
                                             <div class="pm-product-badges">

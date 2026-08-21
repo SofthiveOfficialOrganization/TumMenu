@@ -110,7 +110,7 @@ public class GetActiveMenuBySlugHandler(
 		{
 			Id = menu.Id,
 			Title = menu.Title,
-			StoreId = menu.StoreId,
+			StoreId = store.Id,
 			CompanyId = menu.CompanyId,
 			MenuDesignId = menu.MenuDesignId,
 			MenuDesign = menu.MenuDesign?.ToDto(),

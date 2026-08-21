@@ -1,0 +1,72 @@
+.tm-admin-order-notification {
+  position: relative;
+}
+
+.tm-admin-order-notification__button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tm-admin-order-notification__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e31a1a;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 18px;
+}
+
+.tm-admin-order-notification__menu {
+  width: 310px;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(22, 28, 45, 0.16);
+}
+
+.tm-admin-order-notification-item,
+.tm-admin-order-notification-empty,
+.tm-admin-order-notification-all {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.tm-admin-order-notification-item {
+  color: #1b254b;
+}
+
+.tm-admin-order-notification-item:hover {
+  background: #f4f7fe;
+  color: #1b254b;
+}
+
+.tm-admin-order-notification-item span,
+.tm-admin-order-notification-item small,
+.tm-admin-order-notification-empty {
+  color: #718096;
+}
+
+.tm-admin-order-notification-all {
+  margin-top: 4px;
+  background: #f4f7fe;
+  color: var(--horizon-primary);
+  font-weight: 800;
+  text-align: center;
+}

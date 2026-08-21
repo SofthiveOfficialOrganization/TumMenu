@@ -13,6 +13,7 @@ using WebUI.Middleware;
 using WebUI.ModelBinding;
 using WebUI.Seo;
 using WebUI.Security;
+using WebUI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 var seedOnly = args.Any(arg => string.Equals(arg, "--seed-only", StringComparison.OrdinalIgnoreCase));
@@ -297,6 +298,7 @@ app.Use(async (context, next) =>
 });
 
 app.MapHealthChecks("/health").AllowAnonymous();
+app.MapHub<OrderRequestHub>("/hubs/order-requests");
 
 app.Map("/api", ApiNotFound).AllowAnonymous();
 app.Map("/api/{**path}", ApiNotFound).AllowAnonymous();

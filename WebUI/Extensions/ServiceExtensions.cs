@@ -44,6 +44,7 @@ namespace WebUI.Extensions
 
 			// Add HttpClientFactory for Turnstile API calls
 			services.AddHttpClient();
+			services.AddSignalR();
 
 			// Register Turnstile service
 			services.AddScoped<ITurnstileService, TurnstileService>();

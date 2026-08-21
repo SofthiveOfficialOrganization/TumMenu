@@ -52,6 +52,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/public-order-cart.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
     @{
         var menuPageUrl = $"/{companySlug}/{storeSlug}";
@@ -74,6 +75,13 @@
         Latitude = Model.StoreLatitude,
         Longitude = Model.StoreLongitude
     })
+}
+
+@section Scripts {
+    <script>
+        window.TumMenuPublicOrder = { storeId: '@Model.StoreId' };
+    </script>
+    <script src="~/js/public-order-cart.js" asp-append-version="true"></script>
 }
 
 <div class="pm-wrapper">

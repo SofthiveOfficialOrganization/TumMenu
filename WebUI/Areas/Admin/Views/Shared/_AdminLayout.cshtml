@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link rel="stylesheet" href="~/css/admin-tummenu.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/media-management.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-order-notifications.css" asp-append-version="true" />
     <script>
         // Default theme is light; only apply dark-mode if user explicitly chose it
         if (localStorage.getItem('theme') === 'dark') {
@@ -150,6 +151,12 @@
                             <span>Ürünlerim</span>
                         </a>
                     </li>
+                    <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "OrderRequests", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "OrderRequests" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-bell"></i></div>
+                            <span>Gelen Siparişler</span>
+                        </a>
+                    </li>
                 }
 
                 <li class="horizon-menu-item">
@@ -256,7 +263,30 @@
                 <div class="horizon-navbar-actions">
                     <input type="text" class="horizon-search" placeholder="Ara...">
                     
-                    <i class="far fa-bell horizon-navbar-icon"></i>
+                    @if (isOwnerPanelUser)
+                    {
+                        <div class="dropdown tm-admin-order-notification">
+                            <button type="button"
+                                    class="tm-admin-order-notification__button horizon-navbar-icon"
+                                    data-bs-toggle="dropdown"
+                                    data-order-notification-bell
+                                    aria-expanded="false"
+                                    aria-label="Gelen sipariş bildirimleri">
+                                <i class="far fa-bell"></i>
+                                <span class="tm-admin-order-notification__badge" data-order-notification-badge hidden>0</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end tm-admin-order-notification__menu">
+                                <div data-order-notification-list>
+                                    <div class="tm-admin-order-notification-empty" data-order-notification-empty>Yeni bildirim yok.</div>
+                                </div>
+                                <a class="tm-admin-order-notification-all" href="@Url.Action("Index", "OrderRequests", new { area = "Admin" })">Tümünü aç</a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <i class="far fa-bell horizon-navbar-icon"></i>
+                    }
                     <button type="button"
                             class="theme-switch theme-switch--navbar js-theme-toggle"
                             id="theme-toggle"
@@ -500,6 +530,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/tummenu-alerts.js" asp-append-version="true"></script>
+    @if (isOwnerPanelUser)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+        <script src="~/js/admin-order-notifications.js" asp-append-version="true"></script>
+    }
 
     @if (isOwnerPanelUser)
     {

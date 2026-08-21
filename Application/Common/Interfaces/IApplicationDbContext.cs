@@ -16,6 +16,7 @@ public interface IApplicationDbContext
     DbSet<MenuDesign> MenuDesigns { get; }
     DbSet<Category> Categories { get; }
     DbSet<Product> Products { get; }
+    DbSet<ProductPrice> ProductPrices { get; }
     DbSet<Media> Medias { get; }
     DbSet<Staff> Staffs { get; }
     DbSet<AuditLog> AuditLogs { get; }
@@ -24,6 +25,9 @@ public interface IApplicationDbContext
     DbSet<OwnerIssueReport> OwnerIssueReports { get; }
     DbSet<SystemSetting> SystemSettings { get; }
     DbSet<SystemLog> SystemLogs { get; }
+    DbSet<QrOrderSession> QrOrderSessions { get; }
+    DbSet<CustomerOrderRequest> CustomerOrderRequests { get; }
+    DbSet<CustomerOrderRequestItem> CustomerOrderRequestItems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

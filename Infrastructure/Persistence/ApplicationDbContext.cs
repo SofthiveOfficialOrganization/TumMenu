@@ -85,6 +85,9 @@ namespace Infrastructure.Persistence
 		public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
 		public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
 		public DbSet<SystemLog> SystemLogs => Set<SystemLog>();
+		public DbSet<QrOrderSession> QrOrderSessions => Set<QrOrderSession>();
+		public DbSet<CustomerOrderRequest> CustomerOrderRequests => Set<CustomerOrderRequest>();
+		public DbSet<CustomerOrderRequestItem> CustomerOrderRequestItems => Set<CustomerOrderRequestItem>();
 
 		// Many-to-many join
 		public DbSet<ProductTag> ProductTags => Set<ProductTag>();
@@ -99,6 +102,7 @@ namespace Infrastructure.Persistence
 			ConfigureMenuAndProduct(builder);
 			ConfigureBilling(builder);
 			ConfigureAds(builder);
+			ConfigureCustomerOrderRequests(builder);
 			ConfigureMisc(builder);
 			ConfigurePropertyConversions(builder);
 			ApplySoftDeleteQueryFilter(builder);
@@ -502,6 +506,88 @@ namespace Infrastructure.Persistence
 				.WithMany()
 				.HasForeignKey(i => i.AdPlacementId)
 				.OnDelete(DeleteBehavior.Cascade);
+		}
+
+		#endregion
+
+		#region Customer order requests
+
+		private static void ConfigureCustomerOrderRequests(ModelBuilder builder)
+		{
+			builder.Entity<QrOrderSession>(e =>
+			{
+				e.HasOne(x => x.Store)
+					.WithMany()
+					.HasForeignKey(x => x.StoreId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasOne(x => x.Company)
+					.WithMany()
+					.HasForeignKey(x => x.CompanyId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasOne(x => x.QRCode)
+					.WithMany()
+					.HasForeignKey(x => x.QRCodeId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasIndex(x => x.TokenHash);
+				e.HasIndex(x => new { x.StoreId, x.ExpiresAt });
+				e.Property(x => x.TokenHash).HasMaxLength(128).IsRequired();
+				e.Property(x => x.CreatedIp).HasMaxLength(128);
+				e.Property(x => x.UserAgent).HasMaxLength(512);
+			});
+
+			builder.Entity<CustomerOrderRequest>(e =>
+			{
+				e.HasOne(x => x.Company)
+					.WithMany()
+					.HasForeignKey(x => x.CompanyId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasOne(x => x.Store)
+					.WithMany()
+					.HasForeignKey(x => x.StoreId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasOne(x => x.QrOrderSession)
+					.WithMany()
+					.HasForeignKey(x => x.QrOrderSessionId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasMany(x => x.Items)
+					.WithOne(x => x.OrderRequest)
+					.HasForeignKey(x => x.OrderRequestId)
+					.OnDelete(DeleteBehavior.Cascade);
+
+				e.HasIndex(x => new { x.CompanyId, x.Status, x.CreatedAt });
+				e.HasIndex(x => new { x.StoreId, x.CreatedAt });
+				e.HasIndex(x => x.CreatedAt);
+				e.Property(x => x.Status).HasConversion<int>();
+				e.Property(x => x.Subtotal).HasColumnType("decimal(18,2)");
+				e.Property(x => x.CustomerName).HasMaxLength(150).IsRequired();
+				e.Property(x => x.TableNumber).HasMaxLength(40).IsRequired();
+				e.Property(x => x.Note).HasMaxLength(1000);
+			});
+
+			builder.Entity<CustomerOrderRequestItem>(e =>
+			{
+				e.HasOne(x => x.Product)
+					.WithMany()
+					.HasForeignKey(x => x.ProductId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.HasOne(x => x.ProductPrice)
+					.WithMany()
+					.HasForeignKey(x => x.ProductPriceId)
+					.OnDelete(DeleteBehavior.NoAction);
+
+				e.Property(x => x.ProductTitleSnapshot).HasMaxLength(200).IsRequired();
+				e.Property(x => x.ProductPriceSizeSnapshot).HasMaxLength(100);
+				e.Property(x => x.Note).HasMaxLength(500);
+				e.Property(x => x.UnitPrice).HasColumnType("decimal(18,2)");
+				e.Property(x => x.LineTotal).HasColumnType("decimal(18,2)");
+			});
 		}
 
 		#endregion

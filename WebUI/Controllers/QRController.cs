@@ -1,5 +1,7 @@
 using Application.QRs.Queries;
 using Application.QRs.Commands;
+using Application.CustomerOrderRequests;
+using Application.CustomerOrderRequests.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +45,30 @@ public class QRController(IMediator mediator, IServiceScopeFactory scopeFactory)
                     System.Diagnostics.Debug.WriteLine($"Error in background QR scan recording: {ex.Message}");
                 }
             });
+
+            try
+            {
+                var orderSession = await mediator.Send(new CreateQrOrderSessionCommand(
+                    result.QRCodeId,
+                    Request.HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    Request.Headers.UserAgent.ToString()), ct);
+
+                Response.Cookies.Append(
+                    OrderSessionToken.CookieName,
+                    orderSession.Token,
+                    new CookieOptions
+                    {
+                        Expires = orderSession.ExpiresAt,
+                        HttpOnly = true,
+                        IsEssential = true,
+                        SameSite = SameSiteMode.Lax,
+                        Secure = Request.IsHttps
+                    });
+            }
+            catch (Application.Common.Exceptions.NotFoundAppException)
+            {
+                // Store-bound QR codes can create order sessions; static QR targets still redirect normally.
+            }
 
             // 3. Redirect to the target menu
             return Redirect(result.Url);

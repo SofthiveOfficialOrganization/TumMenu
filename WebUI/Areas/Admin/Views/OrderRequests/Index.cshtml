@@ -1,0 +1,147 @@
+@using Application.CustomerOrderRequests.DTOs
+@using Application.Common.Base.DTOs
+@using Application.Stores.DTOs
+@using Domain.Entities
+@model List<CustomerOrderRequestSummaryDTO>
+
+@{
+    ViewData["Title"] = "Gelen Siparişler";
+    var status = ViewBag.CurrentStatus as CustomerOrderRequestStatus?;
+    var currentStoreId = ViewBag.CurrentStoreId as Guid?;
+    var currentDate = ViewBag.CurrentDate as string;
+    var storeOptions = ViewBag.StoreOptions as PaginatedListDTO<StoreDTO>;
+}
+
+<div class="horizon-card">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Gelen Siparişler</h4>
+            <p class="text-secondary small mb-0">QR menüden gelen sipariş taleplerini canlı takip edin.</p>
+        </div>
+        <form method="get" class="d-flex flex-wrap gap-2 align-items-center">
+            <select name="status" class="form-select form-select-sm" style="width: 150px;">
+                <option value="">Tüm durumlar</option>
+                <option value="New" selected="@(status == CustomerOrderRequestStatus.New)">Yeni</option>
+                <option value="Seen" selected="@(status == CustomerOrderRequestStatus.Seen)">Görüldü</option>
+                <option value="Completed" selected="@(status == CustomerOrderRequestStatus.Completed)">Tamamlandı</option>
+            </select>
+            <select name="storeId" class="form-select form-select-sm" style="width: 180px;">
+                <option value="">Tüm dükkanlar</option>
+                @foreach (var store in storeOptions?.Items ?? [])
+                {
+                    <option value="@store.Id" selected="@(currentStoreId == store.Id)">@store.Title</option>
+                }
+            </select>
+            <input type="date" name="date" value="@currentDate" class="form-control form-control-sm" style="width: 150px;" />
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fas fa-filter me-1"></i> Filtrele
+            </button>
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-times me-1"></i> Temizle
+            </a>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-borderless align-middle table-hover" id="orderRequestsTable">
+            <thead>
+                <tr class="text-secondary small text-uppercase border-bottom">
+                    <th>Saat</th>
+                    <th>Dükkan</th>
+                    <th>Müşteri</th>
+                    <th>Masa</th>
+                    <th>Adet</th>
+                    <th>Tutar</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr id="orderRequestsEmptyRow">
+                        <td colspan="8" class="text-center py-5 text-secondary">
+                            <i class="fas fa-bell-slash fa-2x mb-3 opacity-50"></i>
+                            <h5>Henüz sipariş talebi yok</h5>
+                            <p class="small mb-0">QR menüden gelen talepler burada görünecek.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var order in Model)
+                    {
+                        <tr data-order-id="@order.Id">
+                            <td>@order.CreatedAt.ToString("HH:mm")</td>
+                            <td class="fw-semibold">@order.StoreName</td>
+                            <td>@order.CustomerName</td>
+                            <td><span class="badge bg-light text-dark border">@order.TableNumber</span></td>
+                            <td>@order.ItemCount</td>
+                            <td>@order.Subtotal.ToString("N2") ₺</td>
+                            <td><span class="badge @StatusClass(order.Status)" data-order-status>@StatusText(order.Status)</span></td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-order-detail="@order.Id" title="Detay">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                @if (order.Status == CustomerOrderRequestStatus.New)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-order-seen="@order.Id" title="Görüldü yap">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                }
+                                @if (order.Status != CustomerOrderRequestStatus.Completed)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-success" data-order-complete="@order.Id" title="Tamamlandı yap">
+                                        <i class="fas fa-check-double"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="orderRequestDetailModal" tabindex="-1" aria-labelledby="orderRequestDetailTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <div>
+                    <div class="text-secondary small fw-semibold">Sipariş Talebi</div>
+                    <h5 class="modal-title fw-bold" id="orderRequestDetailTitle">Detay</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="orderRequestDetailBody">
+                <div class="text-center text-secondary py-4">Yükleniyor...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.TumMenuOrderRequestsPage = true;
+    </script>
+    <script src="~/js/admin-order-requests.js" asp-append-version="true"></script>
+}
+
+@functions {
+    private static string StatusText(CustomerOrderRequestStatus status) => status switch
+    {
+        CustomerOrderRequestStatus.New => "Yeni",
+        CustomerOrderRequestStatus.Seen => "Görüldü",
+        CustomerOrderRequestStatus.Completed => "Tamamlandı",
+        _ => status.ToString()
+    };
+
+    private static string StatusClass(CustomerOrderRequestStatus status) => status switch
+    {
+        CustomerOrderRequestStatus.New => "bg-danger",
+        CustomerOrderRequestStatus.Seen => "bg-warning text-dark",
+        CustomerOrderRequestStatus.Completed => "bg-success",
+        _ => "bg-secondary"
+    };
+}

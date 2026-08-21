@@ -22,6 +22,7 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/public-menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/public-order-cart.css" asp-append-version="true" />
     @await Html.PartialAsync("_MenuTheme", Model.MenuDesign)
     @{
         var menuPageUrl = $"/{Model.CompanySlug}/{Model.StoreSlug}";
@@ -46,6 +47,13 @@
         Price = Model.BasePrice,
         IncludeOffer = showPricesOnPublicMenu
     })
+}
+
+@section Scripts {
+    <script>
+        window.TumMenuPublicOrder = { storeId: '@Model.StoreId' };
+    </script>
+    <script src="~/js/public-order-cart.js" asp-append-version="true"></script>
 }
 
 <div class="pm-wrapper">
@@ -140,6 +148,46 @@
                                 <p class="pm-allergen-text">@Model.Allergens</p>
                             </div>
                         }
+
+                        <form class="tm-order-product-form" data-order-product-form>
+                            <input type="hidden" name="productId" value="@Model.ProductId" />
+                            <input type="hidden" name="productTitle" value="@Model.ProductTitle" />
+                            <input type="hidden" name="basePrice" value="@Model.BasePrice.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+                            <div class="tm-order-product-form-row">
+                                <label>
+                                    Seçenek
+                                    <select name="priceOption">
+                                        <option value=""
+                                                data-size=""
+                                                data-price="@Model.BasePrice.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                            Standart - @Model.BasePrice.ToString("N2") ₺
+                                        </option>
+                                        @foreach (var price in Model.Prices.OrderBy(p => p.CreatedAt))
+                                        {
+                                            <option value="@price.Id"
+                                                    data-size="@price.Size"
+                                                    data-price="@price.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                                @(string.IsNullOrWhiteSpace(price.Size) ? "Seçenek" : price.Size) - @price.Price.ToString("N2") ₺
+                                            </option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    Adet
+                                    <input type="number" name="quantity" value="1" min="1" max="99" inputmode="numeric" />
+                                </label>
+                            </div>
+
+                            <label>
+                                Ürün Notu
+                                <textarea name="note" maxlength="500" rows="2" placeholder="Örn. acısız, soğansız"></textarea>
+                            </label>
+
+                            <button type="submit" class="tm-order-submit">
+                                Sepete ekle
+                            </button>
+                        </form>
                     </div>
                 </section>
             </div>
