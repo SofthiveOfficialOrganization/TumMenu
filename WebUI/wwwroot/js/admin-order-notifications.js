@@ -10,7 +10,7 @@
     let audioUnlocked = false;
     let soundEnabled = true;
     let volumeMultiplier = Number(localStorage.getItem('tummenu.orderNotificationVolume') || '2');
-    volumeMultiplier = Math.max(1, Math.min(3, volumeMultiplier));
+    volumeMultiplier = Math.max(1, Math.min(5, volumeMultiplier));
 
     function renderBadge() {
         if (!badge) return;
@@ -198,7 +198,7 @@
 
     volumeInput?.addEventListener('input', function (event) {
         event.stopPropagation();
-        volumeMultiplier = Math.max(1, Math.min(3, Number(volumeInput.value || 2)));
+        volumeMultiplier = Math.max(1, Math.min(5, Number(volumeInput.value || 2)));
         localStorage.setItem('tummenu.orderNotificationVolume', String(volumeMultiplier));
         renderVolumeState();
     });
