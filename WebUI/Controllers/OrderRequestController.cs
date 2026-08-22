@@ -46,7 +46,19 @@ public sealed class OrderRequestController(
             subtotal = order.Subtotal,
             itemCount = order.ItemCount,
             createdAt = order.CreatedAt,
-            status = order.Status.ToString()
+            status = order.Status.ToString(),
+            items = order.Items.Select(item => new
+            {
+                id = item.Id,
+                productId = item.ProductId,
+                productPriceId = item.ProductPriceId,
+                productTitle = item.ProductTitle,
+                productPriceSize = item.ProductPriceSize,
+                quantity = item.Quantity,
+                unitPrice = item.UnitPrice,
+                lineTotal = item.LineTotal,
+                note = item.Note
+            })
         };
 
         await hubContext.Clients

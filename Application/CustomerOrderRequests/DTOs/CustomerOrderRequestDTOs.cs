@@ -40,12 +40,12 @@ public class CustomerOrderRequestSummaryDTO
     public decimal Subtotal { get; set; }
     public int ItemCount { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    public List<CustomerOrderRequestItemDTO> Items { get; set; } = [];
 }
 
 public sealed class CustomerOrderRequestDetailDTO : CustomerOrderRequestSummaryDTO
 {
     public string? Note { get; set; }
-    public List<CustomerOrderRequestItemDTO> Items { get; set; } = [];
 }
 
 public sealed class CustomerOrderRequestItemDTO

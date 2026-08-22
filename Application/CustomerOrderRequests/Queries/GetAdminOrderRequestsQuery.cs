@@ -64,7 +64,22 @@ public sealed class GetAdminOrderRequestsQueryHandler(
                 Status = x.Status,
                 Subtotal = x.Subtotal,
                 ItemCount = x.ItemCount,
-                CreatedAt = x.CreatedAt
+                CreatedAt = x.CreatedAt,
+                Items = x.Items
+                    .OrderBy(item => item.CreatedAt)
+                    .Select(item => new CustomerOrderRequestItemDTO
+                    {
+                        Id = item.Id,
+                        ProductId = item.ProductId,
+                        ProductPriceId = item.ProductPriceId,
+                        ProductTitle = item.ProductTitleSnapshot,
+                        ProductPriceSize = item.ProductPriceSizeSnapshot,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice,
+                        LineTotal = item.LineTotal,
+                        Note = item.Note
+                    })
+                    .ToList()
             })
             .ToListAsync(ct);
     }
