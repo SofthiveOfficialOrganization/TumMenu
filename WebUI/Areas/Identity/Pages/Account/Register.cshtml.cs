@@ -136,6 +136,45 @@ namespace WebUI.Areas.Identity.Pages.Account
             await LoadLegalVersionsAsync();
         }
 
+        public async Task<IActionResult> OnGetCheckEmailAsync(string email)
+        {
+            email = email?.Trim();
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new JsonResult(new
+                {
+                    isValid = false,
+                    message = "E-posta adresi gereklidir."
+                });
+            }
+
+            if (!new EmailAddressAttribute().IsValid(email))
+            {
+                return new JsonResult(new
+                {
+                    isValid = false,
+                    message = "Geçerli bir e-posta adresi giriniz."
+                });
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(email);
+            if (existingUser != null)
+            {
+                return new JsonResult(new
+                {
+                    isValid = false,
+                    message = "Bu e-posta adresi zaten kayıtlı."
+                });
+            }
+
+            return new JsonResult(new
+            {
+                isValid = true,
+                message = "Bu e-posta adresi kullanılabilir."
+            });
+        }
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null, CancellationToken ct = default)
         {
             returnUrl ??= Url.Content("~/");

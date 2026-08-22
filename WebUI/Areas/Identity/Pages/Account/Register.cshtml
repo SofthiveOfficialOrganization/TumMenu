@@ -22,6 +22,7 @@
                 <label asp-for="Input.Email" class="form-label">E-posta Adresi</label>
                 <input asp-for="Input.Email" class="form-input" autocomplete="username" aria-required="true" placeholder="ornek@email.com" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <div id="emailLiveFeedback" class="live-check-message" aria-live="polite"></div>
             </div>
 
             <div class="form-group">
@@ -33,6 +34,13 @@
                     </button>
                 </div>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <ul id="passwordLiveCheck" class="password-live-check" aria-live="polite">
+                    <li data-password-rule="length">En az 6 karakter</li>
+                    <li data-password-rule="uppercase">En az bir büyük harf</li>
+                    <li data-password-rule="lowercase">En az bir küçük harf</li>
+                    <li data-password-rule="digit">En az bir rakam</li>
+                    <li data-password-rule="symbol">En az bir sembol</li>
+                </ul>
             </div>
 
             <div class="form-group">
@@ -44,6 +52,7 @@
                     </button>
                 </div>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <div id="confirmPasswordLiveFeedback" class="live-check-message" aria-live="polite"></div>
             </div>
 
             <div class="form-group">
@@ -97,6 +106,134 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const submitButton = document.getElementById('registerSubmit');
+            const emailInput = document.getElementById('Input_Email');
+            const emailFeedback = document.getElementById('emailLiveFeedback');
+            const passwordInput = document.getElementById('Input_Password');
+            const confirmPasswordInput = document.getElementById('Input_ConfirmPassword');
+            const confirmPasswordFeedback = document.getElementById('confirmPasswordLiveFeedback');
+            const passwordRules = document.querySelectorAll('#passwordLiveCheck [data-password-rule]');
+            let emailCheckTimer;
+            let emailAbortController;
+            let emailState = 'idle';
+
+            const setLiveMessage = (element, state, message) => {
+                if (!element) {
+                    return;
+                }
+
+                element.textContent = message || '';
+                element.className = 'live-check-message';
+
+                if (!message) {
+                    return;
+                }
+
+                element.classList.add('is-visible', `live-check-message--${state}`);
+            };
+
+            const setEmailState = (state, message) => {
+                emailState = state;
+                setLiveMessage(emailFeedback, state, message);
+                if (emailInput) {
+                    emailInput.setAttribute('aria-invalid', state === 'error' ? 'true' : 'false');
+                }
+                if (submitButton) {
+                    submitButton.disabled = state === 'checking' || state === 'error';
+                }
+            };
+
+            const updatePasswordRules = () => {
+                if (!passwordInput) {
+                    return;
+                }
+
+                const password = passwordInput.value;
+                const checks = {
+                    length: password.length >= 6,
+                    uppercase: /\p{Lu}/u.test(password),
+                    lowercase: /\p{Ll}/u.test(password),
+                    digit: /\p{Nd}/u.test(password),
+                    symbol: /[^\p{L}\p{N}]/u.test(password)
+                };
+
+                passwordRules.forEach(rule => {
+                    const isValid = checks[rule.dataset.passwordRule];
+                    rule.classList.toggle('is-valid', Boolean(isValid));
+                    rule.classList.toggle('is-invalid', password.length > 0 && !isValid);
+                });
+            };
+
+            const updateConfirmPassword = () => {
+                if (!passwordInput || !confirmPasswordInput) {
+                    return;
+                }
+
+                if (!confirmPasswordInput.value) {
+                    setLiveMessage(confirmPasswordFeedback, 'idle', '');
+                    return;
+                }
+
+                if (confirmPasswordInput.value === passwordInput.value) {
+                    setLiveMessage(confirmPasswordFeedback, 'success', 'Şifreler eşleşiyor.');
+                    return;
+                }
+
+                setLiveMessage(confirmPasswordFeedback, 'error', 'Şifreler eşleşmiyor.');
+            };
+
+            const checkEmailAvailability = () => {
+                if (!emailInput) {
+                    return;
+                }
+
+                window.clearTimeout(emailCheckTimer);
+                if (emailAbortController) {
+                    emailAbortController.abort();
+                }
+
+                const email = emailInput.value.trim();
+                if (!email) {
+                    setEmailState('idle', '');
+                    return;
+                }
+
+                if (!emailInput.validity.valid) {
+                    setEmailState('idle', '');
+                    return;
+                }
+
+                emailCheckTimer = window.setTimeout(async () => {
+                    emailAbortController = new AbortController();
+                    setEmailState('checking', 'E-posta kontrol ediliyor...');
+
+                    try {
+                        const response = await fetch(`${window.location.pathname}?handler=CheckEmail&email=${encodeURIComponent(email)}`, {
+                            headers: { 'Accept': 'application/json' },
+                            signal: emailAbortController.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Email check failed.');
+                        }
+
+                        const result = await response.json();
+                        if (emailInput.value.trim() !== email) {
+                            return;
+                        }
+
+                        setEmailState(result.isValid ? 'success' : 'error', result.message);
+                    } catch (error) {
+                        if (error.name === 'AbortError') {
+                            return;
+                        }
+
+                        setEmailState('idle', '');
+                    }
+                }, 350);
+            };
+
             document.querySelectorAll('.password-toggle').forEach(button => {
                 button.addEventListener('click', function() {
                     const input = this.previousElementSibling;
@@ -110,6 +247,22 @@
                     }
                 });
             });
+
+            emailInput?.addEventListener('input', checkEmailAvailability);
+            passwordInput?.addEventListener('input', function() {
+                updatePasswordRules();
+                updateConfirmPassword();
+            });
+            confirmPasswordInput?.addEventListener('input', updateConfirmPassword);
+
+            form?.addEventListener('submit', function(event) {
+                if (emailState === 'checking' || emailState === 'error') {
+                    event.preventDefault();
+                    emailInput?.focus();
+                }
+            });
+
+            updatePasswordRules();
         });
     </script>
 }

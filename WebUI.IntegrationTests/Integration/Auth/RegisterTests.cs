@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Text.Json;
 using WebUI.IntegrationTests.Infrastructure;
 
 namespace WebUI.IntegrationTests.Integration.Auth;
@@ -24,6 +25,31 @@ public class RegisterTests : IClassFixture<TumMenuWebAppFactory>
         var client = CreateClient();
         var response = await client.GetAsync("/kayit");
         Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Register_CheckEmail_WithInvalidEmail_ReturnsInvalid()
+    {
+        var client = CreateClient();
+
+        var response = await client.GetAsync("/kayit?handler=CheckEmail&email=not-an-email");
+        response.EnsureSuccessStatusCode();
+
+        var payload = await ReadJsonAsync(response);
+        Assert.False(payload["isValid"].GetBoolean());
+    }
+
+    [Fact]
+    public async Task Register_CheckEmail_WithUnusedEmail_ReturnsValid()
+    {
+        var client = CreateClient();
+        var uniqueEmail = $"live-check-{Guid.NewGuid():N}@example.com";
+
+        var response = await client.GetAsync($"/kayit?handler=CheckEmail&email={Uri.EscapeDataString(uniqueEmail)}");
+        response.EnsureSuccessStatusCode();
+
+        var payload = await ReadJsonAsync(response);
+        Assert.True(payload["isValid"].GetBoolean());
     }
 
     [Fact]
@@ -66,5 +92,11 @@ public class RegisterTests : IClassFixture<TumMenuWebAppFactory>
             response.StatusCode == System.Net.HttpStatusCode.Found ||
             response.StatusCode == System.Net.HttpStatusCode.OK,
             $"Unexpected status: {response.StatusCode}");
+    }
+
+    private static async Task<Dictionary<string, JsonElement>> ReadJsonAsync(HttpResponseMessage response)
+    {
+        var content = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content)!;
     }
 }

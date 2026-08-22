@@ -199,6 +199,75 @@
     padding-right: 48px;
 }
 
+.live-check-message {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.live-check-message.is-visible {
+    display: block;
+}
+
+.live-check-message--checking {
+    color: #495E31;
+    background: #f3f7ee;
+    border: 1px solid rgba(104, 135, 69, 0.22);
+}
+
+.live-check-message--success {
+    color: #0f5132;
+    background: #ecfdf3;
+    border: 1px solid #bbf7d0;
+}
+
+.live-check-message--error {
+    color: #dc3545;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.password-live-check {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.password-live-check li {
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #fafafa;
+    border: 1px solid #ececec;
+    color: var(--color-muted, #6c757d);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.password-live-check li.is-valid {
+    color: #0f5132;
+    background: #ecfdf3;
+    border-color: #bbf7d0;
+}
+
+.password-live-check li.is-invalid {
+    color: #842029;
+    background: #fff5f5;
+    border-color: #fecaca;
+}
+
+#registerSubmit:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
 /* Email Verification Success Screen - Redesigned */
 .success-container {
     text-align: center !important;
