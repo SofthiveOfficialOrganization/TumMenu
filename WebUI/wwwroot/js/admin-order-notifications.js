@@ -2,12 +2,15 @@
     const badge = document.querySelector('[data-order-notification-badge]');
     const list = document.querySelector('[data-order-notification-list]');
     const bell = document.querySelector('[data-order-notification-bell]');
-    const soundButton = document.querySelector('[data-order-notification-sound]');
-    const soundText = document.querySelector('[data-order-notification-sound-text]');
+    const soundTestButton = document.querySelector('[data-order-notification-sound-test]');
+    const volumeInput = document.querySelector('[data-order-notification-volume]');
+    const volumeText = document.querySelector('[data-order-notification-volume-text]');
     let unseenCount = Number(sessionStorage.getItem('tummenu.orderNotificationCount') || '0');
     let audioContext = null;
     let audioUnlocked = false;
-    let soundEnabled = localStorage.getItem('tummenu.orderNotificationSound') === 'enabled';
+    let soundEnabled = true;
+    let volumeMultiplier = Number(localStorage.getItem('tummenu.orderNotificationVolume') || '2');
+    volumeMultiplier = Math.max(1, Math.min(3, volumeMultiplier));
 
     function renderBadge() {
         if (!badge) return;
@@ -36,13 +39,20 @@
         }
     }
 
-    function renderSoundState() {
-        if (!soundButton || !soundText) return;
-        soundButton.classList.toggle('is-enabled', audioUnlocked);
-        soundText.textContent = audioUnlocked ? 'Ses açık' : 'Sesi aç';
-        soundButton.title = audioUnlocked
-            ? 'Yeni siparişlerde ses çalacak'
-            : 'Tarayıcı sesini etkinleştir';
+    function renderVolumeState() {
+        if (volumeInput) {
+            volumeInput.value = String(volumeMultiplier);
+            volumeInput.title = `Bildirim sesi ${volumeMultiplier}x`;
+        }
+        if (volumeText) {
+            volumeText.textContent = `${volumeMultiplier}x`;
+        }
+        if (soundTestButton) {
+            soundTestButton.classList.toggle('is-enabled', audioUnlocked);
+            soundTestButton.title = audioUnlocked
+                ? 'Bildirim sesini test et'
+                : 'Bildirim sesini etkinleştir ve test et';
+        }
     }
 
     function getAudioContext() {
@@ -63,14 +73,13 @@
             audioUnlocked = ctx.state === 'running';
             if (audioUnlocked) {
                 soundEnabled = true;
-                localStorage.setItem('tummenu.orderNotificationSound', 'enabled');
                 if (playTestTone) playSound();
             }
         } catch (_) {
             audioUnlocked = false;
         }
 
-        renderSoundState();
+        renderVolumeState();
         return audioUnlocked;
     }
 
@@ -85,7 +94,7 @@
             const delay = ctx.createDelay();
             const wet = ctx.createGain();
 
-            master.gain.setValueAtTime(0.36, ctx.currentTime);
+            master.gain.setValueAtTime(0.36 * volumeMultiplier, ctx.currentTime);
             toneFilter.type = 'lowpass';
             toneFilter.frequency.setValueAtTime(4200, ctx.currentTime);
             delay.delayTime.setValueAtTime(0.09, ctx.currentTime);
@@ -177,8 +186,24 @@
         return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value || 0)) + ' TL';
     }
 
-    soundButton?.addEventListener('click', function (event) {
+    soundTestButton?.addEventListener('click', function (event) {
         event.preventDefault();
+        event.stopPropagation();
+        unlockAudio(true);
+    });
+
+    volumeInput?.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+
+    volumeInput?.addEventListener('input', function (event) {
+        event.stopPropagation();
+        volumeMultiplier = Math.max(1, Math.min(3, Number(volumeInput.value || 2)));
+        localStorage.setItem('tummenu.orderNotificationVolume', String(volumeMultiplier));
+        renderVolumeState();
+    });
+
+    volumeInput?.addEventListener('change', function (event) {
         event.stopPropagation();
         unlockAudio(true);
     });
@@ -196,6 +221,6 @@
     });
 
     renderBadge();
-    renderSoundState();
+    renderVolumeState();
     connect();
 })();

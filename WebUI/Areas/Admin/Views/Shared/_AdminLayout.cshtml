@@ -276,10 +276,22 @@
                                 <span class="tm-admin-order-notification__badge" data-order-notification-badge hidden>0</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end tm-admin-order-notification__menu">
-                                <button type="button" class="tm-admin-order-notification-sound" data-order-notification-sound>
-                                    <i class="fas fa-volume-up"></i>
-                                    <span data-order-notification-sound-text>Sesi aç</span>
-                                </button>
+                                <div class="tm-admin-order-notification-volume">
+                                    <button type="button"
+                                            class="tm-admin-order-notification-volume__test"
+                                            data-order-notification-sound-test
+                                            aria-label="Bildirim sesini test et">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                    <input type="range"
+                                           min="1"
+                                           max="3"
+                                           step="0.25"
+                                           value="2"
+                                           data-order-notification-volume
+                                           aria-label="Bildirim sesi seviyesi">
+                                    <span data-order-notification-volume-text>2x</span>
+                                </div>
                                 <div data-order-notification-list>
                                     <div class="tm-admin-order-notification-empty" data-order-notification-empty>Yeni bildirim yok.</div>
                                 </div>
