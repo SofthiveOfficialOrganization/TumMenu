@@ -1,96 +1,86 @@
 @{
     ViewData["Title"] = "Özellikler";
     ViewData["Description"] = "TümMenü'nün QR menü, restoran keşfi, menü yönetimi, ürün görselleri, analitik ve çoklu şube özelliklerini keşfedin.";
+    ViewData["OgImage"] = "/images/hero-illustration-business.webp";
 }
 
 @section Head {
-    <style>
-        .features-page {
-            background: #fbfaf7;
-        }
-
-        .features-hero,
-        .features-section {
-            padding: 72px 0;
-        }
-
-        .features-hero__inner {
-            max-width: 900px;
-        }
-
-        .features-eyebrow {
-            color: var(--color-primary);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .features-title {
-            color: var(--color-secondary-dark);
-            font-size: clamp(2rem, 5vw, 4rem);
-            line-height: 1.08;
-            margin-bottom: 20px;
-        }
-
-        .features-lead {
-            color: var(--color-text-muted);
-            font-size: 1.15rem;
-            line-height: 1.75;
-            max-width: 760px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: #fff;
-            border: 1px solid rgba(73, 85, 56, 0.12);
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 14px 34px rgba(48, 44, 35, 0.06);
-        }
-
-        .feature-card h2,
-        .feature-card h3 {
-            color: var(--color-secondary-dark);
-            margin-bottom: 12px;
-        }
-
-        .feature-card p,
-        .feature-card li {
-            color: var(--color-text-muted);
-            line-height: 1.65;
-        }
-
-        .feature-card ul {
-            padding-left: 20px;
-            margin-bottom: 0;
-        }
-
-        .feature-band {
-            background: #fff;
-            border-top: 1px solid rgba(73, 85, 56, 0.12);
-            border-bottom: 1px solid rgba(73, 85, 56, 0.12);
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/features.css" asp-append-version="true" />
 }
 
 <div class="features-page">
     <section class="features-hero" aria-labelledby="features-heading">
         <div class="container features-hero__inner">
-            <p class="features-eyebrow">Restoranlar ve kafeler için dijital menü altyapısı</p>
-            <h1 id="features-heading" class="features-title">Menünü yayınla, güncelle, ölç ve müşteriye daha net göster.</h1>
-            <p class="features-lead">
-                TümMenü, kağıt menünün yerine yalnızca bir QR kod koyan basit bir araç değildir. İşletme sahibinin
-                menü içeriklerini yönetmesini, müşterinin güncel fiyatlara ulaşmasını ve restoranın dijitalde daha
-                güvenilir görünmesini sağlayan pratik bir platformdur.
-            </p>
+            <div class="features-hero__content">
+                <h1 id="features-heading" class="features-hero__title">Menünü yayınla, güncelle, ölç ve müşteriye daha net göster.</h1>
+                <p class="features-hero__lead">
+                    TümMenü, kağıt menünün yerine yalnızca bir QR kod koyan basit bir araç değildir. İşletme sahibinin
+                    menü içeriklerini yönetmesini, müşterinin güncel fiyatlara ulaşmasını ve restoranın dijitalde daha
+                    güvenilir görünmesini sağlayan pratik bir platformdur.
+                </p>
+                <div class="features-hero__actions" aria-label="Özellikler sayfası işlemleri">
+                    <a class="btn btn--primary features-btn features-btn--primary" href="/qr-kod">
+                        <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-rocket")"></use></svg>
+                        QR menü oluştur
+                    </a>
+                    <a class="btn btn--ghost features-btn features-btn--secondary" href="/fiyatlandirma">Fiyatları incele</a>
+                </div>
+            </div>
+
+            <div class="features-hero__visual" aria-label="TümMenü ürün önizlemesi">
+                <div class="product-mockup product-mockup--dashboard">
+                    <div class="product-mockup__bar">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="product-mockup__body">
+                        <div class="product-mockup__side">
+                            <strong>Tüm Menü</strong>
+                            <span class="is-active">Menüler</span>
+                            <span>Ürünler</span>
+                            <span>QR</span>
+                        </div>
+                        <div class="product-mockup__main">
+                            <div class="product-mockup__topline">
+                                <span>Aktif menü</span>
+                                <strong>142 görüntülenme</strong>
+                            </div>
+                            <div class="product-mockup__rows">
+                                <span style="--w: 92%"></span>
+                                <span style="--w: 76%"></span>
+                                <span style="--w: 84%"></span>
+                            </div>
+                            <div class="product-mockup__chart">
+                                <span style="--h: 42%"></span>
+                                <span style="--h: 64%"></span>
+                                <span style="--h: 52%"></span>
+                                <span style="--h: 82%"></span>
+                                <span style="--h: 68%"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-phone" aria-hidden="true">
+                    <div class="product-phone__notch"></div>
+                    <div class="product-phone__screen">
+                        <div class="product-phone__cover"></div>
+                        <h2>Kafe Aroma</h2>
+                        <p>Güncel QR Menü</p>
+                        <div class="product-phone__item">
+                            <span>Mercimek Çorbası</span>
+                            <strong>85 TL</strong>
+                        </div>
+                        <div class="product-phone__item">
+                            <span>Izgara Köfte</span>
+                            <strong>240 TL</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="features-section feature-band" aria-labelledby="core-features-heading">
+    <section class="features-section features-section--surface" aria-labelledby="core-features-heading">
         <div class="container">
             <div class="section-heading">
                 <h2 id="core-features-heading" class="section__title">Temel özellikler</h2>
@@ -99,26 +89,32 @@
 
             <div class="features-grid">
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-menu")"></use></svg></span>
                     <h3>QR menü oluşturma</h3>
                     <p>Her işletme ve şube için menü bağlantısı oluşturulur. QR kodu masalarda, paket servis alanında, vitrinlerde veya sosyal medya profillerinde kullanılabilir.</p>
                 </article>
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-table")"></use></svg></span>
                     <h3>Kategori ve ürün yönetimi</h3>
                     <p>Başlangıçlar, ana yemekler, tatlılar ve içecekler gibi kategorileri düzenleyebilir; ürün adı, fiyat, açıklama ve görsel bilgilerini tek panelden güncelleyebilirsiniz.</p>
                 </article>
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-store")"></use></svg></span>
                     <h3>Çoklu şube desteği</h3>
                     <p>Birden fazla şubesi olan işletmeler her şubenin menüsünü ayrı yönetebilir. Böylece farklı fiyat, stok veya kampanya düzenleri karışmadan yayınlanır.</p>
                 </article>
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></span>
                     <h3>Mobil uyumlu menü sayfası</h3>
                     <p>Müşteri uygulama indirmeden telefon kamerasıyla QR kodu okutur ve menüye ulaşır. Sayfalar küçük ekranlarda hızlı okunacak şekilde tasarlanır.</p>
                 </article>
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-location")"></use></svg></span>
                     <h3>Keşif sayfaları</h3>
                     <p>TümMenü, restoranların yalnızca masadaki müşteriye değil, çevrede mekan arayan kullanıcılara da görünür olmasına yardımcı olur.</p>
                 </article>
                 <article class="feature-card">
+                    <span class="feature-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bolt")"></use></svg></span>
                     <h3>Menü analitiği</h3>
                     <p>Görüntülenme eğilimleri, kategori ilgisi ve ürün performansı gibi veriler, menü kararlarını tahmin yerine gözleme dayandırmayı kolaylaştırır.</p>
                 </article>
@@ -126,28 +122,160 @@
         </div>
     </section>
 
-    <section class="features-section" aria-labelledby="who-heading">
+    <section class="features-showcase" aria-labelledby="showcase-heading">
         <div class="container">
-            <div class="features-grid">
-                <article class="feature-card">
-                    <h2 id="who-heading">Kimler için uygun?</h2>
-                    <p>Kafe, restoran, pastane, burgerci, dönerci, otel restoranı, paket servis noktası ve çok şubeli yeme-içme işletmeleri TümMenü'yü kullanabilir.</p>
-                    <p>Özellikle fiyatları sık güncellenen, sezonluk ürün ekleyen veya menüsünü müşteriye daha görsel anlatmak isteyen işletmeler için güçlü bir başlangıç sağlar.</p>
-                </article>
-                <article class="feature-card">
-                    <h2>Nasıl başlanır?</h2>
-                    <ul>
-                        <li>Hesap oluşturun ve işletme bilgilerinizi girin.</li>
-                        <li>Şube, kategori ve ürünlerinizi ekleyin.</li>
-                        <li>Menünüzü kontrol edip QR kodunuzu indirin.</li>
-                        <li>QR kodu masalara, vitrine veya sosyal medya profillerinize yerleştirin.</li>
-                    </ul>
-                </article>
-                <article class="feature-card">
-                    <h2>İlgili rehberler</h2>
-                    <p>Dijital menüye geçmeden önce pratik bilgi almak isterseniz blog yazılarımızı inceleyebilirsiniz.</p>
-                    <p><a href="/dijital-menu-sistemi">Dijital menü sistemini incele</a>, <a href="/fiyatlandirma">QR menü fiyatlarına bak</a>, <a href="/blog">blog rehberlerini oku</a> veya plan soruları için <a href="/iletisim">iletişime geç</a>.</p>
-                </article>
+            <div class="section-heading">
+                <h2 id="showcase-heading" class="section__title">Menü operasyonunu tek akışta topla</h2>
+                <p class="section__subtitle">QR erişim, içerik yönetimi ve analitik aynı sistem içinde birlikte çalışır.</p>
+            </div>
+
+            <article class="showcase-row">
+                <div class="showcase-row__text">
+                    <h3>QR Menü</h3>
+                    <p>Masadaki QR kod, vitrin, paket servis alanı veya sosyal medya profiliniz aynı güncel menü bağlantısına gider. Müşteri uygulama indirmeden telefon kamerasıyla menüye ulaşır.</p>
+                    <a href="/qr-kod">Ücretsiz QR menü oluşturma</a>
+                </div>
+                <div class="showcase-row__visual showcase-row__visual--qr" aria-hidden="true">
+                    <div class="qr-plate">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="scan-note">
+                        <svg class="tm-icon" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg>
+                        Menü açıldı
+                    </div>
+                </div>
+            </article>
+
+            <article class="showcase-row showcase-row--reverse">
+                <div class="showcase-row__text">
+                    <h3>Menü Yönetimi</h3>
+                    <p>Başlangıçlar, ana yemekler, tatlılar ve içecekler gibi kategoriler, ürün adı, fiyat, açıklama ve görsel bilgileri tek panelden güncellenir. Fiyat değiştiğinde kağıt menü kovalamazsınız.</p>
+                    <a href="/dijital-menu-sistemi">Dijital menü sistemini incele</a>
+                </div>
+                <div class="showcase-row__visual showcase-row__visual--menu" aria-hidden="true">
+                    <div class="menu-editor">
+                        <div>
+                            <strong>Ürünler</strong>
+                            <button type="button" tabindex="-1">Kaydet</button>
+                        </div>
+                        <span class="menu-editor__field">Mercimek Çorbası</span>
+                        <span class="menu-editor__field">85 TL</span>
+                        <span class="menu-editor__field menu-editor__field--wide">Günlük hazırlanır, sıcak servis edilir.</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="showcase-row">
+                <div class="showcase-row__text">
+                    <h3>Analitik</h3>
+                    <p>Görüntülenme eğilimleri, kategori ilgisi ve ürün performansı gibi veriler, menü kararlarını tahmin yerine gözleme dayandırmayı kolaylaştırır.</p>
+                    <a href="/iletisim">Plan ve destek için iletişime geç</a>
+                </div>
+                <div class="showcase-row__visual showcase-row__visual--analytics" aria-hidden="true">
+                    <div class="analytics-panel">
+                        <div class="analytics-panel__metric"><strong>38%</strong><span>Tatlı ilgisi</span></div>
+                        <div class="analytics-panel__bars">
+                            <span style="--h: 58%"></span>
+                            <span style="--h: 78%"></span>
+                            <span style="--h: 48%"></span>
+                            <span style="--h: 86%"></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="features-section features-section--surface" aria-labelledby="who-heading">
+        <div class="container">
+            <div class="who-layout">
+                <div>
+                    <h2 id="who-heading" class="section__title">Kimler için uygun?</h2>
+                    <p class="section__subtitle">Kafe, restoran, pastane, burgerci, dönerci, otel restoranı, paket servis noktası ve çok şubeli yeme-içme işletmeleri TümMenü'yü kullanabilir.</p>
+                    <p class="section__subtitle">Özellikle fiyatları sık güncellenen, sezonluk ürün ekleyen veya menüsünü müşteriye daha görsel anlatmak isteyen işletmeler için güçlü bir başlangıç sağlar.</p>
+                </div>
+                <div class="who-list" aria-label="TümMenü kullanım alanları">
+                    <article>
+                        <span>Restoran</span>
+                        <p>Geniş menüyü kategori ve ürün açıklamalarıyla düzenli gösterin.</p>
+                    </article>
+                    <article>
+                        <span>Kafe</span>
+                        <p>Kahve, tatlı ve kahvaltı seçeneklerini mobil ekranda hızlı okutun.</p>
+                    </article>
+                    <article>
+                        <span>Pastane</span>
+                        <p>Sezonluk ürünleri ve vitrin fiyatlarını güncel tutun.</p>
+                    </article>
+                    <article>
+                        <span>Çok şubeli işletme</span>
+                        <p>Farklı fiyat, stok veya kampanya düzenlerini şube bazlı yönetin.</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" aria-labelledby="start-heading">
+        <div class="container">
+            <div class="section-heading section-heading--center">
+                <h2 id="start-heading" class="section__title">Nasıl başlanır?</h2>
+                <p class="section__subtitle">Menünün müşteriye ulaşması için dört pratik adım yeterlidir.</p>
+            </div>
+            <ol class="steps-list">
+                <li>
+                    <span>1</span>
+                    <strong>Hesap oluşturun ve işletme bilgilerinizi girin.</strong>
+                </li>
+                <li>
+                    <span>2</span>
+                    <strong>Şube, kategori ve ürünlerinizi ekleyin.</strong>
+                </li>
+                <li>
+                    <span>3</span>
+                    <strong>Menünüzü kontrol edip QR kodunuzu indirin.</strong>
+                </li>
+                <li>
+                    <span>4</span>
+                    <strong>QR kodu masalara, vitrine veya sosyal medya profillerinize yerleştirin.</strong>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="features-final-cta" aria-labelledby="final-cta-heading">
+        <div class="container features-final-cta__inner">
+            <div>
+                <h2 id="final-cta-heading">İşletmeni güncel kalan bir QR menüye taşı</h2>
+                <p>Menünü tek panelden yayınla, ürünleri düzenle ve müşteriye her zaman doğru fiyatı göster.</p>
+            </div>
+            <a class="btn btn--primary features-btn features-btn--light" href="/qr-kod">QR menü oluşturmaya başla</a>
+        </div>
+    </section>
+
+    <section class="features-section features-section--resources" aria-labelledby="guides-heading">
+        <div class="container">
+            <div class="section-heading">
+                <h2 id="guides-heading" class="section__title">İlgili rehberler</h2>
+                <p class="section__subtitle">Dijital menüye geçmeden önce pratik bilgi almak isterseniz blog yazılarımızı inceleyebilirsiniz.</p>
+            </div>
+            <div class="resource-grid">
+                <a class="resource-card" href="/dijital-menu-sistemi">
+                    <span>Dijital Menü Sistemi</span>
+                    <strong>Dijital menü sistemini incele</strong>
+                </a>
+                <a class="resource-card" href="/fiyatlandirma">
+                    <span>Planlama</span>
+                    <strong>QR menü fiyatlarına bak</strong>
+                </a>
+                <a class="resource-card" href="/blog">
+                    <span>Blog</span>
+                    <strong>Blog rehberlerini oku</strong>
+                </a>
+                <a class="resource-card" href="/iletisim">
+                    <span>Destek</span>
+                    <strong>Plan soruları için iletişime geç</strong>
+                </a>
             </div>
         </div>
     </section>

@@ -6,11 +6,6 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/BeQr.css" asp-append-version="true" />
-    <style>
-        .qr-seo-guide { background: #fbfaf7; padding: 56px 0; }
-        .qr-seo-guide__steps { max-width: 720px; margin: 24px auto 0; padding-left: 1.25rem; line-height: 1.75; color: var(--color-text-muted, #444); }
-        .qr-seo-guide__note { max-width: 720px; margin: 20px auto 0; text-align: center; color: var(--color-text-muted, #444); }
-    </style>
 }
 
 <!-- HERO SECTION -->
@@ -543,10 +538,10 @@
             QR menü sistemi kurulduktan sonra aynı karekod masada kalır; siz dijital menünüzü panelden güncellersiniz.
         </p>
         <ol class="qr-seo-guide__steps">
-            <li><strong>Ücretsiz kayıt olun</strong> — işletme ve şube bilgilerinizi girin.</li>
-            <li><strong>Menünüzü oluşturun</strong> — kategori, ürün, açıklama ve isteğe bağlı fotoğraf ekleyin.</li>
-            <li><strong>QR kodunuzu indirin</strong> — sabit QR kod masalarda kalır; menüyü panelden güncellersiniz.</li>
-            <li><strong>Müşterileriniz okutur</strong> — uygulama veya üyelik gerekmez; menü tarayıcıda açılır.</li>
+            <li><span><strong>Ücretsiz kayıt olun</strong> — işletme ve şube bilgilerinizi girin.</span></li>
+            <li><span><strong>Menünüzü oluşturun</strong> — kategori, ürün, açıklama ve isteğe bağlı fotoğraf ekleyin.</span></li>
+            <li><span><strong>QR kodunuzu indirin</strong> — sabit QR kod masalarda kalır; menüyü panelden güncellersiniz.</span></li>
+            <li><span><strong>Müşterileriniz okutur</strong> — uygulama veya üyelik gerekmez; menü tarayıcıda açılır.</span></li>
         </ol>
         <p class="qr-seo-guide__note">
             Menü yönetimi tarafını daha detaylı incelemek için <a href="/dijital-menu-sistemi">dijital menü sistemi</a> sayfasına,
@@ -556,186 +551,93 @@
     </div>
 </section>
 
-<!-- FLIP CARDS - NEDEN QR? -->
 <section id="benefits" class="section qr-benefits" aria-labelledby="benefits-heading">
     <div class="container">
-        <div class="section-heading section-heading--center">
-            <h2 id="benefits-heading" class="section__title">Neden QR Menü?</h2>
-            <p class="section__subtitle">
-                Geleneksel menülerin sorunlarına modern çözümler
-            </p>
+        <div class="qr-section-head">
+            <div>
+                <h2 id="benefits-heading" class="section__title">Neden QR Menü?</h2>
+                <p class="section__subtitle">
+                    Geleneksel menülerin sorunlarına modern çözümler
+                </p>
+            </div>
+            <a class="qr-section-head__link" href="/fiyatlandirma">Planları incele</a>
         </div>
-        
-        <div class="qr-benefits__grid">
-            <!-- Card 1 -->
-            <div class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-money")"></use></svg></div>
-                        <h3 class="flip-card__title">Yüksek Maliyet</h3>
-                        <p class="flip-card__text">
-                            Menü basmak ve sürekli yenilemek pahalı
-                        </p>
-                        <div class="flip-card__hint">Çözümü gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg></div>
-                        <h3 class="flip-card__title">Sıfır Baskı Maliyeti</h3>
-                        <p class="flip-card__text">
-                            Dijital menü ile menü baskısına hiç para ödeme. 
-                            Güncellemeler anlık ve ücretsiz.
-                        </p>
-                        <div class="flip-card__stat">Baskı ihtiyacı azalır</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card 2 -->
-            <div class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></div>
-                        <h3 class="flip-card__title">Zor Güncelleme</h3>
-                        <p class="flip-card__text">
-                            Fiyat değişikliği için tüm menüleri yeniden bas
-                        </p>
-                        <div class="flip-card__hint">Çözümü gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-bolt")"></use></svg></div>
-                        <h3 class="flip-card__title">Anında Güncelleme</h3>
-                        <p class="flip-card__text">
-                            Menünü online panelden saniyeler içinde güncelle. 
-                            Değişiklikler hemen yayınlanır.
-                        </p>
-                        <div class="flip-card__stat">5 saniyede güncelle</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card 3 -->
-            <div class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-warning")"></use></svg></div>
-                        <h3 class="flip-card__title">Hijyen Sorunu</h3>
-                        <p class="flip-card__text">
-                            Fiziksel menüler ellerde dolaşıyor, temizlik zor
-                        </p>
-                        <div class="flip-card__hint">Çözümü gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></div>
-                        <h3 class="flip-card__title">Temassız Menü</h3>
-                        <p class="flip-card__text">
-                            Müşteriler kendi telefonlarından menüye erişir. 
-                            %100 hijyenik ve güvenli.
-                        </p>
-                        <div class="flip-card__stat">Tamamen temassız</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card 4 -->
-            <div class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-doc")"></use></svg></div>
-                        <h3 class="flip-card__title">Sınırlı Alan</h3>
-                        <p class="flip-card__text">
-                            Kağıt menüde yer sınırlı, tüm bilgileri sığdıramazsın
-                        </p>
-                        <div class="flip-card__hint">Çözümü gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <div class="flip-card__icon flip-card__icon--success"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></div>
-                        <h3 class="flip-card__title">Sınırsız İçerik</h3>
-                        <p class="flip-card__text">
-                            Fotoğraflar, açıklamalar, alerjen bilgileri, 
-                            sosyal medya linkleri ve daha fazlası!
-                        </p>
-                        <div class="flip-card__stat">Sınırsız bilgi</div>
-                    </div>
-                </div>
-            </div>
+
+        <div class="qr-benefits__layout">
+            <article class="qr-benefit-card qr-benefit-card--primary">
+                <span class="qr-benefit-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-money")"></use></svg></span>
+                <h3>Yüksek Maliyet</h3>
+                <p>Menü basmak ve sürekli yenilemek pahalı. Dijital menü ile menü baskısına hiç para ödeme; güncellemeler anlık ve ücretsiz.</p>
+                <strong>Baskı ihtiyacı azalır</strong>
+            </article>
+            <article class="qr-benefit-card">
+                <span class="qr-benefit-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></span>
+                <h3>Zor Güncelleme</h3>
+                <p>Fiyat değişikliği için tüm menüleri yeniden basmak yerine menünü online panelden saniyeler içinde güncelle. Değişiklikler hemen yayınlanır.</p>
+                <strong>5 saniyede güncelle</strong>
+            </article>
+            <article class="qr-benefit-card">
+                <span class="qr-benefit-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-phone")"></use></svg></span>
+                <h3>Hijyen Sorunu</h3>
+                <p>Fiziksel menüler ellerde dolaşıyor, temizlik zor. Müşteriler kendi telefonlarından menüye erişir.</p>
+                <strong>Tamamen temassız</strong>
+            </article>
+            <article class="qr-benefit-card">
+                <span class="qr-benefit-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-doc")"></use></svg></span>
+                <h3>Sınırlı Alan</h3>
+                <p>Kağıt menüde yer sınırlı, tüm bilgileri sığdıramazsın. Fotoğraflar, açıklamalar, alerjen bilgileri, sosyal medya linkleri ve daha fazlası tek sayfada yer alabilir.</p>
+                <strong>Sınırsız bilgi</strong>
+            </article>
         </div>
     </div>
 </section>
 
-<section class="section" aria-labelledby="qr-guides-heading">
+<section class="section qr-guides" aria-labelledby="qr-guides-heading">
     <div class="container">
-        <div class="section-heading section-heading--center">
-            <h2 id="qr-guides-heading" class="section__title">QR menüye geçmeden önce okuyun</h2>
-            <p class="section__subtitle">
-                Kurulum, kağıt menü karşılaştırması ve müşteri deneyimi hakkında hazırladığımız rehberler,
-                işletmeniz için doğru geçiş planını oluşturmanıza yardımcı olur.
-            </p>
-        </div>
+        <div class="qr-guides__layout">
+            <div class="qr-guides__intro">
+                <h2 id="qr-guides-heading" class="section__title">QR menüye geçmeden önce okuyun</h2>
+                <p class="section__subtitle">
+                    Kurulum, kağıt menü karşılaştırması ve müşteri deneyimi hakkında hazırladığımız rehberler,
+                    işletmeniz için doğru geçiş planını oluşturmanıza yardımcı olur.
+                </p>
+                <a class="btn btn--primary" href="/blog">Tüm rehberleri gör</a>
+            </div>
 
-        <div class="qr-benefits__grid">
-            <article class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-doc")"></use></svg></div>
-                        <h3 class="flip-card__title">Başlangıç rehberi</h3>
-                        <p class="flip-card__text">QR menünün ne olduğunu, nasıl çalıştığını ve masada nasıl kullanıldığını öğrenin.</p>
-                        <div class="flip-card__hint">Rehberi aç →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <h3 class="flip-card__title">QR menü nedir?</h3>
-                        <p class="flip-card__text">Müşteri ve işletme açısından temel süreci anlatan kapsamlı giriş yazısı.</p>
-                        <a class="flip-card__stat" href="/blog/qr-menu-nedir-nasil-calisir">Oku</a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></div>
-                        <h3 class="flip-card__title">Kurulum planı</h3>
-                        <p class="flip-card__text">İşletme bilgileri, kategori yapısı, ürün içerikleri ve QR yerleşimini planlayın.</p>
-                        <div class="flip-card__hint">Adımları gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <h3 class="flip-card__title">Adım adım kurulum</h3>
-                        <p class="flip-card__text">Yayına almadan önce kontrol edilmesi gereken pratik liste.</p>
-                        <a class="flip-card__stat" href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">Oku</a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></div>
-                        <h3 class="flip-card__title">Karşılaştırma</h3>
-                        <p class="flip-card__text">QR menü ve kağıt menünün maliyet, hijyen ve müşteri deneyimi farklarını inceleyin.</p>
-                        <div class="flip-card__hint">Karşılaştır →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <h3 class="flip-card__title">QR mı, kağıt mı?</h3>
-                        <p class="flip-card__text">Hangi işletme için hangi yaklaşım daha mantıklı?</p>
-                        <a class="flip-card__stat" href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">Oku</a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="flip-card">
-                <div class="flip-card__inner">
-                    <div class="flip-card__front">
-                        <div class="flip-card__icon"><svg class="tm-icon tm-icon--xl" aria-hidden="true"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-smile")"></use></svg></div>
-                        <h3 class="flip-card__title">Müşteri deneyimi</h3>
-                        <p class="flip-card__text">Menüyü hız, açıklık, fotoğraf ve alerjen bilgisi açısından iyileştirin.</p>
-                        <div class="flip-card__hint">Detayları gör →</div>
-                    </div>
-                    <div class="flip-card__back">
-                        <h3 class="flip-card__title">Daha iyi deneyim</h3>
-                        <p class="flip-card__text">QR menünün karar sürecini nasıl kolaylaştırdığını okuyun.</p>
-                        <a class="flip-card__stat" href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">Oku</a>
-                    </div>
-                </div>
-            </article>
+            <div class="qr-guide-list">
+                <a class="qr-guide-item" href="/blog/qr-menu-nedir-nasil-calisir">
+                    <span class="qr-guide-item__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-doc")"></use></svg></span>
+                    <span>
+                        <strong>Başlangıç rehberi</strong>
+                        <small>QR menü nedir?</small>
+                        <em>QR menünün ne olduğunu, nasıl çalıştığını ve masada nasıl kullanıldığını öğrenin.</em>
+                    </span>
+                </a>
+                <a class="qr-guide-item" href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">
+                    <span class="qr-guide-item__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-refresh")"></use></svg></span>
+                    <span>
+                        <strong>Kurulum planı</strong>
+                        <small>Adım adım kurulum</small>
+                        <em>İşletme bilgileri, kategori yapısı, ürün içerikleri ve QR yerleşimini planlayın.</em>
+                    </span>
+                </a>
+                <a class="qr-guide-item" href="/blog/qr-menu-ile-kagit-menu-karsilastirmasi">
+                    <span class="qr-guide-item__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></span>
+                    <span>
+                        <strong>Karşılaştırma</strong>
+                        <small>QR mı, kağıt mı?</small>
+                        <em>QR menü ve kağıt menünün maliyet, hijyen ve müşteri deneyimi farklarını inceleyin.</em>
+                    </span>
+                </a>
+                <a class="qr-guide-item" href="/blog/qr-menu-musteri-deneyimini-nasil-iyilestirir">
+                    <span class="qr-guide-item__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-smile")"></use></svg></span>
+                    <span>
+                        <strong>Müşteri deneyimi</strong>
+                        <small>Daha iyi deneyim</small>
+                        <em>Menüyü hız, açıklık, fotoğraf ve alerjen bilgisi açısından iyileştirin.</em>
+                    </span>
+                </a>
+            </div>
         </div>
     </div>
 </section>

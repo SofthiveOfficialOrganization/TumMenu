@@ -381,66 +381,104 @@
     </div>
 </section>
 
-<section class="section" aria-labelledby="menu-discovery-heading">
+<section class="section home-platform" aria-labelledby="menu-discovery-heading">
     <div class="container">
-        <div class="section-heading">
-            <h2 id="menu-discovery-heading" class="section__title">TümMenü ile menü keşfi ve QR menü yönetimi</h2>
-            <p class="section__subtitle">
-                TümMenü, restoran arayan kullanıcılarla menüsünü güncel tutmak isteyen işletmeleri aynı yerde buluşturur.
-                Kullanıcılar bir mekana gitmeden önce kategori, ürün, fiyat ve konum bilgilerini inceleyebilir; işletmeler
-                ise QR menü bağlantılarını, ürün açıklamalarını, fotoğrafları ve fiyat değişikliklerini tek panelden yönetebilir.
-                Bu yapı hem karar vermeyi kolaylaştırır hem de eski fiyat, eksik ürün ve basılı menü maliyeti gibi günlük
-                operasyon sorunlarını azaltır. Her sayfa müşterinin gerçek menüye hızlı ulaşması ve işletmenin bilgisini
-                tutarlı sunması için sade tutulur.
-            </p>
-            <p class="section__subtitle">
-                Platformdaki rehberler, yasal sayfalar, SSS, kaynak merkezi ve blog içerikleri QR menüye geçiş sürecini
-                daha anlaşılır hale getirmek için hazırlanır. Restoran sahipleri menü tasarımı, ürün fotoğrafı, alerjen
-                bilgisi, fiyatlandırma ve online sipariş hazırlığı gibi konularda pratik önerilere ulaşırken; müşteriler de
-                yakınındaki güncel menüleri daha şeffaf biçimde karşılaştırabilir.
-            </p>
+        <div class="home-platform__layout">
+            <div class="home-platform__copy">
+                <h2 id="menu-discovery-heading" class="section__title">TümMenü ile menü keşfi ve QR menü yönetimi</h2>
+                <p class="section__subtitle">
+                    TümMenü, restoran arayan kullanıcılarla menüsünü güncel tutmak isteyen işletmeleri aynı yerde buluşturur.
+                    Kullanıcılar bir mekana gitmeden önce kategori, ürün, fiyat ve konum bilgilerini inceleyebilir; işletmeler
+                    ise QR menü bağlantılarını, ürün açıklamalarını, fotoğrafları ve fiyat değişikliklerini tek panelden yönetebilir.
+                    Bu yapı hem karar vermeyi kolaylaştırır hem de eski fiyat, eksik ürün ve basılı menü maliyeti gibi günlük
+                    operasyon sorunlarını azaltır. Her sayfa müşterinin gerçek menüye hızlı ulaşması ve işletmenin bilgisini
+                    tutarlı sunması için sade tutulur.
+                </p>
+                <p class="section__subtitle">
+                    Platformdaki rehberler, yasal sayfalar, SSS, kaynak merkezi ve blog içerikleri QR menüye geçiş sürecini
+                    daha anlaşılır hale getirmek için hazırlanır. Restoran sahipleri menü tasarımı, ürün fotoğrafı, alerjen
+                    bilgisi, fiyatlandırma ve online sipariş hazırlığı gibi konularda pratik önerilere ulaşırken; müşteriler de
+                    yakınındaki güncel menüleri daha şeffaf biçimde karşılaştırabilir.
+                </p>
+                <div class="home-platform__actions">
+                    <a class="btn btn--primary" href="/restoranlar">Restoran keşfet</a>
+                    <a class="btn btn--ghost" href="/ozellikler">Özellikleri incele</a>
+                </div>
+            </div>
+
+            <div class="home-platform__panel" aria-label="TümMenü keşif ve yönetim akışı">
+                <div class="home-platform__phone" aria-hidden="true">
+                    <div class="home-platform__cover"></div>
+                    <strong>Yakındaki menüler</strong>
+                    <span>Kategori, fiyat ve konum bilgileri</span>
+                    <div class="home-platform__line"></div>
+                    <div class="home-platform__line home-platform__line--short"></div>
+                </div>
+                <div class="home-platform__dashboard" aria-hidden="true">
+                    <div class="home-platform__dashbar">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="home-platform__dashbody">
+                        <strong>Menü yönetimi</strong>
+                        <span>QR bağlantısı</span>
+                        <span>Ürün açıklaması</span>
+                        <span>Fiyat değişikliği</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 
-<section class="section" aria-labelledby="home-guides-heading">
+<section class="section home-guides" aria-labelledby="home-guides-heading">
     <div class="container">
-        <div class="section-heading">
-            <h2 id="home-guides-heading" class="section__title">Restoranlar için pratik rehberler</h2>
-            <p class="section__subtitle">
-                QR menüye geçmeden önce dijital menü, fiyatlandırma, fotoğraf ve müşteri deneyimi konularında
-                karar vermenize yardımcı olacak kaynakları okuyabilirsiniz.
-            </p>
+        <div class="home-guides__header">
+            <div class="section-heading">
+                <h2 id="home-guides-heading" class="section__title">Restoranlar için pratik rehberler</h2>
+                <p class="section__subtitle">
+                    QR menüye geçmeden önce dijital menü, fiyatlandırma, fotoğraf ve müşteri deneyimi konularında
+                    karar vermenize yardımcı olacak kaynakları okuyabilirsiniz.
+                </p>
+            </div>
+            <a class="home-guides__all" href="/blog">Tüm rehberler</a>
         </div>
 
-        <div class="features-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">QR menüye başlangıç</h3>
-                    <p class="home-store-card__location">QR menünün nasıl çalıştığını ve restoranlarda nasıl uygulanacağını adım adım öğrenin.</p>
-                    <p class="home-store-card__location"><a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a> · <a href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">Kurulum rehberi</a></p>
+        <div class="home-guide-grid">
+            <article class="home-guide-card home-guide-card--lead">
+                <span class="home-guide-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-rocket")"></use></svg></span>
+                <h3>QR menüye başlangıç</h3>
+                <p>QR menünün nasıl çalıştığını ve restoranlarda nasıl uygulanacağını adım adım öğrenin.</p>
+                <div class="home-guide-card__links">
+                    <a href="/blog/qr-menu-nedir-nasil-calisir">QR menü nedir?</a>
+                    <a href="/blog/qr-menu-kurulumu-adim-adim-restoran-rehberi">Kurulum rehberi</a>
                 </div>
             </article>
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Menü kalitesi ve satış</h3>
-                    <p class="home-store-card__location">Menü tasarımı, ürün fotoğrafı ve fiyatlandırma kararlarını daha bilinçli planlayın.</p>
-                    <p class="home-store-card__location"><a href="/blog/restoran-menusu-nasil-tasarlanir">Menü tasarımı</a> · <a href="/blog/restoran-menu-fiyatlandirma-stratejileri">Fiyatlandırma</a></p>
+            <article class="home-guide-card">
+                <span class="home-guide-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-star")"></use></svg></span>
+                <h3>Menü kalitesi ve satış</h3>
+                <p>Menü tasarımı, ürün fotoğrafı ve fiyatlandırma kararlarını daha bilinçli planlayın.</p>
+                <div class="home-guide-card__links">
+                    <a href="/blog/restoran-menusu-nasil-tasarlanir">Menü tasarımı</a>
+                    <a href="/blog/restoran-menu-fiyatlandirma-stratejileri">Fiyatlandırma</a>
                 </div>
             </article>
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Büyüme ve pazarlama</h3>
-                    <p class="home-store-card__location">Sosyal medya, online sipariş ve restoran teknolojileriyle dijital menünüzü daha verimli kullanın.</p>
-                    <p class="home-store-card__location"><a href="/blog/restoranlar-icin-sosyal-medya-menu-tanitimi">Sosyal medya</a> · <a href="/blog/online-siparise-hazirlik-rehberi">Online sipariş</a></p>
+            <article class="home-guide-card">
+                <span class="home-guide-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-globe")"></use></svg></span>
+                <h3>Büyüme ve pazarlama</h3>
+                <p>Sosyal medya, online sipariş ve restoran teknolojileriyle dijital menünüzü daha verimli kullanın.</p>
+                <div class="home-guide-card__links">
+                    <a href="/blog/restoranlar-icin-sosyal-medya-menu-tanitimi">Sosyal medya</a>
+                    <a href="/blog/online-siparise-hazirlik-rehberi">Online sipariş</a>
                 </div>
             </article>
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Ücretsiz karar araçları</h3>
-                    <p class="home-store-card__location">QR menüye hazır olup olmadığınızı test edin ve kağıt menü baskı maliyetinizi hesaplayın.</p>
-                    <p class="home-store-card__location"><a href="/qr-menu-uygunluk-testi">Uygunluk testi</a> · <a href="/menu-baski-maliyeti-hesaplayici">Maliyet hesaplayıcı</a></p>
+            <article class="home-guide-card">
+                <span class="home-guide-card__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-check")"></use></svg></span>
+                <h3>Ücretsiz karar araçları</h3>
+                <p>QR menüye hazır olup olmadığınızı test edin ve kağıt menü baskı maliyetinizi hesaplayın.</p>
+                <div class="home-guide-card__links">
+                    <a href="/qr-menu-uygunluk-testi">Uygunluk testi</a>
+                    <a href="/menu-baski-maliyeti-hesaplayici">Maliyet hesaplayıcı</a>
                 </div>
             </article>
         </div>
@@ -448,43 +486,50 @@
 </section>
 
 
-<section class="section" aria-labelledby="guide-heading">
+<section class="section home-purpose" aria-labelledby="guide-heading">
     <div class="container">
-        <div class="section-heading">
-            <h2 id="guide-heading" class="section__title">TümMenü ne işe yarar?</h2>
-            <p class="section__subtitle">
-                TümMenü iki ihtiyacı birleştirir: müşteriler gitmeden önce menü ve fiyatları görebilir,
-                işletmeler ise QR menüsünü tek panelden güncel tutabilir.
-            </p>
+        <div class="home-purpose__layout">
+            <div class="home-purpose__intro">
+                <h2 id="guide-heading" class="section__title">TümMenü ne işe yarar?</h2>
+                <p class="section__subtitle">
+                    TümMenü iki ihtiyacı birleştirir: müşteriler gitmeden önce menü ve fiyatları görebilir,
+                    işletmeler ise QR menüsünü tek panelden güncel tutabilir.
+                </p>
+            </div>
+
+            <div class="home-purpose__stack">
+                <article class="home-purpose__item">
+                    <span class="home-purpose__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-user")"></use></svg></span>
+                    <div>
+                        <h3>Müşteriler için</h3>
+                        <p>Yakındaki restoranları keşfetmek, menüye önceden bakmak ve fiyatları karşılaştırmak daha kolay hale gelir. Karar süreci masaya oturmadan önce başlar.</p>
+                    </div>
+                </article>
+                <article class="home-purpose__item">
+                    <span class="home-purpose__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-store")"></use></svg></span>
+                    <div>
+                        <h3>İşletmeler için</h3>
+                        <p>Kağıt menü baskısı, eski fiyatlar ve stokta olmayan ürünlerin görünmesi gibi sorunlar azalır. Menü değişiklikleri yönetim panelinden güncellenir.</p>
+                    </div>
+                </article>
+                <article class="home-purpose__item">
+                    <span class="home-purpose__icon" aria-hidden="true"><svg class="tm-icon"><use href="@($"{Url.Content("~/assets/icons/tm-sprite.svg")}#icon-search")"></use></svg></span>
+                    <div>
+                        <h3>Google için anlaşılır yapı</h3>
+                        <p>Açıklayıcı sayfalar, yasal bilgiler, fiyatlandırma, SSS ve blog içerikleri sitenin yalnızca bir araç değil, restoran teknolojileri hakkında kaynak olduğunu gösterir.</p>
+                    </div>
+                </article>
+            </div>
         </div>
 
-        <div class="features-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Müşteriler için</h3>
-                    <p class="home-store-card__location">Yakındaki restoranları keşfetmek, menüye önceden bakmak ve fiyatları karşılaştırmak daha kolay hale gelir. Karar süreci masaya oturmadan önce başlar.</p>
-                </div>
-            </article>
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">İşletmeler için</h3>
-                    <p class="home-store-card__location">Kağıt menü baskısı, eski fiyatlar ve stokta olmayan ürünlerin görünmesi gibi sorunlar azalır. Menü değişiklikleri yönetim panelinden güncellenir.</p>
-                </div>
-            </article>
-            <article class="home-store-card" style="padding:22px;">
-                <div class="home-store-card__body">
-                    <h3 class="home-store-card__name">Google için anlaşılır yapı</h3>
-                    <p class="home-store-card__location">Açıklayıcı sayfalar, yasal bilgiler, fiyatlandırma, SSS ve blog içerikleri sitenin yalnızca bir araç değil, restoran teknolojileri hakkında kaynak olduğunu gösterir.</p>
-                </div>
-            </article>
+        <div class="home-purpose__links" aria-label="TümMenü ile ilgili sayfalar">
+            <span>QR menüye geçişi araştırıyorsanız</span>
+            <a href="/ozellikler">özellikleri</a>
+            <a href="/iletisim">plan ve destek seçeneklerini</a>
+            <a href="/sss">sık sorulan soruları</a>
+            <a href="/blog">restoran teknolojileri blogunu</a>
+            <a href="/restoran-kaynaklari">restoran kaynaklarını</a>
         </div>
-
-        <p class="section__subtitle" style="margin-top:24px;">
-            QR menüye geçişi araştırıyorsanız <a href="/ozellikler">özellikleri</a>,
-            <a href="/iletisim">plan ve destek seçeneklerini</a>, <a href="/sss">sık sorulan soruları</a> ve
-            <a href="/blog">restoran teknolojileri blogunu</a> inceleyebilirsiniz. Karar vermeden önce
-            <a href="/restoran-kaynaklari">restoran kaynaklarını</a> da gözden geçirebilirsiniz.
-        </p>
     </div>
 </section>
 
