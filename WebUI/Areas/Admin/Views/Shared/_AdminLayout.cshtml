@@ -84,6 +84,12 @@
                         </a>
                     </li>
                     <li class="horizon-menu-item">
+                        <a href="@Url.Action("Index", "Mail", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Mail" ? "active" : "")">
+                            <div class="horizon-menu-icon"><i class="fas fa-envelope"></i></div>
+                            <span>E-posta</span>
+                        </a>
+                    </li>
+                    <li class="horizon-menu-item">
                         <a href="@Url.Action("Index", "SystemLogs", new { area = "Admin" })" class="horizon-menu-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SystemLogs" ? "active" : "")">
                             <div class="horizon-menu-icon"><i class="fas fa-list-alt"></i></div>
                             <span>Sistem Logları</span>
@@ -657,6 +663,7 @@
         $(document).ready(function() {
             var successMessage = @Json.Serialize(TempData["Success"]);
             var errorMessage = @Json.Serialize(TempData["Error"]);
+            var warningMessage = @Json.Serialize(TempData["Warning"]);
 
             if (successMessage) {
                 TumMenuAlerts.toast('success', successMessage);
@@ -664,6 +671,10 @@
 
             if (errorMessage) {
                 TumMenuAlerts.toast('error', errorMessage);
+            }
+
+            if (warningMessage) {
+                TumMenuAlerts.toast('warning', warningMessage);
             }
         });
     </script>

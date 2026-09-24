@@ -80,6 +80,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<MailTransport>();
+builder.Services.AddScoped<IMailboxService, MailKitMailboxService>();
+builder.Services.AddSingleton<EmailHtmlSanitizer>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddAuthorizationBuilder()

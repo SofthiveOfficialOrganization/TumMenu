@@ -1,0 +1,341 @@
+@using WebUI.Models.Mail
+@model MailPageViewModel
+
+@{
+    ViewData["Title"] = "E-posta";
+    var currentFolder = Model.Folders.FirstOrDefault(folder => folder.Key == Model.CurrentFolderKey);
+    var selected = Model.SelectedMessage;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-mail.css" asp-append-version="true" />
+}
+
+<div class="mail-page @(selected is null ? "" : "mail-page--selected")" data-back-url="@Url.Action("Index", "Mail", new { area = "Admin", folder = Model.CurrentFolderKey, q = Model.Search, page = Model.Page })">
+    <div class="mail-page-heading">
+        <div>
+            <h1 class="mail-page-title">E-posta</h1>
+            <p class="mail-page-subtitle">TumMenu hesabınızın gelen ve gönderilen maillerini tek ekrandan yönetin.</p>
+        </div>
+        <button type="button" class="btn btn-primary mail-compose-button" data-bs-toggle="modal" data-bs-target="#composeMailModal">
+            <i class="fas fa-pen-to-square me-2"></i>Yeni mail
+        </button>
+    </div>
+
+    @if (Model.ErrorMessage is not null)
+    {
+        <div class="mail-connection-state" role="alert">
+            <div class="mail-state-icon"><i class="fas fa-plug-circle-xmark"></i></div>
+            <div>
+                <h2>Mailbox bağlantısı kurulamadı</h2>
+                <p>@Model.ErrorMessage</p>
+                <a class="btn btn-sm btn-primary" href="@Url.Action("Index", "Mail", new { area = "Admin" })">
+                    <i class="fas fa-rotate-right me-1"></i>Tekrar dene
+                </a>
+            </div>
+        </div>
+    }
+    else if (Model.Folders.Count == 0)
+    {
+        <div class="mail-connection-state" role="status">
+            <div class="mail-state-icon"><i class="fas fa-inbox"></i></div>
+            <div>
+                <h2>Mailbox boş görünüyor</h2>
+                <p>Bağlantı kuruldu ancak görüntülenebilir bir klasör bulunamadı.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mail-toolbar">
+            <form method="get" asp-area="Admin" asp-controller="Mail" asp-action="Index" class="mail-search-form">
+                <input type="hidden" name="folder" value="@Model.CurrentFolderKey" />
+                <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="search" name="q" value="@Model.Search" placeholder="Gönderen, konu veya içerikte ara" aria-label="Maillerde ara" />
+                @if (!string.IsNullOrWhiteSpace(Model.Search))
+                {
+                    <a class="mail-search-clear" href="@Url.Action("Index", "Mail", new { area = "Admin", folder = Model.CurrentFolderKey })" aria-label="Aramayı temizle">
+                        <i class="fas fa-xmark"></i>
+                    </a>
+                }
+                <button type="submit" class="visually-hidden">Ara</button>
+            </form>
+            <div class="mail-toolbar-actions">
+                <span class="mail-result-count">@Model.TotalCount mail</span>
+                <a class="mail-icon-button" href="@Url.Action("Index", "Mail", new { area = "Admin", folder = Model.CurrentFolderKey, q = Model.Search, page = Model.Page })" aria-label="Yenile" title="Yenile">
+                    <i class="fas fa-rotate-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="mail-shell">
+            <aside class="mail-folder-panel" aria-label="Mail klasörleri">
+                <div class="mail-folder-panel-heading">
+                    <span>Klasörler</span>
+                    <span class="mail-folder-account">@User.Identity?.Name</span>
+                </div>
+                <nav class="mail-folder-list">
+                    @foreach (var folder in Model.Folders)
+                    {
+                        var isActive = folder.Key == Model.CurrentFolderKey;
+                        <a class="mail-folder-link @(isActive ? "is-active" : "")" href="@Url.Action("Index", "Mail", new { area = "Admin", folder = folder.Key, q = Model.Search })">
+                            <span class="mail-folder-link-label">
+                                <i class="fas @folder.Icon" aria-hidden="true"></i>
+                                <span>@folder.DisplayName</span>
+                            </span>
+                            @if (folder.UnreadCount > 0)
+                            {
+                                <span class="mail-unread-count">@folder.UnreadCount</span>
+                            }
+                        </a>
+                    }
+                </nav>
+                <div class="mail-folder-note">
+                    <i class="fas fa-shield-halved"></i>
+                    <span>Mail içerikleri canlı mailbox’tan okunur.</span>
+                </div>
+            </aside>
+
+            <section class="mail-list-panel" aria-label="Mail listesi">
+                <div class="mail-list-heading">
+                    <div>
+                        <span class="mail-list-title">@(currentFolder?.DisplayName ?? "Mailbox")</span>
+                        <span class="mail-list-subtitle">@Model.TotalCount mesaj</span>
+                    </div>
+                    @if (Model.TotalPages > 1)
+                    {
+                        <div class="mail-pagination-label">@Model.Page / @Model.TotalPages</div>
+                    }
+                </div>
+
+                @if (Model.Messages.Count == 0)
+                {
+                    <div class="mail-empty-list">
+                        <div class="mail-empty-list-icon"><i class="fas fa-envelope-open"></i></div>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.Search) ? "Bu klasörde mail yok" : "Aramanızla eşleşen mail yok")</strong>
+                        <span>@(string.IsNullOrWhiteSpace(Model.Search) ? "Yeni bir mail geldiğinde burada görünecek." : "Farklı bir arama terimi deneyin.")</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mail-list-items">
+                        @foreach (var message in Model.Messages)
+                        {
+                            var sender = string.IsNullOrWhiteSpace(message.SenderName) ? message.SenderAddress : message.SenderName;
+                            var senderInitial = string.IsNullOrWhiteSpace(sender) ? '?' : sender[0];
+                            var isSelected = selected?.Uid == message.Uid && selected.FolderKey == message.FolderKey;
+                            <a class="mail-list-item @(message.IsRead ? "" : "is-unread") @(isSelected ? "is-selected" : "")"
+                               href="@Url.Action("Index", "Mail", new { area = "Admin", folder = message.FolderKey, q = Model.Search, page = Model.Page, uid = message.Uid })">
+                                <span class="mail-list-avatar">@senderInitial.ToString().ToUpperInvariant()</span>
+                                <span class="mail-list-item-content">
+                                    <span class="mail-list-item-topline">
+                                        <span class="mail-list-sender">@sender</span>
+                                        <time datetime="@message.Date.ToString("O")">@message.Date.ToLocalTime().ToString("dd MMM HH:mm")</time>
+                                    </span>
+                                    <span class="mail-list-subject">@message.Subject</span>
+                                    <span class="mail-list-preview">@message.Preview</span>
+                                </span>
+                                @if (message.HasAttachments)
+                                {
+                                    <i class="fas fa-paperclip mail-attachment-indicator" title="Ek dosyası var" aria-label="Ek dosyası var"></i>
+                                }
+                                @if (!message.IsRead)
+                                {
+                                    <span class="mail-unread-dot" aria-label="Okunmamış"></span>
+                                }
+                            </a>
+                        }
+                    </div>
+                }
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mail-pagination" aria-label="Mail sayfaları">
+                        @if (Model.Page > 1)
+                        {
+                            <a href="@Url.Action("Index", "Mail", new { area = "Admin", folder = Model.CurrentFolderKey, q = Model.Search, page = Model.Page - 1 })" aria-label="Önceki sayfa"><i class="fas fa-chevron-left"></i></a>
+                        }
+                        <span>@Model.Page / @Model.TotalPages</span>
+                        @if (Model.Page < Model.TotalPages)
+                        {
+                            <a href="@Url.Action("Index", "Mail", new { area = "Admin", folder = Model.CurrentFolderKey, q = Model.Search, page = Model.Page + 1 })" aria-label="Sonraki sayfa"><i class="fas fa-chevron-right"></i></a>
+                        }
+                    </nav>
+                }
+            </section>
+
+            <main class="mail-reader-panel" aria-label="Seçili mail">
+                @if (selected is null)
+                {
+                    <div class="mail-reader-empty">
+                        <div class="mail-reader-empty-mark"><i class="fas fa-envelope-open-text"></i></div>
+                        <h2>Bir mail seçin</h2>
+                        <p>Okumak istediğiniz maili listeden seçtiğinizde içeriği burada açılır.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="mail-reader" data-message-id="@selected.MessageId" data-references="@selected.References" data-from="@selected.From.Address" data-subject="@selected.Subject">
+                        <div class="mail-reader-header">
+                            <div class="mail-reader-header-copy">
+                                <div class="mail-reader-subject-row">
+                                    <h2>@selected.Subject</h2>
+                                    @if (selected.Attachments.Count > 0)
+                                    {
+                                        <span class="mail-reader-attachment-count"><i class="fas fa-paperclip"></i> @selected.Attachments.Count</span>
+                                    }
+                                </div>
+                                <div class="mail-reader-meta">
+                                    @{ var selectedSender = string.IsNullOrWhiteSpace(selected.From.Name) ? selected.From.Address : selected.From.Name; }
+                                    <span class="mail-reader-sender-avatar">@((string.IsNullOrWhiteSpace(selectedSender) ? '?' : selectedSender[0]).ToString().ToUpperInvariant())</span>
+                                    <div>
+                                        <strong>@selected.From.Display</strong>
+                                        <span>@selected.Date.ToLocalTime().ToString("dd MMMM yyyy, HH:mm")</span>
+                                    </div>
+                                </div>
+                                <div class="mail-reader-recipients">
+                                    <span>Alıcı: @string.Join(", ", selected.To.Select(item => item.Display))</span>
+                                    @if (selected.Cc.Count > 0)
+                                    {
+                                        <span> · Cc: @string.Join(", ", selected.Cc.Select(item => item.Display))</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="mail-reader-actions">
+                                <button type="button" class="mail-icon-button" data-mail-action="reply" title="Yanıtla" aria-label="Yanıtla"><i class="fas fa-reply"></i></button>
+                                <button type="button" class="mail-icon-button" data-mail-action="forward" title="İlet" aria-label="İlet"><i class="fas fa-share"></i></button>
+                                <form method="post" asp-action="MarkRead" asp-controller="Mail" asp-area="Admin">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="folder" value="@selected.FolderKey" />
+                                    <input type="hidden" name="uid" value="@selected.Uid" />
+                                    <input type="hidden" name="isRead" value="@(selected.IsRead ? "false" : "true")" />
+                                    <input type="hidden" name="search" value="@Model.Search" />
+                                    <button type="submit" class="mail-icon-button" title="@(selected.IsRead ? "Okunmadı olarak işaretle" : "Okundu olarak işaretle")" aria-label="Okunma durumunu değiştir"><i class="fas @(selected.IsRead ? "fa-envelope" : "fa-envelope-open")"></i></button>
+                                </form>
+                                <form method="post" asp-action="Delete" asp-controller="Mail" asp-area="Admin" class="mail-delete-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="folder" value="@selected.FolderKey" />
+                                    <input type="hidden" name="uid" value="@selected.Uid" />
+                                    <input type="hidden" name="search" value="@Model.Search" />
+                                    <button type="submit" class="mail-icon-button mail-icon-button--danger" title="Çöp kutusuna taşı" aria-label="Çöp kutusuna taşı"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="mail-reader-toolbar">
+                            <form method="post" asp-action="Move" asp-controller="Mail" asp-area="Admin" class="mail-move-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="folder" value="@selected.FolderKey" />
+                                <input type="hidden" name="uid" value="@selected.Uid" />
+                                <input type="hidden" name="search" value="@Model.Search" />
+                                <label for="moveDestination" class="visually-hidden">Klasöre taşı</label>
+                                <select id="moveDestination" name="destinationFolder" class="form-select form-select-sm">
+                                    <option value="">Klasöre taşı...</option>
+                                    @foreach (var folder in Model.Folders.Where(folder => folder.Key != selected.FolderKey))
+                                    {
+                                        <option value="@folder.Key">@folder.DisplayName</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-light" disabled>Taşı</button>
+                            </form>
+                        </div>
+
+                        <div class="mail-reader-body" id="mailBody">
+                            @Html.Raw(selected.BodyHtml)
+                        </div>
+
+                        @if (selected.Attachments.Count > 0)
+                        {
+                            <div class="mail-reader-attachments">
+                                <div class="mail-section-label">Ekler <span>@selected.Attachments.Count</span></div>
+                                <div class="mail-attachment-list">
+                                    @foreach (var attachment in selected.Attachments)
+                                    {
+                                        <a class="mail-attachment-item" href="@Url.Action("Attachment", "Mail", new { area = "Admin", folder = selected.FolderKey, uid = selected.Uid, partId = attachment.PartId })">
+                                            <span class="mail-attachment-icon"><i class="fas fa-file-lines"></i></span>
+                                            <span>
+                                                <strong>@attachment.FileName</strong>
+                                                <small>@(attachment.Size > 0 ? $"{Math.Max(1, attachment.Size / 1024d):0.#} KB" : attachment.ContentType)</small>
+                                            </span>
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </main>
+        </div>
+    }
+</div>
+
+<div class="modal fade mail-compose-modal" id="composeMailModal" tabindex="-1" aria-labelledby="composeMailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="mail-modal-kicker">Yeni mesaj</span>
+                    <h2 class="modal-title" id="composeMailModalLabel">Mail oluştur</h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <form method="post" asp-action="Send" asp-controller="Mail" asp-area="Admin" enctype="multipart/form-data" id="composeMailForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnFolder" value="@Model.CurrentFolderKey" />
+                <input type="hidden" name="search" value="@Model.Search" />
+                <input type="hidden" name="InReplyTo" id="composeInReplyTo" />
+                <input type="hidden" name="References" id="composeReferences" />
+                <div class="modal-body">
+                    <div class="mail-compose-row mail-compose-recipient-row">
+                        <label for="composeTo">Alıcı</label>
+                        <input type="text" id="composeTo" name="To" class="form-control" placeholder="ornek@firma.com, ikinci@firma.com" required />
+                        <button type="button" class="mail-copy-toggle" data-toggle-recipient="Cc">Cc</button>
+                        <button type="button" class="mail-copy-toggle" data-toggle-recipient="Bcc">Bcc</button>
+                    </div>
+                    <div class="mail-compose-row d-none" data-recipient-row="Cc">
+                        <label for="composeCc">Cc</label>
+                        <input type="text" id="composeCc" name="Cc" class="form-control" placeholder="Bilgi almak isteyenler" />
+                    </div>
+                    <div class="mail-compose-row d-none" data-recipient-row="Bcc">
+                        <label for="composeBcc">Bcc</label>
+                        <input type="text" id="composeBcc" name="Bcc" class="form-control" placeholder="Gizli alıcılar" />
+                    </div>
+                    <div class="mail-compose-row">
+                        <label for="composeSubject">Konu</label>
+                        <input type="text" id="composeSubject" name="Subject" class="form-control" placeholder="Mail konusu" required maxlength="300" />
+                    </div>
+                    <div class="mail-compose-editor-shell">
+                        <div class="mail-editor-toolbar" aria-label="Biçimlendirme araçları">
+                            <button type="button" data-command="bold" title="Kalın"><i class="fas fa-bold"></i></button>
+                            <button type="button" data-command="italic" title="İtalik"><i class="fas fa-italic"></i></button>
+                            <button type="button" data-command="underline" title="Altı çizili"><i class="fas fa-underline"></i></button>
+                            <button type="button" data-command="createLink" title="Bağlantı ekle"><i class="fas fa-link"></i></button>
+                        </div>
+                        <div id="composeEditor" class="mail-compose-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Mesajınızı yazın..."></div>
+                        <textarea id="composeBodyHtml" name="BodyHtml" class="visually-hidden" required></textarea>
+                    </div>
+                    <div class="mail-compose-footer">
+                        <label class="mail-attachment-picker">
+                            <i class="fas fa-paperclip"></i>
+                            <span>Ek dosyası ekle</span>
+                            <input type="file" name="Attachments" multiple />
+                        </label>
+                        <span class="mail-attachment-help">Dosya başına en fazla 25 MB</span>
+                    </div>
+                    <div class="mail-selected-files" data-selected-files></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary mail-send-button">
+                        <i class="fas fa-paper-plane me-2"></i>Gönder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-mail.js" asp-append-version="true"></script>
+}
