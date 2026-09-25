@@ -205,7 +205,33 @@ public sealed class MailTransport(IOptions<EmailSettings> options)
         foreach (var personalNamespace in client.PersonalNamespaces)
         {
             var root = client.GetFolder(personalNamespace);
-            await DiscoverChildrenAsync(root, folders, ct);
+            await DiscoverChildrenAsync(root, folders, new HashSet<string>(StringComparer.OrdinalIgnoreCase), ct);
+        }
+
+        // Some IMAP servers do not report HasChildren correctly on namespace roots
+        // (or even on the folders below them). Add advertised special-use folders
+        // explicitly so Sent/Drafts/Trash remain accessible in those cases.
+        foreach (var specialFolder in new[]
+        {
+            SpecialFolder.Sent,
+            SpecialFolder.Drafts,
+            SpecialFolder.Trash,
+            SpecialFolder.Junk,
+            SpecialFolder.Archive
+        })
+        {
+            try
+            {
+                var folder = client.GetFolder(specialFolder);
+                if (folder?.Exists == true)
+                {
+                    folders.TryAdd(folder.FullName, folder);
+                }
+            }
+            catch (FolderNotFoundException)
+            {
+                // The server does not advertise this special-use folder.
+            }
         }
 
         return folders.Values
@@ -248,18 +274,21 @@ public sealed class MailTransport(IOptions<EmailSettings> options)
     private static async Task DiscoverChildrenAsync(
         IMailFolder parent,
         IDictionary<string, IMailFolder> folders,
+        ISet<string> visited,
         CancellationToken ct)
     {
-        if (!parent.Attributes.HasFlag(FolderAttributes.HasChildren))
+        if (!visited.Add(parent.FullName))
         {
             return;
         }
 
+        // HasChildren is advisory and is missing on some hosting providers. LIST
+        // each discovered folder instead of trusting that flag to find its children.
         var children = await parent.GetSubfoldersAsync(false, ct);
         foreach (var child in children)
         {
             folders.TryAdd(child.FullName, child);
-            await DiscoverChildrenAsync(child, folders, ct);
+            await DiscoverChildrenAsync(child, folders, visited, ct);
         }
     }
 
