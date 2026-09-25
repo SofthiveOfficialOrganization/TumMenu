@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,17 @@ public sealed class MailInfrastructureTests
         result.ToLowerInvariant().Should().NotContain("onclick");
         result.ToLowerInvariant().Should().NotContain("onerror");
         result.Should().Contain("https://example.com/a.png");
+    }
+
+    [Fact]
+    public void Sanitizer_DecodesTextEntitiesBeforeEncodingTextNodes()
+    {
+        var sanitizer = new EmailHtmlSanitizer();
+
+        var result = sanitizer.Sanitize("<p>Merhaba&nbsp;dünya &amp; hoş geldin</p>");
+
+        WebUtility.HtmlDecode(result).Should().Be("<p>Merhaba\u00a0dünya & hoş geldin</p>");
+        result.Should().NotContain("&amp;nbsp;");
     }
 
     [Fact]

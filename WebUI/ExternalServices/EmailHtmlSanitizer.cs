@@ -44,13 +44,20 @@ public sealed class EmailHtmlSanitizer
 
         foreach (Match match in TagRegex.Matches(input))
         {
-            output.Append(WebUtility.HtmlEncode(input[cursor..match.Index]));
+            AppendEncodedText(output, input[cursor..match.Index]);
             output.Append(SanitizeTag(match));
             cursor = match.Index + match.Length;
         }
 
-        output.Append(WebUtility.HtmlEncode(input[cursor..]));
+        AppendEncodedText(output, input[cursor..]);
         return output.ToString();
+    }
+
+    private static void AppendEncodedText(StringBuilder output, string text)
+    {
+        // Decode existing entities before encoding text nodes so valid HTML
+        // entities (for example &nbsp;) render as characters, not literal text.
+        output.Append(WebUtility.HtmlEncode(WebUtility.HtmlDecode(text)));
     }
 
     private static string SanitizeTag(Match tagMatch)
