@@ -847,12 +847,24 @@
     border: 1px solid var(--mail-line);
     border-radius: 18px;
     color: var(--mail-strong);
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mail-compose-modal #composeMailForm {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
     overflow: hidden;
 }
 
 .mail-compose-modal .modal-header,
 .mail-compose-modal .modal-footer {
     border-color: var(--mail-line);
+    flex: 0 0 auto;
     padding: 1.1rem 1.35rem;
 }
 
@@ -861,7 +873,13 @@
 }
 
 .mail-compose-modal .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 1.1rem 1.35rem;
+    scrollbar-gutter: stable;
 }
 
 .mail-modal-kicker {
@@ -1166,6 +1184,32 @@
     .mail-compose-footer {
         align-items: flex-start;
         flex-direction: column;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .mail-compose-modal .modal-dialog {
+        height: calc(100vh - 1rem);
+        height: calc(100dvh - 1rem);
+        margin: .5rem auto;
+        max-height: calc(100vh - 1rem);
+        max-height: calc(100dvh - 1rem);
+    }
+
+    .mail-compose-modal .modal-content {
+        border-radius: 14px;
+        height: 100%;
+        max-height: 100%;
+    }
+
+    .mail-compose-modal .modal-header,
+    .mail-compose-modal .modal-body,
+    .mail-compose-modal .modal-footer {
+        padding-inline: 1rem;
+    }
+
+    .mail-compose-modal .modal-footer .btn {
+        min-height: 44px;
     }
 }
 
