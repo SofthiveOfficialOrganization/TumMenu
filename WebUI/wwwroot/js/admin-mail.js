@@ -164,6 +164,90 @@
         });
     }
 
+    function initBulkActions() {
+        const form = document.getElementById('mailBulkForm');
+        if (!form) return;
+
+        const checkboxes = Array.from(form.querySelectorAll('[data-mail-select]'));
+        const selectAll = document.querySelector('[data-select-all]');
+        const toolbar = form.querySelector('[data-bulk-toolbar]');
+        const count = form.querySelector('[data-bulk-count]');
+        const actionButtons = Array.from(form.querySelectorAll('[data-bulk-action]'));
+        const moveSelect = form.querySelector('[data-bulk-move-select]');
+        const moveButton = form.querySelector('[data-bulk-move-button]');
+        let allowConfirmedDelete = false;
+
+        function refreshSelection() {
+            const selected = checkboxes.filter(checkbox => checkbox.checked);
+            const selectedCount = selected.length;
+            if (count) count.textContent = String(selectedCount);
+            if (toolbar) toolbar.hidden = selectedCount === 0;
+
+            actionButtons.forEach(button => {
+                button.disabled = selectedCount === 0;
+            });
+            if (moveButton) {
+                moveButton.disabled = selectedCount === 0 || !moveSelect?.value;
+            }
+
+            if (selectAll) {
+                selectAll.checked = checkboxes.length > 0 && selectedCount === checkboxes.length;
+                selectAll.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.closest('[data-mail-row]')?.classList.toggle('is-bulk-selected', checkbox.checked);
+            });
+        }
+
+        selectAll?.addEventListener('change', function () {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            refreshSelection();
+        });
+
+        checkboxes.forEach(checkbox => checkbox.addEventListener('change', refreshSelection));
+        moveSelect?.addEventListener('change', refreshSelection);
+
+        form.addEventListener('submit', async function (event) {
+            const operation = event.submitter?.value;
+            const selectedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+            if (!operation || selectedCount === 0) {
+                event.preventDefault();
+                window.TumMenuAlerts?.toast('warning', 'Önce işlem yapılacak mailleri seçin.');
+                return;
+            }
+
+            if (operation === 'move' && !moveSelect?.value) {
+                event.preventDefault();
+                moveSelect?.focus();
+                window.TumMenuAlerts?.toast('warning', 'Taşımak için hedef klasör seçin.');
+                return;
+            }
+
+            if (operation !== 'delete' || allowConfirmedDelete) {
+                allowConfirmedDelete = false;
+                return;
+            }
+
+            event.preventDefault();
+            const confirmed = window.TumMenuAlerts
+                ? await window.TumMenuAlerts.confirm(
+                    `${selectedCount} mail çöp kutusuna taşınsın mı?`,
+                    'Bu işlem seçili mailleri çöp kutusuna taşıyacak.',
+                    'Mailleri sil')
+                : window.confirm(`${selectedCount} mail çöp kutusuna taşınsın mı?`);
+
+            if (confirmed) {
+                allowConfirmedDelete = true;
+                form.requestSubmit(event.submitter);
+            }
+        });
+
+        refreshSelection();
+    }
+
     function initMobileBack() {
         if (!document.querySelector('.mail-page--selected')) return;
         const readerPanel = document.querySelector('.mail-reader-panel');
@@ -181,6 +265,7 @@
         initReaderActions();
         initMoveForm();
         initDeleteConfirmation();
+        initBulkActions();
         initMobileBack();
     });
 })();

@@ -21,9 +21,23 @@ public interface IMailboxService
 
     Task MarkReadAsync(string folderKey, uint uid, bool isRead, CancellationToken ct = default);
 
+    Task BulkMarkReadAsync(
+        string folderKey,
+        IReadOnlyCollection<uint> uids,
+        bool isRead,
+        CancellationToken ct = default);
+
     Task MoveAsync(string sourceFolderKey, uint uid, string destinationFolderKey, CancellationToken ct = default);
 
+    Task BulkMoveAsync(
+        string sourceFolderKey,
+        IReadOnlyCollection<uint> uids,
+        string destinationFolderKey,
+        CancellationToken ct = default);
+
     Task DeleteAsync(string folderKey, uint uid, CancellationToken ct = default);
+
+    Task BulkDeleteAsync(string folderKey, IReadOnlyCollection<uint> uids, CancellationToken ct = default);
 
     Task<MailAttachmentContent> DownloadAttachmentAsync(
         string folderKey,

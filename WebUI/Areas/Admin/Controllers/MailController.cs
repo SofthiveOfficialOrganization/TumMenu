@@ -184,6 +184,61 @@ public sealed class MailController(
         return RedirectToMail(folder, search);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [RequestFormLimits(ValueCountLimit = 100)]
+    public async Task<IActionResult> Bulk(
+        string folder,
+        uint[]? uids,
+        string operation,
+        string? destinationFolder,
+        string? search,
+        CancellationToken ct)
+    {
+        var selectedUids = uids?.Distinct().ToArray() ?? [];
+        if (selectedUids.Length is < 1 or > 50 || selectedUids.Any(uid => uid == 0))
+        {
+            TempData["Error"] = "Bir işlemde 1 ile 50 arasında mail seçin.";
+            return RedirectToMail(folder, search);
+        }
+
+        try
+        {
+            switch (operation)
+            {
+                case "mark-read":
+                    await mailbox.BulkMarkReadAsync(folder, selectedUids, isRead: true, ct);
+                    TempData["Success"] = $"{selectedUids.Length} mail okundu olarak işaretlendi.";
+                    break;
+                case "mark-unread":
+                    await mailbox.BulkMarkReadAsync(folder, selectedUids, isRead: false, ct);
+                    TempData["Success"] = $"{selectedUids.Length} mail okunmadı olarak işaretlendi.";
+                    break;
+                case "move" when !string.IsNullOrWhiteSpace(destinationFolder):
+                    await mailbox.BulkMoveAsync(folder, selectedUids, destinationFolder, ct);
+                    TempData["Success"] = $"{selectedUids.Length} mail taşındı.";
+                    break;
+                case "delete":
+                    await mailbox.BulkDeleteAsync(folder, selectedUids, ct);
+                    TempData["Success"] = $"{selectedUids.Length} mail çöp kutusuna taşındı.";
+                    break;
+                case "move":
+                    TempData["Error"] = "Taşımak için hedef klasör seçin.";
+                    break;
+                default:
+                    TempData["Error"] = "Geçersiz toplu işlem.";
+                    break;
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogWarning(ex, "Toplu mail işlemi başarısız oldu: {Operation}", operation);
+            TempData["Error"] = "Seçilen maillere işlem uygulanamadı. Lütfen tekrar deneyin.";
+        }
+
+        return RedirectToMail(folder, search);
+    }
+
     [HttpGet]
     public async Task<IActionResult> Attachment(
         string folder,

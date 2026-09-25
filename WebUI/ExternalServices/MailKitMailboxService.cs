@@ -14,6 +14,7 @@ public sealed class MailKitMailboxService(
     ILogger<MailKitMailboxService> logger) : IMailboxService
 {
     private const int DefaultPageSize = 50;
+    private const int MaxBulkMessageCount = 50;
 
     public async Task<IReadOnlyList<MailFolderDto>> GetFoldersAsync(CancellationToken ct = default)
     {
@@ -140,6 +141,29 @@ public sealed class MailKitMailboxService(
         await client.DisconnectAsync(true, ct);
     }
 
+    public async Task BulkMarkReadAsync(
+        string folderKey,
+        IReadOnlyCollection<uint> uids,
+        bool isRead,
+        CancellationToken ct = default)
+    {
+        var uniqueIds = ValidateBulkUids(uids);
+        using var client = await transport.ConnectImapAsync(ct);
+        var folder = await FindFolderAsync(client, folderKey, ct);
+        await folder.OpenAsync(FolderAccess.ReadWrite, ct);
+
+        if (isRead)
+        {
+            await folder.AddFlagsAsync(uniqueIds, MessageFlags.Seen, silent: true, ct);
+        }
+        else
+        {
+            await folder.RemoveFlagsAsync(uniqueIds, MessageFlags.Seen, silent: true, ct);
+        }
+
+        await client.DisconnectAsync(true, ct);
+    }
+
     public async Task MoveAsync(
         string sourceFolderKey,
         uint uid,
@@ -151,6 +175,26 @@ public sealed class MailKitMailboxService(
         var destination = await FindFolderAsync(client, destinationFolderKey, ct);
         await source.OpenAsync(FolderAccess.ReadWrite, ct);
         await source.MoveToAsync(new UniqueId(uid), destination, ct);
+        await client.DisconnectAsync(true, ct);
+    }
+
+    public async Task BulkMoveAsync(
+        string sourceFolderKey,
+        IReadOnlyCollection<uint> uids,
+        string destinationFolderKey,
+        CancellationToken ct = default)
+    {
+        var uniqueIds = ValidateBulkUids(uids);
+        using var client = await transport.ConnectImapAsync(ct);
+        var source = await FindFolderAsync(client, sourceFolderKey, ct);
+        var destination = await FindFolderAsync(client, destinationFolderKey, ct);
+        if (string.Equals(source.FullName, destination.FullName, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new MailValidationException("Kaynak ve hedef klasör aynı olamaz.");
+        }
+
+        await source.OpenAsync(FolderAccess.ReadWrite, ct);
+        await source.MoveToAsync(uniqueIds, destination, ct);
         await client.DisconnectAsync(true, ct);
     }
 
@@ -172,6 +216,31 @@ public sealed class MailKitMailboxService(
         {
             await source.AddFlagsAsync(uniqueId, MessageFlags.Deleted, silent: true, ct);
             await source.ExpungeAsync([uniqueId], ct);
+        }
+
+        await client.DisconnectAsync(true, ct);
+    }
+
+    public async Task BulkDeleteAsync(
+        string folderKey,
+        IReadOnlyCollection<uint> uids,
+        CancellationToken ct = default)
+    {
+        var uniqueIds = ValidateBulkUids(uids);
+        using var client = await transport.ConnectImapAsync(ct);
+        var source = await FindFolderAsync(client, folderKey, ct);
+        await source.OpenAsync(FolderAccess.ReadWrite, ct);
+
+        var trash = await TryFindSpecialFolderAsync(client, SpecialFolder.Trash, ct);
+        if (trash is not null
+            && !string.Equals(source.FullName, trash.FullName, StringComparison.OrdinalIgnoreCase))
+        {
+            await source.MoveToAsync(uniqueIds, trash, ct);
+        }
+        else
+        {
+            await source.AddFlagsAsync(uniqueIds, MessageFlags.Deleted, silent: true, ct);
+            await source.ExpungeAsync(uniqueIds, ct);
         }
 
         await client.DisconnectAsync(true, ct);
@@ -257,6 +326,16 @@ public sealed class MailKitMailboxService(
             string.Equals(item.FullName, requestedName, StringComparison.OrdinalIgnoreCase));
 
         return folder ?? throw new MailValidationException("Mail klasörü bulunamadı.");
+    }
+
+    private static UniqueId[] ValidateBulkUids(IReadOnlyCollection<uint> uids)
+    {
+        if (uids.Count is < 1 or > MaxBulkMessageCount || uids.Any(uid => uid == 0))
+        {
+            throw new MailValidationException("Bir işlemde 1 ile 50 arasında mail seçebilirsiniz.");
+        }
+
+        return uids.Distinct().Select(uid => new UniqueId(uid)).ToArray();
     }
 
     private async Task<IMailFolder?> TryFindSpecialFolderAsync(

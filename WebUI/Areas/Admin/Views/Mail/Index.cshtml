@@ -102,10 +102,19 @@
                         <span class="mail-list-title">@(currentFolder?.DisplayName ?? "Mailbox")</span>
                         <span class="mail-list-subtitle">@Model.TotalCount mesaj</span>
                     </div>
-                    @if (Model.TotalPages > 1)
-                    {
-                        <div class="mail-pagination-label">@Model.Page / @Model.TotalPages</div>
-                    }
+                    <div class="mail-list-heading-tools">
+                        @if (Model.Messages.Count > 0)
+                        {
+                            <label class="mail-select-page">
+                                <input type="checkbox" data-select-all aria-label="Bu sayfadaki maillerin tümünü seç" />
+                                <span>Sayfayı seç</span>
+                            </label>
+                        }
+                        @if (Model.TotalPages > 1)
+                        {
+                            <span class="mail-pagination-label">@Model.Page / @Model.TotalPages</span>
+                        }
+                    </div>
                 </div>
 
                 @if (Model.Messages.Count == 0)
@@ -118,34 +127,71 @@
                 }
                 else
                 {
-                    <div class="mail-list-items">
-                        @foreach (var message in Model.Messages)
-                        {
-                            var sender = string.IsNullOrWhiteSpace(message.SenderName) ? message.SenderAddress : message.SenderName;
-                            var senderInitial = string.IsNullOrWhiteSpace(sender) ? '?' : sender[0];
-                            var isSelected = selected?.Uid == message.Uid && selected.FolderKey == message.FolderKey;
-                            <a class="mail-list-item @(message.IsRead ? "" : "is-unread") @(isSelected ? "is-selected" : "")"
-                               href="@Url.Action("Index", "Mail", new { area = "Admin", folder = message.FolderKey, q = Model.Search, page = Model.Page, uid = message.Uid })">
-                                <span class="mail-list-avatar">@senderInitial.ToString().ToUpperInvariant()</span>
-                                <span class="mail-list-item-content">
-                                    <span class="mail-list-item-topline">
-                                        <span class="mail-list-sender">@sender</span>
-                                        <time datetime="@message.Date.ToString("O")">@message.Date.ToLocalTime().ToString("dd MMM HH:mm")</time>
-                                    </span>
-                                    <span class="mail-list-subject">@message.Subject</span>
-                                    <span class="mail-list-preview">@message.Preview</span>
-                                </span>
-                                @if (message.HasAttachments)
-                                {
-                                    <i class="fas fa-paperclip mail-attachment-indicator" title="Ek dosyası var" aria-label="Ek dosyası var"></i>
-                                }
-                                @if (!message.IsRead)
-                                {
-                                    <span class="mail-unread-dot" aria-label="Okunmamış"></span>
-                                }
-                            </a>
-                        }
-                    </div>
+                    <form method="post" asp-action="Bulk" asp-controller="Mail" asp-area="Admin" class="mail-bulk-form" id="mailBulkForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="folder" value="@Model.CurrentFolderKey" />
+                        <input type="hidden" name="search" value="@Model.Search" />
+                        <div class="mail-bulk-toolbar" data-bulk-toolbar hidden>
+                            <span class="mail-bulk-count" aria-live="polite"><strong data-bulk-count>0</strong> mail seçildi</span>
+                            <div class="mail-bulk-actions">
+                                <button type="submit" name="operation" value="mark-read" data-bulk-action disabled title="Okundu olarak işaretle">
+                                    <i class="fas fa-envelope-open" aria-hidden="true"></i><span>Okundu</span>
+                                </button>
+                                <button type="submit" name="operation" value="mark-unread" data-bulk-action disabled title="Okunmadı olarak işaretle">
+                                    <i class="fas fa-envelope" aria-hidden="true"></i><span>Okunmadı</span>
+                                </button>
+                                <label class="mail-bulk-move">
+                                    <span class="visually-hidden">Hedef klasör</span>
+                                    <select name="destinationFolder" data-bulk-move-select aria-label="Hedef klasör">
+                                        <option value="">Klasöre taşı...</option>
+                                        @foreach (var folder in Model.Folders.Where(folder => folder.Key != Model.CurrentFolderKey))
+                                        {
+                                            <option value="@folder.Key">@folder.DisplayName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <button type="submit" name="operation" value="move" data-bulk-move-button data-bulk-action disabled>
+                                    <i class="fas fa-folder-open" aria-hidden="true"></i><span>Taşı</span>
+                                </button>
+                                <button type="submit" name="operation" value="delete" data-bulk-action disabled class="mail-bulk-delete">
+                                    <i class="fas fa-trash" aria-hidden="true"></i><span>Sil</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mail-list-items">
+                            @foreach (var message in Model.Messages)
+                            {
+                                var sender = string.IsNullOrWhiteSpace(message.SenderName) ? message.SenderAddress : message.SenderName;
+                                var senderInitial = string.IsNullOrWhiteSpace(sender) ? '?' : sender[0];
+                                var isSelected = selected?.Uid == message.Uid && selected.FolderKey == message.FolderKey;
+                                <div class="mail-list-item @(message.IsRead ? "" : "is-unread") @(isSelected ? "is-selected" : "")" data-mail-row>
+                                    <label class="mail-select-message">
+                                        <input type="checkbox" name="uids" value="@message.Uid" data-mail-select aria-label="Seç: @message.Subject" />
+                                        <span class="visually-hidden">Seç: @message.Subject</span>
+                                    </label>
+                                    <a class="mail-list-item-link" href="@Url.Action("Index", "Mail", new { area = "Admin", folder = message.FolderKey, q = Model.Search, page = Model.Page, uid = message.Uid })">
+                                        <span class="mail-list-avatar">@senderInitial.ToString().ToUpperInvariant()</span>
+                                        <span class="mail-list-item-content">
+                                            <span class="mail-list-item-topline">
+                                                <span class="mail-list-sender">@sender</span>
+                                                <time datetime="@message.Date.ToString("O")">@message.Date.ToLocalTime().ToString("dd MMM HH:mm")</time>
+                                            </span>
+                                            <span class="mail-list-subject">@message.Subject</span>
+                                            <span class="mail-list-preview">@message.Preview</span>
+                                        </span>
+                                        @if (message.HasAttachments)
+                                        {
+                                            <i class="fas fa-paperclip mail-attachment-indicator" title="Ek dosyası var" aria-label="Ek dosyası var"></i>
+                                        }
+                                        @if (!message.IsRead)
+                                        {
+                                            <span class="mail-unread-dot" aria-label="Okunmamış"></span>
+                                        }
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </form>
                 }
 
                 @if (Model.TotalPages > 1)
