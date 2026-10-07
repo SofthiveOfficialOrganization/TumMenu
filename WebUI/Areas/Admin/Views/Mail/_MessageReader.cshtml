@@ -1,0 +1,96 @@
+@using WebUI.Models.Mail
+@model MailReaderViewModel
+
+@{
+    var selected = Model.Message;
+    var selectedSender = string.IsNullOrWhiteSpace(selected.From.Name) ? selected.From.Address : selected.From.Name;
+}
+
+<div class="mail-reader" data-folder-key="@selected.FolderKey" data-uid="@selected.Uid" data-message-id="@selected.MessageId" data-references="@selected.References" data-from="@selected.From.Address" data-subject="@selected.Subject">
+    <div class="mail-reader-header">
+        <div class="mail-reader-header-copy">
+            <div class="mail-reader-subject-row">
+                <h2>@selected.Subject</h2>
+                @if (selected.Attachments.Count > 0)
+                {
+                    <span class="mail-reader-attachment-count"><i class="fas fa-paperclip"></i> @selected.Attachments.Count</span>
+                }
+            </div>
+            <div class="mail-reader-meta">
+                <span class="mail-reader-sender-avatar">@((string.IsNullOrWhiteSpace(selectedSender) ? '?' : selectedSender[0]).ToString().ToUpperInvariant())</span>
+                <div>
+                    <strong>@selected.From.Display</strong>
+                    <span>@selected.Date.ToLocalTime().ToString("dd MMMM yyyy, HH:mm")</span>
+                </div>
+            </div>
+            <div class="mail-reader-recipients">
+                <span>Alıcı: @string.Join(", ", selected.To.Select(item => item.Display))</span>
+                @if (selected.Cc.Count > 0)
+                {
+                    <span> · Cc: @string.Join(", ", selected.Cc.Select(item => item.Display))</span>
+                }
+            </div>
+        </div>
+        <div class="mail-reader-actions">
+            <button type="button" class="mail-icon-button" data-mail-action="reply" title="Yanıtla" aria-label="Yanıtla"><i class="fas fa-reply"></i></button>
+            <button type="button" class="mail-icon-button" data-mail-action="forward" title="İlet" aria-label="İlet"><i class="fas fa-share"></i></button>
+            <form method="post" asp-action="MarkRead" asp-controller="Mail" asp-area="Admin">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="folder" value="@selected.FolderKey" />
+                <input type="hidden" name="uid" value="@selected.Uid" />
+                <input type="hidden" name="isRead" value="@(selected.IsRead ? "false" : "true")" />
+                <input type="hidden" name="search" value="@Model.Search" />
+                <button type="submit" class="mail-icon-button" title="@(selected.IsRead ? "Okunmadı olarak işaretle" : "Okundu olarak işaretle")" aria-label="Okunma durumunu değiştir"><i class="fas @(selected.IsRead ? "fa-envelope" : "fa-envelope-open")"></i></button>
+            </form>
+            <form method="post" asp-action="Delete" asp-controller="Mail" asp-area="Admin" class="mail-delete-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="folder" value="@selected.FolderKey" />
+                <input type="hidden" name="uid" value="@selected.Uid" />
+                <input type="hidden" name="search" value="@Model.Search" />
+                <button type="submit" class="mail-icon-button mail-icon-button--danger" title="Çöp kutusuna taşı" aria-label="Çöp kutusuna taşı"><i class="fas fa-trash"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mail-reader-toolbar">
+        <form method="post" asp-action="Move" asp-controller="Mail" asp-area="Admin" class="mail-move-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="folder" value="@selected.FolderKey" />
+            <input type="hidden" name="uid" value="@selected.Uid" />
+            <input type="hidden" name="search" value="@Model.Search" />
+            <label for="moveDestination" class="visually-hidden">Klasöre taşı</label>
+            <select id="moveDestination" name="destinationFolder" class="form-select form-select-sm">
+                <option value="">Klasöre taşı...</option>
+                @foreach (var folder in Model.Folders.Where(folder => folder.Key != selected.FolderKey))
+                {
+                    <option value="@folder.Key">@folder.DisplayName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-sm btn-light" disabled>Taşı</button>
+        </form>
+    </div>
+
+    <div class="mail-reader-body" id="mailBody">
+        @Html.Raw(selected.BodyHtml)
+    </div>
+
+    @if (selected.Attachments.Count > 0)
+    {
+        <div class="mail-reader-attachments">
+            <div class="mail-section-label">Ekler <span>@selected.Attachments.Count</span></div>
+            <div class="mail-attachment-list">
+                @foreach (var attachment in selected.Attachments)
+                {
+                    <a class="mail-attachment-item" href="@Url.Action("Attachment", "Mail", new { area = "Admin", folder = selected.FolderKey, uid = selected.Uid, partId = attachment.PartId })">
+                        <span class="mail-attachment-icon"><i class="fas fa-file-lines"></i></span>
+                        <span>
+                            <strong>@attachment.FileName</strong>
+                            <small>@(attachment.Size > 0 ? $"{Math.Max(1, attachment.Size / 1024d):0.#} KB" : attachment.ContentType)</small>
+                        </span>
+                        <i class="fas fa-download"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -97,6 +97,13 @@ public sealed record MailPageViewModel
     public string? ErrorMessage { get; init; }
 }
 
+public sealed record MailReaderViewModel
+{
+    public MailMessageDetailDto Message { get; init; } = new();
+    public IReadOnlyList<MailFolderDto> Folders { get; init; } = [];
+    public string? Search { get; init; }
+}
+
 public sealed class MailComposeRequest
 {
     [Required(ErrorMessage = "En az bir alıcı girin.")]

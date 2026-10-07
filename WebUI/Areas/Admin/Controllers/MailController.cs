@@ -45,14 +45,29 @@ public sealed class MailController(
                 ct);
 
             MailMessageDetailDto? selected = null;
+            var selectedWasUnread = false;
             if (uid.HasValue)
             {
+                selectedWasUnread = messageList.Messages
+                    .FirstOrDefault(item => item.Uid == uid.Value)?.IsRead == false;
                 selected = await mailbox.GetMessageAsync(currentFolder.Key, uid.Value, markAsRead: true, ct);
             }
 
+            var displayFolders = selectedWasUnread
+                ? folders.Select(item => new MailFolderDto
+                {
+                    Key = item.Key,
+                    Name = item.Name,
+                    DisplayName = item.DisplayName,
+                    UnreadCount = item.Key == currentFolder.Key ? Math.Max(0, item.UnreadCount - 1) : item.UnreadCount,
+                    IsSpecial = item.IsSpecial,
+                    Icon = item.Icon
+                }).ToArray()
+                : folders;
+
             model = new MailPageViewModel
             {
-                Folders = folders,
+                Folders = displayFolders,
                 Messages = messageList.Messages,
                 SelectedMessage = selected,
                 CurrentFolderKey = currentFolder.Key,
@@ -77,6 +92,34 @@ public sealed class MailController(
         }
 
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Message(
+        string folder,
+        uint uid,
+        string? search,
+        CancellationToken ct)
+    {
+        try
+        {
+            var message = await mailbox.GetMessageAsync(folder, uid, markAsRead: true, ct);
+            return PartialView("_MessageReader", new MailReaderViewModel
+            {
+                Message = message,
+                Search = search
+            });
+        }
+        catch (Exception ex) when (ex is MailboxUnavailableException or MailValidationException)
+        {
+            logger.LogWarning(ex, "Admin mail içeriği yüklenemedi.");
+            return StatusCode(StatusCodes.Status502BadGateway, ex.Message);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogError(ex, "Admin mail içeriği yüklenirken beklenmeyen hata oluştu.");
+            return StatusCode(StatusCodes.Status502BadGateway, "Mail içeriği alınamadı. Lütfen tekrar deneyin.");
+        }
     }
 
     [HttpPost]
