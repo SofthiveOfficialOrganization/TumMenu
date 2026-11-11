@@ -26,9 +26,9 @@ Bu doküman, TümMenü QR menü tanıtımı için 9 Kasım 2026 Pazartesi günü
 
 | Tarih | Gün | Aday CSV Dosyası | Aday Sayısı | Odak Bölgeler / Konsept | Durum |
 | :--- | :--- | :--- | :---: | :--- | :--- |
-| **09.11.2026** | Pazartesi | `kampanya-20261109-pazartesi.csv` | 21 | Ankara, İzmir, İstanbul, Eskişehir, Trabzon, Samsun (Kafe, Kahve & Balık) | Beklemede |
-| **10.11.2026** | Salı | `kampanya-20261110-sali.csv` | 21 | Adana, Gaziantep, İstanbul, İzmir, Afyon, Trabzon, Antalya (Kebap, Burger, Bistro & Steak) | Beklemede |
-| **11.11.2026** | Çarşamba | `kampanya-20261111-carsamba.csv` | 21 | Antalya, Eskişehir, Balıkesir/Cunda, Muğla/Akyaka, Mersin, Kayseri, Denizli (Restoran & Kahvaltı) | Beklemede |
+| **09.11.2026** | Pazartesi | `kampanya-20261109-pazartesi.csv` | 21 | Ankara, İzmir, İstanbul, Eskişehir, Trabzon, Samsun (Kafe, Kahve & Balık) | Tamamlandı (21/21 Sent) |
+| **10.11.2026** | Salı | `kampanya-20261110-sali.csv` | 21 | Adana, Gaziantep, İstanbul, İzmir, Afyon, Trabzon, Antalya (Kebap, Burger, Bistro & Steak) | Tamamlandı (21/21 Sent) |
+| **11.11.2026** | Çarşamba | `kampanya-20261111-carsamba.csv` | 21 | Antalya, Eskişehir, Balıkesir/Cunda, Muğla/Akyaka, Mersin, Kayseri, Denizli (Restoran & Kahvaltı) | Tamamlandı (21/21 Sent) |
 | **12.11.2026** | Perşembe | `kampanya-20261112-persembe.csv` | 21 | Sakarya/Sapanca, Kocaeli, Tekirdağ, Aydın/Kuşadası, İstanbul (Kahvaltı, Artisan Kruvasan & Butik Roastery) | Beklemede |
 | **13.11.2026** | Cuma | `kampanya-20261113-cuma.csv` | 21 | İzmir/Urla, Bodrum, İstanbul (Fine Dining, Şef Restoranları), Bursa, Gaziantep, Hatay, Konya, Antalya | Beklemede |
 
